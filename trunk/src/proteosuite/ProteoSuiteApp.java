@@ -2,9 +2,9 @@
  * -----------------------------------------------------------------
  * ProteoSuiteApp.java (Main class)
  * -----------------------------------------------------------------
- * Description:       SUITE FOR PROTEOMICS ANALYSES
+ * Description:       SUITE FOR QUANTITATIVE PROTEOMICS ANALYSES
  * Developer:         Faviel Gonzalez
- * Last modification: 08 February 2011
+ * Created:           08 February 2011
  * -----------------------------------------------------------------
  */
 
