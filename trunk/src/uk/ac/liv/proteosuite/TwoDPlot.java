@@ -94,7 +94,7 @@ public class TwoDPlot extends JInternalFrame {
         chart.getRenderingHints().put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         final ChartPanel panel = new ChartPanel(chart, true);
-        panel.setPreferredSize(new java.awt.Dimension(600, 600));
+        panel.setPreferredSize(new java.awt.Dimension(500, 400));
         JButton zoomIn = new JButton();        
         JButton zoomOut = new JButton();
         zoomIn.setText("+");

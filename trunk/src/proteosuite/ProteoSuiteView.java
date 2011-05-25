@@ -100,21 +100,16 @@ public class ProteoSuiteView extends FrameView {
         initComponents();     
         
         //... Setting window defaults ...//
-        getFrame().setTitle("ProteoSuite 0.1.0 - Software for Quantitative Proteomics (Beta Version)");
-
-        Image iconApp = Toolkit.getDefaultToolkit().getImage(".\\src\\images\\icon.gif");
-        getFrame().setIconImage(iconApp);
-
-        getFrame().setSize(1024, 780);
-        //getFrame().setExtendedState(JFrame.MAXIMIZED_BOTH);
-        //getFrame().setPreferredSize(new Dimension(1024, 780));
-        //getFrame().getToolkit().getScreenSize().getHeight();
-        getFrame().setMinimumSize(new Dimension(1024, 780));
-        getFrame().pack();
-        
+        getFrame().setTitle("ProteoSuite 0.1.0 - Software for Quantitative Proteomics (Beta Version)");        
 
         //... Setting icons ...//
+        Image iconApp = new ImageIcon(this.getClass().getResource("/images/icon.gif")).getImage();
+        getFrame().setIconImage(iconApp);
         
+        //... Starting logo ...//
+        Icon logoIcon = new ImageIcon(getClass().getResource("/images/logo.gif"));
+        jLLogo.setIcon(logoIcon);
+
         //... Main Menu ...//
         Icon newIcon = new ImageIcon(getClass().getResource("/images/new.gif"));
         Icon importIcon = new ImageIcon(getClass().getResource("/images/import.gif"));
@@ -137,10 +132,6 @@ public class ProteoSuiteView extends FrameView {
         renderer.setLeafIcon(leafIcon);
         renderer.setClosedIcon(closeleafIcon);
         renderer.setOpenIcon(openleafIcon);
-
-
-
-
         
         //... Setting status bar (message timeout, idle icon and busy animation, etc) ...//
         ResourceMap resourceMap = getResourceMap();
@@ -196,16 +187,13 @@ public class ProteoSuiteView extends FrameView {
                 }
             }
         });
-    }
-//--------------------------------------------------------------------------
-    @Action
-    public void showAboutBox() {
-        if (aboutBox == null) {
-            JFrame mainFrame = ProteoSuiteApp.getApplication().getMainFrame();
-            aboutBox = new ProteoSuiteAboutBox(mainFrame);
-            aboutBox.setLocationRelativeTo(mainFrame);
-        }
-        ProteoSuiteApp.getApplication().show(aboutBox);
+
+        //... Setting Window Height and Width ...//
+        getFrame().setMinimumSize(new Dimension(1024, 780));
+        getFrame().setPreferredSize(new Dimension(1024, 780));
+        getFrame().setExtendedState(JFrame.MAXIMIZED_BOTH);
+        jSPTopDivision.setDividerLocation(200);
+        getFrame().pack();
     }
 //--------------------------------------------------------------------------
     @SuppressWarnings("unchecked")
@@ -225,6 +213,16 @@ public class ProteoSuiteView extends FrameView {
         jSPMainDivision = new javax.swing.JSplitPane();
         jSPTopDivision = new javax.swing.JSplitPane();
         jTPDisplay = new javax.swing.JTabbedPane();
+        jPHome = new javax.swing.JPanel();
+        jLLogo = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jPMS = new javax.swing.JPanel();
         jPXIC = new javax.swing.JPanel();
         jP2D = new javax.swing.JPanel();
@@ -271,14 +269,14 @@ public class ProteoSuiteView extends FrameView {
         jMenuItem20 = new javax.swing.JMenuItem();
         jMenuItem21 = new javax.swing.JMenuItem();
         statsMenu = new javax.swing.JMenu();
-        GraphsMenu = new javax.swing.JMenu();
+        visualMenu = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         utilMenu = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
-        jMenu1 = new javax.swing.JMenu();
+        dbMenu = new javax.swing.JMenu();
         jMenuItem22 = new javax.swing.JMenuItem();
         jMenuItem23 = new javax.swing.JMenuItem();
         toolsMenu = new javax.swing.JMenu();
@@ -382,14 +380,111 @@ public class ProteoSuiteView extends FrameView {
 
         jSPMainDivision.setBorder(null);
         jSPMainDivision.setDividerLocation(580);
+        jSPMainDivision.setDividerSize(1);
         jSPMainDivision.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSPMainDivision.setName("jSPMainDivision"); // NOI18N
 
         jSPTopDivision.setBorder(null);
         jSPTopDivision.setDividerLocation(200);
+        jSPTopDivision.setDividerSize(1);
         jSPTopDivision.setName("jSPTopDivision"); // NOI18N
 
         jTPDisplay.setName("jTPDisplay"); // NOI18N
+
+        jPHome.setBackground(resourceMap.getColor("jPHome.background")); // NOI18N
+        jPHome.setName("jPHome"); // NOI18N
+
+        jLLogo.setText(resourceMap.getString("jLLogo.text")); // NOI18N
+        jLLogo.setName("jLLogo"); // NOI18N
+
+        jLabel1.setFont(resourceMap.getFont("jLabel1.font")); // NOI18N
+        jLabel1.setForeground(resourceMap.getColor("jLabel1.foreground")); // NOI18N
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setName("jLabel1"); // NOI18N
+
+        jLabel2.setFont(resourceMap.getFont("jLabel2.font")); // NOI18N
+        jLabel2.setForeground(resourceMap.getColor("jLabel2.foreground")); // NOI18N
+        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
+        jLabel2.setName("jLabel2"); // NOI18N
+
+        jLabel3.setFont(resourceMap.getFont("jLabel3.font")); // NOI18N
+        jLabel3.setForeground(resourceMap.getColor("jLabel3.foreground")); // NOI18N
+        jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
+        jLabel3.setName("jLabel3"); // NOI18N
+
+        jLabel4.setFont(resourceMap.getFont("jLabel4.font")); // NOI18N
+        jLabel4.setForeground(resourceMap.getColor("jLabel4.foreground")); // NOI18N
+        jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
+        jLabel4.setName("jLabel4"); // NOI18N
+
+        jLabel5.setFont(resourceMap.getFont("jLabel5.font")); // NOI18N
+        jLabel5.setForeground(resourceMap.getColor("jLabel5.foreground")); // NOI18N
+        jLabel5.setText(resourceMap.getString("jLabel5.text")); // NOI18N
+        jLabel5.setName("jLabel5"); // NOI18N
+
+        jLabel6.setFont(resourceMap.getFont("jLabel6.font")); // NOI18N
+        jLabel6.setForeground(resourceMap.getColor("jLabel6.foreground")); // NOI18N
+        jLabel6.setText(resourceMap.getString("jLabel6.text")); // NOI18N
+        jLabel6.setName("jLabel6"); // NOI18N
+
+        jLabel7.setFont(resourceMap.getFont("jLabel7.font")); // NOI18N
+        jLabel7.setText(resourceMap.getString("jLabel7.text")); // NOI18N
+        jLabel7.setName("jLabel7"); // NOI18N
+
+        jLabel8.setText(resourceMap.getString("jLabel8.text")); // NOI18N
+        jLabel8.setName("jLabel8"); // NOI18N
+
+        javax.swing.GroupLayout jPHomeLayout = new javax.swing.GroupLayout(jPHome);
+        jPHome.setLayout(jPHomeLayout);
+        jPHomeLayout.setHorizontalGroup(
+            jPHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPHomeLayout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addGroup(jPHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel8)
+                    .addGroup(jPHomeLayout.createSequentialGroup()
+                        .addGroup(jPHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 366, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPHomeLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(64, 64, 64)
+                        .addComponent(jLabel4)
+                        .addGap(66, 66, 66)
+                        .addComponent(jLabel5)
+                        .addGap(76, 76, 76)
+                        .addComponent(jLabel6))
+                    .addComponent(jLabel7))
+                .addContainerGap(310, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPHomeLayout.createSequentialGroup()
+                .addContainerGap(538, Short.MAX_VALUE)
+                .addComponent(jLLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28))
+        );
+        jPHomeLayout.setVerticalGroup(
+            jPHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPHomeLayout.createSequentialGroup()
+                .addGap(47, 47, 47)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel8)
+                .addGap(57, 57, 57)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addGroup(jPHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel5))
+                .addGap(84, 84, 84)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 168, Short.MAX_VALUE)
+                .addComponent(jLLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jTPDisplay.addTab(resourceMap.getString("jPHome.TabConstraints.tabTitle"), jPHome); // NOI18N
 
         jPMS.setBackground(resourceMap.getColor("jPMS.background")); // NOI18N
         jPMS.setName("jPMS"); // NOI18N
@@ -398,7 +493,7 @@ public class ProteoSuiteView extends FrameView {
         jPMS.setLayout(jPMSLayout);
         jPMSLayout.setHorizontalGroup(
             jPMSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 815, Short.MAX_VALUE)
+            .addGap(0, 819, Short.MAX_VALUE)
         );
         jPMSLayout.setVerticalGroup(
             jPMSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -414,7 +509,7 @@ public class ProteoSuiteView extends FrameView {
         jPXIC.setLayout(jPXICLayout);
         jPXICLayout.setHorizontalGroup(
             jPXICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 815, Short.MAX_VALUE)
+            .addGap(0, 819, Short.MAX_VALUE)
         );
         jPXICLayout.setVerticalGroup(
             jPXICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -430,7 +525,7 @@ public class ProteoSuiteView extends FrameView {
         jP2D.setLayout(jP2DLayout);
         jP2DLayout.setHorizontalGroup(
             jP2DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 815, Short.MAX_VALUE)
+            .addGap(0, 819, Short.MAX_VALUE)
         );
         jP2DLayout.setVerticalGroup(
             jP2DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -446,7 +541,7 @@ public class ProteoSuiteView extends FrameView {
         jP3D.setLayout(jP3DLayout);
         jP3DLayout.setHorizontalGroup(
             jP3DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 815, Short.MAX_VALUE)
+            .addGap(0, 819, Short.MAX_VALUE)
         );
         jP3DLayout.setVerticalGroup(
             jP3DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -457,6 +552,7 @@ public class ProteoSuiteView extends FrameView {
 
         jSPTopDivision.setRightComponent(jTPDisplay);
 
+        jSPTree.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jSPTree.setName("jSPTree"); // NOI18N
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("New Project");
@@ -470,11 +566,13 @@ public class ProteoSuiteView extends FrameView {
 
         jSPMainDivision.setTopComponent(jSPTopDivision);
 
+        jTPResults.setBackground(resourceMap.getColor("jTPResults.background")); // NOI18N
         jTPResults.setName("jTPResults"); // NOI18N
 
         jPOutput.setBackground(resourceMap.getColor("jPOutput.background")); // NOI18N
         jPOutput.setName("jPOutput"); // NOI18N
 
+        jSPOutput.setBorder(null);
         jSPOutput.setName("jSPOutput"); // NOI18N
 
         jTAOutput.setBackground(resourceMap.getColor("jTAOutput.background")); // NOI18N
@@ -493,7 +591,7 @@ public class ProteoSuiteView extends FrameView {
         );
         jPOutputLayout.setVerticalGroup(
             jPOutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSPOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+            .addComponent(jSPOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
         );
 
         jTPResults.addTab(resourceMap.getString("jPOutput.TabConstraints.tabTitle"), jPOutput); // NOI18N
@@ -521,8 +619,8 @@ public class ProteoSuiteView extends FrameView {
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPToolbar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1025, Short.MAX_VALUE)
                     .addComponent(jSPMainDivision, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1025, Short.MAX_VALUE)
+                    .addComponent(jPToolbar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1025, Short.MAX_VALUE)
                     .addComponent(jPStatusBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -531,8 +629,8 @@ public class ProteoSuiteView extends FrameView {
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addComponent(jPToolbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSPMainDivision, javax.swing.GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(jSPMainDivision, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPStatusBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -544,13 +642,11 @@ public class ProteoSuiteView extends FrameView {
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(proteosuite.ProteoSuiteApp.class).getContext().getActionMap(ProteoSuiteView.class, this);
         jMNewProject.setAction(actionMap.get("newProject")); // NOI18N
-        jMNewProject.setIcon(resourceMap.getIcon("jMNewProject.icon")); // NOI18N
         jMNewProject.setText(resourceMap.getString("jMNewProject.text")); // NOI18N
         jMNewProject.setName("jMNewProject"); // NOI18N
         fileMenu.add(jMNewProject);
 
         jMImportFile.setAction(actionMap.get("importFile")); // NOI18N
-        jMImportFile.setIcon(resourceMap.getIcon("jMImportFile.icon")); // NOI18N
         jMImportFile.setText(resourceMap.getString("jMImportFile.text")); // NOI18N
         jMImportFile.setName("jMImportFile"); // NOI18N
         fileMenu.add(jMImportFile);
@@ -559,7 +655,6 @@ public class ProteoSuiteView extends FrameView {
         fileMenu.add(jMSeparator1);
 
         jMOpenProject.setAction(actionMap.get("openProject")); // NOI18N
-        jMOpenProject.setIcon(resourceMap.getIcon("jMOpenProject.icon")); // NOI18N
         jMOpenProject.setText(resourceMap.getString("jMOpenProject.text")); // NOI18N
         jMOpenProject.setName("jMOpenProject"); // NOI18N
         fileMenu.add(jMOpenProject);
@@ -569,7 +664,6 @@ public class ProteoSuiteView extends FrameView {
         fileMenu.add(jMOpenProjectAs);
 
         jMSaveProject.setAction(actionMap.get("saveProject")); // NOI18N
-        jMSaveProject.setIcon(resourceMap.getIcon("jMSaveProject.icon")); // NOI18N
         jMSaveProject.setText(resourceMap.getString("jMSaveProject.text")); // NOI18N
         jMSaveProject.setName("jMSaveProject"); // NOI18N
         fileMenu.add(jMSaveProject);
@@ -583,7 +677,6 @@ public class ProteoSuiteView extends FrameView {
         fileMenu.add(jSeparator2);
 
         jMPrint.setAction(actionMap.get("printResults")); // NOI18N
-        jMPrint.setIcon(resourceMap.getIcon("jMPrint.icon")); // NOI18N
         jMPrint.setText(resourceMap.getString("jMPrint.text")); // NOI18N
         jMPrint.setName("jMPrint"); // NOI18N
         fileMenu.add(jMPrint);
@@ -687,27 +780,27 @@ public class ProteoSuiteView extends FrameView {
         statsMenu.setName("statsMenu"); // NOI18N
         menuBar.add(statsMenu);
 
-        GraphsMenu.setText(resourceMap.getString("GraphsMenu.text")); // NOI18N
-        GraphsMenu.setName("GraphsMenu"); // NOI18N
+        visualMenu.setText(resourceMap.getString("visualMenu.text")); // NOI18N
+        visualMenu.setName("visualMenu"); // NOI18N
 
         jMenuItem1.setText(resourceMap.getString("jMenuItem1.text")); // NOI18N
         jMenuItem1.setName("jMenuItem1"); // NOI18N
-        GraphsMenu.add(jMenuItem1);
+        visualMenu.add(jMenuItem1);
 
         jMenuItem2.setText(resourceMap.getString("jMenuItem2.text")); // NOI18N
         jMenuItem2.setName("jMenuItem2"); // NOI18N
-        GraphsMenu.add(jMenuItem2);
+        visualMenu.add(jMenuItem2);
 
         jMenuItem3.setAction(actionMap.get("show2DPlot")); // NOI18N
         jMenuItem3.setText(resourceMap.getString("jMenuItem3.text")); // NOI18N
         jMenuItem3.setName("jMenuItem3"); // NOI18N
-        GraphsMenu.add(jMenuItem3);
+        visualMenu.add(jMenuItem3);
 
         jMenuItem4.setText(resourceMap.getString("jMenuItem4.text")); // NOI18N
         jMenuItem4.setName("jMenuItem4"); // NOI18N
-        GraphsMenu.add(jMenuItem4);
+        visualMenu.add(jMenuItem4);
 
-        menuBar.add(GraphsMenu);
+        menuBar.add(visualMenu);
 
         utilMenu.setText(resourceMap.getString("utilMenu.text")); // NOI18N
         utilMenu.setName("utilMenu"); // NOI18N
@@ -719,18 +812,18 @@ public class ProteoSuiteView extends FrameView {
 
         menuBar.add(utilMenu);
 
-        jMenu1.setText(resourceMap.getString("jMenu1.text")); // NOI18N
-        jMenu1.setName("jMenu1"); // NOI18N
+        dbMenu.setText(resourceMap.getString("dbMenu.text")); // NOI18N
+        dbMenu.setName("dbMenu"); // NOI18N
 
         jMenuItem22.setText(resourceMap.getString("jMenuItem22.text")); // NOI18N
         jMenuItem22.setName("jMenuItem22"); // NOI18N
-        jMenu1.add(jMenuItem22);
+        dbMenu.add(jMenuItem22);
 
         jMenuItem23.setText(resourceMap.getString("jMenuItem23.text")); // NOI18N
         jMenuItem23.setName("jMenuItem23"); // NOI18N
-        jMenu1.add(jMenuItem23);
+        dbMenu.add(jMenuItem23);
 
-        menuBar.add(jMenu1);
+        menuBar.add(dbMenu);
 
         toolsMenu.setText(resourceMap.getString("toolsMenu.text")); // NOI18N
 
@@ -755,7 +848,6 @@ public class ProteoSuiteView extends FrameView {
 
         helpMenu.setText(resourceMap.getString("helpMenu.text")); // NOI18N
 
-        jMHelpContent.setIcon(resourceMap.getIcon("jMHelpContent.icon")); // NOI18N
         jMHelpContent.setText(resourceMap.getString("jMHelpContent.text")); // NOI18N
         jMHelpContent.setName("jMHelpContent"); // NOI18N
         helpMenu.add(jMHelpContent);
@@ -772,107 +864,34 @@ public class ProteoSuiteView extends FrameView {
     }// </editor-fold>//GEN-END:initComponents
 //--------------------------------------------------------------------------
     @Action
-    public void openProject() {
-
-    }
-//--------------------------------------------------------------------------
-    @Action
-    public void exitApplication() {
-        int exit = JOptionPane.showConfirmDialog(null, "Do you want to exit?");
-        //int exit = JOptionPane.showInternalConfirmDialog(getFrame().getContentPane(), "Do you want to exit?", "Exit", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
-        if (exit == JOptionPane.YES_OPTION) {
-            System.exit(0);
-        }
-    }
-//--------------------------------------------------------------------------
-    @Action
     public void newProject() {           
 
     }
 //--------------------------------------------------------------------------
     @Action
-    public void saveProject() {
-
-    }
-//--------------------------------------------------------------------------
-    @Action
-    public void printResults() {
-    }
-//--------------------------------------------------------------------------
-    @Action
-    public void openJmzMLViewer() {
-
-    }
-//--------------------------------------------------------------------------
-    @Action
-    public void BareBones() {
-        BareBonesBrowserLaunch browser = null;
-        browser.openURL("http://code.google.com/p/psi-pi/");
-    }
-//--------------------------------------------------------------------------
-    @Action
-    public void saveProjectAs() {
-
-    }
-//--------------------------------------------------------------------------
-    @Action
-    public void undoProcess() {
-
-    }
-//--------------------------------------------------------------------------
-    @Action
-    public void redoProcess() {
-    }
-//--------------------------------------------------------------------------
-    @Action
-    public void copyObject() {
-    }
-//--------------------------------------------------------------------------
-    @Action
-    public void cutObject() {
-    }
-//--------------------------------------------------------------------------
-    @Action
-    public void pasteObject() {
-    }
-//--------------------------------------------------------------------------
-    @Action
-    public void selectAll() {
-
-    }
-//--------------------------------------------------------------------------
-//  Method:       importFile
-//  Description:  Read "n" mzML Files
-//--------------------------------------------------------------------------
-    @Action
     public void importFile() {
 
-        String sOutput = "";
+        String sOutput = ""; 
         long time;
 
-        //... Selecting file(s) ...//
+        //... Select file(s) ...//
         JFileChooser chooser = new JFileChooser("user.home");
         chooser.setDialogTitle("Select the file(s) to analyze");
 
         //... Applying file extension filters ...//
         FileNameExtensionFilter filter = new FileNameExtensionFilter("mzML Files (*.mzML)", "mzML");
-        FileNameExtensionFilter filter2 = new FileNameExtensionFilter("mzIdentML Files (*.mzIndetML)", "mzIdentML");
-        FileNameExtensionFilter filter3 = new FileNameExtensionFilter("mzQuantML Files (*.mzQuantML)", "mzQuantML");        
+        FileNameExtensionFilter filter2 = new FileNameExtensionFilter("mzIdentML Files (*.mzid)", "mzIdentML");
+        FileNameExtensionFilter filter3 = new FileNameExtensionFilter("mzQuantML Files (*.mzQuantML)", "mzQuantML");
         chooser.setFileFilter(filter3);
         chooser.setFileFilter(filter2);
         chooser.setFileFilter(filter);
-
-        //... Enabling multiple selection ...//
         chooser.setMultiSelectionEnabled(true);
-
-        //... Setting default directory (optional) ...//
         chooser.setCurrentDirectory(new java.io.File("D:/Data"));
 
         //... Retrieving selection from user ...//
         int returnVal = chooser.showOpenDialog(null);
-        
-        //... Display selected data ...//
+
+        //... Displaying selected data ...//
         if(returnVal == JFileChooser.APPROVE_OPTION)
         {
             File [] aFiles = chooser.getSelectedFiles();
@@ -880,7 +899,7 @@ public class ProteoSuiteView extends FrameView {
 	    if (aFiles != null && aFiles.length > 0)
             {
                 jLStatus.setText("Loading files, please wait...");
-                Sample aSamples[] = new Sample[aFiles.length];                
+                Sample aSamples[] = new Sample[aFiles.length];
 
                 //... Removing initial jTree default configuration ...//
                 jTMainTree.removeAll();
@@ -892,13 +911,13 @@ public class ProteoSuiteView extends FrameView {
 
                 //... Reading selected files ...//
                 for (int iI = 0; iI < aFiles.length; iI++)
-                {                                        
+                {
                     System.out.println("File selected: " + aFiles[iI].getPath());
                     System.out.println("Name selected: " + aFiles[iI].getName());
 
-                    //... Unmarshall data using jzmzML API ...//                    
+                    //... Unmarshall data using jzmzML API ...//
                     System.out.println("Before xmlFile " + time);
-                    
+
                     File xmlFile = new File(aFiles[iI].getPath());
                     System.out.println("After xmlFile " + (System.currentTimeMillis() - time) + "ms");
 
@@ -913,7 +932,7 @@ public class ProteoSuiteView extends FrameView {
                     System.out.println("After MzML Version " + (System.currentTimeMillis() - time) + "ms");
                     System.out.println("MzML ID: = " + unmarshaller.getMzMLId());
                     System.out.println("After MzML ID " + (System.currentTimeMillis() - time) + "ms");
-                    
+
                     System.out.println("MzML Accession: = " + unmarshaller.getMzMLAccession());
                     System.out.println("After MzML Accession " + (System.currentTimeMillis() - time) + "ms");
 
@@ -951,7 +970,7 @@ public class ProteoSuiteView extends FrameView {
                     System.out.println("After reading spectrum data " + (System.currentTimeMillis() - time) + "ms");
                     int iJ = 0;
                     while (spectrumIterator.hasNext())
-                    {                      
+                    {
                         Spectrum spectrum = spectrumIterator.next();
                         System.out.println("After reading each spectrum: " + iJ + " " + (System.currentTimeMillis() - time) + " ms");
 
@@ -1000,18 +1019,75 @@ public class ProteoSuiteView extends FrameView {
                                                                       aSamples[iI].getSam_spectrums()});
                 }
                 jLStatus.setText(aSamples.length + " file(s) loaded");
+                jTPResults.setSelectedIndex(1);
 	    }
         }
     }
+    //--------------------------------------------------------------------------
+    @Action
+    public void openProject() {
 
+    }
+//--------------------------------------------------------------------------
+    @Action
+    public void saveProject() {
+
+    }
+//--------------------------------------------------------------------------
+    @Action
+    public void saveProjectAs() {
+
+    }
+//--------------------------------------------------------------------------
+    @Action
+    public void printResults() {
+
+    }
+//--------------------------------------------------------------------------
+    @Action
+    public void exitApplication() {
+        int exit = JOptionPane.showConfirmDialog(null, "Do you want to exit?");
+
+        if (exit == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+    }
+//--------------------------------------------------------------------------
+    @Action
+    public void undoProcess() {
+
+    }
+//--------------------------------------------------------------------------
+    @Action
+    public void redoProcess() {
+    }
+//--------------------------------------------------------------------------
+    @Action
+    public void copyObject() {
+    }
+//--------------------------------------------------------------------------
+    @Action
+    public void cutObject() {
+    }
+//--------------------------------------------------------------------------
+    @Action
+    public void pasteObject() {
+    }
+//--------------------------------------------------------------------------
+    @Action
+    public void selectAll() {
+
+    }
+//--------------------------------------------------------------------------
     @Action
     public void show2DPlot() {
         TwoDPlot demo = new TwoDPlot("2D Plot");
 
-        jPMS.add(demo);
+        jP2D.add(demo);
 
         demo.pack();
         demo.setVisible(true);
+        jTPDisplay.setSelectedIndex(3);
 
         //...
         
@@ -1020,7 +1096,7 @@ public class ProteoSuiteView extends FrameView {
         //TwoDVisualizer visualizer = new TwoDVisualizer();
         //visualizer.show2DVisualizerSetupDialog(rawDataFileWriter, null, null);
     }
-
+//--------------------------------------------------------------------------
     @Action
     public void callUtility1() {
 
@@ -1044,13 +1120,32 @@ public class ProteoSuiteView extends FrameView {
             //}.start();
            
     }
-
+//--------------------------------------------------------------------------
+    @Action
+    public void showAboutBox() {
+        if (aboutBox == null) {
+            JFrame mainFrame = ProteoSuiteApp.getApplication().getMainFrame();
+            aboutBox = new ProteoSuiteAboutBox(mainFrame);
+            aboutBox.setLocationRelativeTo(mainFrame);
+        }
+        ProteoSuiteApp.getApplication().show(aboutBox);
+    }
+//--------------------------------------------------------------------------
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu GraphsMenu;
     private javax.swing.JMenu analyzeMenu;
+    private javax.swing.JMenu dbMenu;
     private javax.swing.JMenu editMenu;
+    private javax.swing.JLabel jLLogo;
     private javax.swing.JLabel jLStatus;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JMenuItem jMHelpContent;
     private javax.swing.JMenuItem jMImportFile;
     private javax.swing.JMenuItem jMNewProject;
@@ -1061,7 +1156,6 @@ public class ProteoSuiteView extends FrameView {
     private javax.swing.JMenuItem jMSaveProjectAs;
     private javax.swing.JPopupMenu.Separator jMSeparator1;
     private javax.swing.JPopupMenu.Separator jMSeparator2;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuItem jMenuItem1;
@@ -1089,6 +1183,7 @@ public class ProteoSuiteView extends FrameView {
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jP2D;
     private javax.swing.JPanel jP3D;
+    private javax.swing.JPanel jPHome;
     private javax.swing.JPanel jPMS;
     private javax.swing.JPanel jPOutput;
     private javax.swing.JPanel jPStatusBar;
@@ -1119,6 +1214,7 @@ public class ProteoSuiteView extends FrameView {
     private javax.swing.JMenu toolsMenu;
     private javax.swing.JMenu utilMenu;
     private javax.swing.JMenu viewMenu;
+    private javax.swing.JMenu visualMenu;
     private javax.swing.JMenu winMenu;
     // End of variables declaration//GEN-END:variables
 

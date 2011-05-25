@@ -27,8 +27,8 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="jPToolbar" alignment="0" pref="1025" max="32767" attributes="0"/>
                       <Component id="jSPMainDivision" alignment="0" pref="1025" max="32767" attributes="0"/>
+                      <Component id="jPToolbar" alignment="0" pref="1025" max="32767" attributes="0"/>
                       <Component id="jPStatusBar" alignment="1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -40,8 +40,8 @@
               <Group type="102" attributes="0">
                   <Component id="jPToolbar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jSPMainDivision" pref="661" max="32767" attributes="0"/>
-                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="jSPMainDivision" pref="673" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPStatusBar" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -201,6 +201,7 @@
               <Border info="null"/>
             </Property>
             <Property name="dividerLocation" type="int" value="580"/>
+            <Property name="dividerSize" type="int" value="1"/>
             <Property name="orientation" type="int" value="0"/>
             <Property name="name" type="java.lang.String" value="jSPMainDivision" noResource="true"/>
           </Properties>
@@ -213,6 +214,7 @@
                   <Border info="null"/>
                 </Property>
                 <Property name="dividerLocation" type="int" value="200"/>
+                <Property name="dividerSize" type="int" value="1"/>
                 <Property name="name" type="java.lang.String" value="jSPTopDivision" noResource="true"/>
               </Properties>
               <Constraints>
@@ -235,6 +237,148 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
                   <SubComponents>
+                    <Container class="javax.swing.JPanel" name="jPHome">
+                      <Properties>
+                        <Property name="background" type="java.awt.Color" resourceKey="jPHome.background"/>
+                        <Property name="name" type="java.lang.String" value="jPHome" noResource="true"/>
+                      </Properties>
+                      <Constraints>
+                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                          <JTabbedPaneConstraints tabName="Home">
+                            <Property name="tabTitle" type="java.lang.String" resourceKey="jPHome.TabConstraints.tabTitle"/>
+                          </JTabbedPaneConstraints>
+                        </Constraint>
+                      </Constraints>
+
+                      <Layout>
+                        <DimensionLayout dim="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace pref="366" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
+                                          <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
+                                          <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
+                                          <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace pref="310" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace pref="538" max="32767" attributes="0"/>
+                                  <Component id="jLLogo" min="-2" pref="253" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                        </DimensionLayout>
+                        <DimensionLayout dim="1">
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+                                  <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
+                                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
+                                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace pref="168" max="32767" attributes="0"/>
+                                  <Component id="jLLogo" min="-2" pref="66" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                        </DimensionLayout>
+                      </Layout>
+                      <SubComponents>
+                        <Component class="javax.swing.JLabel" name="jLLogo">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" resourceKey="jLLogo.text"/>
+                            <Property name="name" type="java.lang.String" value="jLLogo" noResource="true"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="jLabel1">
+                          <Properties>
+                            <Property name="font" type="java.awt.Font" resourceKey="jLabel1.font"/>
+                            <Property name="foreground" type="java.awt.Color" resourceKey="jLabel1.foreground"/>
+                            <Property name="text" type="java.lang.String" resourceKey="jLabel1.text"/>
+                            <Property name="name" type="java.lang.String" value="jLabel1" noResource="true"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="jLabel2">
+                          <Properties>
+                            <Property name="font" type="java.awt.Font" resourceKey="jLabel2.font"/>
+                            <Property name="foreground" type="java.awt.Color" resourceKey="jLabel2.foreground"/>
+                            <Property name="text" type="java.lang.String" resourceKey="jLabel2.text"/>
+                            <Property name="name" type="java.lang.String" value="jLabel2" noResource="true"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="jLabel3">
+                          <Properties>
+                            <Property name="font" type="java.awt.Font" resourceKey="jLabel3.font"/>
+                            <Property name="foreground" type="java.awt.Color" resourceKey="jLabel3.foreground"/>
+                            <Property name="text" type="java.lang.String" resourceKey="jLabel3.text"/>
+                            <Property name="name" type="java.lang.String" value="jLabel3" noResource="true"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="jLabel4">
+                          <Properties>
+                            <Property name="font" type="java.awt.Font" resourceKey="jLabel4.font"/>
+                            <Property name="foreground" type="java.awt.Color" resourceKey="jLabel4.foreground"/>
+                            <Property name="text" type="java.lang.String" resourceKey="jLabel4.text"/>
+                            <Property name="name" type="java.lang.String" value="jLabel4" noResource="true"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="jLabel5">
+                          <Properties>
+                            <Property name="font" type="java.awt.Font" resourceKey="jLabel5.font"/>
+                            <Property name="foreground" type="java.awt.Color" resourceKey="jLabel5.foreground"/>
+                            <Property name="text" type="java.lang.String" resourceKey="jLabel5.text"/>
+                            <Property name="name" type="java.lang.String" value="jLabel5" noResource="true"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="jLabel6">
+                          <Properties>
+                            <Property name="font" type="java.awt.Font" resourceKey="jLabel6.font"/>
+                            <Property name="foreground" type="java.awt.Color" resourceKey="jLabel6.foreground"/>
+                            <Property name="text" type="java.lang.String" resourceKey="jLabel6.text"/>
+                            <Property name="name" type="java.lang.String" value="jLabel6" noResource="true"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="jLabel7">
+                          <Properties>
+                            <Property name="font" type="java.awt.Font" resourceKey="jLabel7.font"/>
+                            <Property name="text" type="java.lang.String" resourceKey="jLabel7.text"/>
+                            <Property name="name" type="java.lang.String" value="jLabel7" noResource="true"/>
+                          </Properties>
+                        </Component>
+                        <Component class="javax.swing.JLabel" name="jLabel8">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" resourceKey="jLabel8.text"/>
+                            <Property name="name" type="java.lang.String" value="jLabel8" noResource="true"/>
+                          </Properties>
+                        </Component>
+                      </SubComponents>
+                    </Container>
                     <Container class="javax.swing.JPanel" name="jPMS">
                       <Properties>
                         <Property name="background" type="java.awt.Color" resourceKey="jPMS.background"/>
@@ -242,7 +386,7 @@
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                          <JTabbedPaneConstraints tabName="2D Plot">
+                          <JTabbedPaneConstraints tabName="MS">
                             <Property name="tabTitle" type="java.lang.String" resourceKey="jPMS.TabConstraints.tabTitle"/>
                           </JTabbedPaneConstraints>
                         </Constraint>
@@ -251,7 +395,7 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <EmptySpace min="0" pref="815" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="819" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -277,7 +421,7 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <EmptySpace min="0" pref="815" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="819" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -294,7 +438,7 @@
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                          <JTabbedPaneConstraints tabName="MS">
+                          <JTabbedPaneConstraints tabName="2D Plot">
                             <Property name="tabTitle" type="java.lang.String" resourceKey="jP2D.TabConstraints.tabTitle"/>
                           </JTabbedPaneConstraints>
                         </Constraint>
@@ -303,7 +447,7 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <EmptySpace min="0" pref="815" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="819" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -329,7 +473,7 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <EmptySpace min="0" pref="815" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="819" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -343,6 +487,11 @@
                 </Container>
                 <Container class="javax.swing.JScrollPane" name="jSPTree">
                   <Properties>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                        <EtchetBorder/>
+                      </Border>
+                    </Property>
                     <Property name="name" type="java.lang.String" value="jSPTree" noResource="true"/>
                   </Properties>
                   <AuxValues>
@@ -370,6 +519,7 @@
             </Container>
             <Container class="javax.swing.JTabbedPane" name="jTPResults">
               <Properties>
+                <Property name="background" type="java.awt.Color" resourceKey="jTPResults.background"/>
                 <Property name="name" type="java.lang.String" value="jTPResults" noResource="true"/>
               </Properties>
               <Constraints>
@@ -401,13 +551,16 @@
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jSPOutput" alignment="0" pref="48" max="32767" attributes="0"/>
+                          <Component id="jSPOutput" alignment="0" pref="64" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
                   <SubComponents>
                     <Container class="javax.swing.JScrollPane" name="jSPOutput">
                       <Properties>
+                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                          <Border info="null"/>
+                        </Property>
                         <Property name="name" type="java.lang.String" value="jSPOutput" noResource="true"/>
                       </Properties>
                       <AuxValues>
@@ -499,7 +652,6 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="proteosuite.ProteoSuiteView" id="newProject" methodName="newProject"/>
                 </Property>
-                <Property name="icon" type="javax.swing.Icon" resourceKey="jMNewProject.icon"/>
                 <Property name="text" type="java.lang.String" resourceKey="jMNewProject.text"/>
                 <Property name="name" type="java.lang.String" value="jMNewProject" noResource="true"/>
               </Properties>
@@ -509,7 +661,6 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="proteosuite.ProteoSuiteView" id="importFile" methodName="importFile"/>
                 </Property>
-                <Property name="icon" type="javax.swing.Icon" resourceKey="jMImportFile.icon"/>
                 <Property name="text" type="java.lang.String" resourceKey="jMImportFile.text"/>
                 <Property name="name" type="java.lang.String" value="jMImportFile" noResource="true"/>
               </Properties>
@@ -524,7 +675,6 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="proteosuite.ProteoSuiteView" id="openProject" methodName="openProject"/>
                 </Property>
-                <Property name="icon" type="javax.swing.Icon" resourceKey="jMOpenProject.icon"/>
                 <Property name="text" type="java.lang.String" resourceKey="jMOpenProject.text"/>
                 <Property name="name" type="java.lang.String" value="jMOpenProject" noResource="true"/>
               </Properties>
@@ -540,7 +690,6 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="proteosuite.ProteoSuiteView" id="saveProject" methodName="saveProject"/>
                 </Property>
-                <Property name="icon" type="javax.swing.Icon" resourceKey="jMSaveProject.icon"/>
                 <Property name="text" type="java.lang.String" resourceKey="jMSaveProject.text"/>
                 <Property name="name" type="java.lang.String" value="jMSaveProject" noResource="true"/>
               </Properties>
@@ -564,7 +713,6 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
                   <action class="proteosuite.ProteoSuiteView" id="printResults" methodName="printResults"/>
                 </Property>
-                <Property name="icon" type="javax.swing.Icon" resourceKey="jMPrint.icon"/>
                 <Property name="text" type="java.lang.String" resourceKey="jMPrint.text"/>
                 <Property name="name" type="java.lang.String" value="jMPrint" noResource="true"/>
               </Properties>
@@ -737,10 +885,10 @@
             <Property name="name" type="java.lang.String" value="statsMenu" noResource="true"/>
           </Properties>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="GraphsMenu">
+        <Menu class="javax.swing.JMenu" name="visualMenu">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="GraphsMenu.text"/>
-            <Property name="name" type="java.lang.String" value="GraphsMenu" noResource="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="visualMenu.text"/>
+            <Property name="name" type="java.lang.String" value="visualMenu" noResource="true"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
@@ -789,10 +937,10 @@
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="jMenu1">
+        <Menu class="javax.swing.JMenu" name="dbMenu">
           <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="jMenu1.text"/>
-            <Property name="name" type="java.lang.String" value="jMenu1" noResource="true"/>
+            <Property name="text" type="java.lang.String" resourceKey="dbMenu.text"/>
+            <Property name="name" type="java.lang.String" value="dbMenu" noResource="true"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem22">
@@ -853,7 +1001,6 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMHelpContent">
               <Properties>
-                <Property name="icon" type="javax.swing.Icon" resourceKey="jMHelpContent.icon"/>
                 <Property name="text" type="java.lang.String" resourceKey="jMHelpContent.text"/>
                 <Property name="name" type="java.lang.String" value="jMHelpContent" noResource="true"/>
               </Properties>
