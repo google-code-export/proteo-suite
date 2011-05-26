@@ -27,6 +27,7 @@ import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 import java.io.File;
 
@@ -40,6 +41,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.*;
 import javax.swing.Timer;
+
+import javax.swing.JPopupMenu;
+import javax.swing.JMenuItem;
 
 /* -------------------------------
  * EXTERNAL APIs
@@ -86,6 +90,7 @@ import uk.ac.liv.proteosuite.Sample;
 import uk.ac.liv.proteosuite.SpectrumData;
 import uk.ac.liv.proteosuite.PieChart;
 import uk.ac.liv.proteosuite.TwoDPlot;
+import uk.ac.liv.proteosuite.Node;
 //--------------------------------------------------------------------------
 /**
  * MAIN FORM
@@ -189,10 +194,16 @@ public class ProteoSuiteView extends FrameView {
         });
 
         //... Setting Window Height and Width ...//
+        //Dimension screenSize = getFrame().getToolkit().getScreenSize();
+        //System.out.println(screenSize);
+
         getFrame().setMinimumSize(new Dimension(1024, 780));
-        getFrame().setPreferredSize(new Dimension(1024, 780));
+        //getFrame().setSize(screenSize);
+        //getFrame().setPreferredSize(new Dimension(1024, 780));
         getFrame().setExtendedState(JFrame.MAXIMIZED_BOTH);
-        jSPTopDivision.setDividerLocation(200);
+
+        jSPTopDivision.setDividerLocation(200);        
+        jTPDisplay.setSelectedIndex(0);
         getFrame().pack();
     }
 //--------------------------------------------------------------------------
@@ -216,7 +227,6 @@ public class ProteoSuiteView extends FrameView {
         jPHome = new javax.swing.JPanel();
         jLLogo = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -226,6 +236,7 @@ public class ProteoSuiteView extends FrameView {
         jPMS = new javax.swing.JPanel();
         jPXIC = new javax.swing.JPanel();
         jP2D = new javax.swing.JPanel();
+        jPD2D = new javax.swing.JDesktopPane();
         jP3D = new javax.swing.JPanel();
         jSPTree = new javax.swing.JScrollPane();
         jTMainTree = new javax.swing.JTree();
@@ -393,6 +404,14 @@ public class ProteoSuiteView extends FrameView {
 
         jPHome.setBackground(resourceMap.getColor("jPHome.background")); // NOI18N
         jPHome.setName("jPHome"); // NOI18N
+        jPHome.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jPHomeMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jPHomeMouseExited(evt);
+            }
+        });
 
         jLLogo.setText(resourceMap.getString("jLLogo.text")); // NOI18N
         jLLogo.setName("jLLogo"); // NOI18N
@@ -402,35 +421,75 @@ public class ProteoSuiteView extends FrameView {
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
 
-        jLabel2.setFont(resourceMap.getFont("jLabel2.font")); // NOI18N
-        jLabel2.setForeground(resourceMap.getColor("jLabel2.foreground")); // NOI18N
-        jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
-        jLabel2.setName("jLabel2"); // NOI18N
-
         jLabel3.setFont(resourceMap.getFont("jLabel3.font")); // NOI18N
         jLabel3.setForeground(resourceMap.getColor("jLabel3.foreground")); // NOI18N
         jLabel3.setText(resourceMap.getString("jLabel3.text")); // NOI18N
         jLabel3.setName("jLabel3"); // NOI18N
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel3MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel3MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel3MouseExited(evt);
+            }
+        });
 
         jLabel4.setFont(resourceMap.getFont("jLabel4.font")); // NOI18N
         jLabel4.setForeground(resourceMap.getColor("jLabel4.foreground")); // NOI18N
         jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
         jLabel4.setName("jLabel4"); // NOI18N
+        jLabel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel4MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel4MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel4MouseExited(evt);
+            }
+        });
 
         jLabel5.setFont(resourceMap.getFont("jLabel5.font")); // NOI18N
         jLabel5.setForeground(resourceMap.getColor("jLabel5.foreground")); // NOI18N
         jLabel5.setText(resourceMap.getString("jLabel5.text")); // NOI18N
         jLabel5.setName("jLabel5"); // NOI18N
+        jLabel5.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel5MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel5MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel5MouseExited(evt);
+            }
+        });
 
         jLabel6.setFont(resourceMap.getFont("jLabel6.font")); // NOI18N
         jLabel6.setForeground(resourceMap.getColor("jLabel6.foreground")); // NOI18N
         jLabel6.setText(resourceMap.getString("jLabel6.text")); // NOI18N
         jLabel6.setName("jLabel6"); // NOI18N
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jLabel6MouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                jLabel6MouseExited(evt);
+            }
+        });
 
         jLabel7.setFont(resourceMap.getFont("jLabel7.font")); // NOI18N
         jLabel7.setText(resourceMap.getString("jLabel7.text")); // NOI18N
         jLabel7.setName("jLabel7"); // NOI18N
 
+        jLabel8.setFont(resourceMap.getFont("jLabel8.font")); // NOI18N
         jLabel8.setText(resourceMap.getString("jLabel8.text")); // NOI18N
         jLabel8.setName("jLabel8"); // NOI18N
 
@@ -442,11 +501,7 @@ public class ProteoSuiteView extends FrameView {
                 .addGap(37, 37, 37)
                 .addGroup(jPHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
-                    .addGroup(jPHomeLayout.createSequentialGroup()
-                        .addGroup(jPHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 366, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1)
                     .addGroup(jPHomeLayout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(64, 64, 64)
@@ -477,9 +532,7 @@ public class ProteoSuiteView extends FrameView {
                     .addComponent(jLabel4)
                     .addComponent(jLabel6)
                     .addComponent(jLabel5))
-                .addGap(84, 84, 84)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 168, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 271, Short.MAX_VALUE)
                 .addComponent(jLLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -521,15 +574,18 @@ public class ProteoSuiteView extends FrameView {
         jP2D.setBackground(resourceMap.getColor("jP2D.background")); // NOI18N
         jP2D.setName("jP2D"); // NOI18N
 
+        jPD2D.setBackground(resourceMap.getColor("jPD2D.background")); // NOI18N
+        jPD2D.setName("jPD2D"); // NOI18N
+
         javax.swing.GroupLayout jP2DLayout = new javax.swing.GroupLayout(jP2D);
         jP2D.setLayout(jP2DLayout);
         jP2DLayout.setHorizontalGroup(
             jP2DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 819, Short.MAX_VALUE)
+            .addComponent(jPD2D, javax.swing.GroupLayout.DEFAULT_SIZE, 819, Short.MAX_VALUE)
         );
         jP2DLayout.setVerticalGroup(
             jP2DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 552, Short.MAX_VALUE)
+            .addComponent(jPD2D, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
         );
 
         jTPDisplay.addTab(resourceMap.getString("jP2D.TabConstraints.tabTitle"), jP2D); // NOI18N
@@ -560,6 +616,16 @@ public class ProteoSuiteView extends FrameView {
         treeNode1.add(treeNode2);
         jTMainTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         jTMainTree.setName("jTMainTree"); // NOI18N
+        jTMainTree.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTMainTreeMouseClicked(evt);
+            }
+        });
+        jTMainTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                jTMainTreeValueChanged(evt);
+            }
+        });
         jSPTree.setViewportView(jTMainTree);
 
         jSPTopDivision.setLeftComponent(jSPTree);
@@ -862,6 +928,141 @@ public class ProteoSuiteView extends FrameView {
         setMenuBar(menuBar);
         setToolBar(jToolBar1);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jPHomeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPHomeMouseEntered
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jPHomeMouseEntered
+
+    private void jPHomeMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPHomeMouseExited
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jPHomeMouseExited
+
+    private void jLabel3MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseEntered
+        // TODO add your handling code here:
+        Font font = new Font("Tahoma", Font.PLAIN, 12);
+        jPHome.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        jLabel3.setFont(font);
+        jLabel3.setForeground(Color.red);
+    }//GEN-LAST:event_jLabel3MouseEntered
+
+    private void jLabel3MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseExited
+        // TODO add your handling code here:
+        Font font = new Font("Tahoma", Font.PLAIN, 12);
+        jPHome.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        jLabel3.setFont(font);
+        jLabel3.setForeground(Color.black);
+    }//GEN-LAST:event_jLabel3MouseExited
+
+    private void jLabel5MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseEntered
+        // TODO add your handling code here:
+        Font font = new Font("Tahoma", Font.PLAIN, 12);
+        jPHome.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        jLabel5.setFont(font);
+        jLabel5.setForeground(Color.red);
+    }//GEN-LAST:event_jLabel5MouseEntered
+
+    private void jLabel5MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseExited
+        // TODO add your handling code here:
+        Font font = new Font("Tahoma", Font.PLAIN, 12);
+        jPHome.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        jLabel5.setFont(font);
+        jLabel5.setForeground(Color.black);
+    }//GEN-LAST:event_jLabel5MouseExited
+
+    private void jLabel4MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseEntered
+        // TODO add your handling code here:
+        Font font = new Font("Tahoma", Font.PLAIN, 12);
+        jPHome.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        jLabel4.setFont(font);
+        jLabel4.setForeground(Color.red);
+    }//GEN-LAST:event_jLabel4MouseEntered
+
+    private void jLabel4MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseExited
+        // TODO add your handling code here:
+        Font font = new Font("Tahoma", Font.PLAIN, 12);
+        jPHome.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        jLabel4.setFont(font);
+        jLabel4.setForeground(Color.black);
+    }//GEN-LAST:event_jLabel4MouseExited
+
+    private void jLabel6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseEntered
+        // TODO add your handling code here:
+        Font font = new Font("Tahoma", Font.PLAIN, 12);
+        jPHome.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        jLabel6.setFont(font);
+        jLabel6.setForeground(Color.red);
+    }//GEN-LAST:event_jLabel6MouseEntered
+
+    private void jLabel6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseExited
+        // TODO add your handling code here:
+        Font font = new Font("Tahoma", Font.PLAIN, 12);
+        jPHome.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        jLabel6.setFont(font);
+        jLabel6.setForeground(Color.black);
+    }//GEN-LAST:event_jLabel6MouseExited
+
+    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+        // TODO add your handling code here:
+        jTPDisplay.setSelectedIndex(1);
+    }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void jLabel4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel4MouseClicked
+        // TODO add your handling code here:
+        jTPDisplay.setSelectedIndex(2);
+    }//GEN-LAST:event_jLabel4MouseClicked
+
+    private void jLabel5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel5MouseClicked
+        // TODO add your handling code here:
+        jTPDisplay.setSelectedIndex(3);
+    }//GEN-LAST:event_jLabel5MouseClicked
+
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        // TODO add your handling code here:
+        jTPDisplay.setSelectedIndex(4);
+    }//GEN-LAST:event_jLabel6MouseClicked
+
+    private void jTMainTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTMainTreeValueChanged
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_jTMainTreeValueChanged
+
+    private void jTMainTreeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTMainTreeMouseClicked
+
+        if (evt.getButton()== 3)
+        {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                               jTMainTree.getLastSelectedPathComponent();
+            int x = evt.getX();
+            int y = evt.getY();
+
+            if (node == null) return;
+
+            Object nodeInfo = node.getUserObject();
+            if (node.isLeaf()) {                
+                
+                JPopupMenu popup = new JPopupMenu();
+                JMenuItem menuItem = new JMenuItem("Show MS");
+                javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(proteosuite.ProteoSuiteApp.class).getContext().getActionMap(ProteoSuiteView.class, this);
+                menuItem.setAction(actionMap.get("showMS")); 
+                popup.add(menuItem);
+                popup.show(jTMainTree, x, y);
+            }
+            else
+            {
+                
+                JPopupMenu popup = new JPopupMenu();
+                JMenuItem menuItem = new JMenuItem("Show 2D graph");
+                javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(proteosuite.ProteoSuiteApp.class).getContext().getActionMap(ProteoSuiteView.class, this);
+                menuItem.setAction(actionMap.get("show2DPlot")); 
+                popup.add(menuItem);
+                popup.show(jTMainTree, x, y);
+                System.out.println(nodeInfo.toString());
+            }
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTMainTreeMouseClicked
 //--------------------------------------------------------------------------
     @Action
     public void newProject() {           
@@ -997,6 +1198,9 @@ public class ProteoSuiteView extends FrameView {
 
                 //... Draw tree ...//
                 jTMainTree.setModel(new DefaultTreeModel(treeRootNode));
+                jTMainTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+                
+                
                 jTAOutput.setText(sOutput);
                 System.out.println("After drawing the tree " + (System.currentTimeMillis() - time) + "ms");
 
@@ -1080,16 +1284,36 @@ public class ProteoSuiteView extends FrameView {
     }
 //--------------------------------------------------------------------------
     @Action
-    public void show2DPlot() {
-        TwoDPlot demo = new TwoDPlot("2D Plot");
-
-        jP2D.add(demo);
-
-        demo.pack();
-        demo.setVisible(true);
-        jTPDisplay.setSelectedIndex(3);
+    public void showMS() {
+        jTPDisplay.setSelectedIndex(1);
 
         //...
+
+        //RawDataFileImpl rawDataFileWriter;
+        //rawDataFileWriter = (RawDataFileImpl) MZmineCore.createNewFile(null);
+        //TwoDVisualizer visualizer = new TwoDVisualizer();
+        //visualizer.show2DVisualizerSetupDialog(rawDataFileWriter, null, null);
+    }
+//--------------------------------------------------------------------------
+    @Action
+    public void show2DPlot() {
+
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                               jTMainTree.getLastSelectedPathComponent();
+
+            if (node == null) return;
+
+            jTPDisplay.setSelectedIndex(3);
+            
+            Object nodeInfo = node.getUserObject();
+            TwoDPlot demo = new TwoDPlot(nodeInfo.toString());          
+            jPD2D.add(demo);            
+            demo.pack();
+            demo.setVisible(true);
+            
+            
+            
+
         
         //RawDataFileImpl rawDataFileWriter;
         //rawDataFileWriter = (RawDataFileImpl) MZmineCore.createNewFile(null);
@@ -1139,7 +1363,6 @@ public class ProteoSuiteView extends FrameView {
     private javax.swing.JLabel jLLogo;
     private javax.swing.JLabel jLStatus;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1183,6 +1406,7 @@ public class ProteoSuiteView extends FrameView {
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jP2D;
     private javax.swing.JPanel jP3D;
+    private javax.swing.JDesktopPane jPD2D;
     private javax.swing.JPanel jPHome;
     private javax.swing.JPanel jPMS;
     private javax.swing.JPanel jPOutput;

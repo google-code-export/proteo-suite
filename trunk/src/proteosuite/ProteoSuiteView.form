@@ -242,6 +242,10 @@
                         <Property name="background" type="java.awt.Color" resourceKey="jPHome.background"/>
                         <Property name="name" type="java.lang.String" value="jPHome" noResource="true"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jPHomeMouseEntered"/>
+                        <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jPHomeMouseExited"/>
+                      </Events>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
                           <JTabbedPaneConstraints tabName="Home">
@@ -257,13 +261,7 @@
                                   <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace pref="366" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
@@ -300,9 +298,7 @@
                                       <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
-                                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="168" max="32767" attributes="0"/>
+                                  <EmptySpace pref="271" max="32767" attributes="0"/>
                                   <Component id="jLLogo" min="-2" pref="66" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
@@ -324,14 +320,6 @@
                             <Property name="name" type="java.lang.String" value="jLabel1" noResource="true"/>
                           </Properties>
                         </Component>
-                        <Component class="javax.swing.JLabel" name="jLabel2">
-                          <Properties>
-                            <Property name="font" type="java.awt.Font" resourceKey="jLabel2.font"/>
-                            <Property name="foreground" type="java.awt.Color" resourceKey="jLabel2.foreground"/>
-                            <Property name="text" type="java.lang.String" resourceKey="jLabel2.text"/>
-                            <Property name="name" type="java.lang.String" value="jLabel2" noResource="true"/>
-                          </Properties>
-                        </Component>
                         <Component class="javax.swing.JLabel" name="jLabel3">
                           <Properties>
                             <Property name="font" type="java.awt.Font" resourceKey="jLabel3.font"/>
@@ -339,6 +327,11 @@
                             <Property name="text" type="java.lang.String" resourceKey="jLabel3.text"/>
                             <Property name="name" type="java.lang.String" value="jLabel3" noResource="true"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel3MouseClicked"/>
+                            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel3MouseEntered"/>
+                            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel3MouseExited"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel4">
                           <Properties>
@@ -347,6 +340,11 @@
                             <Property name="text" type="java.lang.String" resourceKey="jLabel4.text"/>
                             <Property name="name" type="java.lang.String" value="jLabel4" noResource="true"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel4MouseClicked"/>
+                            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel4MouseEntered"/>
+                            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel4MouseExited"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel5">
                           <Properties>
@@ -355,6 +353,11 @@
                             <Property name="text" type="java.lang.String" resourceKey="jLabel5.text"/>
                             <Property name="name" type="java.lang.String" value="jLabel5" noResource="true"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel5MouseClicked"/>
+                            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel5MouseEntered"/>
+                            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel5MouseExited"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel6">
                           <Properties>
@@ -363,6 +366,11 @@
                             <Property name="text" type="java.lang.String" resourceKey="jLabel6.text"/>
                             <Property name="name" type="java.lang.String" value="jLabel6" noResource="true"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel6MouseClicked"/>
+                            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel6MouseEntered"/>
+                            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jLabel6MouseExited"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel7">
                           <Properties>
@@ -373,6 +381,7 @@
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel8">
                           <Properties>
+                            <Property name="font" type="java.awt.Font" resourceKey="jLabel8.font"/>
                             <Property name="text" type="java.lang.String" resourceKey="jLabel8.text"/>
                             <Property name="name" type="java.lang.String" value="jLabel8" noResource="true"/>
                           </Properties>
@@ -447,15 +456,25 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <EmptySpace min="0" pref="819" max="32767" attributes="0"/>
+                              <Component id="jPD2D" alignment="0" pref="819" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <EmptySpace min="0" pref="552" max="32767" attributes="0"/>
+                              <Component id="jPD2D" alignment="0" pref="552" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
+                      <SubComponents>
+                        <Container class="javax.swing.JDesktopPane" name="jPD2D">
+                          <Properties>
+                            <Property name="background" type="java.awt.Color" resourceKey="jPD2D.background"/>
+                            <Property name="name" type="java.lang.String" value="jPD2D" noResource="true"/>
+                          </Properties>
+
+                          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout"/>
+                        </Container>
+                      </SubComponents>
                     </Container>
                     <Container class="javax.swing.JPanel" name="jP3D">
                       <Properties>
@@ -512,6 +531,10 @@
                         </Property>
                         <Property name="name" type="java.lang.String" value="jTMainTree" noResource="true"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTMainTreeMouseClicked"/>
+                        <EventHandler event="valueChanged" listener="javax.swing.event.TreeSelectionListener" parameters="javax.swing.event.TreeSelectionEvent" handler="jTMainTreeValueChanged"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>

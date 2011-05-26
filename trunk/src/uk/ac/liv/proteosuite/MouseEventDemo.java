@@ -5,12 +5,11 @@
 
 package uk.ac.liv.proteosuite;
 
-
-import java.awt.GridLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
+import java.awt.GridLayout;
 
 import javax.swing.*;
 
@@ -18,7 +17,7 @@ public class MouseEventDemo extends JPanel
         implements MouseListener {
     BlankArea blankArea;
     JTextArea textArea;
-    static final String NEWLINE = System.getProperty("line.separator");
+    static final String NEWLINE = System.getProperty("line.separator"); //... getting \n
 
     public static void main(String[] args) {
         /* Use an appropriate Look and Feel */
@@ -37,6 +36,7 @@ public class MouseEventDemo extends JPanel
         }
         /* Turn off metal's use of bold fonts */
         UIManager.put("swing.boldMetal", Boolean.FALSE);
+        
         //Schedule a job for the event dispatch thread:
         //creating and showing this application's GUI.
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -68,13 +68,15 @@ public class MouseEventDemo extends JPanel
 
     public MouseEventDemo() { //... Constructor ...//
         super(new GridLayout(0,1));
-        blankArea = new BlankArea(Color.YELLOW);
+        blankArea = new BlankArea(Color.lightGray);
         add(blankArea);
         textArea = new JTextArea();
         textArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(textArea);
+
         scrollPane.setVerticalScrollBarPolicy(
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
         scrollPane.setPreferredSize(new Dimension(200, 75));
         add(scrollPane);
 
@@ -124,10 +126,10 @@ public class MouseEventDemo extends JPanel
     }
 
     public void mouseMoved(MouseEvent e) {
-        eventOutput("Mouse moved", e);
+        eventOutput("Mouse moved ", e);
     }
 
     public void mouseDragged(MouseEvent e) {
-        eventOutput("Mouse dragged", e);
+        eventOutput("Mouse dragged ", e);
     }
 }

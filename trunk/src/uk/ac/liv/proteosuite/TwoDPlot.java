@@ -56,7 +56,7 @@ public class TwoDPlot extends JInternalFrame {
      */
     public TwoDPlot(final String title) {
 
-        super(title);
+        super("[" + title + "] - 2D view");
         populateData();
 
         Icon icon = new ImageIcon(".\\src\\images\\icon.gif");
@@ -65,6 +65,7 @@ public class TwoDPlot extends JInternalFrame {
         this.setMaximizable(true);        
         this.setClosable(true);
         this.setIconifiable(true);
+        
         
         //final NumberAxis domainAxis = new NumberAxis("Retention Time");
         //domainAxis.setAutoRangeIncludesZero(false);
@@ -88,19 +89,15 @@ public class TwoDPlot extends JInternalFrame {
         plot.setPaint(Color.gray);        
         //plot.zoom(50.00);
 
-        final JFreeChart chart = new JFreeChart("small.mzML", plot);
+        final JFreeChart chart = new JFreeChart("[" + title + "] - " + "MS1", plot);
         
         
         chart.getRenderingHints().put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         final ChartPanel panel = new ChartPanel(chart, true);
         panel.setPreferredSize(new java.awt.Dimension(500, 400));
-        JButton zoomIn = new JButton();        
-        JButton zoomOut = new JButton();
-        zoomIn.setText("+");
-        zoomOut.setText("-");
 
-        panel.addMouseMotionListener(null);
+        
         //Point2D p = panel.translateScreenToJava2D(MouseEvent.get());
         //Rectangle2D plotArea = panel.getScreenDataArea();
         //XYPlot plot2 = (XYPlot) chart.getPlot(); // your plot
