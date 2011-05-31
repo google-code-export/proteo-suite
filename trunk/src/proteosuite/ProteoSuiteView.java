@@ -54,7 +54,6 @@ import javax.swing.JMenuItem;
 //... jmzML API ...//
 //-----------------//
 import uk.ac.ebi.jmzml.*;
-import uk.ac.ebi.jmzml.gui.*;
 //import uk.ac.ebi.jmzml.gui.model.*;
 import uk.ac.ebi.jmzml.model.mzml.*;
 //import uk.ac.ebi.jmzml.model.mzml.interfaces.*;
@@ -1114,85 +1113,82 @@ public class ProteoSuiteView extends FrameView {
                 for (int iI = 0; iI < aFiles.length; iI++)
                 {
                     System.out.println("File selected: " + aFiles[iI].getPath());
-                    System.out.println("Name selected: " + aFiles[iI].getName());
-
-                    //... Unmarshall data using jzmzML API ...//
-                    System.out.println("Before xmlFile " + time);
+                    System.out.println("Name selected: " + aFiles[iI].getName());                    
 
                     File xmlFile = new File(aFiles[iI].getPath());
-                    System.out.println("After xmlFile " + (System.currentTimeMillis() - time) + "ms");
 
+                    //... Unmarshall data using jzmzML API ...//
                     MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
                     time = System.currentTimeMillis();
-                    System.out.println("After MzMLUnmarshaller " + (System.currentTimeMillis() - time) + "ms");
 
-                    MzML completeMzML = unmarshaller.unmarshall();
-                    System.out.println("After completeMzML " + (System.currentTimeMillis() - time) + "ms");
+                    //... FULL UNMARSHALL (Not used yet) MzML completeMzML = unmarshaller.unmarshall();
 
                     System.out.println("MzML Version: = " + unmarshaller.getMzMLVersion());
-                    System.out.println("After MzML Version " + (System.currentTimeMillis() - time) + "ms");
                     System.out.println("MzML ID: = " + unmarshaller.getMzMLId());
-                    System.out.println("After MzML ID " + (System.currentTimeMillis() - time) + "ms");
-
                     System.out.println("MzML Accession: = " + unmarshaller.getMzMLAccession());
-                    System.out.println("After MzML Accession " + (System.currentTimeMillis() - time) + "ms");
 
                     CVList cvList = unmarshaller.unmarshalFromXpath("/cvList", CVList.class);
-                    System.out.println("Number of defined CVs in this mzML: " + cvList.getCount());
-                    System.out.println("After CVList " + (System.currentTimeMillis() - time) + "ms");
+                    System.out.println("Number of defined CVs in this mzML file: " + cvList.getCount());
+
+                    //... Reading CV params ...//
+                    
+                    MzMLObjectIterator<CV> cvIterator = unmarshaller.unmarshalCollectionFromXpath("/cvList/cv", CV.class);
+                    while (cvIterator.hasNext())
+                    {
+                        CV cv = cvIterator.next();
+
+                        System.out.println("CV Id: " + cv.getId());
+                        System.out.println("CV Name: " + cv.getFullName());
+                        System.out.println("CV Version: " + cv.getVersion());
+                        System.out.println("CV URI: " + cv.getURI());
+                    }
 
                     FileDescription fd = unmarshaller.unmarshalFromXpath("/fileDescription", FileDescription.class);
-                    System.out.println("After FileDescription " + (System.currentTimeMillis() - time) + "ms");
                     System.out.println("Number of source files: " + fd.getSourceFileList().getCount());
 
-                    System.out.println("Supported XPath:" + Constants.XML_INDEXED_XPATHS);
+                    System.out.println("Supported XPath:" + Constants.XML_INDEXED_XPATHS);                    
 
                     System.out.println("Number of spectrum elements: " + unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum"));
-                    System.out.println("After Number of spectrum elements " + (System.currentTimeMillis() - time) + "ms");
 
                     aSamples[iI] = new Sample(aFiles[iI].getName(), unmarshaller.getMzMLVersion(),
                             unmarshaller.getMzMLId(), unmarshaller.getMzMLAccession(), cvList.getCount(),
                             unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum"));
-                    System.out.println("After Creating the array of samples " + (System.currentTimeMillis() - time) + "ms");
 
                     //... Populate the JTree with sample data ...//
                     DefaultMutableTreeNode aSampleNodes[] = new DefaultMutableTreeNode[aSamples.length];
                     aSampleNodes[iI] = new DefaultMutableTreeNode(aSamples[iI].getSam_name());
                     treeRootNode.add(aSampleNodes[iI]);
-                    System.out.println("After Populating jtree " + (System.currentTimeMillis() - time) + "ms");
 
                     //... Populate the JTree with spectrum data ...//
                     SpectrumData aSpectrums[][] = new SpectrumData[aFiles.length][unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum")];
                     DefaultMutableTreeNode aSpectrumNodes[] = new DefaultMutableTreeNode[aSamples.length];
-                    System.out.println("After Creating the array of spectrum data " + (System.currentTimeMillis() - time) + "ms");
 
                     //... Reading spectrum data ...//
                     MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
-                    System.out.println("After reading spectrum data " + (System.currentTimeMillis() - time) + "ms");
                     int iJ = 0;
                     while (spectrumIterator.hasNext())
                     {
                         Spectrum spectrum = spectrumIterator.next();
-                        System.out.println("After reading each spectrum: " + iJ + " " + (System.currentTimeMillis() - time) + " ms");
 
                         System.out.println("Spectrum ID: " + spectrum.getId());
-                        aSpectrums[iI][iJ] = new SpectrumData(spectrum.getId());
-
-                        System.out.println("Spectrum Name: " + aSpectrums[iI][iJ].getSpec_name());
-                        aSpectrumNodes[0] = new DefaultMutableTreeNode(aSpectrums[iI][iJ].getSpec_name());
+                        aSpectrumNodes[0] = new DefaultMutableTreeNode(spectrum.getId());
                         aSampleNodes[iI].add(aSpectrumNodes[0]);
                         iJ++;
-                    }
-                    //MzMLObjectIterator<BinaryDataArray> binaryIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum/binaryDataArrayList/binaryDataArray", BinaryDataArray.class);
-                    MzMLObjectIterator<BinaryDataArray> binaryIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum/binaryDataArrayList/binaryDataArray/binary", BinaryDataArray.class);
-                    int iK = 0;
-                    while (binaryIterator.hasNext())
-                    {
-                        BinaryDataArray binaryDataArray = binaryIterator.next();
-                        System.out.println("Hello");
-                        iK++;
-                    }
 
+                        //... Reading Retention Times ...//
+                        MzMLObjectIterator<CVParam> cvpScanIterator = unmarshaller.unmarshalCollectionFromXpath("/indexedmzML/mzML/run/spectrumList/spectrum/scanList/scan/cvParam", CVParam.class);
+                        while (cvpScanIterator.hasNext())
+                        {
+                            CVParam cvpScan = cvpScanIterator.next();
+
+                            System.out.println("CVParam Accession: " + cvpScan.getAccession());
+                            System.out.println("CVParam Name: " + cvpScan.getName());
+                            System.out.println("CVParam Value: " + cvpScan.getValue());
+                            System.out.println("CVParam Unit Acc: " + cvpScan.getUnitAccession());
+                            System.out.println("CVParam Unit Name: " + cvpScan.getUnitName());
+                            
+                        }
+                    }
                     System.out.println("*********************************" + "\n\n");
 		}
 
@@ -1324,25 +1320,6 @@ public class ProteoSuiteView extends FrameView {
     @Action
     public void callUtility1() {
 
-           JmzMLViewer jmzMLViewer = null;
-           jmzMLViewer = new JmzMLViewer(null);
-
-           int iWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
-           int iHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-
-           jmzMLViewer.setBounds(50, 50, iWidth-250, iHeight-250);
-           jmzMLViewer.setLocationRelativeTo(null);
-           jmzMLViewer.setVisible(true);
-           jmzMLViewer.setAlwaysOnTop(true);
-
-            //new Thread(){
-            //    public void run()
-             //   {
-                    //MZmineCore.main(new String[]{});
-             //       System.out.println("Hello");
-             //   }
-            //}.start();
-           
     }
 //--------------------------------------------------------------------------
     @Action
