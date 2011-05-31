@@ -447,7 +447,7 @@
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                          <JTabbedPaneConstraints tabName="2D Plot">
+                          <JTabbedPaneConstraints tabName="2D View">
                             <Property name="tabTitle" type="java.lang.String" resourceKey="jP2D.TabConstraints.tabTitle"/>
                           </JTabbedPaneConstraints>
                         </Constraint>
@@ -483,7 +483,7 @@
                       </Properties>
                       <Constraints>
                         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                          <JTabbedPaneConstraints tabName="3D Plot">
+                          <JTabbedPaneConstraints tabName="3D View">
                             <Property name="tabTitle" type="java.lang.String" resourceKey="jP3D.TabConstraints.tabTitle"/>
                           </JTabbedPaneConstraints>
                         </Constraint>
@@ -617,7 +617,7 @@
                   </AuxValues>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="Sample(s)">
+                      <JTabbedPaneConstraints tabName="mzML File (s)">
                         <Property name="tabTitle" type="java.lang.String" resourceKey="jSPSampleData.TabConstraints.tabTitle"/>
                       </JTabbedPaneConstraints>
                     </Constraint>

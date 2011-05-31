@@ -1052,7 +1052,7 @@ public class ProteoSuiteView extends FrameView {
             {
                 
                 JPopupMenu popup = new JPopupMenu();
-                JMenuItem menuItem = new JMenuItem("Show 2D graph");
+                JMenuItem menuItem = new JMenuItem("Show 2D View");
                 javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(proteosuite.ProteoSuiteApp.class).getContext().getActionMap(ProteoSuiteView.class, this);
                 menuItem.setAction(actionMap.get("show2DPlot")); 
                 popup.add(menuItem);

@@ -56,7 +56,7 @@ public class TwoDPlot extends JInternalFrame {
      */
     public TwoDPlot(final String title) {
 
-        super("[" + title + "] - 2D view");
+        super("2D View <" + title + "> - MS1");
         populateData();
 
         Icon icon = new ImageIcon(".\\src\\images\\icon.gif");
@@ -65,10 +65,7 @@ public class TwoDPlot extends JInternalFrame {
         this.setMaximizable(true);        
         this.setClosable(true);
         this.setIconifiable(true);
-        
-        
-        //final NumberAxis domainAxis = new NumberAxis("Retention Time");
-        //domainAxis.setAutoRangeIncludesZero(false);
+               
         final DateAxis domainAxis = new DateAxis("Retention Time");
         domainAxis.setDateFormatOverride(new SimpleDateFormat("hh:mm:ss:SS"));
         
@@ -89,7 +86,7 @@ public class TwoDPlot extends JInternalFrame {
         plot.setPaint(Color.gray);        
         //plot.zoom(50.00);
 
-        final JFreeChart chart = new JFreeChart("[" + title + "] - " + "MS1", plot);
+        final JFreeChart chart = new JFreeChart("", plot);
         
         
         chart.getRenderingHints().put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
