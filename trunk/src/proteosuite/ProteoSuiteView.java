@@ -41,9 +41,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.*;
 import javax.swing.Timer;
+import javax.swing.JComponent;
 
 import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 
 /* -------------------------------
  * EXTERNAL APIs
@@ -90,12 +92,15 @@ import uk.ac.liv.proteosuite.SpectrumData;
 import uk.ac.liv.proteosuite.PieChart;
 import uk.ac.liv.proteosuite.TwoDPlot;
 import uk.ac.liv.proteosuite.Node;
+import uk.ac.liv.proteosuite.ProgMonitor;
 //--------------------------------------------------------------------------
 /**
  * MAIN FORM
  */
 //--------------------------------------------------------------------------
 public class ProteoSuiteView extends FrameView {
+
+
 
     public ProteoSuiteView(SingleFrameApplication app) {
         super(app);
@@ -1042,9 +1047,9 @@ public class ProteoSuiteView extends FrameView {
             if (node.isLeaf()) {                
                 
                 JPopupMenu popup = new JPopupMenu();
-                JMenuItem menuItem = new JMenuItem("Show MS");
+                JMenuItem menuItem = new JMenuItem("Show Spectrum");
                 javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(proteosuite.ProteoSuiteApp.class).getContext().getActionMap(ProteoSuiteView.class, this);
-                menuItem.setAction(actionMap.get("showMS")); 
+                menuItem.setAction(actionMap.get("showSpectrum"));
                 popup.add(menuItem);
                 popup.show(jTMainTree, x, y);
             }
@@ -1057,7 +1062,6 @@ public class ProteoSuiteView extends FrameView {
                 menuItem.setAction(actionMap.get("show2DPlot")); 
                 popup.add(menuItem);
                 popup.show(jTMainTree, x, y);
-                System.out.println(nodeInfo.toString());
             }
         }
         // TODO add your handling code here:
@@ -1096,6 +1100,8 @@ public class ProteoSuiteView extends FrameView {
         {
             File [] aFiles = chooser.getSelectedFiles();
 
+            progressBar.setVisible(true);
+            progressBar.setValue(0);
 	    if (aFiles != null && aFiles.length > 0)
             {
                 jLStatus.setText("Loading files, please wait...");
@@ -1112,6 +1118,9 @@ public class ProteoSuiteView extends FrameView {
                 //... Reading selected files ...//
                 for (int iI = 0; iI < aFiles.length; iI++)
                 {
+
+                    //JComponent newContentPane = new ProgMonitor("Loading file " + aFiles[iI].getName());
+
                     System.out.println("File selected: " + aFiles[iI].getPath());
                     System.out.println("Name selected: " + aFiles[iI].getName());                    
 
@@ -1119,7 +1128,7 @@ public class ProteoSuiteView extends FrameView {
 
                     //... Unmarshall data using jzmzML API ...//
                     MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
-                    time = System.currentTimeMillis();
+                    time = System.currentTimeMillis();                    
 
                     //... FULL UNMARSHALL (Not used yet) MzML completeMzML = unmarshaller.unmarshall();
 
@@ -1132,16 +1141,16 @@ public class ProteoSuiteView extends FrameView {
 
                     //... Reading CV params ...//
                     
-                    MzMLObjectIterator<CV> cvIterator = unmarshaller.unmarshalCollectionFromXpath("/cvList/cv", CV.class);
-                    while (cvIterator.hasNext())
-                    {
-                        CV cv = cvIterator.next();
+                    //MzMLObjectIterator<CV> cvIterator = unmarshaller.unmarshalCollectionFromXpath("/cvList/cv", CV.class);
+                    //while (cvIterator.hasNext())
+                   // {
+                   //     CV cv = cvIterator.next();
 
-                        System.out.println("CV Id: " + cv.getId());
-                        System.out.println("CV Name: " + cv.getFullName());
-                        System.out.println("CV Version: " + cv.getVersion());
-                        System.out.println("CV URI: " + cv.getURI());
-                    }
+                   //     System.out.println("CV Id: " + cv.getId());
+                   //     System.out.println("CV Name: " + cv.getFullName());
+                   //     System.out.println("CV Version: " + cv.getVersion());
+                   //     System.out.println("CV URI: " + cv.getURI());
+                   // }
 
                     FileDescription fd = unmarshaller.unmarshalFromXpath("/fileDescription", FileDescription.class);
                     System.out.println("Number of source files: " + fd.getSourceFileList().getCount());
@@ -1176,21 +1185,23 @@ public class ProteoSuiteView extends FrameView {
                         iJ++;
 
                         //... Reading Retention Times ...//
-                        MzMLObjectIterator<CVParam> cvpScanIterator = unmarshaller.unmarshalCollectionFromXpath("/indexedmzML/mzML/run/spectrumList/spectrum/scanList/scan/cvParam", CVParam.class);
-                        while (cvpScanIterator.hasNext())
-                        {
-                            CVParam cvpScan = cvpScanIterator.next();
-
-                            System.out.println("CVParam Accession: " + cvpScan.getAccession());
-                            System.out.println("CVParam Name: " + cvpScan.getName());
-                            System.out.println("CVParam Value: " + cvpScan.getValue());
-                            System.out.println("CVParam Unit Acc: " + cvpScan.getUnitAccession());
-                            System.out.println("CVParam Unit Name: " + cvpScan.getUnitName());
-                            
-                        }
+//                        MzMLObjectIterator<CVParam> cvpScanIterator = unmarshaller.unmarshalCollectionFromXpath("/indexedmzML/mzML/run/spectrumList/spectrum/scanList/scan/cvParam", CVParam.class);
+//                        while (cvpScanIterator.hasNext())
+//                        {
+//                            CVParam cvpScan = cvpScanIterator.next();
+//
+//                            System.out.println("CVParam Accession: " + cvpScan.getAccession());
+//                            System.out.println("CVParam Name: " + cvpScan.getName());
+//                            System.out.println("CVParam Value: " + cvpScan.getValue());
+//                            System.out.println("CVParam Unit Acc: " + cvpScan.getUnitAccession());
+//                            System.out.println("CVParam Unit Name: " + cvpScan.getUnitName());
+//
+//                        }
                     }
                     System.out.println("*********************************" + "\n\n");
+                    progressBar.setValue(iI*100/aFiles.length);
 		}
+                progressBar.setValue(100);
 
                 //... Draw tree ...//
                 jTMainTree.setModel(new DefaultTreeModel(treeRootNode));
@@ -1198,7 +1209,6 @@ public class ProteoSuiteView extends FrameView {
                 
                 
                 jTAOutput.setText(sOutput);
-                System.out.println("After drawing the tree " + (System.currentTimeMillis() - time) + "ms");
 
                 //... Fill JTable ...//
                 DefaultTableModel model = new DefaultTableModel();
@@ -1220,6 +1230,9 @@ public class ProteoSuiteView extends FrameView {
                 }
                 jLStatus.setText(aSamples.length + " file(s) loaded");
                 jTPResults.setSelectedIndex(1);
+                
+                //progressBar.setValue(0);
+                //progressBar.setVisible(false);
 	    }
         }
     }
@@ -1306,15 +1319,37 @@ public class ProteoSuiteView extends FrameView {
             jPD2D.add(demo);            
             demo.pack();
             demo.setVisible(true);
-            
-            
-            
+            System.out.println("Displaying " + nodeInfo.toString() + " as 2D");
+    }
+    //--------------------------------------------------------------------------
+    @Action
+    public void showSpectrum() {
 
-        
-        //RawDataFileImpl rawDataFileWriter;
-        //rawDataFileWriter = (RawDataFileImpl) MZmineCore.createNewFile(null);
-        //TwoDVisualizer visualizer = new TwoDVisualizer();
-        //visualizer.show2DVisualizerSetupDialog(rawDataFileWriter, null, null);
+
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                               jTMainTree.getLastSelectedPathComponent();
+
+            DefaultMutableTreeNode node2 = (DefaultMutableTreeNode)
+                               jTMainTree.getLastSelectedPathComponent();
+
+            if (node == null) return;
+
+            jTPDisplay.setSelectedIndex(1);
+
+            Object nodeInfo = node.getUserObject();
+
+            File xmlFile = new File("D:\\Data\\" + node2.getParent().toString());
+            MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
+            try
+            {
+               Spectrum spectrum = unmarshaller.getSpectrumById(nodeInfo.toString());
+               System.out.println("Spectrum" + spectrum.getId());
+            }
+            catch (MzMLUnmarshallerException ume)
+            {
+                System.out.println(ume.getMessage());
+            }
+            System.out.println("Displaying " + nodeInfo.toString() + " as Spectrum");
     }
 //--------------------------------------------------------------------------
     @Action
