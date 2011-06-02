@@ -46,6 +46,7 @@ import javax.swing.JComponent;
 import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import java.util.List;
 
 /* -------------------------------
  * EXTERNAL APIs
@@ -1058,9 +1059,12 @@ public class ProteoSuiteView extends FrameView {
                 
                 JPopupMenu popup = new JPopupMenu();
                 JMenuItem menuItem = new JMenuItem("Show 2D View");
+                JMenuItem menuItem2 = new JMenuItem("Show Chromatogram");
                 javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(proteosuite.ProteoSuiteApp.class).getContext().getActionMap(ProteoSuiteView.class, this);
-                menuItem.setAction(actionMap.get("show2DPlot")); 
+                menuItem.setAction(actionMap.get("show2DPlot"));
+                menuItem2.setAction(actionMap.get("showChromatogram"));
                 popup.add(menuItem);
+                popup.add(menuItem2);
                 popup.show(jTMainTree, x, y);
             }
         }
@@ -1343,6 +1347,30 @@ public class ProteoSuiteView extends FrameView {
             try
             {
                Spectrum spectrum = unmarshaller.getSpectrumById(nodeInfo.toString());
+
+               List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList().getBinaryDataArray();
+
+               //... Reading mz Values ...//
+               BinaryDataArray mzBinaryDataArray = (BinaryDataArray) bdal.get(0);
+               Number[] mzNumbers = mzBinaryDataArray.getBinaryDataAsNumberArray();
+               double[] mz = new double[mzNumbers.length];
+               for (int iI = 0; iI < mzNumbers.length; iI++)
+               {
+                   mz[iI] = mzNumbers[iI].doubleValue();
+                   System.out.println("mz[" + iI + "] = " + mz[iI]);
+               }
+
+               //... Reading Intensities ...//
+               BinaryDataArray intenBinaryDataArray = (BinaryDataArray) bdal.get(1);
+               Number[] intenNumbers = intenBinaryDataArray.getBinaryDataAsNumberArray();
+               double[] intensities = new double[intenNumbers.length];
+               for (int iI = 0; iI < intenNumbers.length; iI++)
+               {
+                   intensities[iI] = intenNumbers[iI].doubleValue();
+                   System.out.println("Int[" + iI + "] = " + intensities[iI]);
+               }
+
+
                System.out.println("Spectrum" + spectrum.getId());
             }
             catch (MzMLUnmarshallerException ume)
@@ -1350,6 +1378,57 @@ public class ProteoSuiteView extends FrameView {
                 System.out.println(ume.getMessage());
             }
             System.out.println("Displaying " + nodeInfo.toString() + " as Spectrum");
+    }
+    //--------------------------------------------------------------------------
+    @Action
+    public void showChromatogram() {
+
+
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                               jTMainTree.getLastSelectedPathComponent();
+
+            if (node == null) return;
+
+            jTPDisplay.setSelectedIndex(2);
+
+            Object nodeInfo = node.getUserObject();
+
+            File xmlFile = new File("D:\\Data\\" + node.toString());
+            System.out.println(xmlFile.toString());
+            MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
+            try
+            {
+               Chromatogram chromatogram = unmarshaller.getChromatogramById("TIC");
+
+               List<BinaryDataArray> bdal = chromatogram.getBinaryDataArrayList().getBinaryDataArray();
+
+               //... Reading mz Values ...//
+               BinaryDataArray rtBinaryDataArray = (BinaryDataArray) bdal.get(0);
+               Number[] rtNumbers = rtBinaryDataArray.getBinaryDataAsNumberArray();
+               double[] rt = new double[rtNumbers.length];
+               for (int iI = 0; iI < rtNumbers.length; iI++)
+               {
+                   rt[iI] = rtNumbers[iI].doubleValue();
+                   System.out.println("mz[" + iI + "] = " + rt[iI]);
+               }
+
+               //... Reading Intensities ...//
+               BinaryDataArray intenBinaryDataArray = (BinaryDataArray) bdal.get(1);
+               Number[] intenNumbers = intenBinaryDataArray.getBinaryDataAsNumberArray();
+               double[] intensities = new double[intenNumbers.length];
+               for (int iI = 0; iI < intenNumbers.length; iI++)
+               {
+                   intensities[iI] = intenNumbers[iI].doubleValue();
+                   System.out.println("Int[" + iI + "] = " + intensities[iI]);
+               }
+
+               System.out.println("Chromatogram" + chromatogram.getId());
+            }
+            catch (MzMLUnmarshallerException ume)
+            {
+                System.out.println(ume.getMessage());
+            }
+            System.out.println("Displaying " + nodeInfo.toString() + " as Chromatogram");
     }
 //--------------------------------------------------------------------------
     @Action
