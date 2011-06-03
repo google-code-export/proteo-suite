@@ -82,7 +82,7 @@ import org.jfree.ui.RectangleAnchor;
  * SUBJECT TO ALTERATION OR REMOVAL.  DO NOT RELY ON THIS CLASS FOR
  * PRODUCTION USE.  Please experiment with this code and provide feedback.
  */
-public class XYBlockRenderer extends AbstractXYItemRenderer
+public class XYBlockRendererbk extends AbstractXYItemRenderer
         implements XYItemRenderer, Cloneable, Serializable {
 
     /**
@@ -105,15 +105,15 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
 
     private double yOffset;
 
-    private PaintScale paintScale;
+    private PaintScalebk paintScale;
 
     /**
      * Creates a new <code>XYBlockRenderer</code> instance with default
      * attributes.
      */
-    public XYBlockRenderer() {
+    public XYBlockRendererbk() {
         updateOffsets();
-        this.paintScale = new LookupPaintScale();
+        this.paintScale = new LookupPaintScalebk();
     }
 
     /**
@@ -209,7 +209,7 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
      *
      * @param scale  the scale (<code>null</code> not permitted).
      */
-    public void setPaintScale(PaintScale scale) {
+    public void setPaintScale(PaintScalebk scale) {
         if (scale == null) {
             throw new IllegalArgumentException("Null 'scale' argument.");
         }
@@ -372,10 +372,10 @@ public class XYBlockRenderer extends AbstractXYItemRenderer
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof XYBlockRenderer)) {
+        if (!(obj instanceof XYBlockRendererbk)) {
             return false;
         }
-        XYBlockRenderer that = (XYBlockRenderer) obj;
+        XYBlockRendererbk that = (XYBlockRendererbk) obj;
         if (this.blockHeight != that.blockHeight) {
             return false;
         }

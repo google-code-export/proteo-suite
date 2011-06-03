@@ -67,7 +67,7 @@ import java.awt.Paint;
  * SUBJECT TO ALTERATION OR REMOVAL.  DO NOT RELY ON THIS CLASS FOR
  * PRODUCTION USE.  Please experiment with this code and provide feedback.
  */
-public interface PaintScale {
+public interface PaintScalebk {
 
     /**
      * Returns a <code>Paint</code> instance for the specified value.

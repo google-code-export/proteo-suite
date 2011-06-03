@@ -46,15 +46,15 @@ public class XYBlockChartDemo1 extends ApplicationFrame {
         yAxis.setLowerMargin(0.0);
         yAxis.setUpperMargin(0.0);
 
-        XYBlockRenderer renderer = new XYBlockRenderer();
+        XYBlockRendererbk renderer = new XYBlockRendererbk();
         //PaintScale scale = new GrayPaintScale(-2.0, 1.0);
-        PaintScale scale = new GrayPaintScale(-2.0, 1.0);
+        PaintScalebk scale = new GrayPaintScale(-2.0, 1.0);
         renderer.setPaintScale(scale);
         
         XYPlot plot = new XYPlot(dataset, xAxis, yAxis, renderer);
-        plot.setBackgroundPaint(Color.lightGray);
+        plot.setBackgroundPaint(Color.white);
         plot.setDomainGridlinesVisible(false);
-        plot.setRangeGridlinePaint(Color.white);
+        plot.setRangeGridlinesVisible(false);
         JFreeChart chart = new JFreeChart("", plot);
         chart.removeLegend();
         chart.setBackgroundPaint(Color.white);
@@ -78,13 +78,13 @@ public class XYBlockChartDemo1 extends ApplicationFrame {
                 return new Double(getXValue(series, item));
             }
             public double getXValue(int series, int item) {
-                return item / 100 - 50;
+                return item;
             }
             public Number getY(int series, int item) {
                 return new Double(getYValue(series, item));
             }
             public double getYValue(int series, int item) {
-                return item - (item / 100) * 100 - 50;
+                return item;
             }
             public Number getZ(int series, int item) {
                 return new Double(getZValue(series, item));
@@ -92,7 +92,8 @@ public class XYBlockChartDemo1 extends ApplicationFrame {
             public double getZValue(int series, int item) {
                 double x = getXValue(series, item);
                 double y = getYValue(series, item);
-                return Math.sin(Math.sqrt(x * x + y * y) / 5.0);
+                //return Math.sin(Math.sqrt(x * x + y * y) / 5.0);
+                return (x / 1000000);
             }
             public void addChangeListener(DatasetChangeListener listener) {
                // ignore - this dataset never changes
@@ -122,7 +123,7 @@ public class XYBlockChartDemo1 extends ApplicationFrame {
     }
 
     public static void main(String[] args) {
-        XYBlockChartDemo1 demo = new XYBlockChartDemo1("Block Chart Demo");
+        XYBlockChartDemo1 demo = new XYBlockChartDemo1("2D View");
         demo.pack();
         RefineryUtilities.centerFrameOnScreen(demo);
         demo.setVisible(true);

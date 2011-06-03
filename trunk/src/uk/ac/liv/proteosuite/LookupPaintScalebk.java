@@ -67,8 +67,8 @@ import org.jfree.util.PublicCloneable;
  * SUBJECT TO ALTERATION OR REMOVAL.  DO NOT RELY ON THIS CLASS FOR
  * PRODUCTION USE.  Please experiment with this code and provide feedback.
  */
-public class LookupPaintScale
-        implements PaintScale, PublicCloneable, Serializable {
+public class LookupPaintScalebk
+        implements PaintScalebk, PublicCloneable, Serializable {
 
     /**
      * Stores the paint for a value.
@@ -98,7 +98,7 @@ public class LookupPaintScale
     /**
      * Creates a new paint scale.
      */
-    public LookupPaintScale() {
+    public LookupPaintScalebk() {
         this.defaultPaint = Color.lightGray;
         this.lookupTable = new java.util.ArrayList();
     }
@@ -145,10 +145,10 @@ public class LookupPaintScale
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof LookupPaintScale)) {
+        if (!(obj instanceof LookupPaintScalebk)) {
             return false;
         }
-        LookupPaintScale that = (LookupPaintScale) obj;
+        LookupPaintScalebk that = (LookupPaintScalebk) obj;
         if (!PaintUtilities.equal(this.defaultPaint, that.defaultPaint)) {
             return false;
         }

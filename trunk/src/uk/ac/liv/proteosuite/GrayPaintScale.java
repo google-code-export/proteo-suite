@@ -25,7 +25,7 @@ import org.jfree.util.PublicCloneable;
  * PRODUCTION USE.  Please experiment with this code and provide feedback.
  */
 public class GrayPaintScale
-        implements PaintScale, PublicCloneable, Serializable {
+        implements PaintScalebk, PublicCloneable, Serializable {
 
     /** The minimum value. */
     private double min;
