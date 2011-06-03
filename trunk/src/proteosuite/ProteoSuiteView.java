@@ -1087,6 +1087,11 @@ public class ProteoSuiteView extends FrameView {
 
         String sOutput = ""; 
         long time;
+        DefaultMutableTreeNode rootNode = null;
+        DefaultMutableTreeNode sampleNode = null;
+        DefaultMutableTreeNode ms1Node = null;
+        DefaultMutableTreeNode ms2Node = null;
+
 
         //... Select file(s) ...//
         JFileChooser chooser = new JFileChooser("user.home");
@@ -1102,6 +1107,12 @@ public class ProteoSuiteView extends FrameView {
         chooser.setMultiSelectionEnabled(true);
         chooser.setCurrentDirectory(new java.io.File("D:/Data"));
 
+        Icon rootIcon = new ImageIcon(getClass().getResource("/images/icon_small.gif"));
+        Icon sampleIcon = new ImageIcon(getClass().getResource("/images/file.gif"));
+        Icon ms1Icon = new ImageIcon(getClass().getResource("/images/scan.gif"));
+        Icon ms2Icon = new ImageIcon(getClass().getResource("/images/scan.gif"));
+        
+
         //... Retrieving selection from user ...//
         int returnVal = chooser.showOpenDialog(null);
 
@@ -1109,6 +1120,13 @@ public class ProteoSuiteView extends FrameView {
         if(returnVal == JFileChooser.APPROVE_OPTION)
         {
             File [] aFiles = chooser.getSelectedFiles();
+
+            DefaultTreeCellRenderer rootRender = (DefaultTreeCellRenderer)jTMainTree.getCellRenderer();
+            rootNode = new DefaultMutableTreeNode("Project -");
+            rootRender.setLeafIcon(rootIcon);
+            rootRender.setOpenIcon(rootIcon);
+            rootRender.setClosedIcon(rootIcon);
+
 
             progressBar.setVisible(true);
             progressBar.setValue(0);
@@ -1118,10 +1136,8 @@ public class ProteoSuiteView extends FrameView {
                 Sample aSamples[] = new Sample[aFiles.length];
 
                 //... Removing initial jTree default configuration ...//
-                jTMainTree.removeAll();
+                jTMainTree.removeAll();                
 
-                //... Root Node ...//
-                DefaultMutableTreeNode treeRootNode = new DefaultMutableTreeNode("Project - ");
 
                 time = System.currentTimeMillis();
 
@@ -1131,8 +1147,8 @@ public class ProteoSuiteView extends FrameView {
 
                     //JComponent newContentPane = new ProgMonitor("Loading file " + aFiles[iI].getName());
 
-                    System.out.println("File selected: " + aFiles[iI].getPath());
-                    System.out.println("Name selected: " + aFiles[iI].getName());                    
+                    //System.out.println("File selected: " + aFiles[iI].getPath());
+                    //System.out.println("Name selected: " + aFiles[iI].getName());
 
                     File xmlFile = new File(aFiles[iI].getPath());
 
@@ -1142,12 +1158,12 @@ public class ProteoSuiteView extends FrameView {
 
                     //... FULL UNMARSHALL (Not used yet) MzML completeMzML = unmarshaller.unmarshall();
 
-                    System.out.println("MzML Version: = " + unmarshaller.getMzMLVersion());
-                    System.out.println("MzML ID: = " + unmarshaller.getMzMLId());
-                    System.out.println("MzML Accession: = " + unmarshaller.getMzMLAccession());
+                    //System.out.println("MzML Version: = " + unmarshaller.getMzMLVersion());
+                    //System.out.println("MzML ID: = " + unmarshaller.getMzMLId());
+                    //System.out.println("MzML Accession: = " + unmarshaller.getMzMLAccession());
 
                     CVList cvList = unmarshaller.unmarshalFromXpath("/cvList", CVList.class);
-                    System.out.println("Number of defined CVs in this mzML file: " + cvList.getCount());
+                    //System.out.println("Number of defined CVs in this mzML file: " + cvList.getCount());
 
                     //... Reading CV params ...//
                     
@@ -1163,24 +1179,27 @@ public class ProteoSuiteView extends FrameView {
                    // }
 
                     FileDescription fd = unmarshaller.unmarshalFromXpath("/fileDescription", FileDescription.class);
-                    System.out.println("Number of source files: " + fd.getSourceFileList().getCount());
+                    //System.out.println("Number of source files: " + fd.getSourceFileList().getCount());
 
-                    System.out.println("Supported XPath:" + Constants.XML_INDEXED_XPATHS);                    
+                    //System.out.println("Supported XPath:" + Constants.XML_INDEXED_XPATHS);
 
-                    System.out.println("Number of spectrum elements: " + unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum"));
+                    //System.out.println("Number of spectrum elements: " + unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum"));
 
                     aSamples[iI] = new Sample(aFiles[iI].getName(), unmarshaller.getMzMLVersion(),
                             unmarshaller.getMzMLId(), unmarshaller.getMzMLAccession(), cvList.getCount(),
                             unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum"));
 
                     //... Populate the JTree with sample data ...//
-                    DefaultMutableTreeNode aSampleNodes[] = new DefaultMutableTreeNode[aSamples.length];
-                    aSampleNodes[iI] = new DefaultMutableTreeNode(aSamples[iI].getSam_name());
-                    treeRootNode.add(aSampleNodes[iI]);
+                    DefaultTreeCellRenderer sampleRender = (DefaultTreeCellRenderer)jTMainTree.getCellRenderer();
+                    sampleNode = new DefaultMutableTreeNode(aSamples[iI].getSam_name());
+                    rootNode.add(sampleNode);
+                    sampleRender.setLeafIcon(sampleIcon);
+                    sampleRender.setOpenIcon(sampleIcon);
+                    sampleRender.setClosedIcon(sampleIcon);
 
                     //... Populate the JTree with spectrum data ...//
-                    SpectrumData aSpectrums[][] = new SpectrumData[aFiles.length][unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum")];
-                    DefaultMutableTreeNode aSpectrumNodes[] = new DefaultMutableTreeNode[aSamples.length];
+                    //SpectrumData aSpectrums[][] = new SpectrumData[aFiles.length][unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum")];
+                    int spectrums = unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum");
 
                     //... Reading spectrum data ...//
                     MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
@@ -1188,12 +1207,37 @@ public class ProteoSuiteView extends FrameView {
                     while (spectrumIterator.hasNext())
                     {
                         Spectrum spectrum = spectrumIterator.next();
+                        PrecursorList plist = spectrum.getPrecursorList();
 
-                        //System.out.println("Spectrum ID: " + spectrum.getId());
-                        aSpectrumNodes[0] = new DefaultMutableTreeNode(spectrum.getId());
-                        aSampleNodes[iI].add(aSpectrumNodes[0]);
-                        iJ++;
+                        System.out.println("Spectrum ID: " + spectrum.getId());
+                        if (plist != null)
+                        {
+                            if (plist.getCount().intValue() == 1)
+                            {
+                                System.out.println("MS2:" + plist.getPrecursor().get(0).getSpectrumRef());
+                                System.out.println("Element will be inserted on pos :" + iJ);
+                                //... Find what position was the precursor node ...//                                
 
+                                DefaultTreeCellRenderer ms2Render = (DefaultTreeCellRenderer)jTMainTree.getCellRenderer();
+                                ms2Node = new DefaultMutableTreeNode(spectrum.getId());
+                                ms1Node.add(ms2Node);
+                                ms2Render.setLeafIcon(ms2Icon);
+                                ms2Render.setOpenIcon(ms2Icon);
+                                ms2Render.setClosedIcon(ms2Icon);
+                                //aSpectrumNodesMS1[iJ-1].add(aSpectrumNodesMS2[0]);
+                            }
+                        }
+                        else
+                        {
+                           DefaultTreeCellRenderer ms1Render = (DefaultTreeCellRenderer)jTMainTree.getCellRenderer();
+                           ms1Node = new DefaultMutableTreeNode(spectrum.getId());
+                           sampleNode.add(ms1Node);
+                           ms1Render.setLeafIcon(ms1Icon);
+                           ms1Render.setOpenIcon(ms1Icon);
+                           ms1Render.setClosedIcon(ms1Icon);
+                           iJ++;
+                        }
+                        
                         //... Reading Retention Times ...//
 //                        MzMLObjectIterator<CVParam> cvpScanIterator = unmarshaller.unmarshalCollectionFromXpath("/indexedmzML/mzML/run/spectrumList/spectrum/scanList/scan/cvParam", CVParam.class);
 //                        while (cvpScanIterator.hasNext())
@@ -1214,8 +1258,9 @@ public class ProteoSuiteView extends FrameView {
                 progressBar.setValue(100);
 
                 //... Draw tree ...//
-                jTMainTree.setModel(new DefaultTreeModel(treeRootNode));
+                jTMainTree.setModel(new DefaultTreeModel(rootNode));
                 jTMainTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+                
                 
                 
                 jTAOutput.setText(sOutput);
