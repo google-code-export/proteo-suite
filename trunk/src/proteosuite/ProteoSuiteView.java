@@ -47,6 +47,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import java.util.List;
+import java.util.Iterator;
 
 /* -------------------------------
  * EXTERNAL APIs
@@ -1183,7 +1184,7 @@ public class ProteoSuiteView extends FrameView {
                     {
                         Spectrum spectrum = spectrumIterator.next();
 
-                        System.out.println("Spectrum ID: " + spectrum.getId());
+                        //System.out.println("Spectrum ID: " + spectrum.getId());
                         aSpectrumNodes[0] = new DefaultMutableTreeNode(spectrum.getId());
                         aSampleNodes[iI].add(aSpectrumNodes[0]);
                         iJ++;
@@ -1311,19 +1312,97 @@ public class ProteoSuiteView extends FrameView {
     @Action
     public void show2DPlot() {
 
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+           DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                                jTMainTree.getLastSelectedPathComponent();
-
             if (node == null) return;
 
-            jTPDisplay.setSelectedIndex(3);
-            
             Object nodeInfo = node.getUserObject();
-            TwoDPlot demo = new TwoDPlot(nodeInfo.toString());          
-            jPD2D.add(demo);            
+//            double[] mz = null;
+//            double[] intensities = null;
+//            double[] art = null;
+
+            double[] mz = new double[1000000];
+            double[] intensities = new double[1000000];
+            double[] art = new double[1000000];
+
+            double rt = 0;
+            int iCounter = 0;
+
+            File xmlFile = new File("D:\\Data\\" + node.toString());
+            MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
+
+            MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);            
+            while (spectrumIterator.hasNext())
+            {
+                Spectrum spectrumobj = spectrumIterator.next();
+                String spectrumid = spectrumobj.getId();
+                try
+                {
+                   Spectrum spectrum = unmarshaller.getSpectrumById(spectrumid);
+
+                   //System.out.println("Spectrum : " + spectrum.getId());
+
+    //               List<CVParam> specParam = spectrum.getCvParam();
+    //               for (Iterator lCVParamIterator = specParam.iterator(); lCVParamIterator.hasNext();)
+    //               {
+    //                   CVParam lCVParam = (CVParam) lCVParamIterator.next();
+    //                   if (lCVParam.getAccession().equals("MS:1000504"))
+    //                   {
+    //                       //peakmz = Double.parseDouble(lCVParam.getValue().trim());
+    //                       System.out.print("Peak m/z: " + lCVParam.getValue().trim() + "\t");
+    //                   }
+    //                   if (lCVParam.getAccession().equals("MS:1000505"))
+    //                   {
+    //                       //peakint = Double.parseDouble(lCVParam.getValue().trim());
+    //                       System.out.print("Peak int: " + lCVParam.getValue().trim() + "\t");
+    //                   }
+    //               }
+
+                   List<CVParam> scanParam = spectrum.getScanList().getScan().get(0).getCvParam();
+                   for (Iterator lCVParamIterator = scanParam.iterator(); lCVParamIterator.hasNext();)
+                   {
+                       CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                       if (lCVParam.getAccession().equals("MS:1000016"))
+                       {
+
+                           rt = Double.parseDouble(lCVParam.getValue().trim());
+                           //System.out.print("Rt: " + rt + "\n");
+                       }
+                   }
+
+                   //... Binary data ...//
+                   List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList().getBinaryDataArray();
+
+                   //... Reading mz Values ...//
+                   BinaryDataArray mzBinaryDataArray = (BinaryDataArray) bdal.get(0);
+                   BinaryDataArray intenBinaryDataArray = (BinaryDataArray) bdal.get(1);
+                   Number[] mzNumbers = mzBinaryDataArray.getBinaryDataAsNumberArray();
+                   Number[] intenNumbers = intenBinaryDataArray.getBinaryDataAsNumberArray();
+                   //mz = new double[mzNumbers.length];
+                   //intensities = new double[intenNumbers.length];
+                   //art = new double[intenNumbers.length];
+                   for (int iI = 0; iI < mzNumbers.length; iI++)
+                   {
+                       mz[iCounter] = mzNumbers[iI].doubleValue();                                              
+                       intensities[iCounter] = intenNumbers[iI].doubleValue();
+                       art[iCounter] = rt;
+                       //System.out.println("mz[" + iI + "] = " + mz[iI]);
+                       //System.out.println("Int[" + iI + "] = " + intensities[iI]);
+                       iCounter++;
+                   }
+                }
+                catch (MzMLUnmarshallerException ume)
+                {
+                    System.out.println(ume.getMessage());
+                }
+            }
+            TwoDPlot demo = new TwoDPlot(nodeInfo.toString(), mz, intensities, art);
+            jPD2D.add(demo);
             demo.pack();
             demo.setVisible(true);
             System.out.println("Displaying " + nodeInfo.toString() + " as 2D");
+
+            jTPDisplay.setSelectedIndex(3);
     }
     //--------------------------------------------------------------------------
     @Action
