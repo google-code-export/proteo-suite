@@ -9,274 +9,324 @@ package uk.ac.liv.proteosuite;
  *
  * @author fgonzalez
  */
-    import java.awt.Color;
-    import java.awt.Font;
-    import java.awt.Graphics2D;
-    import java.awt.geom.Rectangle2D;
-    import java.util.ArrayList;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 
-    import javax.swing.JFrame;
-
-
-    import org.jfree.chart.*;
-    import org.jfree.chart.labels.StandardXYItemLabelGenerator;
-    import org.jfree.chart.plot.*;
-    import org.jfree.chart.renderer.LookupPaintScale;
-    import org.jfree.chart.renderer.xy.*;
-    import org.jfree.data.xy.*;
-    import org.jfree.chart.axis.*;
-    import org.jfree.chart.title.*;
-    import org.jfree.ui.*;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 
 
-    public class XYZChart {
-       public static int count;
+import org.jfree.chart.*;
+import org.jfree.chart.labels.StandardXYItemLabelGenerator;
+import org.jfree.chart.plot.*;
+import org.jfree.chart.renderer.LookupPaintScale;
+import org.jfree.chart.renderer.xy.*;
+import org.jfree.data.xy.*;
+import org.jfree.chart.axis.*;
+import org.jfree.chart.title.*;
+import org.jfree.ui.*;
 
-       public XYZChart(String title) {
-          XYZChart.count = 0;
-          JFrame frame = new JFrame(title);
-          frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-          JFreeChart chart = createXYZChart();
-          int width = 600;
-          int height = 600;
-          ChartPanel chartPanel = new ChartPanel(chart, width, height, 16, 16,
-                width * 10, height * 10, true, true, true, true, true, true);
-          frame.setContentPane(chartPanel);
-          frame.pack();
-          frame.setVisible(true);
-       }
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
-       private JFreeChart createXYZChart() {
 
-          String achse1[] = {"0-1000","1000-2000","2000-3000","3000-4000","4000-5000"};
-          String achse2[] = {"<1","1-2","2-3","3-5","5-20",">20"};
+public class XYZChart extends JInternalFrame {
+   //public static int count;
+    private double[] mz;
+    private double[] rt;
+    private double[] intens;
 
-          myAxis xAxis = new myAxis("x Axis",achse1);
-          myAxis yAxis = new myAxis("y Axis",achse2);
+   public XYZChart(String title, double[] mz, double[] rt) {
+      //XYZChart.count = 0;
+      //JFrame frame = new JFrame(title);
+        //... Setting Windows defaults ...//
+        super("2D View <" + title + "> - MS1");
+        Icon icon = new ImageIcon(".\\src\\images\\icon.gif");
+        setFrameIcon(icon);
+        setResizable(true);
+        setMaximizable(true);
+        setClosable(true);
+        setIconifiable(true);
 
-          yAxis.setAutoRange(true);
+        this.mz = mz;
+        this.rt = rt;
+       
+      //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      JFreeChart chart = createXYZChart(mz, rt);
+      int width = 500;
+      int height = 400;
+      ChartPanel chartPanel = new ChartPanel(chart, width, height, 16, 16,
+            width * 10, height * 10, true, true, true, true, true, true);
+      chartPanel.setMouseWheelEnabled(true);
+      add(chartPanel);
+//      frame.setContentPane(chartPanel);
+//      frame.pack();
+//      frame.setVisible(true);
+   }
 
-          double[][] data = new double[][] {
-                { 226157.0, 6941.0, 3127.0, 3150.0, 6906.0, 2423.0 },
-                { 46972.0, 1510.0, 665.0, 698.0, 1330.0, 1018.0 },
-                { 12582.0, 651.0, 343.0, 304.0, 403.0, 119.0 },
-                { 2754.0, 103.0, 43.0, 48.0, 34.0, 0.0 },
-                { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 } };
+   private JFreeChart createXYZChart(double[] mz, double[] rt) {
 
-          XYZDataset xyzset = new XYZArrayDataset(data);
+      String seriesx[] = {"0:05","0:10","0:15","0:20","0:25"};
+      String seriesy[] = {"200","250","300","350","400", "450", "500", "550", "600", "650", "700"};
 
-          XYPlot plot = new XYPlot(xyzset, xAxis, yAxis, null);
-          XYBlockRenderer r = new XYBlockRenderer();
+     
 
-          StandardXYItemLabelGenerator generator = new StandardXYItemLabelGenerator();
+      //myAxis xAxis = new myAxis("retention time", seriesx);
+      //myAxis yAxis = new myAxis("m/z", seriesy);
 
-          r.setBaseItemLabelGenerator(generator);
-          r.setBaseItemLabelsVisible(true);
+      myAxis xAxis = new myAxis("retention time", seriesx);
+      myAxis yAxis = new myAxis("m/z", seriesy);
 
-          LookupPaintScale ps = new LookupPaintScale(0.0,250000.0, Color.GRAY);
+      yAxis.setAutoRange(true);
 
-          // create the color spectrum
-          int rot = 0;
-          int blau = 0;
-          int gruen = 0;
-          int lv = 0;
+      double[][] data = new double[][]
+      {
+            { 22060157.0, 6009401.0, 3100027.0, 3100050.0, 6900006.0, 2400023.0 },
+            { 40069072.0, 1500010.0, 600605.0, 600908.0, 1300300.0, 1000018.0 },
+            { 10200582.0, 650001.0, 30043.0, 300004.0, 400003.0, 10019.0 },
+            { 270054.0, 10003.0, 40003.0, 400080.0, 3000004.0, 0.0 },
+            { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+      };
 
-          ps.add(0, new Color(0, 0, 0));
-          // ps.add(50000, new Color(0, 0, 0));
+      XYZDataset xyzset = new XYZArrayDataset(data);
 
-          // schwarz bis blau - spektrum
-          rot = 0;
-          blau = 0;
-          gruen = 0;
-          for (blau = 0; blau < 255; blau++) {
-             Color c = new Color(rot, gruen, blau);
-             ps.add(lv = lv + 177, c);
-          }
+      XYPlot plot = new XYPlot(xyzset, xAxis, yAxis, null);
+      XYBlockRenderer r = new XYBlockRenderer();
 
-          // blau bis türkis - spektrum
-          rot = 0;
-          blau = 255;
-          gruen = 0;
-          for (gruen = 0; gruen < 255; gruen++) {
-             Color c = new Color(rot, gruen, blau);
-             // ps.add(lv, c);
-             ps.add(lv = lv + 177, c);
-          }
+      StandardXYItemLabelGenerator generator = new StandardXYItemLabelGenerator();
 
-          // türkis bis grün - spektrum
-          rot = 0;
-          blau = 255;
-          gruen = 255;
-          for (blau = 255; blau > 0; blau--) {
-             Color c = new Color(rot, gruen, blau);
-             // ps.add(lv, c);
-             ps.add(lv = lv + 177, c);
-          }
+      r.setBaseItemLabelGenerator(generator);
+      r.setBaseItemLabelsVisible(true);
+      double maxValue = 15000000.0;
 
-          // grün bis gelb - spektrum
-          rot = 0;
-          gruen = 255;
-          blau = 0;
-          for (rot = 0; rot < 255; rot++) {
-             Color c = new Color(rot, gruen, blau);
-             // ps.add(lv, c);
-             ps.add(lv = lv + 177, c);
-          }
+      LookupPaintScale ps = new LookupPaintScale(0.0, maxValue, Color.GRAY);
 
-          // gelb bis rot - spektrum
-          rot = 255;
-          gruen = 255;
-          blau = 0;
-          for (gruen = 255; gruen > 0; gruen--) {
-             Color c = new Color(rot, gruen, blau);
-             // ps.add(lv, c);
-             ps.add(lv = lv + 177, c);
-          }
+      // create the color spectrum
+      int red = 0;
+      int blue = 0;
+      int green = 0;
+      double gradient = 0;
 
-          r.setPaintScale(ps);
-          r.setBlockHeight(1.0f);
-          r.setBlockWidth(1.0f);
-          r.setBaseItemLabelGenerator(new StandardXYItemLabelGenerator());
+      ps.add(0, new Color(255, 255, 255));
+      red = 255;
+      blue = 255;
+      green = 255;
+      double scale = maxValue / 255;
+      for (blue = 255; blue > 0; blue--) {
+          red--;
+          green--;
+         Color c = new Color(red, green, blue);
+         ps.add(gradient = gradient + scale, c);
+      }
 
-          plot.setRenderer(r);
-          plot.setForegroundAlpha(0.90f);
+//      ps.add(0, new Color(0, 0, 0));
+//      // ps.add(50000, new Color(0, 0, 0));
+//
+//
+//      red = 0;
+//      blue = 0;
+//      green = 0;
+//      for (blue = 0; blue < 255; blue++) {
+//         Color c = new Color(red, green, blue);
+//         ps.add(gradient = gradient + 177, c);
+//      }
+//
+//
+//      red = 0;
+//      blue = 255;
+//      green = 0;
+//      for (green = 0; green < 255; green++) {
+//         Color c = new Color(red, green, blue);
+//         ps.add(gradient = gradient + 177, c);
+//      }
+//
+//
+//      red = 0;
+//      blue = 255;
+//      green = 255;
+//      for (blue = 255; blue > 0; blue--) {
+//         Color c = new Color(red, green, blue);
+//         ps.add(gradient = gradient + 177, c);
+//      }
+//
+//
+//      red = 0;
+//      green = 255;
+//      blue = 0;
+//      for (red = 0; red < 255; red++) {
+//         Color c = new Color(red, green, blue);
+//         ps.add(gradient = gradient + 177, c);
+//      }
+//
+//
+//      red = 255;
+//      green = 255;
+//      blue = 0;
+//      for (green = 255; green > 0; green--) {
+//         Color c = new Color(red, green, blue);
+//         ps.add(gradient = gradient + 177, c);
+//      }
 
-          JFreeChart chart = new JFreeChart("Mehrdimensionales Diagramm",
-                JFreeChart.DEFAULT_TITLE_FONT, plot, false);
+      r.setPaintScale(ps);
+      r.setBlockHeight(1.0f);
+      r.setBlockWidth(1.0f);
+      r.setBaseItemLabelGenerator(new StandardXYItemLabelGenerator());
 
-          NumberAxis scaleAxis = new NumberAxis("Anzahl");
-          scaleAxis.setUpperBound(100);
-          scaleAxis.setAxisLinePaint(Color.white);
-          scaleAxis.setTickMarkPaint(Color.white);
-          scaleAxis.setTickLabelFont(new Font("Dialog", Font.PLAIN, 12));
+      plot.setRenderer(r);
+      plot.setForegroundAlpha(0.90f);
 
-          PaintScaleLegend ps_legend = new PaintScaleLegend(ps, scaleAxis);
-          ps_legend.setAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-          ps_legend.setPadding(new RectangleInsets(5, 5, 5, 5));
-          ps_legend.setStripWidth(50);
-          ps_legend.setPosition(RectangleEdge.RIGHT);
-          ps_legend.setBackgroundPaint(Color.white);
+      JFreeChart chart = new JFreeChart("",
+            JFreeChart.DEFAULT_TITLE_FONT, plot, false);
 
-          chart.addSubtitle(ps_legend);
-          chart.setBackgroundPaint(Color.white);
+      NumberAxis scaleAxis = new NumberAxis("Intensity");
+      scaleAxis.setUpperBound(100);
+      scaleAxis.setAxisLinePaint(Color.white);
+      scaleAxis.setTickMarkPaint(Color.white);
+      scaleAxis.setTickLabelFont(new Font("Dialog", Font.PLAIN, 12));
 
-          return chart;
-       }
+      PaintScaleLegend ps_legend = new PaintScaleLegend(ps, scaleAxis);
+      ps_legend.setAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
+      ps_legend.setPadding(new RectangleInsets(5, 5, 5, 5));
+      ps_legend.setStripWidth(50);
+      ps_legend.setPosition(RectangleEdge.RIGHT);
+      ps_legend.setBackgroundPaint(Color.white);
 
-       private static class XYZArrayDataset extends AbstractXYZDataset {
-          double[][] data;
-          int rowCount = 0;
-          int columnCount = 0;
+      chart.addSubtitle(ps_legend);
+      chart.setBackgroundPaint(Color.white);
 
-          XYZArrayDataset(double[][] data) {
-             this.data = data;
-             rowCount = data.length;
-             columnCount = data[0].length;
-          }
+      return chart;
+   }
 
-          public int getSeriesCount() {
-             return 1;
-          }
+   private static class XYZArrayDataset extends AbstractXYZDataset {
+      double[][] data;
+      int rowCount = 0;
+      int columnCount = 0;
 
-          public Comparable getSeriesKey(int series) {
-             return "serie";
-          }
+      XYZArrayDataset(double[][] data) {
+         this.data = data;
+         rowCount = data.length;
+         columnCount = data[0].length;
+      }
 
-          public int getItemCount(int series) {
-             return rowCount * columnCount;
-          }
+      public int getSeriesCount() {
+         return 1;
+      }
 
-          public double getXValue(int series, int item) {
-             return (int) (item / columnCount);
-          }
+      public Comparable getSeriesKey(int series) {
+         return "serie";
+      }
 
-          public double getYValue(int series, int item) {
-             return item % columnCount;
-          }
+      public int getItemCount(int series) {
+         return rowCount * columnCount;
+      }
 
-          public double getZValue(int series, int item) {
-             return data[(int) (item / columnCount)][item % columnCount];
-          }
+      public double getXValue(int series, int item) {
+         return (int) (item / columnCount);
+      }
 
-          public Number getX(int series, int item) {
-             return new Double((int) (item / columnCount));
-          }
+      public double getYValue(int series, int item) {
+         return item % columnCount;
+      }
 
-          public Number getY(int series, int item) {
-             return new Double(item % columnCount);
-          }
+      public double getZValue(int series, int item) {
+         return data[(int) (item / columnCount)][item % columnCount];
+      }
 
-          public Number getZ(int series, int item) {
-             return new Double(data[(int) (item / columnCount)][item
-                   % columnCount]);
-          }
-       }
+      public Number getX(int series, int item) {
+         return new Double((int) (item / columnCount));
+      }
 
-       public static void main(String[] args) {
-          XYZChart mychart = new XYZChart("Mehrdimensional");
-       }
+      public Number getY(int series, int item) {
+         return new Double(item % columnCount);
+      }
 
-       public class myAxis extends NumberAxis
-       {
-          String werte[];
+      public Number getZ(int series, int item) {
+         return new Double(data[(int) (item / columnCount)][item
+               % columnCount]);
+      }
+   }
 
-          public myAxis(String achsenbez,String[] werte) {
-             super(achsenbez);
-             this.werte = werte;
-          }
-          /**
-           *
-           */
-          private static final long serialVersionUID = 1L;
-
-          @Override
-          public java.util.List refreshTicks(java.awt.Graphics2D g2,
-                    AxisState state,
-                    java.awt.geom.Rectangle2D dataArea,
-                    org.jfree.ui.RectangleEdge edge)
-          {
-             java.util.List tickliste = new ArrayList<NumberTick>();
-
-             if (RectangleEdge.isTopOrBottom(edge))
-             {
-                tickliste = refreshTicksHorizontal(g2, dataArea, edge);
-             }
-             else if (RectangleEdge.isLeftOrRight(edge))
-             {
-                tickliste = refreshTicksVertical(g2, dataArea, edge);
-             }
-
-             return tickliste;
-          }
-
-          //Zuständig für die x-Achse
-          @Override
-          public java.util.List refreshTicksHorizontal(Graphics2D g2,
-                 Rectangle2D dataArea, RectangleEdge edge)
-          {
-             java.util.List tickliste = new ArrayList<NumberTick>();
-
-             for(int i=0;i<this.werte.length;i++)
-             {
-                tickliste.add(new NumberTick(i,this.werte[i],TextAnchor.TOP_CENTER,TextAnchor.CENTER,0));
-             }
-
-             return tickliste;
-          }
-
-          //Zuständig für die y-Achse
-          @Override
-          public java.util.List refreshTicksVertical(Graphics2D g2,
-                 Rectangle2D dataArea, RectangleEdge edge)
-          {
-             java.util.List tickliste = new ArrayList<NumberTick>();
-
-             for(int i=0;i<this.werte.length;i++)
-             {
-                tickliste.add(new NumberTick(i,this.werte[i],TextAnchor.CENTER_RIGHT,TextAnchor.CENTER,0));
-             }
-
-             return tickliste;
-          }
-       }
+//   public static void main(String[] args) {
+//      XYZChart mychart = new XYZChart("");
+//   }
+    public String[] DoubleToStringArray(double[] darray) throws Exception
+    {
+        if (darray != null)
+        {
+            String sarray[] = new String[darray.length];
+            for (int iI = 0; iI < darray.length; iI++)
+            {
+                sarray[iI] = Double.toString(darray[iI]);
+                System.out.println(sarray[iI]);
+            }
+            return sarray;
+        }
+        return null;
     }
+   public class myAxis extends NumberAxis
+   {
+      String werte[];
+
+      public myAxis(String achsenbez,String[] werte) {
+         super(achsenbez);
+         this.werte = werte;
+      }
+      /**
+       *
+       */
+      private static final long seriagradientersionUID = 1L;
+
+      @Override
+      public java.util.List refreshTicks(java.awt.Graphics2D g2,
+                AxisState state,
+                java.awt.geom.Rectangle2D dataArea,
+                org.jfree.ui.RectangleEdge edge)
+      {
+         java.util.List tickliste = new ArrayList<NumberTick>();
+
+         if (RectangleEdge.isTopOrBottom(edge))
+         {
+            tickliste = refreshTicksHorizontal(g2, dataArea, edge);
+         }
+         else if (RectangleEdge.isLeftOrRight(edge))
+         {
+            tickliste = refreshTicksVertical(g2, dataArea, edge);
+         }
+
+         return tickliste;
+      }
+
+
+      @Override
+      public java.util.List refreshTicksHorizontal(Graphics2D g2,
+             Rectangle2D dataArea, RectangleEdge edge)
+      {
+         java.util.List tickliste = new ArrayList<NumberTick>();
+
+         for(int i=0;i<this.werte.length;i++)
+         {
+            tickliste.add(new NumberTick(i,this.werte[i],TextAnchor.TOP_CENTER,TextAnchor.CENTER,0));
+         }
+
+         return tickliste;
+      }
+
+
+      @Override
+      public java.util.List refreshTicksVertical(Graphics2D g2,
+             Rectangle2D dataArea, RectangleEdge edge)
+      {
+         java.util.List tickliste = new ArrayList<NumberTick>();
+
+         for(int i=0;i<this.werte.length;i++)
+         {
+            tickliste.add(new NumberTick(i,this.werte[i],TextAnchor.CENTER_RIGHT,TextAnchor.CENTER,0));
+         }
+
+         return tickliste;
+      }
+   }
+}

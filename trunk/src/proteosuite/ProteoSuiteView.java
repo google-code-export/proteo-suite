@@ -95,6 +95,7 @@ import uk.ac.liv.proteosuite.PieChart;
 import uk.ac.liv.proteosuite.TwoDPlot;
 import uk.ac.liv.proteosuite.Node;
 import uk.ac.liv.proteosuite.ProgMonitor;
+import uk.ac.liv.proteosuite.XYZChart;
 //--------------------------------------------------------------------------
 /**
  * MAIN FORM
@@ -242,8 +243,9 @@ public class ProteoSuiteView extends FrameView {
         jPMS = new javax.swing.JPanel();
         jPXIC = new javax.swing.JPanel();
         jP2D = new javax.swing.JPanel();
-        jPD2D = new javax.swing.JDesktopPane();
+        jDP2D = new javax.swing.JDesktopPane();
         jP3D = new javax.swing.JPanel();
+        jDP3D = new javax.swing.JDesktopPane();
         jSPTree = new javax.swing.JScrollPane();
         jTMainTree = new javax.swing.JTree();
         jTPResults = new javax.swing.JTabbedPane();
@@ -580,18 +582,18 @@ public class ProteoSuiteView extends FrameView {
         jP2D.setBackground(resourceMap.getColor("jP2D.background")); // NOI18N
         jP2D.setName("jP2D"); // NOI18N
 
-        jPD2D.setBackground(resourceMap.getColor("jPD2D.background")); // NOI18N
-        jPD2D.setName("jPD2D"); // NOI18N
+        jDP2D.setBackground(resourceMap.getColor("jDP2D.background")); // NOI18N
+        jDP2D.setName("jDP2D"); // NOI18N
 
         javax.swing.GroupLayout jP2DLayout = new javax.swing.GroupLayout(jP2D);
         jP2D.setLayout(jP2DLayout);
         jP2DLayout.setHorizontalGroup(
             jP2DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPD2D, javax.swing.GroupLayout.DEFAULT_SIZE, 819, Short.MAX_VALUE)
+            .addComponent(jDP2D, javax.swing.GroupLayout.DEFAULT_SIZE, 819, Short.MAX_VALUE)
         );
         jP2DLayout.setVerticalGroup(
             jP2DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPD2D, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
+            .addComponent(jDP2D, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
         );
 
         jTPDisplay.addTab(resourceMap.getString("jP2D.TabConstraints.tabTitle"), jP2D); // NOI18N
@@ -599,15 +601,18 @@ public class ProteoSuiteView extends FrameView {
         jP3D.setBackground(resourceMap.getColor("jP3D.background")); // NOI18N
         jP3D.setName("jP3D"); // NOI18N
 
+        jDP3D.setBackground(resourceMap.getColor("jDP3D.background")); // NOI18N
+        jDP3D.setName("jDP3D"); // NOI18N
+
         javax.swing.GroupLayout jP3DLayout = new javax.swing.GroupLayout(jP3D);
         jP3D.setLayout(jP3DLayout);
         jP3DLayout.setHorizontalGroup(
             jP3DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 819, Short.MAX_VALUE)
+            .addComponent(jDP3D, javax.swing.GroupLayout.DEFAULT_SIZE, 819, Short.MAX_VALUE)
         );
         jP3DLayout.setVerticalGroup(
             jP3DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 552, Short.MAX_VALUE)
+            .addComponent(jDP3D, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
         );
 
         jTPDisplay.addTab(resourceMap.getString("jP3D.TabConstraints.tabTitle"), jP3D); // NOI18N
@@ -885,7 +890,6 @@ public class ProteoSuiteView extends FrameView {
         menuBar.add(utilMenu);
 
         dbMenu.setText(resourceMap.getString("dbMenu.text")); // NOI18N
-        dbMenu.setName("dbMenu"); // NOI18N
 
         jMenuItem22.setText(resourceMap.getString("jMenuItem22.text")); // NOI18N
         jMenuItem22.setName("jMenuItem22"); // NOI18N
@@ -899,6 +903,7 @@ public class ProteoSuiteView extends FrameView {
 
         toolsMenu.setText(resourceMap.getString("toolsMenu.text")); // NOI18N
 
+        jMenuItem17.setAction(actionMap.get("optionsMenu")); // NOI18N
         jMenuItem17.setText(resourceMap.getString("jMenuItem17.text")); // NOI18N
         jMenuItem17.setName("jMenuItem17"); // NOI18N
         toolsMenu.add(jMenuItem17);
@@ -1324,6 +1329,8 @@ public class ProteoSuiteView extends FrameView {
             double[] mz = new double[1000000];
             double[] intensities = new double[1000000];
             double[] art = new double[1000000];
+            //String[] smz = new String[1000000];
+            //String[] srt = new String[1000000];
 
             double rt = 0;
             int iCounter = 0;
@@ -1386,6 +1393,7 @@ public class ProteoSuiteView extends FrameView {
                        mz[iCounter] = mzNumbers[iI].doubleValue();                                              
                        intensities[iCounter] = intenNumbers[iI].doubleValue();
                        art[iCounter] = rt;
+
                        //System.out.println("mz[" + iI + "] = " + mz[iI]);
                        //System.out.println("Int[" + iI + "] = " + intensities[iI]);
                        iCounter++;
@@ -1396,10 +1404,14 @@ public class ProteoSuiteView extends FrameView {
                     System.out.println(ume.getMessage());
                 }
             }
-            TwoDPlot demo = new TwoDPlot(nodeInfo.toString(), mz, intensities, art);
-            jPD2D.add(demo);
+            TwoDPlot demo2 = new TwoDPlot(nodeInfo.toString(), mz, intensities, art);
+            XYZChart demo = new XYZChart(nodeInfo.toString(), mz, art);
+            jDP2D.add(demo2);
+            jDP2D.add(demo);
             demo.pack();
             demo.setVisible(true);
+            demo2.pack();
+            demo2.setVisible(true);
             System.out.println("Displaying " + nodeInfo.toString() + " as 2D");
 
             jTPDisplay.setSelectedIndex(3);
@@ -1524,12 +1536,19 @@ public class ProteoSuiteView extends FrameView {
         }
         ProteoSuiteApp.getApplication().show(aboutBox);
     }
+
+    @Action
+    public void optionsMenu() {
+      
+    }
 //--------------------------------------------------------------------------
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu analyzeMenu;
     private javax.swing.JMenu dbMenu;
     private javax.swing.JMenu editMenu;
+    private javax.swing.JDesktopPane jDP2D;
+    private javax.swing.JDesktopPane jDP3D;
     private javax.swing.JLabel jLLogo;
     private javax.swing.JLabel jLStatus;
     private javax.swing.JLabel jLabel1;
@@ -1576,7 +1595,6 @@ public class ProteoSuiteView extends FrameView {
     private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jP2D;
     private javax.swing.JPanel jP3D;
-    private javax.swing.JDesktopPane jPD2D;
     private javax.swing.JPanel jPHome;
     private javax.swing.JPanel jPMS;
     private javax.swing.JPanel jPOutput;
