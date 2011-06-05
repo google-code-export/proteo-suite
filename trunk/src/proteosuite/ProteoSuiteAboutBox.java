@@ -33,11 +33,12 @@ public class ProteoSuiteAboutBox extends javax.swing.JDialog {
     private void initComponents() {
 
         closeButton = new javax.swing.JButton();
-        javax.swing.JLabel versionLabel = new javax.swing.JLabel();
-        javax.swing.JLabel appVersionLabel = new javax.swing.JLabel();
         javax.swing.JLabel appDescLabel = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         javax.swing.JLabel appDescLabel1 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        javax.swing.JLabel versionLabel = new javax.swing.JLabel();
+        javax.swing.JLabel appVersionLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(proteosuite.ProteoSuiteApp.class).getContext().getResourceMap(ProteoSuiteAboutBox.class);
@@ -51,6 +52,22 @@ public class ProteoSuiteAboutBox extends javax.swing.JDialog {
         closeButton.setText(resourceMap.getString("closeButton.text")); // NOI18N
         closeButton.setName("closeButton"); // NOI18N
 
+        appDescLabel.setFont(resourceMap.getFont("appDescLabel.font")); // NOI18N
+        appDescLabel.setText(resourceMap.getString("appDescLabel.text")); // NOI18N
+        appDescLabel.setName("appDescLabel"); // NOI18N
+
+        jLabel1.setIcon(resourceMap.getIcon("jLabel1.icon")); // NOI18N
+        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
+        jLabel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jLabel1.setName("jLabel1"); // NOI18N
+
+        appDescLabel1.setText(resourceMap.getString("appDescLabel1.text")); // NOI18N
+        appDescLabel1.setName("appDescLabel1"); // NOI18N
+
+        jPanel1.setBackground(resourceMap.getColor("jPanel1.background")); // NOI18N
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder(null, resourceMap.getColor("jPanel1.border.shadowColor"))); // NOI18N
+        jPanel1.setName("jPanel1"); // NOI18N
+
         versionLabel.setFont(versionLabel.getFont().deriveFont(versionLabel.getFont().getStyle() | java.awt.Font.BOLD));
         versionLabel.setText(resourceMap.getString("versionLabel.text")); // NOI18N
         versionLabel.setName("versionLabel"); // NOI18N
@@ -58,15 +75,26 @@ public class ProteoSuiteAboutBox extends javax.swing.JDialog {
         appVersionLabel.setText(resourceMap.getString("Application.version")); // NOI18N
         appVersionLabel.setName("appVersionLabel"); // NOI18N
 
-        appDescLabel.setText(resourceMap.getString("appDescLabel.text")); // NOI18N
-        appDescLabel.setName("appDescLabel"); // NOI18N
-
-        jLabel1.setIcon(resourceMap.getIcon("jLabel1.icon")); // NOI18N
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
-
-        appDescLabel1.setText(resourceMap.getString("appDescLabel1.text")); // NOI18N
-        appDescLabel1.setName("appDescLabel1"); // NOI18N
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(versionLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addComponent(appVersionLabel)
+                .addGap(239, 239, 239))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(versionLabel)
+                    .addComponent(appVersionLabel))
+                .addContainerGap(36, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -75,34 +103,28 @@ public class ProteoSuiteAboutBox extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(247, 247, 247)
-                        .addComponent(closeButton, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE))
-                    .addComponent(appDescLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(39, 39, 39)
-                        .addComponent(versionLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                        .addComponent(appVersionLabel))
-                    .addComponent(appDescLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(appDescLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(closeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(appDescLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(versionLabel)
-                        .addComponent(appVersionLabel))
-                    .addComponent(jLabel1))
+                .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(appDescLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(appDescLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
-                .addComponent(closeButton)
+                .addComponent(appDescLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(closeButton)
+                    .addComponent(appDescLabel1))
                 .addContainerGap())
         );
 
@@ -112,6 +134,7 @@ public class ProteoSuiteAboutBox extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton closeButton;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
     
 }

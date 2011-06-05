@@ -62,7 +62,6 @@ public class Sample {
         return sam_spectrums;
     }
 
-
     public void setSam_name(String sam_name) {
         this.sam_name = sam_name;
     }
@@ -78,5 +77,8 @@ public class Sample {
     public String getSam_version() {
         return sam_version;
     }
-
+    @Override
+    public String toString() {
+        return sam_id;
+    }
 }

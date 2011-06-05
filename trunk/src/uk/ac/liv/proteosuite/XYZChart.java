@@ -44,7 +44,8 @@ public class XYZChart extends JInternalFrame {
       //JFrame frame = new JFrame(title);
         //... Setting Windows defaults ...//
         super("2D View <" + title + "> - MS1");
-        Icon icon = new ImageIcon(".\\src\\images\\icon.gif");
+        Icon icon = new ImageIcon(getClass().getResource("/images/icon.gif"));
+        
         setFrameIcon(icon);
         setResizable(true);
         setMaximizable(true);
@@ -55,11 +56,9 @@ public class XYZChart extends JInternalFrame {
         this.rt = rt;
        
       //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      JFreeChart chart = createXYZChart(mz, rt);
-      int width = 500;
-      int height = 400;
-      ChartPanel chartPanel = new ChartPanel(chart, width, height, 16, 16,
-            width * 10, height * 10, true, true, true, true, true, true);
+      final JFreeChart chart = createXYZChart(mz, rt);
+      final ChartPanel chartPanel = new ChartPanel(chart, true);
+      chartPanel.setPreferredSize(new java.awt.Dimension(500, 400));
       chartPanel.setMouseWheelEnabled(true);
       add(chartPanel);
 //      frame.setContentPane(chartPanel);
@@ -69,9 +68,16 @@ public class XYZChart extends JInternalFrame {
 
    private JFreeChart createXYZChart(double[] mz, double[] rt) {
 
-      String seriesx[] = {"0:05","0:10","0:15","0:20","0:25"};
-      String seriesy[] = {"200","250","300","350","400", "450", "500", "550", "600", "650", "700"};
+      //String seriesx[] = {"0:05","0:10","0:15","0:20","0:25"};
+      //String seriesy[] = {"200","250","300","350","400", "450", "500", "550", "600", "650", "700"};
+      String seriesx[] = new String[1000];
+      String seriesy[] = new String[100];
 
+      for (int iI=0; iI<100; iI++)
+      {
+          seriesx[iI] = Integer.toString(iI);
+          seriesy[iI] = Integer.toString(iI);
+      }
      
 
       //myAxis xAxis = new myAxis("retention time", seriesx);
@@ -82,14 +88,23 @@ public class XYZChart extends JInternalFrame {
 
       yAxis.setAutoRange(true);
 
-      double[][] data = new double[][]
+//      double[][] data = new double[][]
+//      {
+//            { 22060157.0, 6009401.0, 3100027.0, 3100050.0, 6900006.0, 2400023.0 },
+//            { 40069072.0, 1500010.0, 600605.0, 600908.0, 1300300.0, 1000018.0 },
+//            { 10200582.0, 650001.0, 30043.0, 300004.0, 400003.0, 10019.0 },
+//            { 270054.0, 10003.0, 40003.0, 400080.0, 3000004.0, 0.0 },
+//            { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
+//      };
+      double[][] data = new double[100][100];
+      for (int iI=0; iI<100; iI++)
       {
-            { 22060157.0, 6009401.0, 3100027.0, 3100050.0, 6900006.0, 2400023.0 },
-            { 40069072.0, 1500010.0, 600605.0, 600908.0, 1300300.0, 1000018.0 },
-            { 10200582.0, 650001.0, 30043.0, 300004.0, 400003.0, 10019.0 },
-            { 270054.0, 10003.0, 40003.0, 400080.0, 3000004.0, 0.0 },
-            { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
-      };
+           for (int iJ=0; iJ<100; iJ++)
+           {
+               data[iI][iJ] = iI*iI*100 + 1000000;
+           }
+      }
+
 
       XYZDataset xyzset = new XYZArrayDataset(data);
 

@@ -49,6 +49,8 @@ import javax.swing.JPanel;
 import java.util.List;
 import java.util.Iterator;
 
+import com.compomics.util.gui.spectrum.ChromatogramPanel;
+import com.compomics.util.gui.spectrum.SpectrumPanel;
 /* -------------------------------
  * EXTERNAL APIs
  * -------------------------------
@@ -57,6 +59,7 @@ import java.util.Iterator;
 //-----------------//
 //... jmzML API ...//
 //-----------------//
+import javax.swing.JInternalFrame;
 import uk.ac.ebi.jmzml.*;
 //import uk.ac.ebi.jmzml.gui.model.*;
 import uk.ac.ebi.jmzml.model.mzml.*;
@@ -95,6 +98,7 @@ import uk.ac.liv.proteosuite.PieChart;
 import uk.ac.liv.proteosuite.TwoDPlot;
 import uk.ac.liv.proteosuite.Node;
 import uk.ac.liv.proteosuite.ProgMonitor;
+import uk.ac.liv.proteosuite.TreeRender;
 import uk.ac.liv.proteosuite.XYZChart;
 //--------------------------------------------------------------------------
 /**
@@ -138,8 +142,8 @@ public class ProteoSuiteView extends FrameView {
 
         //... Object Tree ...//
         Icon leafIcon = new ImageIcon(getClass().getResource("/images/scan.gif"));
-        Icon openleafIcon = new ImageIcon(getClass().getResource("/images/file.gif"));
-        Icon closeleafIcon = new ImageIcon(getClass().getResource("/images/file.gif"));
+        Icon openleafIcon = new ImageIcon(getClass().getResource("/images/scan.gif"));
+        Icon closeleafIcon = new ImageIcon(getClass().getResource("/images/scan.gif"));
         DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)jTMainTree.getCellRenderer();
         renderer.setLeafIcon(leafIcon);
         renderer.setClosedIcon(closeleafIcon);
@@ -242,6 +246,7 @@ public class ProteoSuiteView extends FrameView {
         jLabel8 = new javax.swing.JLabel();
         jPMS = new javax.swing.JPanel();
         jPXIC = new javax.swing.JPanel();
+        jDPXIC = new javax.swing.JDesktopPane();
         jP2D = new javax.swing.JPanel();
         jDP2D = new javax.swing.JDesktopPane();
         jP3D = new javax.swing.JPanel();
@@ -519,7 +524,7 @@ public class ProteoSuiteView extends FrameView {
                         .addGap(76, 76, 76)
                         .addComponent(jLabel6))
                     .addComponent(jLabel7))
-                .addContainerGap(310, Short.MAX_VALUE))
+                .addContainerGap(314, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPHomeLayout.createSequentialGroup()
                 .addContainerGap(538, Short.MAX_VALUE)
                 .addComponent(jLLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -566,15 +571,18 @@ public class ProteoSuiteView extends FrameView {
         jPXIC.setBackground(resourceMap.getColor("jPXIC.background")); // NOI18N
         jPXIC.setName("jPXIC"); // NOI18N
 
+        jDPXIC.setBackground(resourceMap.getColor("jDPXIC.background")); // NOI18N
+        jDPXIC.setName("jDPXIC"); // NOI18N
+
         javax.swing.GroupLayout jPXICLayout = new javax.swing.GroupLayout(jPXIC);
         jPXIC.setLayout(jPXICLayout);
         jPXICLayout.setHorizontalGroup(
             jPXICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 819, Short.MAX_VALUE)
+            .addComponent(jDPXIC, javax.swing.GroupLayout.DEFAULT_SIZE, 819, Short.MAX_VALUE)
         );
         jPXICLayout.setVerticalGroup(
             jPXICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 552, Short.MAX_VALUE)
+            .addComponent(jDPXIC, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
         );
 
         jTPDisplay.addTab(resourceMap.getString("jPXIC.TabConstraints.tabTitle"), jPXIC); // NOI18N
@@ -860,10 +868,12 @@ public class ProteoSuiteView extends FrameView {
         visualMenu.setText(resourceMap.getString("visualMenu.text")); // NOI18N
         visualMenu.setName("visualMenu"); // NOI18N
 
+        jMenuItem1.setAction(actionMap.get("showSpectrum")); // NOI18N
         jMenuItem1.setText(resourceMap.getString("jMenuItem1.text")); // NOI18N
         jMenuItem1.setName("jMenuItem1"); // NOI18N
         visualMenu.add(jMenuItem1);
 
+        jMenuItem2.setAction(actionMap.get("showChromatogram")); // NOI18N
         jMenuItem2.setText(resourceMap.getString("jMenuItem2.text")); // NOI18N
         jMenuItem2.setName("jMenuItem2"); // NOI18N
         visualMenu.add(jMenuItem2);
@@ -1051,7 +1061,11 @@ public class ProteoSuiteView extends FrameView {
             if (node == null) return;
 
             Object nodeInfo = node.getUserObject();
-            if (node.isLeaf()) {                
+            //... Check if node is spectrum or sample ...//
+            System.out.println(nodeInfo.toString());
+            
+            if (nodeInfo.toString().indexOf("scan=") >= 0)
+            {
                 
                 JPopupMenu popup = new JPopupMenu();
                 JMenuItem menuItem = new JMenuItem("Show Spectrum");
@@ -1062,16 +1076,18 @@ public class ProteoSuiteView extends FrameView {
             }
             else
             {
-                
-                JPopupMenu popup = new JPopupMenu();
-                JMenuItem menuItem = new JMenuItem("Show 2D View");
-                JMenuItem menuItem2 = new JMenuItem("Show Chromatogram");
-                javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(proteosuite.ProteoSuiteApp.class).getContext().getActionMap(ProteoSuiteView.class, this);
-                menuItem.setAction(actionMap.get("show2DPlot"));
-                menuItem2.setAction(actionMap.get("showChromatogram"));
-                popup.add(menuItem);
-                popup.add(menuItem2);
-                popup.show(jTMainTree, x, y);
+                if (nodeInfo.toString().indexOf(".mzML") >= 0)
+                {
+                    JPopupMenu popup = new JPopupMenu();
+                    JMenuItem menuItem = new JMenuItem("Show 2D View");
+                    JMenuItem menuItem2 = new JMenuItem("Show Chromatogram");
+                    javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(proteosuite.ProteoSuiteApp.class).getContext().getActionMap(ProteoSuiteView.class, this);
+                    menuItem.setAction(actionMap.get("show2DPlot"));
+                    popup.add(menuItem);
+                    menuItem2.setAction(actionMap.get("showChromatogram"));
+                    popup.add(menuItem2);
+                    popup.show(jTMainTree, x, y);
+                }
             }
         }
         // TODO add your handling code here:
@@ -1121,11 +1137,7 @@ public class ProteoSuiteView extends FrameView {
         {
             File [] aFiles = chooser.getSelectedFiles();
 
-            DefaultTreeCellRenderer rootRender = (DefaultTreeCellRenderer)jTMainTree.getCellRenderer();
             rootNode = new DefaultMutableTreeNode("Project -");
-            rootRender.setLeafIcon(rootIcon);
-            rootRender.setOpenIcon(rootIcon);
-            rootRender.setClosedIcon(rootIcon);
 
 
             progressBar.setVisible(true);
@@ -1190,12 +1202,8 @@ public class ProteoSuiteView extends FrameView {
                             unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum"));
 
                     //... Populate the JTree with sample data ...//
-                    DefaultTreeCellRenderer sampleRender = (DefaultTreeCellRenderer)jTMainTree.getCellRenderer();
                     sampleNode = new DefaultMutableTreeNode(aSamples[iI].getSam_name());
                     rootNode.add(sampleNode);
-                    sampleRender.setLeafIcon(sampleIcon);
-                    sampleRender.setOpenIcon(sampleIcon);
-                    sampleRender.setClosedIcon(sampleIcon);
 
                     //... Populate the JTree with spectrum data ...//
                     //SpectrumData aSpectrums[][] = new SpectrumData[aFiles.length][unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum")];
@@ -1204,10 +1212,15 @@ public class ProteoSuiteView extends FrameView {
                     //... Reading spectrum data ...//
                     MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
                     int iJ = 0;
+                    int iK = 0;
+                    System.out.println("spect:" + spectrums);
+                    System.out.println("iI:" + aFiles.length);
+                    SpectrumData[][] aSpectrums = new SpectrumData[aFiles.length][spectrums];
                     while (spectrumIterator.hasNext())
                     {
                         Spectrum spectrum = spectrumIterator.next();
-                        PrecursorList plist = spectrum.getPrecursorList();
+                        PrecursorList plist = spectrum.getPrecursorList();                        
+                        
 
                         System.out.println("Spectrum ID: " + spectrum.getId());
                         if (plist != null)
@@ -1218,25 +1231,20 @@ public class ProteoSuiteView extends FrameView {
                                 System.out.println("Element will be inserted on pos :" + iJ);
                                 //... Find what position was the precursor node ...//                                
 
-                                DefaultTreeCellRenderer ms2Render = (DefaultTreeCellRenderer)jTMainTree.getCellRenderer();
+                                aSpectrums[iI][iK] = new SpectrumData(spectrum.getId(), "MS2");
                                 ms2Node = new DefaultMutableTreeNode(spectrum.getId());
                                 ms1Node.add(ms2Node);
-                                ms2Render.setLeafIcon(ms2Icon);
-                                ms2Render.setOpenIcon(ms2Icon);
-                                ms2Render.setClosedIcon(ms2Icon);
                                 //aSpectrumNodesMS1[iJ-1].add(aSpectrumNodesMS2[0]);
                             }
                         }
                         else
                         {
-                           DefaultTreeCellRenderer ms1Render = (DefaultTreeCellRenderer)jTMainTree.getCellRenderer();
+                           aSpectrums[iI][iK] = new SpectrumData(spectrum.getId(), "MS1");
                            ms1Node = new DefaultMutableTreeNode(spectrum.getId());
                            sampleNode.add(ms1Node);
-                           ms1Render.setLeafIcon(ms1Icon);
-                           ms1Render.setOpenIcon(ms1Icon);
-                           ms1Render.setClosedIcon(ms1Icon);
                            iJ++;
                         }
+                        iK++;
                         
                         //... Reading Retention Times ...//
 //                        MzMLObjectIterator<CVParam> cvpScanIterator = unmarshaller.unmarshalCollectionFromXpath("/indexedmzML/mzML/run/spectrumList/spectrum/scanList/scan/cvParam", CVParam.class);
@@ -1255,13 +1263,14 @@ public class ProteoSuiteView extends FrameView {
                     System.out.println("*********************************" + "\n\n");
                     progressBar.setValue(iI*100/aFiles.length);
 		}
-                progressBar.setValue(100);
+                progressBar.setValue(0);
+                progressBar.setVisible(false);
 
                 //... Draw tree ...//
                 jTMainTree.setModel(new DefaultTreeModel(rootNode));
                 jTMainTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-                
-                
+
+                //jTMainTree.setCellRenderer(new TreeRender(ms1Icon));
                 
                 jTAOutput.setText(sOutput);
 
@@ -1478,7 +1487,7 @@ public class ProteoSuiteView extends FrameView {
 
             Object nodeInfo = node.getUserObject();
 
-            File xmlFile = new File("D:\\Data\\" + node2.getParent().toString());
+            File xmlFile = new File("D:\\Data\\" + node2.getParent().toString());            
             MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
             try
             {
@@ -1493,7 +1502,7 @@ public class ProteoSuiteView extends FrameView {
                for (int iI = 0; iI < mzNumbers.length; iI++)
                {
                    mz[iI] = mzNumbers[iI].doubleValue();
-                   System.out.println("mz[" + iI + "] = " + mz[iI]);
+                   //System.out.println("mz[" + iI + "] = " + mz[iI]);
                }
 
                //... Reading Intensities ...//
@@ -1503,17 +1512,33 @@ public class ProteoSuiteView extends FrameView {
                for (int iI = 0; iI < intenNumbers.length; iI++)
                {
                    intensities[iI] = intenNumbers[iI].doubleValue();
-                   System.out.println("Int[" + iI + "] = " + intensities[iI]);
+                   //System.out.println("Int[" + iI + "] = " + intensities[iI]);
                }
 
+               JPanel specpanel = new SpectrumPanel(mz, intensities, 0.0, "", "", 50, false, true,
+                       true, true, 1);
+               JInternalFrame internal = new JInternalFrame("MS spectrum <" + nodeInfo.toString() + ">");
+               specpanel.setSize(new java.awt.Dimension(500, 400));
+               specpanel.setPreferredSize(new java.awt.Dimension(500, 400));
+               Icon icon = new ImageIcon(getClass().getResource("/images/icon.gif"));
+               internal.setFrameIcon(icon);
+               internal.setResizable(true);
+               internal.setMaximizable(true);
+               internal.setClosable(true);
+               internal.setIconifiable(true);
 
-               System.out.println("Spectrum" + spectrum.getId());
+               internal.add(specpanel);
+               internal.pack();
+               internal.setVisible(true);
+               jPMS.add(internal);
+
+               //System.out.println("Spectrum" + spectrum.getId());
             }
             catch (MzMLUnmarshallerException ume)
             {
                 System.out.println(ume.getMessage());
             }
-            System.out.println("Displaying " + nodeInfo.toString() + " as Spectrum");
+            //System.out.println("Displaying " + nodeInfo.toString() + " as Spectrum");
     }
     //--------------------------------------------------------------------------
     @Action
@@ -1545,7 +1570,7 @@ public class ProteoSuiteView extends FrameView {
                for (int iI = 0; iI < rtNumbers.length; iI++)
                {
                    rt[iI] = rtNumbers[iI].doubleValue();
-                   System.out.println("mz[" + iI + "] = " + rt[iI]);
+                   //System.out.println("mz[" + iI + "] = " + rt[iI]);
                }
 
                //... Reading Intensities ...//
@@ -1555,16 +1580,32 @@ public class ProteoSuiteView extends FrameView {
                for (int iI = 0; iI < intenNumbers.length; iI++)
                {
                    intensities[iI] = intenNumbers[iI].doubleValue();
-                   System.out.println("Int[" + iI + "] = " + intensities[iI]);
+                   //System.out.println("Int[" + iI + "] = " + intensities[iI]);
                }
+               ChromatogramPanel panel = new ChromatogramPanel(rt, intensities, "RT (mins)", "Intensity (counts)");
 
-               System.out.println("Chromatogram" + chromatogram.getId());
+               JInternalFrame internal = new JInternalFrame("Chromatogram <" + nodeInfo.toString() + ">");
+               panel.setSize(new java.awt.Dimension(500, 400));
+               panel.setPreferredSize(new java.awt.Dimension(500, 400));
+               panel.setMaxPadding(50);
+               Icon icon = new ImageIcon(getClass().getResource("/images/icon.gif"));
+               internal.setFrameIcon(icon);
+               internal.setResizable(true);
+               internal.setMaximizable(true);
+               internal.setClosable(true);
+               internal.setIconifiable(true);
+               
+               internal.add(panel);
+               internal.pack();
+               internal.setVisible(true);
+               jDPXIC.add(internal);
+               //System.out.println("Chromatogram" + chromatogram.getId());
             }
             catch (MzMLUnmarshallerException ume)
             {
                 System.out.println(ume.getMessage());
             }
-            System.out.println("Displaying " + nodeInfo.toString() + " as Chromatogram");
+            //System.out.println("Displaying " + nodeInfo.toString() + " as Chromatogram");
     }
 //--------------------------------------------------------------------------
     @Action
@@ -1594,6 +1635,7 @@ public class ProteoSuiteView extends FrameView {
     private javax.swing.JMenu editMenu;
     private javax.swing.JDesktopPane jDP2D;
     private javax.swing.JDesktopPane jDP3D;
+    private javax.swing.JDesktopPane jDPXIC;
     private javax.swing.JLabel jLLogo;
     private javax.swing.JLabel jLStatus;
     private javax.swing.JLabel jLabel1;

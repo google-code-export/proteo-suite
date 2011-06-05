@@ -60,7 +60,8 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
 
         //... Setting Windows defaults ...//
         super("2D View <" + title + "> - MS1");
-        Icon icon = new ImageIcon(".\\src\\images\\icon.gif");
+        Icon icon = new ImageIcon(getClass().getResource("/images/icon.gif"));
+        
         setFrameIcon(icon);
         setResizable(true);
         setMaximizable(true);        
@@ -153,7 +154,7 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
             //System.out.print("mz=" + mz[iI] + "\t");
             //System.out.print("Intens=" + intens[iI] + "\t");
            // System.out.print("rt=" + art[iI] / 60 + "\n");
-            if (intens[iI] > 100000)
+            if (intens[iI] > 1000)
             {
                 this.data[0][iCounter] = (float) (art[iI]);
                 this.data[1][iCounter] = (float) mz[iI];

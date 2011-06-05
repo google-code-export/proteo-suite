@@ -40,7 +40,7 @@
               <Group type="102" attributes="0">
                   <Component id="jPToolbar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jSPMainDivision" pref="671" max="32767" attributes="0"/>
+                  <Component id="jSPMainDivision" pref="673" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPStatusBar" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -80,7 +80,7 @@
                       <Component id="jToolBar2" min="-2" pref="221" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jToolBar3" min="-2" pref="301" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="245" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -273,7 +273,7 @@
                                       </Group>
                                       <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace pref="310" max="32767" attributes="0"/>
+                                  <EmptySpace pref="314" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <EmptySpace pref="538" max="32767" attributes="0"/>
@@ -430,15 +430,25 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <EmptySpace min="0" pref="819" max="32767" attributes="0"/>
+                              <Component id="jDPXIC" alignment="0" pref="819" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <EmptySpace min="0" pref="552" max="32767" attributes="0"/>
+                              <Component id="jDPXIC" alignment="0" pref="552" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
+                      <SubComponents>
+                        <Container class="javax.swing.JDesktopPane" name="jDPXIC">
+                          <Properties>
+                            <Property name="background" type="java.awt.Color" resourceKey="jDPXIC.background"/>
+                            <Property name="name" type="java.lang.String" value="jDPXIC" noResource="true"/>
+                          </Properties>
+
+                          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout"/>
+                        </Container>
+                      </SubComponents>
                     </Container>
                     <Container class="javax.swing.JPanel" name="jP2D">
                       <Properties>
@@ -584,7 +594,7 @@
                     </DimensionLayout>
                     <DimensionLayout dim="1">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jSPOutput" alignment="0" pref="62" max="32767" attributes="0"/>
+                          <Component id="jSPOutput" alignment="0" pref="64" max="32767" attributes="0"/>
                       </Group>
                     </DimensionLayout>
                   </Layout>
@@ -627,7 +637,7 @@
                   </AuxValues>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="mzML File (s)">
+                      <JTabbedPaneConstraints tabName="Sample File (s)">
                         <Property name="tabTitle" type="java.lang.String" resourceKey="jSPSampleData.TabConstraints.tabTitle"/>
                       </JTabbedPaneConstraints>
                     </Constraint>
@@ -926,12 +936,18 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem1">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="proteosuite.ProteoSuiteView" id="showSpectrum" methodName="showSpectrum"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jMenuItem1.text"/>
                 <Property name="name" type="java.lang.String" value="jMenuItem1" noResource="true"/>
               </Properties>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
               <Properties>
+                <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.swingapp.ActionEditor">
+                  <action class="proteosuite.ProteoSuiteView" id="showChromatogram" methodName="showChromatogram"/>
+                </Property>
                 <Property name="text" type="java.lang.String" resourceKey="jMenuItem2.text"/>
                 <Property name="name" type="java.lang.String" value="jMenuItem2" noResource="true"/>
               </Properties>
