@@ -70,13 +70,18 @@ public class XYZChart extends JInternalFrame {
 
       //String seriesx[] = {"0:05","0:10","0:15","0:20","0:25"};
       //String seriesy[] = {"200","250","300","350","400", "450", "500", "550", "600", "650", "700"};
-      String seriesx[] = new String[1000];
-      String seriesy[] = new String[100];
+      String seriesx[] = new String[rt.length];
+      String seriesy[] = new String[mz.length];
 
-      for (int iI=0; iI<100; iI++)
+      for (int iI=0; iI<mz.length; iI++)
       {
-          seriesx[iI] = Integer.toString(iI);
+          
           seriesy[iI] = Integer.toString(iI);
+      }
+      for (int iI=0; iI<rt.length; iI++)
+      {
+          
+          seriesx[iI] = Integer.toString(iI);
       }
      
 
@@ -96,12 +101,12 @@ public class XYZChart extends JInternalFrame {
 //            { 270054.0, 10003.0, 40003.0, 400080.0, 3000004.0, 0.0 },
 //            { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 }
 //      };
-      double[][] data = new double[100][100];
-      for (int iI=0; iI<100; iI++)
+      double[][] data = new double[rt.length][mz.length];
+      for (int iI=0; iI<rt.length; iI++)
       {
-           for (int iJ=0; iJ<100; iJ++)
+           for (int iJ=0; iJ<mz.length; iJ++)
            {
-               data[iI][iJ] = iI*iI*100 + 1000000;
+               //data[iI][iJ] = (iI*10)*(iI*10) + 1000000;
            }
       }
 

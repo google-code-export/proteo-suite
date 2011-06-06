@@ -130,17 +130,17 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
         panel.setMouseWheelEnabled(true);
         panel.setDisplayToolTips(true);
                 
-        setLayout(new GridLayout(2,1));
+        //setLayout(new GridLayout(2,1));
         //setContentPane(panel);
-        JButton button1 = new JButton("Click");
-        JButton button2 = new JButton("Here");
+        //JButton button1 = new JButton("Click");
+        //JButton button2 = new JButton("Here");
         //panel.add(button1);
         //panel.add(button2);
         add(panel);
 
-        JPanel chartmenu = new JPanel();
-        chartmenu.setSize(400, 100);
-        add(chartmenu);
+        //JPanel chartmenu = new JPanel();
+        //chartmenu.setSize(400, 100);
+        //add(chartmenu);
         //addMouseMotionListener(this);
     }
 

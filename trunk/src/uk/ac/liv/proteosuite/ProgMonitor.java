@@ -47,10 +47,10 @@ public class ProgMonitor extends JPanel implements PropertyChangeListener {
         }
     }
 
-    public ProgMonitor(String title) {
+    public ProgMonitor(String title, int perc, int total) {
         progMonitor = new ProgressMonitor(ProgMonitor.this,
                                   title,
-                                  "", 0, 100);
+                                  "", perc, total);
         progMonitor.setProgress(0);
         task = new Task();
         task.addPropertyChangeListener(this);
