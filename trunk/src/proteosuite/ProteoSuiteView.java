@@ -42,6 +42,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.*;
 import javax.swing.Timer;
 import javax.swing.JComponent;
+import javax.swing.JProgressBar;
+import javax.swing.JLabel;
 
 import javax.swing.JPopupMenu;
 import javax.swing.JMenuItem;
@@ -215,6 +217,7 @@ public class ProteoSuiteView extends FrameView {
 
         jSPTopDivision.setDividerLocation(200);        
         jTPDisplay.setSelectedIndex(0);
+        jTPResults.setSelectedIndex(1);
         getFrame().pack();
     }
 //--------------------------------------------------------------------------
@@ -1062,7 +1065,7 @@ public class ProteoSuiteView extends FrameView {
 
             Object nodeInfo = node.getUserObject();
             //... Check if node is spectrum or sample ...//
-            System.out.println(nodeInfo.toString());
+            //System.out.println(nodeInfo.toString());
             
             if (nodeInfo.toString().indexOf("scan=") >= 0)
             {
@@ -1094,8 +1097,14 @@ public class ProteoSuiteView extends FrameView {
     }//GEN-LAST:event_jTMainTreeMouseClicked
 //--------------------------------------------------------------------------
     @Action
-    public void newProject() {           
-
+    public void newProject() {
+           double[] mz = new double[100];
+           double[] art = new double[100];
+            XYZChart demo = new XYZChart("Test", mz, art);
+            jTPDisplay.setSelectedIndex(3);
+            jDP2D.add(demo);
+            demo.pack();
+            demo.setVisible(true);
     }
 //--------------------------------------------------------------------------
     @Action
@@ -1139,9 +1148,21 @@ public class ProteoSuiteView extends FrameView {
 
             rootNode = new DefaultMutableTreeNode("Project -");
 
+            JFrame frame = new JFrame("Processing...");
+            JPanel panel = new JPanel();
+            Icon procIcon = new ImageIcon(getClass().getResource("/images/processing.gif"));
+            JLabel lprocess = new JLabel("Processing file... ");
+            lprocess.setIcon(procIcon);
+            panel.add(lprocess);
+            panel.setBackground(Color.white);
+            panel.setPreferredSize(new java.awt.Dimension(250, 50));
+            frame.setContentPane(panel);
+            frame.setLocationRelativeTo(mainPanel);
+            frame.setResizable(false);
+            frame.pack();
+            frame.setVisible(true);
 
-            progressBar.setVisible(true);
-            progressBar.setValue(0);
+
 	    if (aFiles != null && aFiles.length > 0)
             {
                 jLStatus.setText("Loading files, please wait...");
@@ -1157,7 +1178,8 @@ public class ProteoSuiteView extends FrameView {
                 for (int iI = 0; iI < aFiles.length; iI++)
                 {
 
-                    //JComponent newContentPane = new ProgMonitor("Loading file " + aFiles[iI].getName());
+                    //int perc = iI / aFiles.length * 100;
+                    //JComponent newContentPane = new ProgMonitor("Loading file " + aFiles[iI].getName(), iI, 100);
 
                     //System.out.println("File selected: " + aFiles[iI].getPath());
                     //System.out.println("Name selected: " + aFiles[iI].getName());
@@ -1213,8 +1235,8 @@ public class ProteoSuiteView extends FrameView {
                     MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
                     int iJ = 0;
                     int iK = 0;
-                    System.out.println("spect:" + spectrums);
-                    System.out.println("iI:" + aFiles.length);
+                    //System.out.println("spect:" + spectrums);
+                    //System.out.println("iI:" + aFiles.length);
                     SpectrumData[][] aSpectrums = new SpectrumData[aFiles.length][spectrums];
                     while (spectrumIterator.hasNext())
                     {
@@ -1222,13 +1244,13 @@ public class ProteoSuiteView extends FrameView {
                         PrecursorList plist = spectrum.getPrecursorList();                        
                         
 
-                        System.out.println("Spectrum ID: " + spectrum.getId());
+                        //System.out.println("Spectrum ID: " + spectrum.getId());
                         if (plist != null)
                         {
                             if (plist.getCount().intValue() == 1)
                             {
-                                System.out.println("MS2:" + plist.getPrecursor().get(0).getSpectrumRef());
-                                System.out.println("Element will be inserted on pos :" + iJ);
+                                //System.out.println("MS2:" + plist.getPrecursor().get(0).getSpectrumRef());
+                                //System.out.println("Element will be inserted on pos :" + iJ);
                                 //... Find what position was the precursor node ...//                                
 
                                 aSpectrums[iI][iK] = new SpectrumData(spectrum.getId(), "MS2");
@@ -1260,11 +1282,8 @@ public class ProteoSuiteView extends FrameView {
 //
 //                        }
                     }
-                    System.out.println("*********************************" + "\n\n");
-                    progressBar.setValue(iI*100/aFiles.length);
+                    //System.out.println("*********************************" + "\n\n");
 		}
-                progressBar.setValue(0);
-                progressBar.setVisible(false);
 
                 //... Draw tree ...//
                 jTMainTree.setModel(new DefaultTreeModel(rootNode));
@@ -1295,10 +1314,11 @@ public class ProteoSuiteView extends FrameView {
                 jLStatus.setText(aSamples.length + " file(s) loaded");
                 jTPResults.setSelectedIndex(1);
                 
-                //progressBar.setValue(0);
-                //progressBar.setVisible(false);
-	    }
-        }
+	    } //... Files
+            
+            frame.setVisible(false);
+            frame.dispose();
+        }  //... if
     }
     //--------------------------------------------------------------------------
     @Action
@@ -1388,6 +1408,8 @@ public class ProteoSuiteView extends FrameView {
 
             double rt = 0;
             int iCounter = 0;
+            
+
 
             File xmlFile = new File("D:\\Data\\" + node.toString());
             MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
@@ -1458,15 +1480,12 @@ public class ProteoSuiteView extends FrameView {
                     System.out.println(ume.getMessage());
                 }
             }
-            TwoDPlot demo2 = new TwoDPlot(nodeInfo.toString(), mz, intensities, art);
-            XYZChart demo = new XYZChart(nodeInfo.toString(), mz, art);
+            TwoDPlot demo2 = new TwoDPlot(nodeInfo.toString(), mz, intensities, art);            
             jDP2D.add(demo2);
-            jDP2D.add(demo);
-            demo.pack();
-            demo.setVisible(true);
+
             demo2.pack();
             demo2.setVisible(true);
-            System.out.println("Displaying " + nodeInfo.toString() + " as 2D");
+            //System.out.println("Displaying " + nodeInfo.toString() + " as 2D");
 
             jTPDisplay.setSelectedIndex(3);
     }
@@ -1555,7 +1574,7 @@ public class ProteoSuiteView extends FrameView {
             Object nodeInfo = node.getUserObject();
 
             File xmlFile = new File("D:\\Data\\" + node.toString());
-            System.out.println(xmlFile.toString());
+            //System.out.println(xmlFile.toString());
             MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
             try
             {
