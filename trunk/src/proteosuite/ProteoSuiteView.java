@@ -1098,13 +1098,13 @@ public class ProteoSuiteView extends FrameView {
 //--------------------------------------------------------------------------
     @Action
     public void newProject() {
-           double[] mz = new double[100];
-           double[] art = new double[100];
-            XYZChart demo = new XYZChart("Test", mz, art);
-            jTPDisplay.setSelectedIndex(3);
-            jDP2D.add(demo);
-            demo.pack();
-            demo.setVisible(true);
+        double[] mz = new double[190];
+        double[] rt = new double[49];
+        XYZChart demo = new XYZChart("Test", mz, rt, 15000000);
+        jTPDisplay.setSelectedIndex(3);
+        jDP2D.add(demo);
+        demo.pack();
+        demo.setVisible(true);
     }
 //--------------------------------------------------------------------------
     @Action

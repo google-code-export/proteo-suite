@@ -145,7 +145,7 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
     }
 
     /**
-     * Populates the data array with random values.
+     * 
      */
     private void populateData(double[] mz, double[] intens, double[] art) {
 
