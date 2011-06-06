@@ -28,6 +28,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
+import java.math.BigInteger;
 
 import java.io.File;
 
@@ -50,6 +52,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import java.util.List;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
@@ -109,7 +112,8 @@ import uk.ac.liv.proteosuite.XYZChart;
 //--------------------------------------------------------------------------
 public class ProteoSuiteView extends FrameView {
 
-
+        //... Defining list of unmarshallers ...//
+        private ArrayList<MzMLUnmarshaller> iUnmarshaller = null;
 
     public ProteoSuiteView(SingleFrameApplication app) {
         super(app);
@@ -1109,16 +1113,14 @@ public class ProteoSuiteView extends FrameView {
 //--------------------------------------------------------------------------
     @Action
     public void importFile() {
-
-        String sOutput = ""; 
-        long time;
+       
+        //... Defining tree nodes ...//
         DefaultMutableTreeNode rootNode = null;
         DefaultMutableTreeNode sampleNode = null;
         DefaultMutableTreeNode ms1Node = null;
         DefaultMutableTreeNode ms2Node = null;
 
-
-        //... Select file(s) ...//
+        //... Selecting file(s) ...//
         JFileChooser chooser = new JFileChooser("user.home");
         chooser.setDialogTitle("Select the file(s) to analyze");
 
@@ -1130,14 +1132,14 @@ public class ProteoSuiteView extends FrameView {
         chooser.setFileFilter(filter2);
         chooser.setFileFilter(filter);
         chooser.setMultiSelectionEnabled(true);
-        chooser.setCurrentDirectory(new java.io.File("D:/Data"));
+        chooser.setCurrentDirectory(new java.io.File("D:/Data")); //... If not found it goes to Home ...//
 
+        //... Setting icons for tree ...//
         Icon rootIcon = new ImageIcon(getClass().getResource("/images/icon_small.gif"));
         Icon sampleIcon = new ImageIcon(getClass().getResource("/images/file.gif"));
         Icon ms1Icon = new ImageIcon(getClass().getResource("/images/scan.gif"));
         Icon ms2Icon = new ImageIcon(getClass().getResource("/images/scan.gif"));
         
-
         //... Retrieving selection from user ...//
         int returnVal = chooser.showOpenDialog(null);
 
@@ -1146,179 +1148,169 @@ public class ProteoSuiteView extends FrameView {
         {
             File [] aFiles = chooser.getSelectedFiles();
 
-            rootNode = new DefaultMutableTreeNode("Project -");
-
-            JFrame frame = new JFrame("Processing...");
-            JPanel panel = new JPanel();
-            Icon procIcon = new ImageIcon(getClass().getResource("/images/processing.gif"));
-            JLabel lprocess = new JLabel("Processing file... ");
-            lprocess.setIcon(procIcon);
-            panel.add(lprocess);
-            panel.setBackground(Color.white);
-            panel.setPreferredSize(new java.awt.Dimension(250, 50));
-            frame.setContentPane(panel);
-            frame.setLocationRelativeTo(mainPanel);
-            frame.setResizable(false);
-            frame.pack();
-            frame.setVisible(true);
-
+            rootNode = new DefaultMutableTreeNode("Project - "); //... This will contain the name of the project once we set it up ..//            
 
 	    if (aFiles != null && aFiles.length > 0)
             {
+                //... Code to be inserted here ...//
+                //.... VALIDATING FILE ...//
+
+                //... Setting progress bar ...// (To do: This needs to be set up in a thread)
+                //********************************************************
+                final JFrame frameProgBar = new JFrame("Processing...");
+                final JPanel panel = new JPanel();
+                Icon procIcon = new ImageIcon(getClass().getResource("/images/processing.gif"));
+                JLabel lprocess = new JLabel("Processing file... ");
+                lprocess.setIcon(procIcon);
+                panel.add(lprocess);
+                panel.setBackground(Color.white);
+                panel.setPreferredSize(new java.awt.Dimension(250, 50));
+                frameProgBar.setContentPane(panel);
+                frameProgBar.setLocationRelativeTo(mainPanel);
+                frameProgBar.setResizable(false);
+                frameProgBar.pack();
+                new Thread("ProgressMonitor")
+                {
+                    @Override
+                    public void run()
+                    {
+                        frameProgBar.setVisible(true);
+                    }
+                }.start();
+
+
                 jLStatus.setText("Loading files, please wait...");
                 Sample aSamples[] = new Sample[aFiles.length];
 
                 //... Removing initial jTree default configuration ...//
                 jTMainTree.removeAll();                
 
-
-                time = System.currentTimeMillis();
-
                 //... Reading selected files ...//
                 for (int iI = 0; iI < aFiles.length; iI++)
                 {
 
-                    //int perc = iI / aFiles.length * 100;
-                    //JComponent newContentPane = new ProgMonitor("Loading file " + aFiles[iI].getName(), iI, 100);
-
-                    //System.out.println("File selected: " + aFiles[iI].getPath());
-                    //System.out.println("Name selected: " + aFiles[iI].getName());
-
                     File xmlFile = new File(aFiles[iI].getPath());
 
                     //... Unmarshall data using jzmzML API ...//
+                    iUnmarshaller = new ArrayList<MzMLUnmarshaller>();
                     MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
-                    time = System.currentTimeMillis();                    
+                    iUnmarshaller.add(unmarshaller);                    
 
-                    //... FULL UNMARSHALL (Not used yet) MzML completeMzML = unmarshaller.unmarshall();
+                    //... Creating object for samples ...//
+                    CVList cvList = unmarshaller.unmarshalFromXpath("/cvList", CVList.class);                    
+                    aSamples[iI] = new Sample(unmarshaller.getMzMLId(),
+                                                aFiles[iI].getName(),
+                                                unmarshaller.getMzMLVersion(),
+                                                unmarshaller.getMzMLAccession(), cvList.getCount(),
+                                                unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum"));
 
-                    //System.out.println("MzML Version: = " + unmarshaller.getMzMLVersion());
-                    //System.out.println("MzML ID: = " + unmarshaller.getMzMLId());
-                    //System.out.println("MzML Accession: = " + unmarshaller.getMzMLAccession());
-
-                    CVList cvList = unmarshaller.unmarshalFromXpath("/cvList", CVList.class);
-                    //System.out.println("Number of defined CVs in this mzML file: " + cvList.getCount());
-
-                    //... Reading CV params ...//
-                    
-                    //MzMLObjectIterator<CV> cvIterator = unmarshaller.unmarshalCollectionFromXpath("/cvList/cv", CV.class);
-                    //while (cvIterator.hasNext())
-                   // {
-                   //     CV cv = cvIterator.next();
-
-                   //     System.out.println("CV Id: " + cv.getId());
-                   //     System.out.println("CV Name: " + cv.getFullName());
-                   //     System.out.println("CV Version: " + cv.getVersion());
-                   //     System.out.println("CV URI: " + cv.getURI());
-                   // }
-
-                    FileDescription fd = unmarshaller.unmarshalFromXpath("/fileDescription", FileDescription.class);
-                    //System.out.println("Number of source files: " + fd.getSourceFileList().getCount());
-
-                    //System.out.println("Supported XPath:" + Constants.XML_INDEXED_XPATHS);
-
-                    //System.out.println("Number of spectrum elements: " + unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum"));
-
-                    aSamples[iI] = new Sample(aFiles[iI].getName(), unmarshaller.getMzMLVersion(),
-                            unmarshaller.getMzMLId(), unmarshaller.getMzMLAccession(), cvList.getCount(),
-                            unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum"));
-
-                    //... Populate the JTree with sample data ...//
-                    sampleNode = new DefaultMutableTreeNode(aSamples[iI].getSam_name());
+                    //... Populate the JTree with samples ...//
+                    sampleNode = new DefaultMutableTreeNode(aSamples[iI].getSamName());
                     rootNode.add(sampleNode);
 
-                    //... Populate the JTree with spectrum data ...//
-                    //SpectrumData aSpectrums[][] = new SpectrumData[aFiles.length][unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum")];
+                    //... Populate the JTree with spectrums ...//                    
                     int spectrums = unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum");
 
                     //... Reading spectrum data ...//
                     MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
-                    int iJ = 0;
-                    int iK = 0;
-                    //System.out.println("spect:" + spectrums);
-                    //System.out.println("iI:" + aFiles.length);
-                    SpectrumData[][] aSpectrums = new SpectrumData[aFiles.length][spectrums];
+                    int iJ = 0; //... For Spectrum Counter ...//
+                    int iK = 0; //... For Spectrum Counter ...//
+                    SpectrumData[][] aSpectrums = new SpectrumData[aFiles.length][spectrums]; //... To store MS1 and MS2 spectrums ...//
                     while (spectrumIterator.hasNext())
                     {
-                        Spectrum spectrum = spectrumIterator.next();
-                        PrecursorList plist = spectrum.getPrecursorList();                        
-                        
 
-                        //System.out.println("Spectrum ID: " + spectrum.getId());
+                        Spectrum spectrum = spectrumIterator.next();
+
+                        //... Reading CV param for retention time and MS level ...//
+                        String mslevel = "";                        
+                        List<CVParam> specParam = spectrum.getCvParam();
+                        for (Iterator lCVParamIterator = specParam.iterator(); lCVParamIterator.hasNext();)
+                        {
+                           CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                           if (lCVParam.getAccession().equals("MS:1000511"))
+                           {
+                               mslevel = lCVParam.getValue().trim();
+                           }
+                        }
+                        
+                        double rt = 0.0;
+                        List<CVParam> scanParam = spectrum.getScanList().getScan().get(0).getCvParam();
+                        for (Iterator lCVParamIterator = scanParam.iterator(); lCVParamIterator.hasNext();)
+                        {
+                           CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                           if (lCVParam.getAccession().equals("MS:1000016"))
+                           {
+                               rt = Double.parseDouble(lCVParam.getValue().trim());
+                           }
+                        }
+
+                        //... Setting a more descriptive name for each node ...//
+                        DecimalFormat df = new DecimalFormat("#.0000");
+                        long spectrumIndex = spectrum.getIndex().longValue();
+                        spectrumIndex++;
+
+                        String nodeName = "Scan: " + spectrumIndex + " @ " + df.format(rt) + " mins - MS" + mslevel;
+
+                        //... Determining precursor list if exists (Add MSn as subnode) ...//
+                        PrecursorList plist = spectrum.getPrecursorList();
                         if (plist != null)
                         {
                             if (plist.getCount().intValue() == 1)
-                            {
-                                //System.out.println("MS2:" + plist.getPrecursor().get(0).getSpectrumRef());
-                                //System.out.println("Element will be inserted on pos :" + iJ);
-                                //... Find what position was the precursor node ...//                                
-
-                                aSpectrums[iI][iK] = new SpectrumData(spectrum.getId(), "MS2");
-                                ms2Node = new DefaultMutableTreeNode(spectrum.getId());
+                            {                    
+                                aSpectrums[iI][iK] = new SpectrumData(spectrum.getId(), nodeName, mslevel, rt);
+                                ms2Node = new DefaultMutableTreeNode(nodeName);
                                 ms1Node.add(ms2Node);
-                                //aSpectrumNodesMS1[iJ-1].add(aSpectrumNodesMS2[0]);
                             }
                         }
                         else
                         {
-                           aSpectrums[iI][iK] = new SpectrumData(spectrum.getId(), "MS1");
-                           ms1Node = new DefaultMutableTreeNode(spectrum.getId());
+                           aSpectrums[iI][iK] = new SpectrumData(spectrum.getId(), nodeName, mslevel, rt);
+                           ms1Node = new DefaultMutableTreeNode(nodeName);
                            sampleNode.add(ms1Node);
                            iJ++;
                         }
                         iK++;
-                        
-                        //... Reading Retention Times ...//
-//                        MzMLObjectIterator<CVParam> cvpScanIterator = unmarshaller.unmarshalCollectionFromXpath("/indexedmzML/mzML/run/spectrumList/spectrum/scanList/scan/cvParam", CVParam.class);
-//                        while (cvpScanIterator.hasNext())
-//                        {
-//                            CVParam cvpScan = cvpScanIterator.next();
-//
-//                            System.out.println("CVParam Accession: " + cvpScan.getAccession());
-//                            System.out.println("CVParam Name: " + cvpScan.getName());
-//                            System.out.println("CVParam Value: " + cvpScan.getValue());
-//                            System.out.println("CVParam Unit Acc: " + cvpScan.getUnitAccession());
-//                            System.out.println("CVParam Unit Name: " + cvpScan.getUnitName());
-//
-//                        }
-                    }
-                    //System.out.println("*********************************" + "\n\n");
+                    }                    
 		}
 
                 //... Draw tree ...//
                 jTMainTree.setModel(new DefaultTreeModel(rootNode));
-                jTMainTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-
-                //jTMainTree.setCellRenderer(new TreeRender(ms1Icon));
-                
-                jTAOutput.setText(sOutput);
+                jTMainTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);                                
 
                 //... Fill JTable ...//
                 DefaultTableModel model = new DefaultTableModel();
                 jTSampleData.setModel(model);
-                model.addColumn("Name");
-                model.addColumn("Version");
                 model.addColumn("ID");
+                model.addColumn("Name");
+                model.addColumn("Version");                
                 model.addColumn("Accession");
                 model.addColumn("CVs");
                 model.addColumn("Spectrums");
                 for(int iI=0; iI<aSamples.length; iI++)
                 {
-                    model.insertRow(model.getRowCount(), new Object[]{aSamples[iI].getSam_name(),
-                                                                      aSamples[iI].getSam_version(),
-                                                                      aSamples[iI].getSam_id(),
-                                                                      aSamples[iI].getSam_accession(),
-                                                                      aSamples[iI].getSam_cvs(),
-                                                                      aSamples[iI].getSam_spectrums()});
+                    model.insertRow(model.getRowCount(), new Object[]{aSamples[iI].getSamId(),
+                                                                      aSamples[iI].getSamName(),
+                                                                      aSamples[iI].getSamVersion(),                                                                      
+                                                                      aSamples[iI].getSamAccession(),
+                                                                      aSamples[iI].getSamCVs(),
+                                                                      aSamples[iI].getSamSpectrums()});
                 }
                 jLStatus.setText(aSamples.length + " file(s) loaded");
                 jTPResults.setSelectedIndex(1);
+
+                new Thread("Closing")
+                {
+                    @Override
+                    public void run()
+                    {
+                        frameProgBar.setVisible(false);
+                        frameProgBar.dispose();
+                    }
+                }.start();
                 
-	    } //... Files
+	    } //... From Files
             
-            frame.setVisible(false);
-            frame.dispose();
-        }  //... if
+        }  //... From If
     }
     //--------------------------------------------------------------------------
     @Action

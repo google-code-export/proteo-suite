@@ -47,7 +47,7 @@ public class TreeRender extends DefaultTreeCellRenderer {
         protected boolean getNodeType(Object value) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
             SpectrumData nodeInfo = (SpectrumData)(node.getUserObject());
-            String type_data = nodeInfo.getSpec_type_data();
+            String type_data = nodeInfo.getSpecMSLevel();
             if (type_data.indexOf("MS1") >= 0) {
                 return true;
             }
