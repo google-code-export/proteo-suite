@@ -1,6 +1,6 @@
 @echo off
 
-set HEAP_SIZE=3072
+set HEAP_SIZE=2024
 
 set JAVA_COMMAND=java
 

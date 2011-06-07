@@ -31,6 +31,7 @@ import org.jfree.ui.*;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import java.util.Random;
 
 
 public class XYZChart extends JInternalFrame {
@@ -61,7 +62,7 @@ public class XYZChart extends JInternalFrame {
 
         final ChartPanel chartPanel = new ChartPanel(chart, true);
 
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 400));
+        chartPanel.setPreferredSize(new java.awt.Dimension(600, 400));
         chartPanel.setMouseWheelEnabled(true);
         add(chartPanel);
         //frame.setContentPane(chartPanel);
@@ -164,7 +165,9 @@ public class XYZChart extends JInternalFrame {
       {
            for (int iJ=0; iJ<mz.length; iJ++)
            {
-               data[iI][iJ] = (iI*100)*(iI*100) + 1000000;
+               //data[iI][iJ] = (iI*100)*(iI*100) + 1000000;
+               Random generator = new Random();
+               data[iI][iJ] = (generator.nextInt(10000)*10000) + 1000;
            }
       }
       this.intens = data;

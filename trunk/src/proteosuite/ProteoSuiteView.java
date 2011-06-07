@@ -1149,7 +1149,7 @@ public class ProteoSuiteView extends FrameView {
 
                 //... Setting progress bar ...// (To do: This needs to be set up in a thread)
                 //********************************************************
-                final JFrame frameProgBar = new JFrame("Processing...");
+                final JFrame frameProgBar = new JFrame("Processing files ");
                 final JPanel panel = new JPanel();
                 Image iconApp = new ImageIcon(this.getClass().getResource("/images/icon.gif")).getImage();
                 Icon procIcon = new ImageIcon(getClass().getResource("/images/processing.gif"));
@@ -1157,7 +1157,7 @@ public class ProteoSuiteView extends FrameView {
                 lprocess.setIcon(procIcon);
                 panel.add(lprocess);
                 panel.setBackground(Color.white);
-                panel.setPreferredSize(new java.awt.Dimension(250, 50));
+                panel.setPreferredSize(new java.awt.Dimension(300, 50));
                 frameProgBar.setContentPane(panel);
                 frameProgBar.setIconImage(iconApp);
                 frameProgBar.setLocationRelativeTo(mainPanel);
@@ -1182,7 +1182,7 @@ public class ProteoSuiteView extends FrameView {
                 //... Reading selected files ...//
                 for (int iI = 0; iI < aFiles.length; iI++)
                 {
-
+                    frameProgBar.setTitle("Processing file: <" + aFiles[iI].getName() + ">");
                     File xmlFile = new File(aFiles[iI].getPath());
 
                     //... Unmarshall data using jzmzML API ...//
@@ -1324,8 +1324,8 @@ public class ProteoSuiteView extends FrameView {
 //--------------------------------------------------------------------------
     @Action
     public void printResults() {
-        double[] mz = new double[190];
-        double[] rt = new double[49];
+        double[] mz = new double[50];
+        double[] rt = new double[50];
         XYZChart demo = new XYZChart("Test", mz, rt, 15000000);
         jTPDisplay.setSelectedIndex(3);
         jDP2D.add(demo);
