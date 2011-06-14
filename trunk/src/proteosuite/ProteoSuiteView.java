@@ -32,6 +32,7 @@ import java.text.DecimalFormat;
 import java.math.BigInteger;
 
 import java.io.File;
+import javax.swing.UIManager;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -56,6 +57,10 @@ import java.util.ArrayList;
 
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
+import java.util.zip.GZIPInputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.FileInputStream;
 /* -------------------------------
  * EXTERNAL APIs
  * -------------------------------
@@ -64,7 +69,10 @@ import com.compomics.util.gui.spectrum.SpectrumPanel;
 //-----------------//
 //... jmzML API ...//
 //-----------------//
+import java.io.IOException;
+import java.util.logging.Level;
 import javax.swing.JInternalFrame;
+import javax.swing.UnsupportedLookAndFeelException;
 import uk.ac.ebi.jmzml.*;
 //import uk.ac.ebi.jmzml.gui.model.*;
 import uk.ac.ebi.jmzml.model.mzml.*;
@@ -118,8 +126,22 @@ public class ProteoSuiteView extends FrameView {
     public ProteoSuiteView(SingleFrameApplication app) {
         super(app);
 
+        //... Setting standard look and feel ...//
+        try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                } catch (ClassNotFoundException ex) {
+                    System.out.println(ex.getStackTrace());
+                } catch (InstantiationException ex) {
+                    System.out.println(ex.getStackTrace());
+                } catch (IllegalAccessException ex) {
+                    System.out.println(ex.getStackTrace());
+                } catch (UnsupportedLookAndFeelException ex) {
+                    System.out.println(ex.getStackTrace());
+        }
+        
         //... Initializing components using NetBeans ...//
-        initComponents();     
+        initComponents();
+        
         
         //... Setting window defaults ...//
         getFrame().setTitle("ProteoSuite 0.1.0 - Software for Quantitative Proteomics (Beta Version)");        
@@ -129,7 +151,7 @@ public class ProteoSuiteView extends FrameView {
         getFrame().setIconImage(iconApp);
         
         //... Starting logo ...//
-        Icon logoIcon = new ImageIcon(getClass().getResource("/images/logo.gif"));
+        Icon logoIcon = new ImageIcon(getClass().getResource("/images/logo.png"));
         jLLogo.setIcon(logoIcon);
 
         //... Main Menu ...//
@@ -1120,6 +1142,14 @@ public class ProteoSuiteView extends FrameView {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("mzML Files (*.mzML)", "mzML");
         FileNameExtensionFilter filter2 = new FileNameExtensionFilter("mzIdentML Files (*.mzid)", "mzIdentML");
         FileNameExtensionFilter filter3 = new FileNameExtensionFilter("mzQuantML Files (*.mzQuantML)", "mzQuantML");
+
+        FileNameExtensionFilter filter4 = new FileNameExtensionFilter("mzML Compressed Files (*.mzML.gz)", "gz");
+        FileNameExtensionFilter filter5 = new FileNameExtensionFilter("mzIdentML Compressed Files (*.mzid.gz)", "gz");
+        FileNameExtensionFilter filter6 = new FileNameExtensionFilter("mzQuantML Compressed Files (*.mzQuantML.gz)", "gz");
+
+        chooser.setFileFilter(filter6);
+        chooser.setFileFilter(filter5);
+        chooser.setFileFilter(filter4);
         chooser.setFileFilter(filter3);
         chooser.setFileFilter(filter2);
         chooser.setFileFilter(filter);
@@ -1147,6 +1177,7 @@ public class ProteoSuiteView extends FrameView {
                 //... Code to be inserted here ...//
                 //.... VALIDATING FILE ...//
 
+
                 //... Setting progress bar ...// (To do: This needs to be set up in a thread)
                 //********************************************************
                 final JFrame frameProgBar = new JFrame("Processing files ");
@@ -1172,7 +1203,6 @@ public class ProteoSuiteView extends FrameView {
                     }
                 }.start();
 
-
                 jLStatus.setText("Loading files, please wait...");
                 Sample aSamples[] = new Sample[aFiles.length];
 
@@ -1182,6 +1212,28 @@ public class ProteoSuiteView extends FrameView {
                 //... Reading selected files ...//
                 for (int iI = 0; iI < aFiles.length; iI++)
                 {
+//                    int mid= aFiles[iI].getName().lastIndexOf(".");
+//                    String ext=aFiles[iI].getName().substring(mid+1,aFiles[iI].getName().length());
+//                    if (ext.equals("gz"))
+//                    {
+//                        try
+//                        {
+//                            FileInputStream fin = new FileInputStream(aFiles[iI].getPath());
+//                            GZIPInputStream gzis = new GZIPInputStream(fin);
+//                            InputStreamReader xover = new InputStreamReader(gzis);
+//                            BufferedReader is = new BufferedReader(xover);
+//                            String line;
+//                            while ((line = is.readLine()) != null)
+//                            {
+//                              //System.out.println("Read: " + line);
+//                            }
+//                        }
+//                        catch (IOException e)
+//                        {
+//                            System.out.println(e.getMessage());
+//                        }
+//                    }
+
                     frameProgBar.setTitle("Processing file: <" + aFiles[iI].getName() + ">");
                     File xmlFile = new File(aFiles[iI].getPath());
 
