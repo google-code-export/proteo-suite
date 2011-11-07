@@ -40,7 +40,7 @@
               <Group type="102" attributes="0">
                   <Component id="jPToolbar" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jSPMainDivision" pref="671" max="32767" attributes="0"/>
+                  <Component id="jSPMainDivision" pref="673" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPStatusBar" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -80,7 +80,7 @@
                       <Component id="jToolBar2" min="-2" pref="221" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jToolBar3" min="-2" pref="301" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="245" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -258,7 +258,7 @@
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -273,19 +273,14 @@
                                       </Group>
                                       <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace pref="314" max="32767" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace pref="538" max="32767" attributes="0"/>
-                                  <Component id="jLLogo" min="-2" pref="253" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                                  <EmptySpace pref="329" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                                   <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
@@ -298,20 +293,12 @@
                                       <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace pref="271" max="32767" attributes="0"/>
-                                  <Component id="jLLogo" min="-2" pref="66" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
+                                  <EmptySpace pref="370" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
                       </Layout>
                       <SubComponents>
-                        <Component class="javax.swing.JLabel" name="jLLogo">
-                          <Properties>
-                            <Property name="text" type="java.lang.String" resourceKey="jLLogo.text"/>
-                            <Property name="name" type="java.lang.String" value="jLLogo" noResource="true"/>
-                          </Properties>
-                        </Component>
                         <Component class="javax.swing.JLabel" name="jLabel1">
                           <Properties>
                             <Property name="font" type="java.awt.Font" resourceKey="jLabel1.font"/>
@@ -573,61 +560,6 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
               <SubComponents>
-                <Container class="javax.swing.JPanel" name="jPOutput">
-                  <Properties>
-                    <Property name="background" type="java.awt.Color" resourceKey="jPOutput.background"/>
-                    <Property name="name" type="java.lang.String" value="jPOutput" noResource="true"/>
-                  </Properties>
-                  <Constraints>
-                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="Output">
-                        <Property name="tabTitle" type="java.lang.String" resourceKey="jPOutput.TabConstraints.tabTitle"/>
-                      </JTabbedPaneConstraints>
-                    </Constraint>
-                  </Constraints>
-
-                  <Layout>
-                    <DimensionLayout dim="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jSPOutput" alignment="0" pref="1020" max="32767" attributes="0"/>
-                      </Group>
-                    </DimensionLayout>
-                    <DimensionLayout dim="1">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jSPOutput" alignment="0" pref="62" max="32767" attributes="0"/>
-                      </Group>
-                    </DimensionLayout>
-                  </Layout>
-                  <SubComponents>
-                    <Container class="javax.swing.JScrollPane" name="jSPOutput">
-                      <Properties>
-                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                          <Border info="null"/>
-                        </Property>
-                        <Property name="name" type="java.lang.String" value="jSPOutput" noResource="true"/>
-                      </Properties>
-                      <AuxValues>
-                        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                      </AuxValues>
-
-                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                      <SubComponents>
-                        <Component class="javax.swing.JTextArea" name="jTAOutput">
-                          <Properties>
-                            <Property name="background" type="java.awt.Color" resourceKey="jTAOutput.background"/>
-                            <Property name="columns" type="int" value="20"/>
-                            <Property name="font" type="java.awt.Font" resourceKey="jTAOutput.font"/>
-                            <Property name="rows" type="int" value="5"/>
-                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                              <Border info="null"/>
-                            </Property>
-                            <Property name="name" type="java.lang.String" value="jTAOutput" noResource="true"/>
-                          </Properties>
-                        </Component>
-                      </SubComponents>
-                    </Container>
-                  </SubComponents>
-                </Container>
                 <Container class="javax.swing.JScrollPane" name="jSPSampleData">
                   <Properties>
                     <Property name="name" type="java.lang.String" value="jSPSampleData" noResource="true"/>
@@ -637,7 +569,7 @@
                   </AuxValues>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="Sample File (s)">
+                      <JTabbedPaneConstraints tabName="Sample (s)">
                         <Property name="tabTitle" type="java.lang.String" resourceKey="jSPSampleData.TabConstraints.tabTitle"/>
                       </JTabbedPaneConstraints>
                     </Constraint>
@@ -648,16 +580,148 @@
                     <Component class="javax.swing.JTable" name="jTSampleData">
                       <Properties>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="6" rowCount="0">
+                          <Table columnCount="7" rowCount="0">
                             <Column editable="true" title="Name" type="java.lang.Object"/>
                             <Column editable="true" title="Version" type="java.lang.Object"/>
                             <Column editable="true" title="ID" type="java.lang.Object"/>
                             <Column editable="true" title="Accession" type="java.lang.Object"/>
                             <Column editable="true" title="CVs" type="java.lang.Object"/>
                             <Column editable="true" title="Spectrums" type="java.lang.Object"/>
+                            <Column editable="true" title="" type="java.lang.Object"/>
                           </Table>
                         </Property>
+                        <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                          <TableColumnModel selectionModel="0">
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTSampleData.columnModel.title0"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTSampleData.columnModel.title1"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTSampleData.columnModel.title2"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTSampleData.columnModel.title3"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTSampleData.columnModel.title4"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTSampleData.columnModel.title5"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTSampleData.columnModel.title6"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                          </TableColumnModel>
+                        </Property>
                         <Property name="name" type="java.lang.String" value="jTSampleData" noResource="true"/>
+                        <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                          <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                        </Property>
+                      </Properties>
+                    </Component>
+                  </SubComponents>
+                </Container>
+                <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+                  <Properties>
+                    <Property name="name" type="java.lang.String" value="jScrollPane1" noResource="true"/>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                  </AuxValues>
+                  <Constraints>
+                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                      <JTabbedPaneConstraints tabName="Spectrum List">
+                        <Property name="tabTitle" type="java.lang.String" resourceKey="jScrollPane1.TabConstraints.tabTitle"/>
+                      </JTabbedPaneConstraints>
+                    </Constraint>
+                  </Constraints>
+
+                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                  <SubComponents>
+                    <Component class="javax.swing.JTable" name="jTable1">
+                      <Properties>
+                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                          <Table columnCount="9" rowCount="1">
+                            <Column editable="true" title="Scan" type="java.lang.Object"/>
+                            <Column editable="true" title="Spectrum type" type="java.lang.Object"/>
+                            <Column editable="true" title="MS Level" type="java.lang.Object"/>
+                            <Column editable="true" title="Scan time" type="java.lang.Object"/>
+                            <Column editable="true" title="Base peak m/z" type="java.lang.Object"/>
+                            <Column editable="true" title="Ion current" type="java.lang.Object"/>
+                            <Column editable="true" title="IC id" type="java.lang.Object"/>
+                            <Column editable="true" title="DP id" type="java.lang.Object"/>
+                            <Column editable="true" title="Precursor" type="java.lang.Object"/>
+                          </Table>
+                        </Property>
+                        <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                          <TableColumnModel selectionModel="0">
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTable1.columnModel.title0"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTable1.columnModel.title1"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTable1.columnModel.title2"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTable1.columnModel.title3"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTable1.columnModel.title4"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTable1.columnModel.title5"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTable1.columnModel.title6"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTable1.columnModel.title7"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                            <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                              <Title resourceKey="jTable1.columnModel.title8"/>
+                              <Editor/>
+                              <Renderer/>
+                            </Column>
+                          </TableColumnModel>
+                        </Property>
+                        <Property name="name" type="java.lang.String" value="jTable1" noResource="true"/>
+                        <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                          <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
+                        </Property>
                       </Properties>
                     </Component>
                   </SubComponents>
@@ -878,26 +942,24 @@
                     <Property name="name" type="java.lang.String" value="jMenuItem14" noResource="true"/>
                   </Properties>
                 </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem24">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="jMenuItem24.text"/>
+                    <Property name="name" type="java.lang.String" value="jMenuItem24" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem25">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="jMenuItem25.text"/>
+                    <Property name="name" type="java.lang.String" value="jMenuItem25" noResource="true"/>
+                  </Properties>
+                </MenuItem>
                 <MenuItem class="javax.swing.JMenuItem" name="jMenuItem16">
                   <Properties>
                     <Property name="text" type="java.lang.String" resourceKey="jMenuItem16.text"/>
                     <Property name="name" type="java.lang.String" value="jMenuItem16" noResource="true"/>
                   </Properties>
                 </MenuItem>
-                <Menu class="javax.swing.JMenu" name="jMenu2">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" resourceKey="jMenu2.text"/>
-                    <Property name="name" type="java.lang.String" value="jMenu2" noResource="true"/>
-                  </Properties>
-                  <SubComponents>
-                    <MenuItem class="javax.swing.JMenuItem" name="jMenuItem15">
-                      <Properties>
-                        <Property name="text" type="java.lang.String" resourceKey="jMenuItem15.text"/>
-                        <Property name="name" type="java.lang.String" value="jMenuItem15" noResource="true"/>
-                      </Properties>
-                    </MenuItem>
-                  </SubComponents>
-                </Menu>
               </SubComponents>
             </Menu>
           </SubComponents>
@@ -920,6 +982,20 @@
                 <Property name="name" type="java.lang.String" value="jMenuItem21" noResource="true"/>
               </Properties>
             </MenuItem>
+            <Menu class="javax.swing.JMenu" name="jMenu2">
+              <Properties>
+                <Property name="text" type="java.lang.String" resourceKey="jMenu2.text"/>
+                <Property name="name" type="java.lang.String" value="jMenu2" noResource="true"/>
+              </Properties>
+              <SubComponents>
+                <MenuItem class="javax.swing.JMenuItem" name="jMenuItem15">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" resourceKey="jMenuItem15.text"/>
+                    <Property name="name" type="java.lang.String" value="jMenuItem15" noResource="true"/>
+                  </Properties>
+                </MenuItem>
+              </SubComponents>
+            </Menu>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="statsMenu">

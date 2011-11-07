@@ -1,11 +1,14 @@
 /*
- * -----------------------------------------------------------------
+ * --------------------------------------------------------------------------
  * ProteoSuiteApp.java (Main class)
- * -----------------------------------------------------------------
- * Description:       SUITE FOR QUANTITATIVE PROTEOMICS ANALYSES
+ * --------------------------------------------------------------------------
+ * Description:       SOFTWARE FOR ANALYSIS OF QUANTITATIVE PROTEOMICS DATA
  * Developer:         Faviel Gonzalez
  * Created:           08 February 2011
- * -----------------------------------------------------------------
+ * Read our documentation file under our Google SVN repository
+ * SVN: http://code.google.com/p/proteo-suite/
+ * Project Website: http://www.proteosuite.org/
+ * --------------------------------------------------------------------------
  */
 
 package proteosuite;
@@ -14,21 +17,19 @@ import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 
 /**
- * The main class of the application.
+ * Main class
  */
 public class ProteoSuiteApp extends SingleFrameApplication {
 
     /**
-     * At startup create and show the main frame of the application.
+     * Startup
      */
     @Override protected void startup() {
         show(new ProteoSuiteView(this));
     }
 
     /**
-     * This method is to initialise the specified window by injecting resources.
-     * Windows shown in our application come fully initialised from the GUI
-     * builder, so this additional configuration is not needed.
+     * Window settings
      */
     @Override protected void configureWindow(java.awt.Window root) {
     }

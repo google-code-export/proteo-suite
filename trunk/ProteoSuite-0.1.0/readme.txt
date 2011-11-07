@@ -1,12 +1,4 @@
 ----------------------------------------------------------------
-  _____            _               _____       _ _        
- |  __ \          | |             / ____|     (_) |       
- | |__) |_ __ ___ | |_  ___  ___ | (___  _   _ _| |_  ___ 
- |  ___/| '__/ _ \| __|/ _ \/ _ \ \___ \| | | | | __|/ _ \
- | |    | | | (_) | |_|  __/ (_) |____) | |_| | | |_|  __/
- |_|    |_|  \___/ \__|\___|\___/|_____/ \__,_|_|\__|\___|
-                                                          
-----------------------------------------------------------------
  ProteoSuite 0.1.0
  Software for Analysis of Quantitative Proteomics Data
 ----------------------------------------------------------------
@@ -27,7 +19,7 @@ http://www.proteosuite.org
 ---------------------
 
 This software is under the Apache 2.0 license which means that it can 
-be used for commercial and non-commercial purposes.
+be used for any commercial and non-commercial purposes.
 See Apache 2.0 license for further details. 
 http://www.apache.org/licenses/LICENSE-2.0.html
 
@@ -35,45 +27,31 @@ http://www.apache.org/licenses/LICENSE-2.0.html
 3. Installation
 ---------------------
 
-ProteoSuite can run in Windows, Linux and Mac. Use one of the following set of instructions 
-depending on your operating system.
-
-Windows:
-----------
 i) Download the latest release from 
    http://code.google.com/p/proteo-suite/downloads/list
 
 ii)Uncompress the .zip file into one of your local drives. (e.g. C:\ProteoSuite)
 
-iii)  Locate the batch file (ProteoSuite_win.bat) to start ProteoSuite.
-
+iii) Locate the ProteoSuite.jar file and double-click on it.
 Tip: You can create a shortcut to this file and place it into your desktop.
 
-Linux:
-----------
-
-MacOS:
-----------
-
-------------------------------------------------------
-//  The next section is only intended for programmers
-------------------------------------------------------
+iv) Run the application
 
 ---------------------
-4. Source code 
+2. Source code 
 ---------------------
 
 This project has been developed using NetBeans 6.9.1
 The following libraries are needed for compiling the source code:
 
-* appframework-1.0.3.jar                             Swing Application Framework
-* swing-worker-1.1.jar                               Swing Application Framework
-* jmzml-1.6.4.jar                                    jmzML
-* jfreechart-1.0.13.jar                              JFreeChart-1.0.13
-* jcommon-1.0.16.jar                                 JCommon-1.0.16
+* Swing Application Framework - appframework-1.0.3.jar
+* Swing Application Framework - swing-worker-1.1.jar
+* jmzML - jmzml-1.6.4.jar
+* JFreeChart-1.0.13 - jfreechart-1.0.13.jar
+* JCommon-1.0.16 - jcommon-1.0.16.jar
 
 ---------------------
-5. SVN content
+3. Content
 ---------------------
 
 Directories available on the SVN public repository 
@@ -89,10 +67,10 @@ Directories available on the SVN public repository
 
 
 ---------------------
-6. Technical support
+5. Technical support
 ----------------------
 
-In case of technical problems please consult the documentation available at:
+In case of technical problem please consult the documentation available at:
      http://www.proteosuite.org/
 or send an e-mail to:
      support@proteosuite.org

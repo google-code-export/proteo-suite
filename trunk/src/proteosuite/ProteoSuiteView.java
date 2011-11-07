@@ -61,6 +61,7 @@ import java.util.zip.GZIPInputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.FileInputStream;
+
 /* -------------------------------
  * EXTERNAL APIs
  * -------------------------------
@@ -117,11 +118,11 @@ import uk.ac.liv.proteosuite.XYZChart;
 /**
  * MAIN FORM
  */
-//--------------------------------------------------------------------------
+//-----------------------------------------------------------------   ---------
 public class ProteoSuiteView extends FrameView {
 
-        //... Defining list of unmarshallers ...//
-        private ArrayList<MzMLUnmarshaller> iUnmarshaller = null;
+    //... Defining list of unmarshallers ...//
+    private ArrayList<MzMLUnmarshaller> iUnmarshaller = null;
 
     public ProteoSuiteView(SingleFrameApplication app) {
         super(app);
@@ -140,8 +141,7 @@ public class ProteoSuiteView extends FrameView {
         }
         
         //... Initializing components using NetBeans ...//
-        initComponents();
-        
+        initComponents();        
         
         //... Setting window defaults ...//
         getFrame().setTitle("ProteoSuite 0.1.0 - Software for Quantitative Proteomics (Beta Version)");        
@@ -152,7 +152,6 @@ public class ProteoSuiteView extends FrameView {
         
         //... Starting logo ...//
         Icon logoIcon = new ImageIcon(getClass().getResource("/images/logo.png"));
-        jLLogo.setIcon(logoIcon);
 
         //... Main Menu ...//
         Icon newIcon = new ImageIcon(getClass().getResource("/images/new.gif"));
@@ -243,7 +242,7 @@ public class ProteoSuiteView extends FrameView {
 
         jSPTopDivision.setDividerLocation(200);        
         jTPDisplay.setSelectedIndex(0);
-        jTPResults.setSelectedIndex(1);
+        jTPResults.setSelectedIndex(0);
         getFrame().pack();
     }
 //--------------------------------------------------------------------------
@@ -265,7 +264,6 @@ public class ProteoSuiteView extends FrameView {
         jSPTopDivision = new javax.swing.JSplitPane();
         jTPDisplay = new javax.swing.JTabbedPane();
         jPHome = new javax.swing.JPanel();
-        jLLogo = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -283,11 +281,10 @@ public class ProteoSuiteView extends FrameView {
         jSPTree = new javax.swing.JScrollPane();
         jTMainTree = new javax.swing.JTree();
         jTPResults = new javax.swing.JTabbedPane();
-        jPOutput = new javax.swing.JPanel();
-        jSPOutput = new javax.swing.JScrollPane();
-        jTAOutput = new javax.swing.JTextArea();
         jSPSampleData = new javax.swing.JScrollPane();
         jTSampleData = new javax.swing.JTable();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         jMNewProject = new javax.swing.JMenuItem();
@@ -315,12 +312,14 @@ public class ProteoSuiteView extends FrameView {
         viewMenu = new javax.swing.JMenu();
         jMenu9 = new javax.swing.JMenu();
         jMenuItem14 = new javax.swing.JMenuItem();
+        jMenuItem24 = new javax.swing.JMenuItem();
+        jMenuItem25 = new javax.swing.JMenuItem();
         jMenuItem16 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMenuItem15 = new javax.swing.JMenuItem();
         analyzeMenu = new javax.swing.JMenu();
         jMenuItem20 = new javax.swing.JMenuItem();
         jMenuItem21 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem15 = new javax.swing.JMenuItem();
         statsMenu = new javax.swing.JMenu();
         visualMenu = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -455,9 +454,6 @@ public class ProteoSuiteView extends FrameView {
             }
         });
 
-        jLLogo.setText(resourceMap.getString("jLLogo.text")); // NOI18N
-        jLLogo.setName("jLLogo"); // NOI18N
-
         jLabel1.setFont(resourceMap.getFont("jLabel1.font")); // NOI18N
         jLabel1.setForeground(resourceMap.getColor("jLabel1.foreground")); // NOI18N
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
@@ -540,7 +536,7 @@ public class ProteoSuiteView extends FrameView {
         jPHomeLayout.setHorizontalGroup(
             jPHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPHomeLayout.createSequentialGroup()
-                .addGap(37, 37, 37)
+                .addGap(22, 22, 22)
                 .addGroup(jPHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel8)
                     .addComponent(jLabel1)
@@ -553,16 +549,12 @@ public class ProteoSuiteView extends FrameView {
                         .addGap(76, 76, 76)
                         .addComponent(jLabel6))
                     .addComponent(jLabel7))
-                .addContainerGap(314, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPHomeLayout.createSequentialGroup()
-                .addContainerGap(538, Short.MAX_VALUE)
-                .addComponent(jLLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28))
+                .addContainerGap(329, Short.MAX_VALUE))
         );
         jPHomeLayout.setVerticalGroup(
             jPHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPHomeLayout.createSequentialGroup()
-                .addGap(47, 47, 47)
+                .addGap(25, 25, 25)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel8)
@@ -574,9 +566,7 @@ public class ProteoSuiteView extends FrameView {
                     .addComponent(jLabel4)
                     .addComponent(jLabel6)
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 271, Short.MAX_VALUE)
-                .addComponent(jLLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(370, Short.MAX_VALUE))
         );
 
         jTPDisplay.addTab(resourceMap.getString("jPHome.TabConstraints.tabTitle"), jPHome); // NOI18N
@@ -683,33 +673,6 @@ public class ProteoSuiteView extends FrameView {
         jTPResults.setBackground(resourceMap.getColor("jTPResults.background")); // NOI18N
         jTPResults.setName("jTPResults"); // NOI18N
 
-        jPOutput.setBackground(resourceMap.getColor("jPOutput.background")); // NOI18N
-        jPOutput.setName("jPOutput"); // NOI18N
-
-        jSPOutput.setBorder(null);
-        jSPOutput.setName("jSPOutput"); // NOI18N
-
-        jTAOutput.setBackground(resourceMap.getColor("jTAOutput.background")); // NOI18N
-        jTAOutput.setColumns(20);
-        jTAOutput.setFont(resourceMap.getFont("jTAOutput.font")); // NOI18N
-        jTAOutput.setRows(5);
-        jTAOutput.setBorder(null);
-        jTAOutput.setName("jTAOutput"); // NOI18N
-        jSPOutput.setViewportView(jTAOutput);
-
-        javax.swing.GroupLayout jPOutputLayout = new javax.swing.GroupLayout(jPOutput);
-        jPOutput.setLayout(jPOutputLayout);
-        jPOutputLayout.setHorizontalGroup(
-            jPOutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSPOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 1020, Short.MAX_VALUE)
-        );
-        jPOutputLayout.setVerticalGroup(
-            jPOutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSPOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
-        );
-
-        jTPResults.addTab(resourceMap.getString("jPOutput.TabConstraints.tabTitle"), jPOutput); // NOI18N
-
         jSPSampleData.setName("jSPSampleData"); // NOI18N
 
         jTSampleData.setModel(new javax.swing.table.DefaultTableModel(
@@ -717,13 +680,44 @@ public class ProteoSuiteView extends FrameView {
 
             },
             new String [] {
-                "Name", "Version", "ID", "Accession", "CVs", "Spectrums"
+                "Name", "Version", "ID", "Accession", "CVs", "Spectrums", ""
             }
         ));
         jTSampleData.setName("jTSampleData"); // NOI18N
         jSPSampleData.setViewportView(jTSampleData);
+        jTSampleData.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTSampleData.columnModel.title0")); // NOI18N
+        jTSampleData.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTSampleData.columnModel.title1")); // NOI18N
+        jTSampleData.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTSampleData.columnModel.title2")); // NOI18N
+        jTSampleData.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTSampleData.columnModel.title3")); // NOI18N
+        jTSampleData.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("jTSampleData.columnModel.title4")); // NOI18N
+        jTSampleData.getColumnModel().getColumn(5).setHeaderValue(resourceMap.getString("jTSampleData.columnModel.title5")); // NOI18N
+        jTSampleData.getColumnModel().getColumn(6).setHeaderValue(resourceMap.getString("jTSampleData.columnModel.title6")); // NOI18N
 
         jTPResults.addTab(resourceMap.getString("jSPSampleData.TabConstraints.tabTitle"), jSPSampleData); // NOI18N
+
+        jScrollPane1.setName("jScrollPane1"); // NOI18N
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Scan", "Spectrum type", "MS Level", "Scan time", "Base peak m/z", "Ion current", "IC id", "DP id", "Precursor"
+            }
+        ));
+        jTable1.setName("jTable1"); // NOI18N
+        jScrollPane1.setViewportView(jTable1);
+        jTable1.getColumnModel().getColumn(0).setHeaderValue(resourceMap.getString("jTable1.columnModel.title0")); // NOI18N
+        jTable1.getColumnModel().getColumn(1).setHeaderValue(resourceMap.getString("jTable1.columnModel.title1")); // NOI18N
+        jTable1.getColumnModel().getColumn(2).setHeaderValue(resourceMap.getString("jTable1.columnModel.title2")); // NOI18N
+        jTable1.getColumnModel().getColumn(3).setHeaderValue(resourceMap.getString("jTable1.columnModel.title3")); // NOI18N
+        jTable1.getColumnModel().getColumn(4).setHeaderValue(resourceMap.getString("jTable1.columnModel.title4")); // NOI18N
+        jTable1.getColumnModel().getColumn(5).setHeaderValue(resourceMap.getString("jTable1.columnModel.title5")); // NOI18N
+        jTable1.getColumnModel().getColumn(6).setHeaderValue(resourceMap.getString("jTable1.columnModel.title6")); // NOI18N
+        jTable1.getColumnModel().getColumn(7).setHeaderValue(resourceMap.getString("jTable1.columnModel.title7")); // NOI18N
+        jTable1.getColumnModel().getColumn(8).setHeaderValue(resourceMap.getString("jTable1.columnModel.title8")); // NOI18N
+
+        jTPResults.addTab(resourceMap.getString("jScrollPane1.TabConstraints.tabTitle"), jScrollPane1); // NOI18N
 
         jSPMainDivision.setRightComponent(jTPResults);
 
@@ -860,18 +854,17 @@ public class ProteoSuiteView extends FrameView {
         jMenuItem14.setName("jMenuItem14"); // NOI18N
         jMenu9.add(jMenuItem14);
 
+        jMenuItem24.setText(resourceMap.getString("jMenuItem24.text")); // NOI18N
+        jMenuItem24.setName("jMenuItem24"); // NOI18N
+        jMenu9.add(jMenuItem24);
+
+        jMenuItem25.setText(resourceMap.getString("jMenuItem25.text")); // NOI18N
+        jMenuItem25.setName("jMenuItem25"); // NOI18N
+        jMenu9.add(jMenuItem25);
+
         jMenuItem16.setText(resourceMap.getString("jMenuItem16.text")); // NOI18N
         jMenuItem16.setName("jMenuItem16"); // NOI18N
         jMenu9.add(jMenuItem16);
-
-        jMenu2.setText(resourceMap.getString("jMenu2.text")); // NOI18N
-        jMenu2.setName("jMenu2"); // NOI18N
-
-        jMenuItem15.setText(resourceMap.getString("jMenuItem15.text")); // NOI18N
-        jMenuItem15.setName("jMenuItem15"); // NOI18N
-        jMenu2.add(jMenuItem15);
-
-        jMenu9.add(jMenu2);
 
         viewMenu.add(jMenu9);
 
@@ -887,6 +880,15 @@ public class ProteoSuiteView extends FrameView {
         jMenuItem21.setText(resourceMap.getString("jMenuItem21.text")); // NOI18N
         jMenuItem21.setName("jMenuItem21"); // NOI18N
         analyzeMenu.add(jMenuItem21);
+
+        jMenu2.setText(resourceMap.getString("jMenu2.text")); // NOI18N
+        jMenu2.setName("jMenu2"); // NOI18N
+
+        jMenuItem15.setText(resourceMap.getString("jMenuItem15.text")); // NOI18N
+        jMenuItem15.setName("jMenuItem15"); // NOI18N
+        jMenu2.add(jMenuItem15);
+
+        analyzeMenu.add(jMenu2);
 
         menuBar.add(analyzeMenu);
 
@@ -1122,7 +1124,7 @@ public class ProteoSuiteView extends FrameView {
 //--------------------------------------------------------------------------
     @Action
     public void newProject() {
-
+        
     }
 //--------------------------------------------------------------------------
     @Action
@@ -1153,11 +1155,13 @@ public class ProteoSuiteView extends FrameView {
         chooser.setFileFilter(filter3);
         chooser.setFileFilter(filter2);
         chooser.setFileFilter(filter);
-        chooser.setMultiSelectionEnabled(true);
-        chooser.setCurrentDirectory(new java.io.File("D:/Data")); //... If not found it goes to Home ...//
 
-        //... Setting icons for tree ...//
-        Icon rootIcon = new ImageIcon(getClass().getResource("/images/icon_small.gif"));
+        //... Enable multiple selection of files ...//
+        chooser.setMultiSelectionEnabled(true);
+        chooser.setCurrentDirectory(new java.io.File("D:/Data")); //... If not found it goes to Home, not need for exception ...//
+
+        //... Customising icons for tree ...//
+        Icon rootIcon = new ImageIcon(getClass().getResource("/images/root.gif"));
         Icon sampleIcon = new ImageIcon(getClass().getResource("/images/file.gif"));
         Icon ms1Icon = new ImageIcon(getClass().getResource("/images/scan.gif"));
         Icon ms2Icon = new ImageIcon(getClass().getResource("/images/scan.gif"));
@@ -1342,7 +1346,7 @@ public class ProteoSuiteView extends FrameView {
                                                                       aSamples[iI].getSamSpectrums()});
                 }
                 jLStatus.setText(aSamples.length + " file(s) loaded");
-                jTPResults.setSelectedIndex(1);
+                jTPResults.setSelectedIndex(0);
 
                 new Thread("Closing")
                 {
@@ -1652,7 +1656,6 @@ public class ProteoSuiteView extends FrameView {
     private javax.swing.JDesktopPane jDP2D;
     private javax.swing.JDesktopPane jDP3D;
     private javax.swing.JDesktopPane jDPXIC;
-    private javax.swing.JLabel jLLogo;
     private javax.swing.JLabel jLStatus;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
@@ -1689,6 +1692,8 @@ public class ProteoSuiteView extends FrameView {
     private javax.swing.JMenuItem jMenuItem21;
     private javax.swing.JMenuItem jMenuItem22;
     private javax.swing.JMenuItem jMenuItem23;
+    private javax.swing.JMenuItem jMenuItem24;
+    private javax.swing.JMenuItem jMenuItem25;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
@@ -1700,23 +1705,22 @@ public class ProteoSuiteView extends FrameView {
     private javax.swing.JPanel jP3D;
     private javax.swing.JPanel jPHome;
     private javax.swing.JPanel jPMS;
-    private javax.swing.JPanel jPOutput;
     private javax.swing.JPanel jPStatusBar;
     private javax.swing.JPanel jPToolbar;
     private javax.swing.JPanel jPXIC;
     private javax.swing.JSplitPane jSPMainDivision;
-    private javax.swing.JScrollPane jSPOutput;
     private javax.swing.JScrollPane jSPSampleData;
     private javax.swing.JSplitPane jSPTopDivision;
     private javax.swing.JScrollPane jSPTree;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
-    private javax.swing.JTextArea jTAOutput;
     private javax.swing.JTree jTMainTree;
     private javax.swing.JTabbedPane jTPDisplay;
     private javax.swing.JTabbedPane jTPResults;
     private javax.swing.JTable jTSampleData;
+    private javax.swing.JTable jTable1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JToolBar jToolBar3;

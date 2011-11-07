@@ -83,13 +83,14 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
         yAxis.setAutoRangeIncludesZero(true);
 
         //... Graph and values ...//
-        final FastScatterPlot plot = new FastScatterPlot(this.data, xAxis, yAxis);
+        //final FastScatterPlot plot = new FastScatterPlot(this.data, xAxis, yAxis);
+        final FastScatterPlot plot = new FastScatterPlot(this.data, yAxis, xAxis);
         //final XYPlot plot = new XYPlot(this.data1, xAxis, yAxis, null);
 
         plot.setDomainGridlinesVisible(false);
         plot.setRangeGridlinesVisible(false);
         plot.setBackgroundPaint(Color.white);
-        plot.setPaint(Color.gray);
+        plot.setPaint(Color.red);
 
         //... Container ...//
         final JFreeChart chart = new JFreeChart("", plot);
@@ -152,8 +153,8 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
         for (int iI = 0; iI < mz.length; iI++) {
             if (intens[iI] > 100)
             {
-                this.data[0][iCounter] = (float) art[iI];
-                this.data[1][iCounter] = (float) mz[iI];
+                this.data[1][iCounter] = (float) art[iI];
+                this.data[0][iCounter] = (float) mz[iI];
                 iCounter++;
             }
         }
@@ -166,6 +167,7 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
     public void mouseMoved(MouseEvent e) {
         eventOutput("Moved", e);
     }
+    
     public void mouseDragged(MouseEvent e) {
         eventOutput("Dragged", e);
     }
