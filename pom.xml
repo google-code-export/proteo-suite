@@ -8,7 +8,7 @@
 
     <name>ProteoSuite</name>
     <url>http://www.proteosuite.org</url>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.1</version>
     <description>Software for analysis of quantitative proteomics data</description>    
 
     <properties>
