@@ -21,20 +21,16 @@ public class Sample {
    private String Id;
    private String Name;
    private String Version;   
-   private String Accession;
-   private int CVs;
    private int Spectrums;
 
     public Sample() {
-        this("", "", "", "", 0, 0);
+        this("", "", "", 0);
     }
 
-    public Sample(String Id, String Name, String Version,  String Accession, int CVs, int Spectrums) {
+    public Sample(String Id, String Name, String Version, int Spectrums) {
         this.Id = Id;
         this.Name = Name;
         this.Version = Version;        
-        this.Accession = Accession;
-        this.CVs = CVs;
         this.Spectrums = Spectrums;
     }
 
@@ -60,22 +56,6 @@ public class Sample {
 
     public String getVersion() {
         return Version;
-    }
-
-    public String getAccession() {
-        return Accession;
-    }
-
-    public void setAccession(String sam_accesion) {
-        this.Accession = sam_accesion;
-    }
-
-    public int getCVs() {
-        return CVs;
-    }
-
-    public void setCVs(int CVs) {
-        this.CVs = CVs;
     }
 
     public int getSpectrums() {
