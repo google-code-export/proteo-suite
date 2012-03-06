@@ -44,7 +44,7 @@ public class MzML2MGF {
         
         File xmlFile = new File(paramFile);
         String paramFile2 = "";
-        paramFile2 = paramFile.replace(".mzML", ".mgff");
+        paramFile2 = paramFile.replace(".mzML", ".mgf");
         String sOut = "";
         try{
             
@@ -145,7 +145,7 @@ public class MzML2MGF {
                             out.write("BEGIN IONS");
                             out.newLine();
                             
-                            sOut = "TITLE=Spectrum1 scans:" + spectrum.getIndex() + ",";
+                            sOut = "TITLE=Spectrum1 scans:" + spectrum.getIndex() + ", (rt=" + rt + ")";
                             //System.out.println(sOut);
                             out.write(sOut);
                             out.newLine();

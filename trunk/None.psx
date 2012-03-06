@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ProteoSuiteProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="ProteoSuite.xsd" name="None">
+<ProteoSuiteProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="ProteoSuite.xsd" name="None" workspace="">
  <configSettings>
      <rawDataSettings>
-         <rawFile  id="SA_jenna_silac_a24" name="SA_silac_a24_small.mzML" version="1.1.0" accession="null" cvs="2" spectrums="200" />
-         <rawFile  id="SA_jenna_silac_a96" name="SA_silac_a96_small.mzML" version="1.1.0" accession="null" cvs="2" spectrums="200" />
-         <rawFile  id="SA_jenna_silac_b24" name="SA_silac_b24_small.mzML" version="1.1.0" accession="null" cvs="2" spectrums="200" />
-         <rawFile  id="SA_jenna_silac_b96" name="SA_silac_b96_small.mzML" version="1.1.0" accession="null" cvs="2" spectrums="200" />
-         <rawFile  id="SA_jenna_silac_c24" name="SA_silac_c24_small.mzML" version="1.1.0" accession="null" cvs="2" spectrums="200" />
-         <rawFile  id="SA_jenna_silac_c96" name="SA_silac_c96_small.mzML" version="1.1.0" accession="null" cvs="2" spectrums="200" />
-         <rawFile  id="SA_jenna_silac_d24" name="SA_silac_d24_small.mzML" version="1.1.0" accession="null" cvs="2" spectrums="200" />
-         <rawFile  id="SA_jenna_silac_d96" name="SA_silac_d96_small.mzML" version="1.1.0" accession="null" cvs="2" spectrums="200" />
+         <rawFile  id="SA_jenna_silac_a24" name="SA_silac_a24_small.mzML" version="1.1.0" accession="null" cvs="2" spectrums="200" >
+         </rawFile>
      </rawDataSettings>
      <identDataSettings>
      </identDataSettings>
