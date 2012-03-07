@@ -29,7 +29,6 @@ public class IdentParamsView extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         bgMonoAver = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
@@ -83,6 +82,9 @@ public class IdentParamsView extends javax.swing.JPanel {
         jComboBox9 = new javax.swing.JComboBox();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+
+        setMaximumSize(new java.awt.Dimension(638, 585));
+        setMinimumSize(new java.awt.Dimension(638, 585));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -301,6 +303,7 @@ public class IdentParamsView extends javax.swing.JPanel {
         jRadioButton1.setText("Monoisotopic");
         jPanel3.add(jRadioButton1);
 
+        bgMonoAver.add(jRadioButton2);
         jRadioButton2.setText("Average");
         jPanel3.add(jRadioButton2);
 
