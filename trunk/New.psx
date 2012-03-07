@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProteoSuiteProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="ProteoSuite.xsd" name="New" workspace="D:\Data">
+ <configSettings>
+     <rawDataSettings>
+         <rawFile  id="small" name="small.mzML" version="1.1.0" spectrums="48" >
+         </rawFile>
+     </rawDataSettings>
+     <identDataSettings>
+     </identDataSettings>
+     <quantDataSettings>
+     </quantDataSettings>
+ </configSettings>
+</ProteoSuiteProject>
