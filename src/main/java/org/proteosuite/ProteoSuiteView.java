@@ -20,7 +20,8 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.beans.PropertyVetoException;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -28,31 +29,29 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeSelectionModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.proteosuite.gui.About;
+import org.proteosuite.gui.Configparams;
+import org.proteosuite.gui.MzML2MGFparams;
 import org.proteosuite.utils.TwoDPlot;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -82,16 +81,10 @@ public class ProteoSuiteView extends JFrame {
     //... Project settings ...//
     private String sProjectName;
     private String sWorkspace;
-    private boolean bProjectChanges;    
+    private boolean bProjectModified;
 
     //... List of unmarshaller objects ...//
-    private ArrayList<MzMLUnmarshaller> alUnmarshaller = null;
-    
-    //... Tree nodes (root=Project, sampleNode=Files, ms1Node=LC-MS, ms2Node=LC-MS/MS ...//
-    private DefaultMutableTreeNode rootNode = null;
-    private DefaultMutableTreeNode sampleNode = null;
-    private DefaultMutableTreeNode ms1Node = null;
-    private DefaultMutableTreeNode ms2Node = null;                
+    private ArrayList<MzMLUnmarshaller> alUnmarshaller = null;    
     
     public ProteoSuiteView() {
         
@@ -146,15 +139,6 @@ public class ProteoSuiteView extends JFrame {
         jbCopy.setIcon(copyIcon);
         jmPaste.setIcon(pasteIcon);
         jbPaste.setIcon(pasteIcon);        
-
-        //... Object tree icons ...//
-        Icon leafIcon = new ImageIcon(getClass().getClassLoader().getResource("images/scan.gif"));
-        Icon openleafIcon = new ImageIcon(getClass().getClassLoader().getResource("images/scan.gif"));
-        Icon closeleafIcon = new ImageIcon(getClass().getClassLoader().getResource("images/scan.gif"));
-        //DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer)jtMainTree.getCellRenderer();
-        //renderer.setLeafIcon(leafIcon);
-        //renderer.setClosedIcon(closeleafIcon);
-        //renderer.setOpenIcon(openleafIcon);
         
         //... Setting Window Height and Width ...//
         this.setMinimumSize(new Dimension(1024, 780));
@@ -263,7 +247,8 @@ public class ProteoSuiteView extends JFrame {
         jmStatistics = new javax.swing.JMenu();
         jmTools = new javax.swing.JMenu();
         jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        jmMzML2MGF = new javax.swing.JMenuItem();
+        jmOptions = new javax.swing.JMenuItem();
         jmDatabases = new javax.swing.JMenu();
         jmSubmitPRIDE = new javax.swing.JMenuItem();
         jmWindow = new javax.swing.JMenu();
@@ -394,7 +379,7 @@ public class ProteoSuiteView extends JFrame {
         jspMzML.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jtaMzML.setColumns(20);
-        jtaMzML.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        jtaMzML.setFont(new java.awt.Font("Tahoma", 0, 11));
         jtaMzML.setRows(5);
         jspMzMLHeader.setViewportView(jtaMzML);
 
@@ -788,10 +773,23 @@ public class ProteoSuiteView extends JFrame {
 
         jMenu1.setText("Converters");
 
-        jMenuItem1.setText("mzML to MGF");
-        jMenu1.add(jMenuItem1);
+        jmMzML2MGF.setText("mzML to MGF");
+        jmMzML2MGF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmMzML2MGFActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jmMzML2MGF);
 
         jmTools.add(jMenu1);
+
+        jmOptions.setText("Options");
+        jmOptions.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmOptionsActionPerformed(evt);
+            }
+        });
+        jmTools.add(jmOptions);
 
         jMenuBar1.add(jmTools);
 
@@ -853,7 +851,7 @@ public class ProteoSuiteView extends JFrame {
     private void jmNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmNewProjectActionPerformed
         
         //... Validate modification options ...//
-        if (this.bProjectChanges) //... Project changes = false when initialised ...//
+        if (this.bProjectModified) //... Project changes = false when initialised ...//
         {
             if (this.sProjectName.equals("New")) //... 
             {
@@ -906,14 +904,7 @@ public class ProteoSuiteView extends JFrame {
         FileNameExtensionFilter filter2 = new FileNameExtensionFilter("mzIdentML Files (*.mzid)", "mzid");
         FileNameExtensionFilter filter3 = new FileNameExtensionFilter("mzQuantML Files (*.mzq)", "mzq");
 
-        FileNameExtensionFilter filter4 = new FileNameExtensionFilter("mzML Compressed Files (*.mzML.gz)", "gz");
-        FileNameExtensionFilter filter5 = new FileNameExtensionFilter("mzIdentML Compressed Files (*.mzid.gz)", "gz");
-        FileNameExtensionFilter filter6 = new FileNameExtensionFilter("mzQuantML Compressed Files (*.mzq.gz)", "gz");
-
         //... Filters must be in descending order ...//
-        chooser.setFileFilter(filter6);
-        chooser.setFileFilter(filter5);
-        chooser.setFileFilter(filter4);
         chooser.setFileFilter(filter3);
         chooser.setFileFilter(filter2);
         chooser.setFileFilter(filter);
@@ -922,18 +913,16 @@ public class ProteoSuiteView extends JFrame {
         chooser.setMultiSelectionEnabled(true);
 
         //... Setting default directory ...//
-        chooser.setCurrentDirectory(new java.io.File("D:/Data")); //... If not found it goes to Home, exception not needed ...//
+        chooser.setCurrentDirectory(new java.io.File(this.sWorkspace)); //... If not found it goes to Home, exception not needed ...//
         
         //... Retrieving selection from user ...//
         int returnVal = chooser.showOpenDialog(this);
         if(returnVal == JFileChooser.APPROVE_OPTION)
         {
-            this.bProjectChanges = true;
+            this.bProjectModified = true;
             
             //... A common experiment will have around 4-20 raw files ....//
             File [] aFiles = chooser.getSelectedFiles();
-
-            rootNode = new DefaultMutableTreeNode("Project - " + this.sProjectName); //... This will contain the name of the project once we set it up ..//            
 
 	    if (aFiles != null && aFiles.length > 0)
             {
@@ -950,13 +939,7 @@ public class ProteoSuiteView extends JFrame {
                     model.addColumn("Name");
                     model.addColumn("Version");
                     model.addColumn("Spectrums");
-                    
-                    //jpbStatus.setStringPainted(true);                    
-
-                    //Sample aSamples[] = new Sample[aFiles.length];
-
-                    //... Removing initial jTree default configuration ...//
-                    //jtMainTree.removeAll();       
+    
                     alUnmarshaller = new ArrayList<MzMLUnmarshaller>();
 
                     //... Reading selected files ...//
@@ -977,17 +960,6 @@ public class ProteoSuiteView extends JFrame {
 //                        jpbStatus.repaint();                        
                     } //... For files ...//                    
                     
-                    //... Draw tree ...//
-                    //jtMainTree.setModel(new DefaultTreeModel(rootNode));
-                    //jtMainTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);                                
-
-//                    for(int iI=0; iI<aSamples.length; iI++)
-//                    {
-//                        model.insertRow(model.getRowCount(), new Object[]{aSamples[iI].getId(),
-//                                                                          aSamples[iI].getName(),
-//                                                                          aSamples[iI].getVersion(),
-//                                                                          aSamples[iI].getSpectrums()});
-//                    }
                     setCursor(null); //... Turn off the wait cursor ...//                    
 //                    try{Thread.sleep(500);} 
 //                    catch (InterruptedException err){}
@@ -1014,14 +986,13 @@ public class ProteoSuiteView extends JFrame {
     private void jmOpenProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmOpenProjectActionPerformed
         
         //... Validate modification options ...//
-        if (this.bProjectChanges)
+        if (this.bProjectModified)
         {
             if (this.sProjectName.equals("New"))
             {
                 int option = JOptionPane.showConfirmDialog(this, "Do you want to save the current project?", "Open Project", JOptionPane.YES_NO_CANCEL_OPTION);
                 if (option == JOptionPane.YES_OPTION) 
                 {
-                    System.out.println("Yes, I want to save all changes.");
                     boolean bSaved = saveProject();
                     if (bSaved)
                     {
@@ -1033,7 +1004,6 @@ public class ProteoSuiteView extends JFrame {
                 {                    
                     if (option == JOptionPane.NO_OPTION) 
                     {                    
-                        System.out.println("No, I don't want to save any changes.");
                         initProjectValues();
                         openProject();
                     }
@@ -1076,7 +1046,7 @@ public class ProteoSuiteView extends JFrame {
 
     private void jmSaveProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmSaveProjectActionPerformed
         
-        if (this.bProjectChanges)
+        if (this.bProjectModified)
         {
             writeConfigFile(sProjectName);
         }        
@@ -1089,14 +1059,13 @@ public class ProteoSuiteView extends JFrame {
 
     private void jmCloseProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmCloseProjectActionPerformed
         //... Validate modification options ...//
-        if (this.bProjectChanges)
+        if (this.bProjectModified)
         {
             if (this.sProjectName.equals("New"))
             {
                 int option = JOptionPane.showConfirmDialog(this, "Do you want to save this project?", "Closing project", JOptionPane.YES_NO_CANCEL_OPTION);
                 if (option == JOptionPane.YES_OPTION) 
                 {
-                    System.out.println("Yes, I want to save all changes.");
                     boolean bSaved = saveProject();
                     if (bSaved)
                     {
@@ -1107,7 +1076,6 @@ public class ProteoSuiteView extends JFrame {
                 {                    
                     if (option == JOptionPane.NO_OPTION) 
                     {                    
-                        System.out.println("No, I don't want to save any changes.");
                         initProjectValues();
                     }
                 }
@@ -1192,9 +1160,19 @@ public class ProteoSuiteView extends JFrame {
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         About about = new About();
-        JFrame jfAbout = new JFrame("About ProteoSuite");
+        final JFrame jfAbout = new JFrame("About ProteoSuite");
         jfAbout.setResizable(false);
         jfAbout.setSize(400, 300);
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
+        Action escapeAction = new AbstractAction() 
+        {
+            public void actionPerformed(ActionEvent e) {
+                jfAbout.dispose();
+            }
+        };        
+        jfAbout.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
+        jfAbout.getRootPane().getActionMap().put("ESCAPE", escapeAction);
+        
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         int x1 = dim.width / 2;
         int y1 = dim.height / 2;
@@ -1223,6 +1201,66 @@ public class ProteoSuiteView extends JFrame {
             loadMzMLView();         
         }
     }//GEN-LAST:event_jtRawFilesMouseClicked
+
+    private void jmMzML2MGFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmMzML2MGFActionPerformed
+        MzML2MGFparams winParams = new MzML2MGFparams(this.sWorkspace);
+        final JFrame jfWinParams = new JFrame("Convert mzML files to MGF");
+        jfWinParams.setResizable(false);
+        jfWinParams.setSize(400, 300);
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
+        Action escapeAction = new AbstractAction() 
+        {
+            public void actionPerformed(ActionEvent e) {
+                jfWinParams.dispose();
+            }
+        };        
+        jfWinParams.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
+        jfWinParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);
+        
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        int x1 = dim.width / 2;
+        int y1 = dim.height / 2;
+        int x2 = jfWinParams.getSize().width / 2;
+        int y2 = jfWinParams.getSize().height / 2;        
+        jfWinParams.setLocation(x1-x2, y1-y2);
+        Image iconApp = new ImageIcon(this.getClass().getClassLoader().getResource("images/icon.gif")).getImage();
+        jfWinParams.setIconImage(iconApp);
+        jfWinParams.setAlwaysOnTop(true);
+       
+        jfWinParams.add(winParams);
+        jfWinParams.pack();
+        jfWinParams.setVisible(true);
+    }//GEN-LAST:event_jmMzML2MGFActionPerformed
+
+    private void jmOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmOptionsActionPerformed
+        Configparams winParams = new Configparams();
+        final JFrame jfWinParams = new JFrame("Options");
+        jfWinParams.setResizable(false);
+        jfWinParams.setSize(580, 370);
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
+        Action escapeAction = new AbstractAction() 
+        {
+            public void actionPerformed(ActionEvent e) {
+                jfWinParams.dispose();
+            }
+        };
+        jfWinParams.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
+        jfWinParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);        
+        
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        int x1 = dim.width / 2;
+        int y1 = dim.height / 2;
+        int x2 = jfWinParams.getSize().width / 2;
+        int y2 = jfWinParams.getSize().height / 2;        
+        jfWinParams.setLocation(x1-x2, y1-y2);
+        Image iconApp = new ImageIcon(this.getClass().getClassLoader().getResource("images/icon.gif")).getImage();
+        jfWinParams.setIconImage(iconApp);
+        jfWinParams.setAlwaysOnTop(true);
+       
+        jfWinParams.add(winParams);
+        jfWinParams.pack();
+        jfWinParams.setVisible(true);    
+    }//GEN-LAST:event_jmOptionsActionPerformed
     
     public class threadProgBar implements Runnable{
         
@@ -1308,29 +1346,9 @@ public class ProteoSuiteView extends JFrame {
         internalFrame.setVisible(true);  
         return internalFrame;
     }
-    private void showSpectrumData() {                                             
-        
-            //DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-            //                   jtMainTree.getLastSelectedPathComponent();
-
-            //if (node == null) return;
-
-            //jtpViewer.setSelectedIndex(0);
-            //String nodeName = node.getUserObject().toString();
-
-            //nodeName = "controllerType=0 controllerNumber=1 scan=" + nodeName.toString();           
-            //System.out.println(nodeName);
-            
-    }         
     private void showChromatogram() {                                             
         
-            //DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-             //                  jtMainTree.getLastSelectedPathComponent();
-
-            //if (node == null) return;
-
             jtpViewer.setSelectedIndex(1);
-            //Object nodeInfo = node.getUserObject();
 
             //... Get index from spectrums ...//
             int iIndex = 0;
@@ -1464,7 +1482,7 @@ public class ProteoSuiteView extends JFrame {
         chooser.setFileFilter(filter);
 
         //... Setting default directory ...//
-        chooser.setCurrentDirectory(new java.io.File("D:/Data")); //... If not found it goes to Home, exception handle not needed ...//        
+        chooser.setCurrentDirectory(new java.io.File(this.sWorkspace)); //... If not found it goes to Home, exception handle not needed ...//        
         
         //... Retrieving selection from user ...//
         int returnVal = chooser.showSaveDialog(this);        
@@ -1509,7 +1527,7 @@ public class ProteoSuiteView extends JFrame {
         try{
 
             FileWriter fstream = new FileWriter(sFileName);
-            BufferedWriter out = new BufferedWriter(fstream);                                    
+            BufferedWriter out = new BufferedWriter(fstream);            
             out.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
             out.newLine();
             out.write("<ProteoSuiteProject xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ");
@@ -1519,16 +1537,13 @@ public class ProteoSuiteView extends JFrame {
             out.newLine();
             out.write("     <rawDataSettings>");
             out.newLine();
-            //... Write all files ...//
             for (int iI=0; iI<jtRawFiles.getRowCount(); iI++)
             {
                 out.write("         <rawFile ");
                 out.write(" id=\"" + jtRawFiles.getValueAt(iI, 0) + "\"");
                 out.write(" name=\"" + jtRawFiles.getValueAt(iI, 1) + "\"");
                 out.write(" version=\"" + jtRawFiles.getValueAt(iI, 2) + "\"");
-                out.write(" accession=\"" + jtRawFiles.getValueAt(iI, 3) + "\"");
-                out.write(" cvs=\"" + jtRawFiles.getValueAt(iI, 4) + "\"");
-                out.write(" spectrums=\"" + jtRawFiles.getValueAt(iI, 5) + "\" >");
+                out.write(" spectrums=\"" + jtRawFiles.getValueAt(iI, 3) + "\" >");
                 out.newLine();                
                 out.write("         </rawFile>");
                 out.newLine();
@@ -1743,27 +1758,56 @@ public class ProteoSuiteView extends JFrame {
     private void initProjectValues() 
     {
         //... Project settings ...//
-        this.sProjectName = "New";
-        this.bProjectChanges = false;
-        this.sWorkspace = "";
-                  
-        initTree();
-        initTables();        
+        initSettings();                  
+        initTables();
         initTextAreas();
         initViews();
     }
-    /**
-     * Initialise tree values.
+     /**
+     * Initialise project settings (configuration file).
      *
-     */     
-    private void initTree()
+     */    
+    private void initSettings() 
     {
-        //DefaultMutableTreeNode rootNode = null;
-        //jtMainTree.removeAll();
-        //rootNode = new DefaultMutableTreeNode("Project - " + this.sProjectName);        
-        //jtMainTree.setModel(new DefaultTreeModel(rootNode));
-        //jtMainTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);        
+        //... Validate if config file exists ...//
+        boolean exists = (new File("config.xml")).exists();
+        if (exists)
+        {
+            try{            
+                DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+                DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+                Document doc = docBuilder.parse (new File("config.xml"));
+
+                doc.getDocumentElement().normalize();
+                NodeList projectList = doc.getElementsByTagName("ProteoSuiteApp");                
+                Node projectNode = projectList.item(0);
+                Element projectElement = (Element)projectNode;
+                this.sProjectName = "New";
+                this.sWorkspace = projectElement.getAttribute("workspace").toString();
+                this.bProjectModified = false;
+                
+            }catch (SAXParseException err) {
+                System.out.println ("** Parsing error" + ", line " + err.getLineNumber () + ", uri " + err.getSystemId ());
+                System.out.println(" " + err.getMessage ());
+            }catch (SAXException e) {
+                Exception x = e.getException ();
+                ((x == null) ? e : x).printStackTrace ();
+            }catch (Throwable t) {
+                t.printStackTrace ();
+            }                
+        }
+        else
+        {            
+            this.sProjectName = "New";
+            this.sWorkspace = "";
+            this.bProjectModified = false;
+            String sMessage = "The config.xml file was not found, please make sure that this file exists \n";
+            sMessage = sMessage + "under your installation folder. ProteoSuite will continue launching, however \n";
+            sMessage = sMessage + "it is recommended that you copy the file as indicated in the readme.txt file.";
+            JOptionPane.showMessageDialog(this, sMessage, "Warning", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
+    
     /**
      * Initialise table values.
      *
@@ -1813,7 +1857,7 @@ public class ProteoSuiteView extends JFrame {
         chooser.setMultiSelectionEnabled(false);        
 
         //... Setting default directory ...//
-        chooser.setCurrentDirectory(new java.io.File("D:/Data")); //... If not found it goes to Home, exception handle not needed ...//
+        chooser.setCurrentDirectory(new java.io.File(this.sWorkspace)); //... If not found it goes to Home, exception handle not needed ...//
         
         //... Retrieving selection from user ...//
         int returnVal = chooser.showOpenDialog(this);        
@@ -1842,7 +1886,7 @@ public class ProteoSuiteView extends JFrame {
                     
                     for (int iI=0; iI<jtRawFiles.getRowCount(); iI++)
                     {                    
-                        File xmlFile = new File("D:\\Data\\"+jtRawFiles.getValueAt(iI, 1).toString());
+                        File xmlFile = new File(this.sWorkspace+"\\"+jtRawFiles.getValueAt(iI, 1).toString());
                         unmarshalMzMLFile(model, iI, xmlFile);
                     }
                     //... Draw tree ...//
@@ -1877,7 +1921,7 @@ public class ProteoSuiteView extends JFrame {
             Element projectElement = (Element)projectNode;
             this.sProjectName = projectElement.getAttribute("name").toString();
             this.sWorkspace = projectElement.getAttribute("workspace").toString();
-            this.bProjectChanges = false;
+            this.bProjectModified = false;
 
             //... Fill JTable ...//
             DefaultTableModel model = new DefaultTableModel();
@@ -1929,10 +1973,6 @@ public class ProteoSuiteView extends JFrame {
 //                                        unmarshaller.getMzMLVersion(),
 //                                        unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum"));
 
-            //... Populate the JTree with samples ...//                        
-            //sampleNode = new DefaultMutableTreeNode(aSamples[iI].getName());
-            sampleNode = new DefaultMutableTreeNode(xmlFile.getName());
-            rootNode.add(sampleNode);
 
             //... Populate the JTree with spectrums ...//                    
             int spectrums = unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum");
@@ -1987,15 +2027,15 @@ public class ProteoSuiteView extends JFrame {
                     if (plist.getCount().intValue() == 1)
                     {                    
                         //aSpectrums[iIndex][iK] = new SpectrumData(spectrum.getId(), nodeName, mslevel, rt);
-                        ms2Node = new DefaultMutableTreeNode(nodeName);
-                        ms1Node.add(ms2Node);
+                        //ms2Node = new DefaultMutableTreeNode(nodeName);
+                        //ms1Node.add(ms2Node);
                     }
                 }
                 else
                 {
                    //aSpectrums[iIndex][iK] = new SpectrumData(spectrum.getId(), nodeName, mslevel, rt);
-                   ms1Node = new DefaultMutableTreeNode(nodeName);
-                   sampleNode.add(ms1Node);
+                   //ms1Node = new DefaultMutableTreeNode(nodeName);
+                   //sampleNode.add(ms1Node);
                    iJ++;
                 }
                 iK++;
@@ -2024,7 +2064,6 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem6;
@@ -2057,9 +2096,11 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JMenu jmFile;
     private javax.swing.JMenu jmHelp;
     private javax.swing.JMenuItem jmImportFile;
+    private javax.swing.JMenuItem jmMzML2MGF;
     private javax.swing.JMenuItem jmNewProject;
     private javax.swing.JMenuItem jmOpenProject;
     private javax.swing.JMenuItem jmOpenRecentProject;
+    private javax.swing.JMenuItem jmOptions;
     private javax.swing.JMenuItem jmPaste;
     private javax.swing.JMenuItem jmPrint;
     private javax.swing.JMenu jmProject;

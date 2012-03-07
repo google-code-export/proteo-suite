@@ -26,11 +26,9 @@ import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
-
-
 /**
  *
- * @author Faviel Gonzalez
+ * @author faviel
  */
 public class MzML2MGF {
         
@@ -38,18 +36,17 @@ public class MzML2MGF {
     
     /**
      * Plugin to convert MzML files to MGF
-     * @param paramFile a string containing the file name of parameters if any.	     
-     */    
-    public MzML2MGF(String paramFile) {
+     * @param paramFile a string containing the file name
+     */
+    public MzML2MGF(File xmlFile, String sPath) {
         
-        File xmlFile = new File(paramFile);
-        String paramFile2 = "";
-        paramFile2 = paramFile.replace(".mzML", ".mgf");
+        String paramFile = xmlFile.getName();
+        paramFile = sPath + "\\" + paramFile.replace(".mzML", ".mgf");
+        System.out.println(paramFile);
         String sOut = "";
-        try{
-            
-            FileWriter fstream = new FileWriter(paramFile2);
-            BufferedWriter out = new BufferedWriter(fstream);                        
+        try{            
+            FileWriter fstream = new FileWriter(paramFile);
+            BufferedWriter out = new BufferedWriter(fstream);    
 
             //... Unmarshall data using jzmzML API ...//
             iUnmarshaller = new ArrayList<MzMLUnmarshaller>();
@@ -61,7 +58,7 @@ public class MzML2MGF {
             while (spectrumIterator.hasNext())
             {
                 //... Reading each spectrum ...//
-                Spectrum spectrum = spectrumIterator.next();
+                Spectrum spectrum = spectrumIterator.next();                
 
                 //... Reading CvParam to identify the MS level (1, 2) ...//
                 String mslevel = "";
@@ -73,7 +70,7 @@ public class MzML2MGF {
                     {
                         mslevel = lCVParam.getValue().trim();
                     }
-                }            
+                }
 
                 //... Getting Retention Time (rt) ...//
                 float rt = 0;
@@ -141,32 +138,26 @@ public class MzML2MGF {
                             {
                                 parCharge = 1;
                             }                            
-                            //System.out.println("BEGIN IONS");
                             out.write("BEGIN IONS");
                             out.newLine();
                             
                             sOut = "TITLE=Spectrum1 scans:" + spectrum.getIndex() + ", (rt=" + rt + ")";
-                            //System.out.println(sOut);
                             out.write(sOut);
                             out.newLine();
                             
                             sOut = "PEPMASS=" + String.format("%.4f", parIonMz) + " " + String.format("%.4f", peakIntensity);
-                            //System.out.println(sOut);                            
                             out.write(sOut);
                             out.newLine();
                             
                             sOut = "CHARGE=" + parCharge + "+";
-                            //System.out.println(sOut);                            
                             out.write(sOut);
                             out.newLine();
                             
                             sOut = "RTINSECONDS=" + String.format("%.4f", rt);
-                            //System.out.println(sOut);
                             out.write(sOut);
                             out.newLine();
                             
                             sOut = "SCANS=" + spectrum.getIndex();
-                            //System.out.println(sOut);
                             out.write(sOut);
                             out.newLine();
                             
@@ -177,13 +168,11 @@ public class MzML2MGF {
                                 if (intVal > 0)
                                 {
                                     sOut = String.format("%.4f", mzVal) + " " + String.format("%.4f", intVal);
-                                    //System.out.println(sOut);
                                     out.write(sOut);
                                     out.newLine();
                                 }
                                 iJ++;
                             }           
-                            //System.out.println("END IONS");
                             out.write("END IONS");
                             out.newLine();
                         }
@@ -198,8 +187,6 @@ public class MzML2MGF {
             System.exit(0);                                
         }                
         return;
-
     }
-
 }
 
