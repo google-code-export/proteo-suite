@@ -41,6 +41,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -123,6 +124,9 @@ public class ProteoSuiteView extends JFrame {
         Icon copyIcon = new ImageIcon(getClass().getClassLoader().getResource("images/copy.gif"));
         Icon pasteIcon = new ImageIcon(getClass().getClassLoader().getResource("images/paste.gif"));
         
+        Icon spectrumIcon = new ImageIcon(getClass().getClassLoader().getResource("images/spectrum.gif"));
+        Icon twoDIcon = new ImageIcon(getClass().getClassLoader().getResource("images/twod.gif"));
+        
         jmNewProject.setIcon(newIcon);
         jbNewProject.setIcon(newIcon);
         jmImportFile.setIcon(importIcon);
@@ -138,17 +142,20 @@ public class ProteoSuiteView extends JFrame {
         jmCopy.setIcon(copyIcon);
         jbCopy.setIcon(copyIcon);
         jmPaste.setIcon(pasteIcon);
-        jbPaste.setIcon(pasteIcon);        
+        jbPaste.setIcon(pasteIcon);
+        
+        jbShowChromatogram.setIcon(spectrumIcon);
+        jbShow2D.setIcon(twoDIcon);
         
         //... Setting Window Height and Width ...//
         this.setMinimumSize(new Dimension(1024, 780));
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         //... Setting dividers ...//
-        jspLeft.setDividerLocation(300); //... Left Menu ...//
-        jspLeftMenu.setDividerLocation(200);
-        jspLeftMenu2.setDividerLocation(200);
-        jspCenter.setDividerLocation(700); //... Graphs X-axis ...//
+        jspMainPanelView.setDividerLocation(300); //... Left Menu ...//
+        jspLeftPanelView.setDividerLocation(200);
+        jspLeftMenuBottom.setDividerLocation(200);
+        jspRightPanelView.setDividerLocation(700); //... Graphs X-axis ...//
         jspViewer.setDividerLocation(550); //... Graphs Y-axis ...//
         jspMzML.setDividerLocation(100); //... MzML data ...//
         jtpViewer.setSelectedIndex(0);
@@ -178,20 +185,29 @@ public class ProteoSuiteView extends JFrame {
         jbPaste = new javax.swing.JButton();
         jpbStatus = new javax.swing.JProgressBar();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jToolBar4 = new javax.swing.JToolBar();
+        jToolBar3 = new javax.swing.JToolBar();
         jpMain = new javax.swing.JPanel();
-        jspLeft = new javax.swing.JSplitPane();
-        jspCenter = new javax.swing.JSplitPane();
+        jspMainPanelView = new javax.swing.JSplitPane();
+        jspRightPanelView = new javax.swing.JSplitPane();
         jpProperties = new javax.swing.JPanel();
         jtpProperties = new javax.swing.JTabbedPane();
         jpMzML = new javax.swing.JPanel();
         jspMzML = new javax.swing.JSplitPane();
         jspMzMLHeader = new javax.swing.JScrollPane();
         jtaMzML = new javax.swing.JTextArea();
-        jspMzMLDetail = new javax.swing.JScrollPane();
+        jspMzMLDetail = new javax.swing.JSplitPane();
+        jspMzMLSubDetail = new javax.swing.JScrollPane();
         jtMzML = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        jToolBar4 = new javax.swing.JToolBar();
+        jbShowChromatogram = new javax.swing.JButton();
+        jbShow2D = new javax.swing.JButton();
         jpMzQuantML = new javax.swing.JPanel();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jspViewer = new javax.swing.JSplitPane();
         jtpViewer = new javax.swing.JTabbedPane();
         jdpMS = new javax.swing.JDesktopPane();
@@ -199,8 +215,8 @@ public class ProteoSuiteView extends JFrame {
         jp2D = new javax.swing.JPanel();
         jp3D = new javax.swing.JPanel();
         jpViewer = new javax.swing.JPanel();
-        jspLeftMenu = new javax.swing.JSplitPane();
-        jspLeftMenu2 = new javax.swing.JSplitPane();
+        jspLeftPanelView = new javax.swing.JSplitPane();
+        jspLeftMenuBottom = new javax.swing.JSplitPane();
         jtpIdentFiles = new javax.swing.JTabbedPane();
         jspIdentFiles = new javax.swing.JScrollPane();
         jtIdentFiles = new javax.swing.JTable();
@@ -208,10 +224,9 @@ public class ProteoSuiteView extends JFrame {
         jspQuantFiles = new javax.swing.JScrollPane();
         jtQuantFiles = new javax.swing.JTable();
         jtpRawFiles = new javax.swing.JTabbedPane();
-        jpRawFiles = new javax.swing.JPanel();
         jspRawFiles = new javax.swing.JScrollPane();
         jtRawFiles = new javax.swing.JTable();
-        jMenuBar1 = new javax.swing.JMenuBar();
+        jmMain = new javax.swing.JMenuBar();
         jmFile = new javax.swing.JMenu();
         jmNewProject = new javax.swing.JMenuItem();
         jmImportFile = new javax.swing.JMenuItem();
@@ -240,22 +255,22 @@ public class ProteoSuiteView extends JFrame {
         jmViewMzML = new javax.swing.JMenuItem();
         jmViewMzQuantML = new javax.swing.JMenuItem();
         jmProject = new javax.swing.JMenu();
+        jmEditIdent = new javax.swing.JMenuItem();
         jmEditQuant = new javax.swing.JMenuItem();
-        jMenuItem6 = new javax.swing.JMenuItem();
         jmAnalyze = new javax.swing.JMenu();
         jmRunQuantAnalysis = new javax.swing.JMenuItem();
         jmStatistics = new javax.swing.JMenu();
         jmTools = new javax.swing.JMenu();
-        jMenu1 = new javax.swing.JMenu();
+        jmConverters = new javax.swing.JMenu();
         jmMzML2MGF = new javax.swing.JMenuItem();
         jmOptions = new javax.swing.JMenuItem();
         jmDatabases = new javax.swing.JMenu();
         jmSubmitPRIDE = new javax.swing.JMenuItem();
         jmWindow = new javax.swing.JMenu();
         jmHelp = new javax.swing.JMenu();
-        jMenuItem2 = new javax.swing.JMenuItem();
+        jmHelpContent = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem3 = new javax.swing.JMenuItem();
+        jmAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -318,16 +333,19 @@ public class ProteoSuiteView extends JFrame {
         jToolBar2.setRollover(true);
 
         jbCut.setToolTipText("Cut (Ctrl + X)");
+        jbCut.setEnabled(false);
         jbCut.setFocusable(false);
         jbCut.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jbCut.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar2.add(jbCut);
 
+        jbCopy.setEnabled(false);
         jbCopy.setFocusable(false);
         jbCopy.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jbCopy.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar2.add(jbCopy);
 
+        jbPaste.setEnabled(false);
         jbPaste.setFocusable(false);
         jbPaste.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jbPaste.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -335,10 +353,10 @@ public class ProteoSuiteView extends JFrame {
 
         jLabel1.setText("Task monitor:");
 
-        jToolBar4.setFloatable(false);
-        jToolBar4.setRollover(true);
-        jToolBar4.setMaximumSize(new java.awt.Dimension(34, 9));
-        jToolBar4.setMinimumSize(new java.awt.Dimension(34, 9));
+        jToolBar3.setFloatable(false);
+        jToolBar3.setRollover(true);
+        jToolBar3.setMaximumSize(new java.awt.Dimension(34, 9));
+        jToolBar3.setMinimumSize(new java.awt.Dimension(34, 9));
 
         javax.swing.GroupLayout jpToolBarLayout = new javax.swing.GroupLayout(jpToolBar);
         jpToolBar.setLayout(jpToolBarLayout);
@@ -349,13 +367,11 @@ public class ProteoSuiteView extends JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToolBar4, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 297, Short.MAX_VALUE)
+                .addComponent(jToolBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 299, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jpbStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
+                .addComponent(jpbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jpToolBarLayout.setVerticalGroup(
@@ -364,18 +380,24 @@ public class ProteoSuiteView extends JFrame {
                 .addGroup(jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
                     .addComponent(jpbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2))
+                .addGap(6, 6, 6))
             .addGroup(jpToolBarLayout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpToolBarLayout.createSequentialGroup()
                 .addGroup(jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                    .addComponent(jToolBar4, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+                    .addComponent(jToolBar3, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
+        jspMainPanelView.setDividerLocation(280);
+        jspMainPanelView.setDividerSize(2);
+
+        jspRightPanelView.setDividerLocation(500);
+        jspRightPanelView.setDividerSize(2);
+
+        jspMzML.setDividerSize(2);
         jspMzML.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jtaMzML.setColumns(20);
@@ -383,14 +405,18 @@ public class ProteoSuiteView extends JFrame {
         jtaMzML.setRows(5);
         jspMzMLHeader.setViewportView(jtaMzML);
 
-        jspMzML.setTopComponent(jspMzMLHeader);
+        jspMzML.setLeftComponent(jspMzMLHeader);
+
+        jspMzMLDetail.setDividerLocation(35);
+        jspMzMLDetail.setDividerSize(2);
+        jspMzMLDetail.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jtMzML.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "", "Index", "ID", "MS", "Base peak m/z", "Base peak int", "Total ion curr", "Lowest obs m/z", "Highest obs m/z", "Ret Time", "Scan Win Min", "Scan Win Max"
+                "", "Index", "ID", "MS", "Base peak m/z", "Base peak int", "Total ion curr", "Lowest obs m/z", "Highest obs m/z", "Ret Time (sec)", "Scan Win Min", "Scan Win Max"
             }
         ));
         jtMzML.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -398,15 +424,65 @@ public class ProteoSuiteView extends JFrame {
                 jtMzMLMouseClicked(evt);
             }
         });
-        jspMzMLDetail.setViewportView(jtMzML);
+        jspMzMLSubDetail.setViewportView(jtMzML);
 
-        jspMzML.setRightComponent(jspMzMLDetail);
+        jspMzMLDetail.setRightComponent(jspMzMLSubDetail);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jToolBar4.setFloatable(false);
+        jToolBar4.setRollover(true);
+        jToolBar4.setMaximumSize(new java.awt.Dimension(100, 27));
+        jToolBar4.setMinimumSize(new java.awt.Dimension(100, 27));
+        jToolBar4.setPreferredSize(new java.awt.Dimension(100, 27));
+        jToolBar4.setRequestFocusEnabled(false);
+
+        jbShowChromatogram.setToolTipText("Show Chromatogram");
+        jbShowChromatogram.setMaximumSize(new java.awt.Dimension(35, 24));
+        jbShowChromatogram.setMinimumSize(new java.awt.Dimension(35, 24));
+        jbShowChromatogram.setPreferredSize(new java.awt.Dimension(35, 24));
+        jbShowChromatogram.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jbShowChromatogramMouseClicked(evt);
+            }
+        });
+        jToolBar4.add(jbShowChromatogram);
+
+        jbShow2D.setToolTipText("Show 2D Plot");
+        jbShow2D.setMaximumSize(new java.awt.Dimension(35, 24));
+        jbShow2D.setMinimumSize(new java.awt.Dimension(35, 24));
+        jbShow2D.setPreferredSize(new java.awt.Dimension(35, 24));
+        jbShow2D.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jbShow2DMouseClicked(evt);
+            }
+        });
+        jToolBar4.add(jbShow2D);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jToolBar4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(114, 114, 114))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jToolBar4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jspMzMLDetail.setLeftComponent(jPanel1);
+
+        jspMzML.setBottomComponent(jspMzMLDetail);
 
         javax.swing.GroupLayout jpMzMLLayout = new javax.swing.GroupLayout(jpMzML);
         jpMzML.setLayout(jpMzMLLayout);
         jpMzMLLayout.setHorizontalGroup(
             jpMzMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspMzML, javax.swing.GroupLayout.DEFAULT_SIZE, 759, Short.MAX_VALUE)
+            .addComponent(jspMzML, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
         );
         jpMzMLLayout.setVerticalGroup(
             jpMzMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -415,15 +491,35 @@ public class ProteoSuiteView extends JFrame {
 
         jtpProperties.addTab("mzML View", jpMzML);
 
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane1.setViewportView(jTextArea1);
+
+        jSplitPane1.setTopComponent(jScrollPane1);
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Column 1", "Column 2", "Column 3", "Column 4"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable1);
+
+        jSplitPane1.setRightComponent(jScrollPane2);
+
         javax.swing.GroupLayout jpMzQuantMLLayout = new javax.swing.GroupLayout(jpMzQuantML);
         jpMzQuantML.setLayout(jpMzQuantMLLayout);
         jpMzQuantMLLayout.setHorizontalGroup(
             jpMzQuantMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 759, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
         );
         jpMzQuantMLLayout.setVerticalGroup(
             jpMzQuantMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 546, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
         );
 
         jtpProperties.addTab("mzQuantML View", jpMzQuantML);
@@ -432,15 +528,17 @@ public class ProteoSuiteView extends JFrame {
         jpProperties.setLayout(jpPropertiesLayout);
         jpPropertiesLayout.setHorizontalGroup(
             jpPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE)
+            .addComponent(jtpProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
         );
         jpPropertiesLayout.setVerticalGroup(
             jpPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jtpProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
         );
 
-        jspCenter.setRightComponent(jpProperties);
+        jspRightPanelView.setRightComponent(jpProperties);
 
+        jspViewer.setDividerLocation(400);
+        jspViewer.setDividerSize(2);
         jspViewer.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jdpMS.setBackground(new java.awt.Color(255, 255, 255));
@@ -452,11 +550,11 @@ public class ProteoSuiteView extends JFrame {
         jpXIC.setLayout(jpXICLayout);
         jpXICLayout.setHorizontalGroup(
             jpXICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 84, Short.MAX_VALUE)
+            .addGap(0, 492, Short.MAX_VALUE)
         );
         jpXICLayout.setVerticalGroup(
             jpXICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 17, Short.MAX_VALUE)
+            .addGap(0, 371, Short.MAX_VALUE)
         );
 
         jtpViewer.addTab("XIC", jpXIC);
@@ -467,11 +565,11 @@ public class ProteoSuiteView extends JFrame {
         jp2D.setLayout(jp2DLayout);
         jp2DLayout.setHorizontalGroup(
             jp2DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 84, Short.MAX_VALUE)
+            .addGap(0, 492, Short.MAX_VALUE)
         );
         jp2DLayout.setVerticalGroup(
             jp2DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 17, Short.MAX_VALUE)
+            .addGap(0, 371, Short.MAX_VALUE)
         );
 
         jtpViewer.addTab("2D View", jp2D);
@@ -482,37 +580,41 @@ public class ProteoSuiteView extends JFrame {
         jp3D.setLayout(jp3DLayout);
         jp3DLayout.setHorizontalGroup(
             jp3DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 84, Short.MAX_VALUE)
+            .addGap(0, 492, Short.MAX_VALUE)
         );
         jp3DLayout.setVerticalGroup(
             jp3DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 17, Short.MAX_VALUE)
+            .addGap(0, 371, Short.MAX_VALUE)
         );
 
         jtpViewer.addTab("3D View", jp3D);
 
         jspViewer.setTopComponent(jtpViewer);
 
+        jpViewer.setBackground(new java.awt.Color(255, 255, 255));
+
         javax.swing.GroupLayout jpViewerLayout = new javax.swing.GroupLayout(jpViewer);
         jpViewer.setLayout(jpViewerLayout);
         jpViewerLayout.setHorizontalGroup(
             jpViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 89, Short.MAX_VALUE)
+            .addGap(0, 497, Short.MAX_VALUE)
         );
         jpViewerLayout.setVerticalGroup(
             jpViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 490, Short.MAX_VALUE)
+            .addGap(0, 171, Short.MAX_VALUE)
         );
 
         jspViewer.setRightComponent(jpViewer);
 
-        jspCenter.setLeftComponent(jspViewer);
+        jspRightPanelView.setLeftComponent(jspViewer);
 
-        jspLeft.setRightComponent(jspCenter);
+        jspMainPanelView.setRightComponent(jspRightPanelView);
 
-        jspLeftMenu.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jspLeftPanelView.setDividerLocation(150);
+        jspLeftPanelView.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        jspLeftMenu2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jspLeftMenuBottom.setDividerLocation(150);
+        jspLeftMenuBottom.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jtIdentFiles.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -526,7 +628,7 @@ public class ProteoSuiteView extends JFrame {
 
         jtpIdentFiles.addTab("Identification Files", jspIdentFiles);
 
-        jspLeftMenu2.setTopComponent(jtpIdentFiles);
+        jspLeftMenuBottom.setTopComponent(jtpIdentFiles);
 
         jtQuantFiles.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -540,13 +642,13 @@ public class ProteoSuiteView extends JFrame {
 
         jtpQuantFiles.addTab("Quantification Files", jspQuantFiles);
 
-        jspLeftMenu2.setRightComponent(jtpQuantFiles);
+        jspLeftMenuBottom.setRightComponent(jtpQuantFiles);
 
-        jspLeftMenu.setBottomComponent(jspLeftMenu2);
+        jspLeftPanelView.setBottomComponent(jspLeftMenuBottom);
 
         jtRawFiles.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null}
+
             },
             new String [] {
                 "ID", "Name", "Version", "Spectrums"
@@ -559,32 +661,21 @@ public class ProteoSuiteView extends JFrame {
         });
         jspRawFiles.setViewportView(jtRawFiles);
 
-        javax.swing.GroupLayout jpRawFilesLayout = new javax.swing.GroupLayout(jpRawFiles);
-        jpRawFiles.setLayout(jpRawFilesLayout);
-        jpRawFilesLayout.setHorizontalGroup(
-            jpRawFilesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspRawFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-        );
-        jpRawFilesLayout.setVerticalGroup(
-            jpRawFilesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspRawFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
-        );
+        jtpRawFiles.addTab("Raw Files", jspRawFiles);
 
-        jtpRawFiles.addTab("Raw Files", jpRawFiles);
+        jspLeftPanelView.setLeftComponent(jtpRawFiles);
 
-        jspLeftMenu.setLeftComponent(jtpRawFiles);
-
-        jspLeft.setLeftComponent(jspLeftMenu);
+        jspMainPanelView.setLeftComponent(jspLeftPanelView);
 
         javax.swing.GroupLayout jpMainLayout = new javax.swing.GroupLayout(jpMain);
         jpMain.setLayout(jpMainLayout);
         jpMainLayout.setHorizontalGroup(
             jpMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspLeft, javax.swing.GroupLayout.DEFAULT_SIZE, 980, Short.MAX_VALUE)
+            .addComponent(jspMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 980, Short.MAX_VALUE)
         );
         jpMainLayout.setVerticalGroup(
             jpMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspLeft, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
+            .addComponent(jspMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
         );
 
         jmFile.setText("File");
@@ -668,7 +759,7 @@ public class ProteoSuiteView extends JFrame {
         });
         jmFile.add(jmExit);
 
-        jMenuBar1.add(jmFile);
+        jmMain.add(jmFile);
 
         jmEdit.setText("Edit");
 
@@ -688,7 +779,7 @@ public class ProteoSuiteView extends JFrame {
         jmEdit.add(jmPaste);
         jmEdit.add(jSeparator6);
 
-        jMenuBar1.add(jmEdit);
+        jmMain.add(jmEdit);
 
         jmView.setText("View");
 
@@ -741,17 +832,17 @@ public class ProteoSuiteView extends JFrame {
         });
         jmView.add(jmViewMzQuantML);
 
-        jMenuBar1.add(jmView);
+        jmMain.add(jmView);
 
         jmProject.setText("Project");
 
-        jmEditQuant.setText("Edit Ident Parameters");
+        jmEditIdent.setText("Edit Ident Parameters");
+        jmProject.add(jmEditIdent);
+
+        jmEditQuant.setText("Edit Quant Parameters");
         jmProject.add(jmEditQuant);
 
-        jMenuItem6.setText("Edit Quant Parameters");
-        jmProject.add(jMenuItem6);
-
-        jMenuBar1.add(jmProject);
+        jmMain.add(jmProject);
 
         jmAnalyze.setText("Analyze");
 
@@ -764,14 +855,14 @@ public class ProteoSuiteView extends JFrame {
         });
         jmAnalyze.add(jmRunQuantAnalysis);
 
-        jMenuBar1.add(jmAnalyze);
+        jmMain.add(jmAnalyze);
 
         jmStatistics.setText("Statistics");
-        jMenuBar1.add(jmStatistics);
+        jmMain.add(jmStatistics);
 
         jmTools.setText("Tools");
 
-        jMenu1.setText("Converters");
+        jmConverters.setText("Converters");
 
         jmMzML2MGF.setText("mzML to MGF");
         jmMzML2MGF.addActionListener(new java.awt.event.ActionListener() {
@@ -779,9 +870,9 @@ public class ProteoSuiteView extends JFrame {
                 jmMzML2MGFActionPerformed(evt);
             }
         });
-        jMenu1.add(jmMzML2MGF);
+        jmConverters.add(jmMzML2MGF);
 
-        jmTools.add(jMenu1);
+        jmTools.add(jmConverters);
 
         jmOptions.setText("Options");
         jmOptions.addActionListener(new java.awt.event.ActionListener() {
@@ -791,35 +882,35 @@ public class ProteoSuiteView extends JFrame {
         });
         jmTools.add(jmOptions);
 
-        jMenuBar1.add(jmTools);
+        jmMain.add(jmTools);
 
         jmDatabases.setText("Databases");
 
         jmSubmitPRIDE.setText("Submit to PRIDE");
         jmDatabases.add(jmSubmitPRIDE);
 
-        jMenuBar1.add(jmDatabases);
+        jmMain.add(jmDatabases);
 
         jmWindow.setText("Window");
-        jMenuBar1.add(jmWindow);
+        jmMain.add(jmWindow);
 
         jmHelp.setText("Help");
 
-        jMenuItem2.setText("ProteoSuite Help");
-        jmHelp.add(jMenuItem2);
+        jmHelpContent.setText("ProteoSuite Help");
+        jmHelp.add(jmHelpContent);
         jmHelp.add(jSeparator5);
 
-        jMenuItem3.setText("About ProteoSuite");
-        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+        jmAbout.setText("About ProteoSuite");
+        jmAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem3ActionPerformed(evt);
+                jmAboutActionPerformed(evt);
             }
         });
-        jmHelp.add(jMenuItem3);
+        jmHelp.add(jmAbout);
 
-        jMenuBar1.add(jmHelp);
+        jmMain.add(jmHelp);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(jmMain);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -902,11 +993,13 @@ public class ProteoSuiteView extends JFrame {
         //... Applying file extension filters ...//
         FileNameExtensionFilter filter = new FileNameExtensionFilter("mzML Files (*.mzML)", "mzML");
         FileNameExtensionFilter filter2 = new FileNameExtensionFilter("mzIdentML Files (*.mzid)", "mzid");
+        FileNameExtensionFilter filter2a = new FileNameExtensionFilter("Mascot XML Files (*.xml)", "xml");
         FileNameExtensionFilter filter3 = new FileNameExtensionFilter("mzQuantML Files (*.mzq)", "mzq");
 
         //... Filters must be in descending order ...//
         chooser.setFileFilter(filter3);
         chooser.setFileFilter(filter2);
+        chooser.setFileFilter(filter2a);
         chooser.setFileFilter(filter);
 
         //... Enable multiple file selection ...//
@@ -968,6 +1061,38 @@ public class ProteoSuiteView extends JFrame {
 //                    jLabel2.setText("");
                     
                 } //... From reading mzML files ...//
+
+                if (aFiles[0].getName().indexOf(".xml") >0) 
+                {
+                    //... Setting progress bar ...// (To do: This needs to be set up in a thread)
+                    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                    
+                    //... Fill JTable ...//
+                    DefaultTableModel model = new DefaultTableModel();
+                    jtIdentFiles.setModel(model);
+                    model.addColumn("ID");
+                    model.addColumn("Name");
+                    model.addColumn("Version");
+
+                    //... Reading selected files ...//
+                    for (int iI = 0; iI < aFiles.length; iI++)
+                    {
+                        File xmlFile = new File(aFiles[iI].getPath());                        
+
+                        //... Unmarshall data using jzmzML API ...//
+                        loadIdentFiles(model, aFiles[iI].getName(), aFiles[iI].getName(), "Mascot XML File", iI);
+
+//                        jpbStatus.setValue(100);                                            
+//                        jpbStatus.repaint();                        
+                    } //... For files ...//                    
+                    
+                    setCursor(null); //... Turn off the wait cursor ...//                    
+//                    try{Thread.sleep(500);} 
+//                    catch (InterruptedException err){}
+//                    jpbStatus.setValue(0);                                        
+//                    jpbStatus.repaint();                     
+//                    jLabel2.setText("");
+                }                
                 
                 if (aFiles[0].getName().indexOf(".mzq") >0) 
                 {
@@ -1158,7 +1283,7 @@ public class ProteoSuiteView extends JFrame {
         jtpProperties.setSelectedIndex(1);
     }//GEN-LAST:event_jmViewMzQuantMLActionPerformed
 
-    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+    private void jmAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmAboutActionPerformed
         About about = new About();
         final JFrame jfAbout = new JFrame("About ProteoSuite");
         jfAbout.setResizable(false);
@@ -1186,11 +1311,11 @@ public class ProteoSuiteView extends JFrame {
         jfAbout.add(about);
         jfAbout.pack();
         jfAbout.setVisible(true);       
-    }//GEN-LAST:event_jMenuItem3ActionPerformed
+    }//GEN-LAST:event_jmAboutActionPerformed
 
     private void jtMzMLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtMzMLMouseClicked
         if (evt.getButton()== 1)
-        {            
+        {                        
             showSpectrum(jtRawFiles.getSelectedRow(), jtMzML.getValueAt(jtMzML.getSelectedRow(), 2).toString());
         }
     }//GEN-LAST:event_jtMzMLMouseClicked
@@ -1233,7 +1358,7 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jmMzML2MGFActionPerformed
 
     private void jmOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmOptionsActionPerformed
-        Configparams winParams = new Configparams();
+        Configparams panelParams = new Configparams();
         final JFrame jfWinParams = new JFrame("Options");
         jfWinParams.setResizable(false);
         jfWinParams.setSize(580, 370);
@@ -1257,10 +1382,18 @@ public class ProteoSuiteView extends JFrame {
         jfWinParams.setIconImage(iconApp);
         jfWinParams.setAlwaysOnTop(true);
        
-        jfWinParams.add(winParams);
+        jfWinParams.add(panelParams);
         jfWinParams.pack();
         jfWinParams.setVisible(true);    
     }//GEN-LAST:event_jmOptionsActionPerformed
+
+    private void jbShowChromatogramMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbShowChromatogramMouseClicked
+        this.showChromatogram(jtRawFiles.getSelectedRow(), jtRawFiles.getValueAt(jtRawFiles.getSelectedRow(), 1).toString());
+    }//GEN-LAST:event_jbShowChromatogramMouseClicked
+
+    private void jbShow2DMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbShow2DMouseClicked
+        this.show2DPlot(jtRawFiles.getSelectedRow(), jtRawFiles.getValueAt(jtRawFiles.getSelectedRow(), 1).toString());
+    }//GEN-LAST:event_jbShow2DMouseClicked
     
     public class threadProgBar implements Runnable{
         
@@ -1291,6 +1424,8 @@ public class ProteoSuiteView extends JFrame {
         
     private void showSpectrum(int iIndex, String sID) {                                             
                   
+        jtpViewer.setSelectedIndex(0);
+        
         //... Get index from spectrums ...//
         MzMLUnmarshaller unmarshaller = alUnmarshaller.get(iIndex);            
         try
@@ -1346,12 +1481,11 @@ public class ProteoSuiteView extends JFrame {
         internalFrame.setVisible(true);  
         return internalFrame;
     }
-    private void showChromatogram() {                                             
+    private void showChromatogram(int iIndex, String sTitle) {                                             
         
             jtpViewer.setSelectedIndex(1);
 
             //... Get index from spectrums ...//
-            int iIndex = 0;
             MzMLUnmarshaller unmarshaller = alUnmarshaller.get(iIndex);
             try
             {
@@ -1377,45 +1511,39 @@ public class ProteoSuiteView extends JFrame {
                    intensities[iI] = intenNumbers[iI].doubleValue();
                }
                ChromatogramPanel panel = new ChromatogramPanel(rt, intensities, "RT (mins)", "Intensity (counts)");
-               //JInternalFrame internal = new JInternalFrame("Chromatogram <" + nodeInfo.toString() + ">");
+               JInternalFrame internal = new JInternalFrame("Chromatogram <" + sTitle + ">");
                panel.setSize(new java.awt.Dimension(600, 400));
                panel.setPreferredSize(new java.awt.Dimension(600, 400));
                panel.setMaxPadding(50);
                Icon icon = new ImageIcon(getClass().getResource("/images/icon.gif"));
-               //internal.setFrameIcon(icon);
-               //internal.setResizable(true);
-               //internal.setMaximizable(true);
-               //internal.setClosable(true);
-               //internal.setIconifiable(true);
+               internal.setFrameIcon(icon);
+               internal.setResizable(true);
+               internal.setMaximizable(true);
+               internal.setClosable(true);
+               internal.setIconifiable(true);
                
-               //internal.add(panel);
-               //internal.pack();
-               //internal.setVisible(true);
-               //jpXIC.add(internal);
+               internal.add(panel);
+               internal.pack();
+               internal.setVisible(true);
+               jpXIC.add(internal);
             }
             catch (MzMLUnmarshallerException ume)
             {
                 System.out.println(ume.getMessage());
             }
     }         
-    private void show2DPlot() {                                             
+    private void show2DPlot(int iIndex, String sTitle) {                                             
        
-            //DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-            //                   jtMainTree.getLastSelectedPathComponent();
-            //if (node == null) return;
-
-            //... Getting values from nodes ...//
-            //Object nodeInfo = node.getUserObject();
-
             double[] mz = new double[1000000];
             double[] intensities = new double[1000000];
             double[] art = new double[1000000];
 
             double rt = 0;
             int iCounter = 0;
+            
+            jtpViewer.setSelectedIndex(2);
 
             //... Get index from spectrums ...//
-            int iIndex = 0;
             MzMLUnmarshaller unmarshaller = alUnmarshaller.get(iIndex);            
 
             MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
@@ -1465,11 +1593,10 @@ public class ProteoSuiteView extends JFrame {
                 }
                 iK++;
             }
-            //TwoDPlot demo2 = new TwoDPlot(nodeInfo.toString(), mz, intensities, art);
-            //jp2D.add(demo2);            
-            //demo2.pack();
-            //demo2.setVisible(true);
-            jtpViewer.setSelectedIndex(2);
+            TwoDPlot demo2 = new TwoDPlot(sTitle, mz, intensities, art);
+            jp2D.add(demo2);
+            demo2.pack();
+            demo2.setVisible(true);
     } 
     private boolean saveProject() 
     {
@@ -1581,7 +1708,7 @@ public class ProteoSuiteView extends JFrame {
         model.addColumn("Total ion current");
         model.addColumn("Lowest obs m/z");
         model.addColumn("Highest obs m/z");
-        model.addColumn("Ret Time");
+        model.addColumn("Ret Time (sec)");
         model.addColumn("Scan Win Min");
         model.addColumn("Scan Win Max");     
         String sOutput="";
@@ -1650,16 +1777,17 @@ public class ProteoSuiteView extends JFrame {
         //... Reading spectrum data ...//
         MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
         String msLevel = "";
-        String basePeakMZ = "";
-        String basePeakInt = "";
-        String totalIonCurrent = "";
-        String lowestObsMZ = "";
-        String highestObsMZ = "";
+        float basePeakMZ = 0;
+        float basePeakInt = 0;
+        float totalIonCurrent = 0;
+        float lowestObsMZ = 0;
+        float highestObsMZ = 0;
         String unitRT = "";
         float rt = 0;
         String scanWinMin = "";
         String scanWinMax = "";
-        while (spectrumIterator.hasNext())
+        int iCount = 1;
+        while (spectrumIterator.hasNext()&&iCount<=500)
         {
             Spectrum spectrum = spectrumIterator.next();
             
@@ -1673,23 +1801,23 @@ public class ProteoSuiteView extends JFrame {
                }
                if (lCVParam.getAccession().equals("MS:1000504")) 
                {
-                   basePeakMZ = lCVParam.getValue().trim();
+                   basePeakMZ = Float.parseFloat(lCVParam.getValue().trim());
                }
                if (lCVParam.getAccession().equals("MS:1000505")) 
                {
-                   basePeakInt = lCVParam.getValue().trim();
+                   basePeakInt = Float.parseFloat(lCVParam.getValue().trim());
                }
                if (lCVParam.getAccession().equals("MS:1000285")) 
                {
-                   totalIonCurrent = lCVParam.getValue().trim();
+                   totalIonCurrent = Float.parseFloat(lCVParam.getValue().trim());
                }
                if (lCVParam.getAccession().equals("MS:1000528")) 
                {
-                   lowestObsMZ = lCVParam.getValue().trim();
+                   lowestObsMZ = Float.parseFloat(lCVParam.getValue().trim());
                }
                if (lCVParam.getAccession().equals("MS:1000527")) 
                {
-                   highestObsMZ = lCVParam.getValue().trim();
+                   highestObsMZ = Float.parseFloat(lCVParam.getValue().trim());
                }               
             }
             List<CVParam> scanParam = spectrum.getScanList().getScan().get(0).getCvParam();
@@ -1727,18 +1855,27 @@ public class ProteoSuiteView extends JFrame {
                 spectrum.getIndex().toString(), 
                 spectrum.getId().toString(),
                 msLevel,
-                basePeakMZ,
-                basePeakInt,
-                totalIonCurrent,
-                lowestObsMZ,
-                highestObsMZ,
+                String.format("%.4f", basePeakMZ),
+                String.format("%.4f", basePeakInt),
+                String.format("%.4f", totalIonCurrent),
+                String.format("%.4f", lowestObsMZ),
+                String.format("%.4f", highestObsMZ),
                 String.format("%.4f", rt),
                 scanWinMin,
                 scanWinMax
-                });                
+                });       
+            iCount++;
         }
         this.jtMzML.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer());
-    }
+        
+        for (int i = 0; i < jtMzML.getModel().getRowCount(); i++) {
+           for (int j = 0; j < jtMzML.getModel().getColumnCount(); j++) {
+              DefaultTableCellRenderer renderer =
+                 (DefaultTableCellRenderer)jtMzML.getCellRenderer(i, j);
+              renderer.setHorizontalAlignment(JTextField.RIGHT);
+           } 
+        }        
+    }   
     private class ImageRenderer extends DefaultTableCellRenderer {
         JLabel lbl = new JLabel();
 
@@ -1831,7 +1968,7 @@ public class ProteoSuiteView extends JFrame {
         model2.addColumn("Total ion current");
         model2.addColumn("Lowest obs m/z");
         model2.addColumn("Highest obs m/z");
-        model2.addColumn("Ret Time");
+        model2.addColumn("Ret Time (sec)");
         model2.addColumn("Scan Win Min");
         model2.addColumn("Scan Win Max");             
     }
@@ -2045,7 +2182,10 @@ public class ProteoSuiteView extends JFrame {
                                                                       unmarshaller.getMzMLVersion(),
                                                                       spectrums});            
     }
-    
+    private void loadIdentFiles(DefaultTableModel model, String sID, String sFileName, String sVersion, int iIndex)
+    {
+            model.insertRow(model.getRowCount(), new Object[]{sID, sFileName, sVersion});  
+    }    
     /**
      * @param args the command line arguments (leave empty)
      */
@@ -2061,12 +2201,9 @@ public class ProteoSuiteView extends JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
-    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -2074,8 +2211,12 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
+    private javax.swing.JToolBar jToolBar3;
     private javax.swing.JToolBar jToolBar4;
     private javax.swing.JButton jbCopy;
     private javax.swing.JButton jbCut;
@@ -2084,18 +2225,25 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JButton jbOpenProject;
     private javax.swing.JButton jbPaste;
     private javax.swing.JButton jbSaveProject;
+    private javax.swing.JButton jbShow2D;
+    private javax.swing.JButton jbShowChromatogram;
     private javax.swing.JDesktopPane jdpMS;
+    private javax.swing.JMenuItem jmAbout;
     private javax.swing.JMenu jmAnalyze;
     private javax.swing.JMenuItem jmCloseProject;
+    private javax.swing.JMenu jmConverters;
     private javax.swing.JMenuItem jmCopy;
     private javax.swing.JMenuItem jmCut;
     private javax.swing.JMenu jmDatabases;
     private javax.swing.JMenu jmEdit;
+    private javax.swing.JMenuItem jmEditIdent;
     private javax.swing.JMenuItem jmEditQuant;
     private javax.swing.JMenuItem jmExit;
     private javax.swing.JMenu jmFile;
     private javax.swing.JMenu jmHelp;
+    private javax.swing.JMenuItem jmHelpContent;
     private javax.swing.JMenuItem jmImportFile;
+    private javax.swing.JMenuBar jmMain;
     private javax.swing.JMenuItem jmMzML2MGF;
     private javax.swing.JMenuItem jmNewProject;
     private javax.swing.JMenuItem jmOpenProject;
@@ -2124,21 +2272,21 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JPanel jpMzML;
     private javax.swing.JPanel jpMzQuantML;
     private javax.swing.JPanel jpProperties;
-    private javax.swing.JPanel jpRawFiles;
     private javax.swing.JPanel jpToolBar;
     private javax.swing.JPanel jpViewer;
     private javax.swing.JPanel jpXIC;
     private javax.swing.JProgressBar jpbStatus;
-    private javax.swing.JSplitPane jspCenter;
     private javax.swing.JScrollPane jspIdentFiles;
-    private javax.swing.JSplitPane jspLeft;
-    private javax.swing.JSplitPane jspLeftMenu;
-    private javax.swing.JSplitPane jspLeftMenu2;
+    private javax.swing.JSplitPane jspLeftMenuBottom;
+    private javax.swing.JSplitPane jspLeftPanelView;
+    private javax.swing.JSplitPane jspMainPanelView;
     private javax.swing.JSplitPane jspMzML;
-    private javax.swing.JScrollPane jspMzMLDetail;
+    private javax.swing.JSplitPane jspMzMLDetail;
     private javax.swing.JScrollPane jspMzMLHeader;
+    private javax.swing.JScrollPane jspMzMLSubDetail;
     private javax.swing.JScrollPane jspQuantFiles;
     private javax.swing.JScrollPane jspRawFiles;
+    private javax.swing.JSplitPane jspRightPanelView;
     private javax.swing.JSplitPane jspViewer;
     private javax.swing.JTable jtIdentFiles;
     private javax.swing.JTable jtMzML;

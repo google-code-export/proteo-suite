@@ -3,5 +3,14 @@
  <configSettings>
      <generalSettings>
      </generalSettings>
+	 <pipelineSettings>
+		<protocol name="SILAC">
+			<rawdata_loadplugin>loadRawMzML111</rawdata_loadplugin>
+			<identdata_loadplugin>loadMascotIdent111</identdata_loadplugin>
+			<peakselplugin>metLabelingPeakSel</peakselplugin>
+			<quantplugin>LcMsAreasSimpson</quantplugin>
+			<outputplugin>displayTable</outputplugin>
+		</protocol>
+	 </pipelineSettings>	
  </configSettings>
 </ProteoSuiteApp>
