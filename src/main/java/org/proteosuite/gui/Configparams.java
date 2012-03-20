@@ -35,7 +35,7 @@ public class Configparams extends javax.swing.JPanel {
     public Configparams() {
         initComponents();
         initValues();
-    }
+    }    
    
     private void initValues()
     {       
@@ -201,7 +201,7 @@ public class Configparams extends javax.swing.JPanel {
     }//GEN-LAST:event_jbBrowseActionPerformed
 
     private void jbSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSaveActionPerformed
-        saveConfigFile();
+        saveConfigFile();        
     }//GEN-LAST:event_jbSaveActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
