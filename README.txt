@@ -100,13 +100,12 @@ Folder/File							Description								Comments
 Maven manual dependencies:
 As GUI releases are usually modified by programmers, we have selected several stable versions.
 The following libraries need to be installed manually:
-* jcommon-1.0.16.jar			jfree.org
-* jfreechart-1.0.13.jar			jfree.org
-* jmzml-1.6.7.jar				ebi.ac.uk (Latest stable version)
+* jcommon-1.0.16.jar			jfree.org		(For general charts)
+* jfreechart-1.0.13.jar			jfree.org		(For general charts)
 * utilities-3.0.16.jar			compomics.org	(For GUIs, spectrum and chromatogram)
-* x-Tracker-1.0-SNAPSHOT.jar	xtracker.info
+* x-Tracker-1.0-SNAPSHOT.jar	xtracker.info	Visit http://code.google.com/p/x-tracker/
 
-These libraries are included under src/main/resources/
+Note: These libraries are included under src/main/resources/lib/
 
 ---------------------
 6. Technical support
