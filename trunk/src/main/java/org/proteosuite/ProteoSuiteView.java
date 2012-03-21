@@ -72,6 +72,7 @@ import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
+import xtracker.xTracker;
 
         
 /**
@@ -215,6 +216,9 @@ public class ProteoSuiteView extends JFrame {
         jp2D = new javax.swing.JPanel();
         jp3D = new javax.swing.JPanel();
         jpViewer = new javax.swing.JPanel();
+        jtbLog = new javax.swing.JTabbedPane();
+        jspLog = new javax.swing.JScrollPane();
+        jtaLog = new javax.swing.JTextArea();
         jspLeftPanelView = new javax.swing.JSplitPane();
         jspLeftMenuBottom = new javax.swing.JSplitPane();
         jtpIdentFiles = new javax.swing.JTabbedPane();
@@ -593,15 +597,21 @@ public class ProteoSuiteView extends JFrame {
 
         jpViewer.setBackground(new java.awt.Color(255, 255, 255));
 
+        jtaLog.setColumns(20);
+        jtaLog.setRows(5);
+        jspLog.setViewportView(jtaLog);
+
+        jtbLog.addTab("Log", jspLog);
+
         javax.swing.GroupLayout jpViewerLayout = new javax.swing.GroupLayout(jpViewer);
         jpViewer.setLayout(jpViewerLayout);
         jpViewerLayout.setHorizontalGroup(
             jpViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 497, Short.MAX_VALUE)
+            .addComponent(jtbLog, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
         );
         jpViewerLayout.setVerticalGroup(
             jpViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 171, Short.MAX_VALUE)
+            .addComponent(jtbLog, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
         );
 
         jspViewer.setRightComponent(jpViewer);
@@ -1225,7 +1235,9 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jmCloseProjectActionPerformed
 
     private void jmRunQuantAnalysisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmRunQuantAnalysisActionPerformed
-        
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        xTracker run = new xTracker("D:\\Data\\SILAC_Conf.xtc");
+        setCursor(null);
     }//GEN-LAST:event_jmRunQuantAnalysisActionPerformed
 
     private void jbNewProjectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbNewProjectMouseClicked
@@ -1787,7 +1799,7 @@ public class ProteoSuiteView extends JFrame {
         String scanWinMin = "";
         String scanWinMax = "";
         int iCount = 1;
-        while (spectrumIterator.hasNext()&&iCount<=500)
+        while (spectrumIterator.hasNext())
         {
             Spectrum spectrum = spectrumIterator.next();
             
@@ -2279,6 +2291,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JScrollPane jspIdentFiles;
     private javax.swing.JSplitPane jspLeftMenuBottom;
     private javax.swing.JSplitPane jspLeftPanelView;
+    private javax.swing.JScrollPane jspLog;
     private javax.swing.JSplitPane jspMainPanelView;
     private javax.swing.JSplitPane jspMzML;
     private javax.swing.JSplitPane jspMzMLDetail;
@@ -2292,7 +2305,9 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JTable jtMzML;
     private javax.swing.JTable jtQuantFiles;
     private javax.swing.JTable jtRawFiles;
+    private javax.swing.JTextArea jtaLog;
     private javax.swing.JTextArea jtaMzML;
+    private javax.swing.JTabbedPane jtbLog;
     private javax.swing.JTabbedPane jtpIdentFiles;
     private javax.swing.JTabbedPane jtpProperties;
     private javax.swing.JTabbedPane jtpQuantFiles;
