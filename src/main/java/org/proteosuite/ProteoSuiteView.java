@@ -108,7 +108,7 @@ public class ProteoSuiteView extends JFrame {
         
         //... Window default settings ...//
         initProjectValues();
-        this.setTitle("ProteoSuite 0.2.0 (Beta Version) - <Project: " + this.sProjectName +  ">");
+        this.setTitle("ProteoSuite 0.2.0 (Beta Version) - <Project: " + this.sProjectName +  ">    http://www.proteosuite.org");
         
         //... Setting icons ...//        
         Image iconApp = new ImageIcon(this.getClass().getClassLoader().getResource("images/icon.gif")).getImage();
