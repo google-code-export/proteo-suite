@@ -53,6 +53,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.proteosuite.gui.About;
 import org.proteosuite.gui.Configparams;
 import org.proteosuite.gui.MzML2MGFparams;
+import org.proteosuite.utils.ProgressBarDialog;
 import org.proteosuite.utils.TwoDPlot;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -216,9 +217,12 @@ public class ProteoSuiteView extends JFrame {
         jp2D = new javax.swing.JPanel();
         jp3D = new javax.swing.JPanel();
         jpViewer = new javax.swing.JPanel();
-        jtbLog = new javax.swing.JTabbedPane();
+        jtpLog = new javax.swing.JTabbedPane();
         jspLog = new javax.swing.JScrollPane();
         jtaLog = new javax.swing.JTextArea();
+        jpRawData = new javax.swing.JPanel();
+        jspRawData = new javax.swing.JScrollPane();
+        jtaRawData = new javax.swing.JTextArea();
         jspLeftPanelView = new javax.swing.JSplitPane();
         jspLeftMenuBottom = new javax.swing.JSplitPane();
         jtpIdentFiles = new javax.swing.JTabbedPane();
@@ -405,7 +409,7 @@ public class ProteoSuiteView extends JFrame {
         jspMzML.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jtaMzML.setColumns(20);
-        jtaMzML.setFont(new java.awt.Font("Tahoma", 0, 11));
+        jtaMzML.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
         jtaMzML.setRows(5);
         jspMzMLHeader.setViewportView(jtaMzML);
 
@@ -532,11 +536,11 @@ public class ProteoSuiteView extends JFrame {
         jpProperties.setLayout(jpPropertiesLayout);
         jpPropertiesLayout.setHorizontalGroup(
             jpPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+            .addComponent(jtpProperties)
         );
         jpPropertiesLayout.setVerticalGroup(
             jpPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
+            .addComponent(jtpProperties)
         );
 
         jspRightPanelView.setRightComponent(jpProperties);
@@ -601,17 +605,35 @@ public class ProteoSuiteView extends JFrame {
         jtaLog.setRows(5);
         jspLog.setViewportView(jtaLog);
 
-        jtbLog.addTab("Log", jspLog);
+        jtpLog.addTab("Log", jspLog);
+
+        jtaRawData.setColumns(20);
+        jtaRawData.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        jtaRawData.setRows(5);
+        jspRawData.setViewportView(jtaRawData);
+
+        javax.swing.GroupLayout jpRawDataLayout = new javax.swing.GroupLayout(jpRawData);
+        jpRawData.setLayout(jpRawDataLayout);
+        jpRawDataLayout.setHorizontalGroup(
+            jpRawDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspRawData, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
+        );
+        jpRawDataLayout.setVerticalGroup(
+            jpRawDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspRawData, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
+        );
+
+        jtpLog.addTab("Raw Data", jpRawData);
 
         javax.swing.GroupLayout jpViewerLayout = new javax.swing.GroupLayout(jpViewer);
         jpViewer.setLayout(jpViewerLayout);
         jpViewerLayout.setHorizontalGroup(
             jpViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtbLog, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+            .addComponent(jtpLog, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
         );
         jpViewerLayout.setVerticalGroup(
             jpViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtbLog, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+            .addComponent(jtpLog, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
         );
 
         jspViewer.setRightComponent(jpViewer);
@@ -1235,9 +1257,24 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jmCloseProjectActionPerformed
 
     private void jmRunQuantAnalysisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmRunQuantAnalysisActionPerformed
-        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        xTracker run = new xTracker("D:\\Data\\SILAC_Conf.xtc");
-        setCursor(null);
+        final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+        final Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                progressBarDialog.setTitle("Running xTracker Core");
+                progressBarDialog.setVisible(true);
+            }
+        }, "ProgressBarDialog");
+        System.out.println("Hello");
+        thread.start();
+        new Thread("LoadingThread"){
+            @Override
+            public void run(){
+                xTracker run = new xTracker("D:\\Data\\SILAC_Conf.xtc");
+                progressBarDialog.setVisible(false);
+                progressBarDialog.dispose();                
+            }
+        }.start();        
     }//GEN-LAST:event_jmRunQuantAnalysisActionPerformed
 
     private void jbNewProjectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbNewProjectMouseClicked
@@ -1329,6 +1366,7 @@ public class ProteoSuiteView extends JFrame {
         if (evt.getButton()== 1)
         {                        
             showSpectrum(jtRawFiles.getSelectedRow(), jtMzML.getValueAt(jtMzML.getSelectedRow(), 2).toString());
+            showRawData(jtRawFiles.getSelectedRow(), jtMzML.getValueAt(jtMzML.getSelectedRow(), 2).toString());
         }
     }//GEN-LAST:event_jtMzMLMouseClicked
 
@@ -1478,6 +1516,39 @@ public class ProteoSuiteView extends JFrame {
             System.out.println(ume.getMessage());
         }
     }     
+    private void showRawData(int iIndex, String sID) {                                             
+                  
+        jtpLog.setSelectedIndex(1);
+        jtaRawData.setText("");
+        
+        //... Get index from spectrums ...//
+        MzMLUnmarshaller unmarshaller = alUnmarshaller.get(iIndex);            
+        try
+        {
+           Spectrum spectrum = unmarshaller.getSpectrumById(sID);
+           List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList().getBinaryDataArray();
+
+           //... Reading mz Values ...//
+           BinaryDataArray mzBinaryDataArray = (BinaryDataArray) bdal.get(0);
+           Number[] mzNumbers = mzBinaryDataArray.getBinaryDataAsNumberArray();
+           //... Reading Intensities ...//
+           BinaryDataArray intenBinaryDataArray = (BinaryDataArray) bdal.get(1);
+           Number[] intenNumbers = intenBinaryDataArray.getBinaryDataAsNumberArray();
+           
+           for (int iI = 0; iI < mzNumbers.length; iI++)
+           {
+               if (intenNumbers[iI].doubleValue() > 0)
+               {
+                   jtaRawData.append(iI+"\t MZ="+String.format("%.4f", mzNumbers[iI].doubleValue())+"\tInt="+String.format("%.4f", intenNumbers[iI].doubleValue())+"\n");
+               }
+           }                  
+           jtaRawData.repaint();
+        }
+        catch (MzMLUnmarshallerException ume)
+        {
+            System.out.println(ume.getMessage());
+        }
+    }         
     private JInternalFrame getInternalFrame(){ 
         JInternalFrame internalFrame = new JInternalFrame("");  
         Icon icon = new ImageIcon(getClass().getClassLoader().getResource("images/icon.gif"));
@@ -2284,6 +2355,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JPanel jpMzML;
     private javax.swing.JPanel jpMzQuantML;
     private javax.swing.JPanel jpProperties;
+    private javax.swing.JPanel jpRawData;
     private javax.swing.JPanel jpToolBar;
     private javax.swing.JPanel jpViewer;
     private javax.swing.JPanel jpXIC;
@@ -2298,6 +2370,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JScrollPane jspMzMLHeader;
     private javax.swing.JScrollPane jspMzMLSubDetail;
     private javax.swing.JScrollPane jspQuantFiles;
+    private javax.swing.JScrollPane jspRawData;
     private javax.swing.JScrollPane jspRawFiles;
     private javax.swing.JSplitPane jspRightPanelView;
     private javax.swing.JSplitPane jspViewer;
@@ -2307,8 +2380,9 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JTable jtRawFiles;
     private javax.swing.JTextArea jtaLog;
     private javax.swing.JTextArea jtaMzML;
-    private javax.swing.JTabbedPane jtbLog;
+    private javax.swing.JTextArea jtaRawData;
     private javax.swing.JTabbedPane jtpIdentFiles;
+    private javax.swing.JTabbedPane jtpLog;
     private javax.swing.JTabbedPane jtpProperties;
     private javax.swing.JTabbedPane jtpQuantFiles;
     private javax.swing.JTabbedPane jtpRawFiles;
