@@ -1272,7 +1272,7 @@ public class ProteoSuiteView extends JFrame {
             public void run(){
                 xTracker run = new xTracker("D:\\Data\\SILAC_Conf.xtc");
                 progressBarDialog.setVisible(false);
-                progressBarDialog.dispose();                
+                progressBarDialog.dispose();        
             }
         }.start();        
     }//GEN-LAST:event_jmRunQuantAnalysisActionPerformed
