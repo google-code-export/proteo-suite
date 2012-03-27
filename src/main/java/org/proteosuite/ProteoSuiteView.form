@@ -1214,7 +1214,7 @@
                                 <Column editable="true" title="ID" type="java.lang.Object"/>
                                 <Column editable="true" title="Name" type="java.lang.Object"/>
                                 <Column editable="true" title="Version" type="java.lang.Object"/>
-                                <Column editable="true" title="Spectrums" type="java.lang.Object"/>
+                                <Column editable="true" title="Spectra" type="java.lang.Object"/>
                               </Table>
                             </Property>
                           </Properties>

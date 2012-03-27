@@ -409,7 +409,7 @@ public class ProteoSuiteView extends JFrame {
         jspMzML.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jtaMzML.setColumns(20);
-        jtaMzML.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        jtaMzML.setFont(new java.awt.Font("Tahoma", 0, 11));
         jtaMzML.setRows(5);
         jspMzMLHeader.setViewportView(jtaMzML);
 
@@ -608,7 +608,7 @@ public class ProteoSuiteView extends JFrame {
         jtpLog.addTab("Log", jspLog);
 
         jtaRawData.setColumns(20);
-        jtaRawData.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        jtaRawData.setFont(new java.awt.Font("Tahoma", 0, 11));
         jtaRawData.setRows(5);
         jspRawData.setViewportView(jtaRawData);
 
@@ -683,7 +683,7 @@ public class ProteoSuiteView extends JFrame {
 
             },
             new String [] {
-                "ID", "Name", "Version", "Spectrums"
+                "ID", "Name", "Version", "Spectra"
             }
         ));
         jtRawFiles.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1063,7 +1063,7 @@ public class ProteoSuiteView extends JFrame {
                     model.addColumn("ID");
                     model.addColumn("Name");
                     model.addColumn("Version");
-                    model.addColumn("Spectrums");
+                    model.addColumn("Spectra");
     
                     alUnmarshaller = new ArrayList<MzMLUnmarshaller>();
 
@@ -1476,7 +1476,7 @@ public class ProteoSuiteView extends JFrame {
                   
         jtpViewer.setSelectedIndex(0);
         
-        //... Get index from spectrums ...//
+        //... Get index from spectra ...//
         MzMLUnmarshaller unmarshaller = alUnmarshaller.get(iIndex);            
         try
         {
@@ -1521,7 +1521,7 @@ public class ProteoSuiteView extends JFrame {
         jtpLog.setSelectedIndex(1);
         jtaRawData.setText("");
         
-        //... Get index from spectrums ...//
+        //... Get index from spectra ...//
         MzMLUnmarshaller unmarshaller = alUnmarshaller.get(iIndex);            
         try
         {
@@ -1568,7 +1568,7 @@ public class ProteoSuiteView extends JFrame {
         
             jtpViewer.setSelectedIndex(1);
 
-            //... Get index from spectrums ...//
+            //... Get index from spectra ...//
             MzMLUnmarshaller unmarshaller = alUnmarshaller.get(iIndex);
             try
             {
@@ -1626,7 +1626,7 @@ public class ProteoSuiteView extends JFrame {
             
             jtpViewer.setSelectedIndex(2);
 
-            //... Get index from spectrums ...//
+            //... Get index from spectra ...//
             MzMLUnmarshaller unmarshaller = alUnmarshaller.get(iIndex);            
 
             MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
@@ -1753,7 +1753,7 @@ public class ProteoSuiteView extends JFrame {
                 out.write(" id=\"" + jtRawFiles.getValueAt(iI, 0) + "\"");
                 out.write(" name=\"" + jtRawFiles.getValueAt(iI, 1) + "\"");
                 out.write(" version=\"" + jtRawFiles.getValueAt(iI, 2) + "\"");
-                out.write(" spectrums=\"" + jtRawFiles.getValueAt(iI, 3) + "\" >");
+                out.write(" spectra=\"" + jtRawFiles.getValueAt(iI, 3) + "\" >");
                 out.newLine();                
                 out.write("         </rawFile>");
                 out.newLine();
@@ -2040,7 +2040,7 @@ public class ProteoSuiteView extends JFrame {
         model.addColumn("ID");
         model.addColumn("Name");
         model.addColumn("Version");
-        model.addColumn("Spectrums");
+        model.addColumn("Spectra");
         
         jtMzML.setModel(model2);     
         model2.addColumn("Index");
@@ -2102,7 +2102,7 @@ public class ProteoSuiteView extends JFrame {
                     model.addColumn("ID");
                     model.addColumn("Name");
                     model.addColumn("Version");
-                    model.addColumn("Spectrums");                   
+                    model.addColumn("Spectra");                   
                     
                     for (int iI=0; iI<jtRawFiles.getRowCount(); iI++)
                     {                    
@@ -2149,7 +2149,7 @@ public class ProteoSuiteView extends JFrame {
             model.addColumn("ID");
             model.addColumn("Name");
             model.addColumn("Version");                
-            model.addColumn("Spectrums");
+            model.addColumn("Spectra");
 
 
             //... Reading raw files ...//
@@ -2169,7 +2169,7 @@ public class ProteoSuiteView extends JFrame {
                                                                       rawFileElement.getAttribute("version").toString(),
                                                                       rawFileElement.getAttribute("accession").toString(),
                                                                       rawFileElement.getAttribute("cvs").toString(),
-                                                                      rawFileElement.getAttribute("spectrums").toString()});
+                                                                      rawFileElement.getAttribute("spectra").toString()});
                 }
             }
         }catch (SAXParseException err) {
@@ -2194,16 +2194,14 @@ public class ProteoSuiteView extends JFrame {
 //                                        unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum"));
 
 
-            //... Populate the JTree with spectrums ...//                    
-            int spectrums = unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum");
+            //... Populate the JTree with spectra ...//                    
+            int spectra = unmarshaller.getObjectCountForXpath("/run/spectrumList/spectrum");
 
             //... Reading spectrum data ...//
             MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
             int iJ = 0; //... For Spectrum Counter ...//
             int iK = 0; //... For Spectrum Counter ...//
             
-            //int iPercentage = 0;
-            //SpectrumData[][] aSpectrums = new SpectrumData[iIndex][spectrums]; //... To store MS1 and MS2 spectrums ...//
             while (spectrumIterator.hasNext())
             {
 
@@ -2246,14 +2244,12 @@ public class ProteoSuiteView extends JFrame {
                 {
                     if (plist.getCount().intValue() == 1)
                     {                    
-                        //aSpectrums[iIndex][iK] = new SpectrumData(spectrum.getId(), nodeName, mslevel, rt);
                         //ms2Node = new DefaultMutableTreeNode(nodeName);
                         //ms1Node.add(ms2Node);
                     }
                 }
                 else
                 {
-                   //aSpectrums[iIndex][iK] = new SpectrumData(spectrum.getId(), nodeName, mslevel, rt);
                    //ms1Node = new DefaultMutableTreeNode(nodeName);
                    //sampleNode.add(ms1Node);
                    iJ++;
@@ -2263,7 +2259,7 @@ public class ProteoSuiteView extends JFrame {
             model.insertRow(model.getRowCount(), new Object[]{unmarshaller.getMzMLId(),
                                                                       xmlFile.getName(),
                                                                       unmarshaller.getMzMLVersion(),
-                                                                      spectrums});            
+                                                                      spectra});            
     }
     private void loadIdentFiles(DefaultTableModel model, String sID, String sFileName, String sVersion, int iIndex)
     {
