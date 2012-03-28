@@ -2339,6 +2339,7 @@ public class ProteoSuiteView extends JFrame {
         writeXTrackerIdent(sExperiment);
         writeXTrackerPeakSel(sExperiment);
         writeXTrackerOutput(sExperiment);
+        
         JOptionPane.showMessageDialog(this, "xTracker files generated.", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
     }
     private void writeXTrackerMain(String sExperiment) 
