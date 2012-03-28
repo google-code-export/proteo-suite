@@ -50,9 +50,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.proteosuite.gui.About;
-import org.proteosuite.gui.Configparams;
-import org.proteosuite.gui.MzML2MGFparams;
+import org.proteosuite.gui.*;
 import org.proteosuite.utils.ProgressBarDialog;
 import org.proteosuite.utils.TwoDPlot;
 import org.w3c.dom.Document;
@@ -154,11 +152,11 @@ public class ProteoSuiteView extends JFrame {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         //... Setting dividers ...//
-        jspMainPanelView.setDividerLocation(300); //... Left Menu ...//
+        jspMainPanelView.setDividerLocation(250); //... Left Menu ...//
         jspLeftPanelView.setDividerLocation(200);
         jspLeftMenuBottom.setDividerLocation(200);
-        jspRightPanelView.setDividerLocation(700); //... Graphs X-axis ...//
-        jspViewer.setDividerLocation(550); //... Graphs Y-axis ...//
+        jspRightPanelView.setDividerLocation(650); //... Graphs X-axis ...//
+        jspViewer.setDividerLocation(460); //... Graphs Y-axis ...//
         jspMzML.setDividerLocation(100); //... MzML data ...//
         jtpViewer.setSelectedIndex(0);
         
@@ -213,7 +211,7 @@ public class ProteoSuiteView extends JFrame {
         jspViewer = new javax.swing.JSplitPane();
         jtpViewer = new javax.swing.JTabbedPane();
         jdpMS = new javax.swing.JDesktopPane();
-        jpXIC = new javax.swing.JPanel();
+        jpTIC = new javax.swing.JPanel();
         jp2D = new javax.swing.JPanel();
         jp3D = new javax.swing.JPanel();
         jpViewer = new javax.swing.JPanel();
@@ -386,16 +384,16 @@ public class ProteoSuiteView extends JFrame {
             jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpToolBarLayout.createSequentialGroup()
                 .addGroup(jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jpbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(6, 6, 6))
             .addGroup(jpToolBarLayout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpToolBarLayout.createSequentialGroup()
                 .addGroup(jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                    .addComponent(jToolBar3, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+                    .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jToolBar3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -409,7 +407,7 @@ public class ProteoSuiteView extends JFrame {
         jspMzML.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jtaMzML.setColumns(20);
-        jtaMzML.setFont(new java.awt.Font("Tahoma", 0, 11));
+        jtaMzML.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
         jtaMzML.setRows(5);
         jspMzMLHeader.setViewportView(jtaMzML);
 
@@ -552,20 +550,20 @@ public class ProteoSuiteView extends JFrame {
         jdpMS.setBackground(new java.awt.Color(255, 255, 255));
         jtpViewer.addTab("Spectrum", jdpMS);
 
-        jpXIC.setBackground(new java.awt.Color(255, 255, 255));
+        jpTIC.setBackground(new java.awt.Color(255, 255, 255));
 
-        javax.swing.GroupLayout jpXICLayout = new javax.swing.GroupLayout(jpXIC);
-        jpXIC.setLayout(jpXICLayout);
-        jpXICLayout.setHorizontalGroup(
-            jpXICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout jpTICLayout = new javax.swing.GroupLayout(jpTIC);
+        jpTIC.setLayout(jpTICLayout);
+        jpTICLayout.setHorizontalGroup(
+            jpTICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 492, Short.MAX_VALUE)
         );
-        jpXICLayout.setVerticalGroup(
-            jpXICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        jpTICLayout.setVerticalGroup(
+            jpTICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 371, Short.MAX_VALUE)
         );
 
-        jtpViewer.addTab("XIC", jpXIC);
+        jtpViewer.addTab("TIC", jpTIC);
 
         jp2D.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -608,7 +606,7 @@ public class ProteoSuiteView extends JFrame {
         jtpLog.addTab("Log", jspLog);
 
         jtaRawData.setColumns(20);
-        jtaRawData.setFont(new java.awt.Font("Tahoma", 0, 11));
+        jtaRawData.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
         jtaRawData.setRows(5);
         jspRawData.setViewportView(jtaRawData);
 
@@ -629,11 +627,11 @@ public class ProteoSuiteView extends JFrame {
         jpViewer.setLayout(jpViewerLayout);
         jpViewerLayout.setHorizontalGroup(
             jpViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpLog, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+            .addComponent(jtpLog)
         );
         jpViewerLayout.setVerticalGroup(
             jpViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpLog, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+            .addComponent(jtpLog)
         );
 
         jspViewer.setRightComponent(jpViewer);
@@ -672,7 +670,7 @@ public class ProteoSuiteView extends JFrame {
         ));
         jspQuantFiles.setViewportView(jtQuantFiles);
 
-        jtpQuantFiles.addTab("Quantification Files", jspQuantFiles);
+        jtpQuantFiles.addTab("Quantitation Files", jspQuantFiles);
 
         jspLeftMenuBottom.setRightComponent(jtpQuantFiles);
 
@@ -868,10 +866,20 @@ public class ProteoSuiteView extends JFrame {
 
         jmProject.setText("Project");
 
-        jmEditIdent.setText("Edit Ident Parameters");
+        jmEditIdent.setText("Set Identification Parameters");
+        jmEditIdent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmEditIdentActionPerformed(evt);
+            }
+        });
         jmProject.add(jmEditIdent);
 
-        jmEditQuant.setText("Edit Quant Parameters");
+        jmEditQuant.setText("Set Quantitation Parameters");
+        jmEditQuant.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmEditQuantActionPerformed(evt);
+            }
+        });
         jmProject.add(jmEditQuant);
 
         jmMain.add(jmProject);
@@ -919,6 +927,11 @@ public class ProteoSuiteView extends JFrame {
         jmDatabases.setText("Databases");
 
         jmSubmitPRIDE.setText("Submit to PRIDE");
+        jmSubmitPRIDE.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmSubmitPRIDEActionPerformed(evt);
+            }
+        });
         jmDatabases.add(jmSubmitPRIDE);
 
         jmMain.add(jmDatabases);
@@ -954,7 +967,7 @@ public class ProteoSuiteView extends JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jpToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jpToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jpMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1071,27 +1084,12 @@ public class ProteoSuiteView extends JFrame {
                     for (int iI = 0; iI < aFiles.length; iI++)
                     {
                         File xmlFile = new File(aFiles[iI].getPath());                        
-//                        jpbStatus.setValue(0);
-                        
-                        //jLabel2.setText("Processing file (" + (iI+1) + " of " + aFiles.length + ")");
-                        //try{Thread.sleep(500);} 
-                        //catch (InterruptedException err){}                        
-                        //new Thread(new threadProgBar(aFiles[iI].getName())).start();                         
 
                         //... Unmarshall data using jzmzML API ...//
                         unmarshalMzMLFile(model, iI, xmlFile);
-
-//                        jpbStatus.setValue(100);                                            
-//                        jpbStatus.repaint();                        
                     } //... For files ...//                    
                     
-                    setCursor(null); //... Turn off the wait cursor ...//                    
-//                    try{Thread.sleep(500);} 
-//                    catch (InterruptedException err){}
-//                    jpbStatus.setValue(0);                                        
-//                    jpbStatus.repaint();                     
-//                    jLabel2.setText("");
-                    
+                    setCursor(null); //... Turn off the wait cursor ...//                                        
                 } //... From reading mzML files ...//
 
                 if (aFiles[0].getName().indexOf(".xml") >0) 
@@ -1113,17 +1111,9 @@ public class ProteoSuiteView extends JFrame {
 
                         //... Unmarshall data using jzmzML API ...//
                         loadIdentFiles(model, aFiles[iI].getName(), aFiles[iI].getName(), "Mascot XML File", iI);
-
-//                        jpbStatus.setValue(100);                                            
-//                        jpbStatus.repaint();                        
                     } //... For files ...//                    
                     
                     setCursor(null); //... Turn off the wait cursor ...//                    
-//                    try{Thread.sleep(500);} 
-//                    catch (InterruptedException err){}
-//                    jpbStatus.setValue(0);                                        
-//                    jpbStatus.repaint();                     
-//                    jLabel2.setText("");
                 }                
                 
                 if (aFiles[0].getName().indexOf(".mzq") >0) 
@@ -1257,24 +1247,36 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jmCloseProjectActionPerformed
 
     private void jmRunQuantAnalysisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmRunQuantAnalysisActionPerformed
-        final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
-        final Thread thread = new Thread(new Runnable(){
-            @Override
-            public void run(){
-                progressBarDialog.setTitle("Running xTracker Core");
-                progressBarDialog.setVisible(true);
-            }
-        }, "ProgressBarDialog");
-        System.out.println("Hello");
-        thread.start();
-        new Thread("LoadingThread"){
-            @Override
-            public void run(){
-                xTracker run = new xTracker("D:\\Data\\SILAC_Conf.xtc");
-                progressBarDialog.setVisible(false);
-                progressBarDialog.dispose();        
-            }
-        }.start();        
+        
+        //... Validate if we got some raw and identification files ...//
+        if (jtRawFiles.getRowCount()<=0)
+        {
+            JOptionPane.showMessageDialog(this, "Please select at least one raw file", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
+        } 
+        else if (jtIdentFiles.getRowCount()<=0)
+        {
+            JOptionPane.showMessageDialog(this, "Please select at least one identification file", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);            
+        }
+        else
+        {
+            final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+            final Thread thread = new Thread(new Runnable(){
+                @Override
+                public void run(){
+                    progressBarDialog.setTitle("Running xTracker Core");
+                    progressBarDialog.setVisible(true);
+                }
+            }, "ProgressBarDialog");
+            thread.start();
+            new Thread("LoadingThread"){
+                @Override
+                public void run(){
+                    xTracker run = new xTracker("D:\\Data\\SILAC_Conf.xtc");
+                    progressBarDialog.setVisible(false);
+                    progressBarDialog.dispose();        
+                }
+            }.start();                    
+        }       
     }//GEN-LAST:event_jmRunQuantAnalysisActionPerformed
 
     private void jbNewProjectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbNewProjectMouseClicked
@@ -1444,6 +1446,70 @@ public class ProteoSuiteView extends JFrame {
     private void jbShow2DMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbShow2DMouseClicked
         this.show2DPlot(jtRawFiles.getSelectedRow(), jtRawFiles.getValueAt(jtRawFiles.getSelectedRow(), 1).toString());
     }//GEN-LAST:event_jbShow2DMouseClicked
+
+    private void jmSubmitPRIDEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmSubmitPRIDEActionPerformed
+        writeXTrackerConfigFiles();
+    }//GEN-LAST:event_jmSubmitPRIDEActionPerformed
+
+    private void jmEditIdentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmEditIdentActionPerformed
+        IdentParamsView identParams = new IdentParamsView();
+        final JFrame jfIdentParams = new JFrame("Edit Identification Parameters");
+        jfIdentParams.setResizable(false);
+        jfIdentParams.setSize(638, 585);
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
+        Action escapeAction = new AbstractAction() 
+        {
+            public void actionPerformed(ActionEvent e) {
+                jfIdentParams.dispose();
+            }
+        };        
+        jfIdentParams.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
+        jfIdentParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);
+        
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        int x1 = dim.width / 2;
+        int y1 = dim.height / 2;
+        int x2 = jfIdentParams.getSize().width / 2;
+        int y2 = jfIdentParams.getSize().height / 2;        
+        jfIdentParams.setLocation(x1-x2, y1-y2);
+        Image iconApp = new ImageIcon(this.getClass().getClassLoader().getResource("images/icon.gif")).getImage();
+        jfIdentParams.setIconImage(iconApp);
+        jfIdentParams.setAlwaysOnTop(true);
+       
+        jfIdentParams.add(identParams);
+        jfIdentParams.pack();
+        jfIdentParams.setVisible(true);
+    }//GEN-LAST:event_jmEditIdentActionPerformed
+
+    private void jmEditQuantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmEditQuantActionPerformed
+        QuantParamsView quantParams = new QuantParamsView();
+        final JFrame jfQuantParams = new JFrame("Edit Identification Parameters");
+        jfQuantParams.setResizable(false);
+        jfQuantParams.setSize(638, 585);
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
+        Action escapeAction = new AbstractAction() 
+        {
+            public void actionPerformed(ActionEvent e) {
+                jfQuantParams.dispose();
+            }
+        };        
+        jfQuantParams.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
+        jfQuantParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);
+        
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        int x1 = dim.width / 2;
+        int y1 = dim.height / 2;
+        int x2 = jfQuantParams.getSize().width / 2;
+        int y2 = jfQuantParams.getSize().height / 2;        
+        jfQuantParams.setLocation(x1-x2, y1-y2);
+        Image iconApp = new ImageIcon(this.getClass().getClassLoader().getResource("images/icon.gif")).getImage();
+        jfQuantParams.setIconImage(iconApp);
+        jfQuantParams.setAlwaysOnTop(true);
+       
+        jfQuantParams.add(quantParams);
+        jfQuantParams.pack();
+        jfQuantParams.setVisible(true);        
+    }//GEN-LAST:event_jmEditQuantActionPerformed
     
     public class threadProgBar implements Runnable{
         
@@ -1608,7 +1674,7 @@ public class ProteoSuiteView extends JFrame {
                internal.add(panel);
                internal.pack();
                internal.setVisible(true);
-               jpXIC.add(internal);
+               jpTIC.add(internal);
             }
             catch (MzMLUnmarshallerException ume)
             {
@@ -1631,7 +1697,7 @@ public class ProteoSuiteView extends JFrame {
 
             MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
             int iK = 0;
-            while ((spectrumIterator.hasNext())&&(iK < 500))
+            while ((spectrumIterator.hasNext()))
             {
                 Spectrum spectrumobj = spectrumIterator.next();
                 String spectrumid = spectrumobj.getId();
@@ -1645,8 +1711,7 @@ public class ProteoSuiteView extends JFrame {
                        CVParam lCVParam = (CVParam) lCVParamIterator.next();
                        if (lCVParam.getAccession().equals("MS:1000016"))
                        {
-
-                           rt = Double.parseDouble(lCVParam.getValue().trim());                           
+                           rt = Double.parseDouble(lCVParam.getValue().trim());
                        }
                    }
 
@@ -2058,6 +2123,7 @@ public class ProteoSuiteView extends JFrame {
     private void initTextAreas()
     {
         jtaMzML.setText("");
+        jtaRawData.setText("");
     }
     private void initViews()
     {
@@ -2265,6 +2331,245 @@ public class ProteoSuiteView extends JFrame {
     {
             model.insertRow(model.getRowCount(), new Object[]{sID, sFileName, sVersion});  
     }    
+    private void writeXTrackerConfigFiles() 
+    {
+        String sExperiment = "SILAC";
+        writeXTrackerMain(sExperiment);
+        writeXTrackerRaw(sExperiment);
+        writeXTrackerIdent(sExperiment);
+        writeXTrackerPeakSel(sExperiment);
+        writeXTrackerOutput(sExperiment);
+        JOptionPane.showMessageDialog(this, "xTracker files generated.", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
+    }
+    private void writeXTrackerMain(String sExperiment) 
+    {
+        String sFileName = sExperiment + "_Conf.xtc";
+        try{
+            FileWriter fstream = new FileWriter(sFileName);
+            BufferedWriter out = new BufferedWriter(fstream);            
+            out.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            out.newLine();
+            out.write("<!--");
+            out.newLine();
+            out.write(" This XML file specifies the set of plugins used in this specific run of the pipeline X-Tracker together with  all the corresponding parameters.");
+            out.newLine();
+            out.write(" For each plugin, if needed, parameters can be specified in turn as xml files specifying particular inputs.");
+            out.newLine();
+            out.write("-->");
+            out.newLine();
+            out.write("<xTrackerPipeline xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins\\xtracker.xsd\">");
+            out.newLine();
+            out.write(" <!--");            
+            out.newLine();
+            out.write(" Specifies which Plugins to use as well as the parameters those plugins will work on.");
+            out.newLine();
+            out.write(" There different tags MUST BE:");            
+            out.newLine();
+            out.write("     rawdata_loadplugin");            
+            out.newLine();
+            out.write("     identdata_loadplugin");
+            out.newLine();
+            out.write("     peakselplugin");
+            out.newLine();
+            out.write("     quantplugin");
+            out.newLine();
+            out.write("     outplugin");
+            out.newLine();
+            out.write(" and each one of them has to be present EXACTLY once within the whole xml file.");
+            out.newLine();
+            out.write(" The attribute \"filename\" will point to the .jar plugin (which has to be put in the Plugins folder)");
+            out.newLine();
+            out.write(" and the parameter file is the content of the tag");
+            out.newLine();
+            out.write("     (e.g. <peakselplugin filename=\"plugin2.jar\">15n14n.xml</peakselplugin>).");
+            out.newLine();
+            out.write(" -->");
+            out.newLine();
+            out.write("<rawdata_loadplugin filename=\"loadRawMzML111.jar\">D:/Data/SILAC_LoadRawDataParams.xtp</rawdata_loadplugin>");
+            out.newLine();
+            out.write("<identdata_loadplugin filename=\"loadMascotIdent111.jar\">D:/Data/SILAC_LoadIdentDataParams.xtp</identdata_loadplugin>");
+            out.newLine();
+            out.write("<peakselplugin filename=\"metLabelingPeakSel.jar\">D:/Data/SILAC_PeakSel.xtp</peakselplugin>");
+            out.newLine();
+            out.write("<quantplugin filename=\"LcMsAreasSimpson.jar\"></quantplugin>");
+            out.newLine();
+            out.write("<outplugin filename=\"displayTable.jar\">D:/Data/SILAC_DisplayTableParam.xtp</outplugin>");
+            out.newLine();
+            out.write("</xTrackerPipeline>");
+            out.close();
+        }
+        catch (Exception e)
+        {
+            System.err.println("Error: " + e.getMessage());
+        }             
+    }
+    private void writeXTrackerRaw(String sExperiment) 
+    {
+        String sFileName = sExperiment + "_LoadRawDataParams.xtp";
+        try{
+            FileWriter fstream = new FileWriter(sFileName);
+            BufferedWriter out = new BufferedWriter(fstream);            
+            out.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            out.newLine();
+            out.write("<param xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins\\loadRawMzML.xsd\">");
+            out.newLine();
+            for (int iI=0; iI<jtRawFiles.getRowCount(); iI++)
+            {
+                out.write(" <datafile>D:/Data/SILACData5000/" + jtRawFiles.getValueAt(iI, 1).toString() + "</datafile>");
+                out.newLine();
+            }
+            out.write("</param>");
+            out.close();
+        }
+        catch (Exception e)
+        {
+            System.err.println("Error: " + e.getMessage());
+        }             
+    }
+    private void writeXTrackerIdent(String sExperiment) 
+    {
+        String sFileName = sExperiment + "_LoadIdentDataParams.xtp";
+        try{
+            FileWriter fstream = new FileWriter(sFileName);
+            BufferedWriter out = new BufferedWriter(fstream);            
+            out.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            out.newLine();
+            out.write("<!-- ");
+            out.newLine();
+            out.write("This is the Load_raw and load_identification files parameters file. ");
+            out.newLine();
+            out.write("It specifies a list of raw data files together with their identification files.");
+            out.newLine();
+            out.write("Also, modifications and mass shift induced by them are specified here since mascot does not report fixed modification mass shifts.");
+            out.newLine();
+            out.write("Finally it specifies the threshold on \"pep_delta\" field to accept identifications. ");
+            out.newLine();
+            out.write("-->");
+            out.newLine();
+            out.write("<param xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins\\loadMascotIdent.xsd\">");
+            out.newLine();
+            out.write(" <!--");
+            out.newLine();
+            out.write(" Specifies the rawdata file names and the corresponding identification names. Note that paths are relative to the xTracker folder.");
+            out.newLine();
+            out.write(" -->");
+            out.newLine();
+            out.write(" <inputFiles>");
+            out.newLine();
+            for (int iI=0; iI<jtIdentFiles.getRowCount(); iI++)
+            {
+                out.write("     <datafile identification_file=\"D:/Data/SILACData5000/" + jtIdentFiles.getValueAt(iI, 1) + "\">D:/Data/SILACData200/" + jtRawFiles.getValueAt(iI, 1) + "</datafile>");
+                out.newLine();   
+            }           
+            out.write(" </inputFiles>");
+            out.newLine();
+            out.write("<!-- Modifications (including amino-acid affected) and mass shifts considered in the search are reported below.");
+            out.newLine();
+            out.write(" NOTE THAT MONOISOTOPIC MASSES ARE USED IN THIS FILE!!!");
+            out.newLine();
+            out.write("-->");
+            out.newLine();
+            out.write("<modificationData>");
+            out.newLine();
+            out.write(" <modification delta=\"42.010559\">Acetyl (K)</modification>");
+            out.newLine();
+            out.write("</modificationData>");
+            out.newLine();
+            out.write("<pep_score_threshold>30</pep_score_threshold>");
+            out.newLine();
+            out.write("</params>");
+            out.newLine();
+            out.close();
+        }
+        catch (Exception e)
+        {
+            System.err.println("Error: " + e.getMessage());
+        }             
+    }
+    private void writeXTrackerPeakSel(String sExperiment) 
+    {
+        String sFileName = sExperiment + "_PeakSel.xtp";
+        try{
+            FileWriter fstream = new FileWriter(sFileName);
+            BufferedWriter out = new BufferedWriter(fstream);            
+            out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            out.newLine();
+            out.write("<!-- ");
+            out.newLine();
+            out.write("This is the SILAC method parameters file. ");
+            out.newLine();
+            out.write("-->");
+            out.newLine();            
+            out.write("<param xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins\\metLabelingPeakSel.xsd\">");
+            out.newLine();
+            out.write(" <!-- Specifies the mass values to use (it can be either \"monoisotopic\" or \"average\") -->");
+            out.newLine();
+            out.write(" <mass_type>monoisotopic</mass_type>");
+            out.newLine();
+            out.write(" <!-- Specifies the incorporation rate, normalized to 1 (i.e. 98.5% -> 0.985) -->");
+            out.newLine();
+            out.write(" <incorporation_rate>0.985</incorporation_rate>");
+            out.newLine();
+            out.write(" <!-- Specifies the Retention time mass window (in seconds) to consider while trying to match peaks -->");
+            out.newLine();
+            out.write(" <RT_window>10</RT_window>");
+            out.newLine();
+            out.write(" <!-- Specifies the M/Z tolerance +/- (in Daltons) to match a MS peak with  the theoretical computed form the parent ion Mz of a peptide +/- its mass shift -->	");
+            out.newLine();
+            out.write(" <mz_tolerance>0.1</mz_tolerance>");
+            out.newLine();
+            out.write(" <!-- Specifies the mass shift in Daltons for the C terminus -->");
+            out.newLine();
+            out.write(" <C_term>0</C_term>");
+            out.newLine();
+            out.write(" <!-- Specifies the mass shift in Daltons for the N terminus -->");
+            out.newLine();
+            out.write(" <N_term>0</N_term>");
+            out.newLine();
+            out.write(" <!-- ");
+            out.newLine();
+            out.write(" Specifies the mass shift in Daltons for each aminoacid ALL 20 aminoacids will have to be specified");
+            out.newLine();
+            out.write(" otherwise 0 Daltons shift will be assumed!");
+            out.newLine();
+            out.write(" -->");
+            out.newLine();
+            out.write(" <aminoShifts>");
+            out.newLine();
+            out.write("     <aminoacid value=\"A\">1.0087</aminoacid>");
+            out.newLine();
+            out.write(" </aminoShifts>");
+            out.newLine();
+            out.write("</params>");
+            out.newLine();
+            out.close();
+        }
+        catch (Exception e)
+        {
+            System.err.println("Error: " + e.getMessage());
+        }             
+    }
+    private void writeXTrackerOutput(String sExperiment) 
+    {
+        String sFileName = sExperiment + "_DisplayTableParam.xtp";
+        try{
+            FileWriter fstream = new FileWriter(sFileName);
+            BufferedWriter out = new BufferedWriter(fstream);            
+            out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            out.newLine();
+            out.write("<param xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins\\displayTable.xsd\">");
+            out.newLine();
+            out.write(" <normalisation>yes</normalisation>");
+            out.newLine();
+            out.write("</param>");
+            out.newLine();
+            out.close();
+        }
+        catch (Exception e)
+        {
+            System.err.println("Error: " + e.getMessage());
+        }             
+    }
     /**
      * @param args the command line arguments (leave empty)
      */
@@ -2352,9 +2657,9 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JPanel jpMzQuantML;
     private javax.swing.JPanel jpProperties;
     private javax.swing.JPanel jpRawData;
+    private javax.swing.JPanel jpTIC;
     private javax.swing.JPanel jpToolBar;
     private javax.swing.JPanel jpViewer;
-    private javax.swing.JPanel jpXIC;
     private javax.swing.JProgressBar jpbStatus;
     private javax.swing.JScrollPane jspIdentFiles;
     private javax.swing.JSplitPane jspLeftMenuBottom;
