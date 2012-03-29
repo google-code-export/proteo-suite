@@ -220,7 +220,7 @@ public class ProteoSuiteView extends JFrame {
         jtaLog = new javax.swing.JTextArea();
         jpRawData = new javax.swing.JPanel();
         jspRawData = new javax.swing.JScrollPane();
-        jtaRawData = new javax.swing.JTextArea();
+        jtRawData = new javax.swing.JTable();
         jspLeftPanelView = new javax.swing.JSplitPane();
         jspLeftMenuBottom = new javax.swing.JSplitPane();
         jtpIdentFiles = new javax.swing.JTabbedPane();
@@ -374,26 +374,27 @@ public class ProteoSuiteView extends JFrame {
                 .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToolBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 299, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jpbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jpbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jpToolBarLayout.setVerticalGroup(
             jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpToolBarLayout.createSequentialGroup()
-                .addGroup(jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jpbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jToolBar3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpToolBarLayout.createSequentialGroup()
+                .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(11, 11, 11))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpToolBarLayout.createSequentialGroup()
+                .addGroup(jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jpbStatus, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(6, 6, 6))
             .addGroup(jpToolBarLayout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpToolBarLayout.createSequentialGroup()
-                .addGroup(jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jToolBar3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -605,10 +606,15 @@ public class ProteoSuiteView extends JFrame {
 
         jtpLog.addTab("Log", jspLog);
 
-        jtaRawData.setColumns(20);
-        jtaRawData.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
-        jtaRawData.setRows(5);
-        jspRawData.setViewportView(jtaRawData);
+        jtRawData.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Index", "m/z", "Intensity"
+            }
+        ));
+        jspRawData.setViewportView(jtRawData);
 
         javax.swing.GroupLayout jpRawDataLayout = new javax.swing.GroupLayout(jpRawData);
         jpRawData.setLayout(jpRawDataLayout);
@@ -618,7 +624,9 @@ public class ProteoSuiteView extends JFrame {
         );
         jpRawDataLayout.setVerticalGroup(
             jpRawDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspRawData, javax.swing.GroupLayout.DEFAULT_SIZE, 143, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpRawDataLayout.createSequentialGroup()
+                .addGap(0, 21, Short.MAX_VALUE)
+                .addComponent(jspRawData, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jtpLog.addTab("Raw Data", jpRawData);
@@ -941,6 +949,7 @@ public class ProteoSuiteView extends JFrame {
 
         jmHelp.setText("Help");
 
+        jmHelpContent.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
         jmHelpContent.setText("ProteoSuite Help");
         jmHelp.add(jmHelpContent);
         jmHelp.add(jSeparator5);
@@ -1583,9 +1592,14 @@ public class ProteoSuiteView extends JFrame {
         }
     }     
     private void showRawData(int iIndex, String sID) {                                             
-                  
+                
+        DefaultTableModel model = new DefaultTableModel();
+        jtRawData.setModel(model);
+        model.addColumn("Index");
+        model.addColumn("m/z");
+        model.addColumn("Intensity");
+        
         jtpLog.setSelectedIndex(1);
-        jtaRawData.setText("");
         
         //... Get index from spectra ...//
         MzMLUnmarshaller unmarshaller = alUnmarshaller.get(iIndex);            
@@ -1605,10 +1619,13 @@ public class ProteoSuiteView extends JFrame {
            {
                if (intenNumbers[iI].doubleValue() > 0)
                {
-                   jtaRawData.append(iI+"\t MZ="+String.format("%.4f", mzNumbers[iI].doubleValue())+"\tInt="+String.format("%.4f", intenNumbers[iI].doubleValue())+"\n");
+                    model.insertRow(model.getRowCount(), new Object[]{
+                        iI,
+                        String.format("%.4f", mzNumbers[iI].doubleValue()),
+                        String.format("%.1f", intenNumbers[iI].doubleValue())
+                        });
                }
            }                  
-           jtaRawData.repaint();
         }
         catch (MzMLUnmarshallerException ume)
         {
@@ -2123,7 +2140,6 @@ public class ProteoSuiteView extends JFrame {
     private void initTextAreas()
     {
         jtaMzML.setText("");
-        jtaRawData.setText("");
     }
     private void initViews()
     {
@@ -2679,10 +2695,10 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JTable jtIdentFiles;
     private javax.swing.JTable jtMzML;
     private javax.swing.JTable jtQuantFiles;
+    private javax.swing.JTable jtRawData;
     private javax.swing.JTable jtRawFiles;
     private javax.swing.JTextArea jtaLog;
     private javax.swing.JTextArea jtaMzML;
-    private javax.swing.JTextArea jtaRawData;
     private javax.swing.JTabbedPane jtpIdentFiles;
     private javax.swing.JTabbedPane jtpLog;
     private javax.swing.JTabbedPane jtpProperties;
