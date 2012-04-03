@@ -165,7 +165,7 @@ public class MzML2MGF {
                             {
                                 mzVal = mzValues[iJ].floatValue();
                                 intVal = intenValues[iJ].floatValue();
-                                if (intVal > 0)
+                                if (intVal > 0.0001)
                                 {
                                     sOut = String.format("%.4f", mzVal) + " " + String.format("%.4f", intVal);
                                     out.write(sOut);
