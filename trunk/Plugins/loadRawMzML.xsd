@@ -25,7 +25,7 @@
 		<xs:complexType>
   		<xs:simpleContent>
    			<xs:extension base="rawFile">
-    			<xs:attribute name="identification_file" use="required" type="identFile" />
+    			<xs:attribute name="identification_file" use="optional" type="identFile" />
    			</xs:extension>
   		</xs:simpleContent>
 	</xs:complexType>

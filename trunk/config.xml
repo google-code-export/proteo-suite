@@ -1,16 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ProteoSuiteApp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="ProteoSuiteApp.xsd" workspace="D:\Data">
+<ProteoSuiteApplication xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="ProteoSuiteApplication.xsd" >
  <configSettings>
      <generalSettings>
+         <workspace>D:\Data</workspace>
      </generalSettings>
-	 <pipelineSettings>
-		<protocol name="SILAC">
-			<rawdata_loadplugin>loadRawMzML111</rawdata_loadplugin>
-			<identdata_loadplugin>loadMascotIdent111</identdata_loadplugin>
-			<peakselplugin>metLabelingPeakSel</peakselplugin>
-			<quantplugin>LcMsAreasSimpson</quantplugin>
-			<outputplugin>displayTable</outputplugin>
-		</protocol>
-	 </pipelineSettings>	
+     <xTrackerSettings>
+         <pipeline>
+             <pipelineTechnique>SILAC</pipelineTechnique>
+             <pipelineLoadRawFiles>loadRawMzML111</pipelineLoadRawFiles>
+             <pipelineLoadIdentFiles>loadMascotIdent111</pipelineLoadIdentFiles>
+             <pipelinePeakSelection>metLabelingPeakSelSILAC</pipelinePeakSelection>
+             <pipelineQuantitation>computeLcMsAreas</pipelineQuantitation>
+             <pipelineOutput>displayTable</pipelineOutput>
+         </pipeline>
+         <pipeline>
+             <pipelineTechnique>iTRAQ</pipelineTechnique>
+             <pipelineLoadRawFiles>loadRawMGF</pipelineLoadRawFiles>
+             <pipelineLoadIdentFiles>loadMascotIdent111</pipelineLoadIdentFiles>
+             <pipelinePeakSelection>iTraqNplexPeakSel</pipelinePeakSelection>
+             <pipelineQuantitation>iTraqNplexQuant</pipelineQuantitation>
+             <pipelineOutput>displayTable</pipelineOutput>
+         </pipeline>
+         <pipeline>
+             <pipelineTechnique>N15</pipelineTechnique>
+             <pipelineLoadRawFiles>loadRawMzML111</pipelineLoadRawFiles>
+             <pipelineLoadIdentFiles>loadMascotIdent111</pipelineLoadIdentFiles>
+             <pipelinePeakSelection>metLabelingPeakSel</pipelinePeakSelection>
+             <pipelineQuantitation>computeLcMsAreas</pipelineQuantitation>
+             <pipelineOutput>displayTable</pipelineOutput>
+         </pipeline>
+         <pipeline>
+             <pipelineTechnique>Label free</pipelineTechnique>
+             <pipelineLoadRawFiles>loadRawMzML111</pipelineLoadRawFiles>
+             <pipelineLoadIdentFiles>loadMascotIdent111</pipelineLoadIdentFiles>
+             <pipelinePeakSelection>labelFree</pipelinePeakSelection>
+             <pipelineQuantitation>computeLcMsAreas</pipelineQuantitation>
+             <pipelineOutput>displayTable</pipelineOutput>
+         </pipeline>		 
+     </xTrackerSettings>
  </configSettings>
-</ProteoSuiteApp>
+</ProteoSuiteApplication>
