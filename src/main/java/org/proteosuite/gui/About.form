@@ -30,9 +30,9 @@
                   <Component id="jLabel5" alignment="0" pref="367" max="32767" attributes="1"/>
                   <Component id="jLabel4" alignment="0" pref="367" max="32767" attributes="1"/>
                   <Component id="jSeparator1" alignment="0" max="32767" attributes="1"/>
-                  <Component id="jLabel3" alignment="0" pref="357" max="32767" attributes="1"/>
+                  <Component id="jlLogo" alignment="0" pref="357" max="32767" attributes="1"/>
                   <Component id="jLabel2" alignment="0" min="-2" pref="330" max="-2" attributes="0"/>
-                  <Component id="jLabel6" alignment="0" max="32767" attributes="1"/>
+                  <Component id="jlURL" alignment="0" max="32767" attributes="1"/>
               </Group>
               <EmptySpace pref="23" max="32767" attributes="0"/>
           </Group>
@@ -42,7 +42,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabel3" min="-2" pref="149" max="-2" attributes="0"/>
+              <Component id="jlLogo" min="-2" pref="149" max="-2" attributes="0"/>
               <EmptySpace pref="24" max="32767" attributes="0"/>
               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -52,7 +52,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabel6" min="-2" pref="26" max="-2" attributes="0"/>
+              <Component id="jlURL" min="-2" pref="26" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -67,7 +67,7 @@
         <Property name="text" type="java.lang.String" value="Software for the Analysis of Quantitative Proteomics Data"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel3">
+    <Component class="javax.swing.JLabel" name="jlLogo">
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
@@ -79,10 +79,20 @@
         <Property name="text" type="java.lang.String" value="License 2.0. For more information please visit our website:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel6">
+    <Component class="javax.swing.JLabel" name="jlURL">
       <Properties>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="ff" green="66" red="33" type="rgb"/>
+        </Property>
         <Property name="text" type="java.lang.String" value="http://www.proteosuite.org"/>
+        <Property name="toolTipText" type="java.lang.String" value="Go to ProteoSuite Website"/>
+        <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+          <Color id="Hand Cursor"/>
+        </Property>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jlURLMouseClicked"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator1">
     </Component>

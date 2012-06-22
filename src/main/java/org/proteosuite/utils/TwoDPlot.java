@@ -85,7 +85,7 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
         //... Seeting axis ...//
         //final DateAxis xAxis = new DateAxis("Retention Time");
         //xAxis.setDateFormatOverride(new SimpleDateFormat("ss"));
-        final NumberAxis xAxis = new NumberAxis("Retention Time (sec)");
+        final NumberAxis xAxis = new NumberAxis("Retention Time (secs)");
         xAxis.setAutoRangeIncludesZero(true);
         final NumberAxis yAxis = new NumberAxis("m/z");
         yAxis.setAutoRangeIncludesZero(true);

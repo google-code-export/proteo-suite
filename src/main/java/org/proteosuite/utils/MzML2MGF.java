@@ -27,22 +27,18 @@ import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 /**
- *
+ * This plugin allows the conversion of MzML files to MGF, considering rt in the scan title.
+ * @param paramFile a string containing the file name
  * @author faviel
  */
 public class MzML2MGF {
         
     private ArrayList<MzMLUnmarshaller> iUnmarshaller = null;    
-    
-    /**
-     * Plugin to convert MzML files to MGF
-     * @param paramFile a string containing the file name
-     */
+        
     public MzML2MGF(File xmlFile, String sPath) {
         
         String paramFile = xmlFile.getName();
         paramFile = sPath + "\\" + paramFile.replace(".mzML", ".mgf");
-        System.out.println(paramFile);
         String sOut = "";
         try{            
             FileWriter fstream = new FileWriter(paramFile);
@@ -53,11 +49,11 @@ public class MzML2MGF {
             MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
             iUnmarshaller.add(unmarshaller);
 
-            //... Reading spectrum data ...//
+            //... Reading entire spectra ...//
             MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
             while (spectrumIterator.hasNext())
             {
-                //... Reading each spectrum ...//
+                //... Reading a individual spectrum ...//
                 Spectrum spectrum = spectrumIterator.next();                
 
                 //... Reading CvParam to identify the MS level (1, 2) ...//
@@ -104,7 +100,7 @@ public class MzML2MGF {
                             float peakIntensity =0;
                             int parCharge = 0;
 
-                            //... Detect parent ion m/z and charge 
+                            //... Detect parent ion m/z and charge ...//
                             for (Iterator lCVParamIterator = scanPrecParam.iterator(); lCVParamIterator.hasNext();)
                             {
                                 CVParam lCVParam = (CVParam) lCVParamIterator.next();
@@ -134,7 +130,7 @@ public class MzML2MGF {
                             int iJ=0;
                             float mzVal;
                             float intVal;
-                            if (parCharge == 0) 
+                            if (parCharge == 0) //... In case it is not specified ...//
                             {
                                 parCharge = 1;
                             }                            

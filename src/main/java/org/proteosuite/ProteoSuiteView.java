@@ -15,7 +15,6 @@ package org.proteosuite;
 
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
-import java.applet.AppletContext;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -26,10 +25,9 @@ import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.AbstractAction;
@@ -46,6 +44,7 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -53,15 +52,20 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import org.proteosuite.gui.*;
+import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.ProgressBarDialog;
 import org.proteosuite.utils.TwoDPlot;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.FileDescription;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
@@ -78,6 +82,7 @@ import xtracker.xTracker;
 
         
 /**
+ * This class corresponds to the main form in ProteoSuite. The form includes the visualisation of data and other associated tools.
  * @author faviel
  */
 public class ProteoSuiteView extends JFrame {
@@ -110,44 +115,129 @@ public class ProteoSuiteView extends JFrame {
         
         //... Window default settings ...//
         initProjectValues();
-        this.setTitle("ProteoSuite 0.2.0 (Beta Version) - <Project: " + this.sProjectName +  ">  http://www.proteosuite.org");
+        setTitle("ProteoSuite 0.2.0 (Beta Version) - <Project: " + sProjectName +  ">         http://www.proteosuite.org");
         
-        //... Setting icons ...//        
+        //... Setting project icons ...//        
         Image iconApp = new ImageIcon(this.getClass().getClassLoader().getResource("images/icon.gif")).getImage();
-        this.setIconImage(iconApp);
+        setIconImage(iconApp);
         
-        //... Main Menu icons ...//
+        //... Main Menu icons ...//        
+        //... File ...//
         Icon newIcon = new ImageIcon(getClass().getClassLoader().getResource("images/new.gif"));
         Icon importIcon = new ImageIcon(getClass().getClassLoader().getResource("images/import.gif"));
         Icon openIcon = new ImageIcon(getClass().getClassLoader().getResource("images/open.gif"));
         Icon saveIcon = new ImageIcon(getClass().getClassLoader().getResource("images/save.gif"));
-        Icon printIcon = new ImageIcon(getClass().getClassLoader().getResource("images/print.gif"));
-        
+        Icon printIcon = new ImageIcon(getClass().getClassLoader().getResource("images/print.gif"));                       
+        //... Edit ...//
         Icon cutIcon = new ImageIcon(getClass().getClassLoader().getResource("images/cut.gif"));
         Icon copyIcon = new ImageIcon(getClass().getClassLoader().getResource("images/copy.gif"));
-        Icon pasteIcon = new ImageIcon(getClass().getClassLoader().getResource("images/paste.gif"));
-        
-        Icon spectrumIcon = new ImageIcon(getClass().getClassLoader().getResource("images/spectrum.gif"));
-        Icon twoDIcon = new ImageIcon(getClass().getClassLoader().getResource("images/twod.gif"));
-        
-        jmNewProject.setIcon(newIcon);
-        jbNewProject.setIcon(newIcon);
+        Icon pasteIcon = new ImageIcon(getClass().getClassLoader().getResource("images/paste.gif"));        
+        //... Project ...//
+        Icon runIcon = new ImageIcon(getClass().getClassLoader().getResource("images/run.gif"));        
+        //... Help ...//
+        Icon helpIcon = new ImageIcon(getClass().getClassLoader().getResource("images/help.gif"));
+                
+        jmNewProject.setIcon(newIcon);        
         jmImportFile.setIcon(importIcon);
-        jbImportFile.setIcon(importIcon);
         jmOpenProject.setIcon(openIcon);
-        jbOpenProject.setIcon(openIcon);
-        jmSaveProject.setIcon(saveIcon);
-        jbSaveProject.setIcon(saveIcon);
-        jmPrint.setIcon(printIcon);
-        
+        jmSaveProject.setIcon(saveIcon);        
+        jmPrint.setIcon(printIcon);        
         jmCut.setIcon(cutIcon);
+        jmCopy.setIcon(copyIcon);        
+        jmPaste.setIcon(pasteIcon);        
+        jmRunQuantAnalysis.setIcon(runIcon);        
+        jmHelpContent.setIcon(helpIcon);        
+
+        //... Toolbar icons ...//
+        jbNewProject.setIcon(newIcon);
+        jbImportFile.setIcon(importIcon);        
+        jbOpenProject.setIcon(openIcon);        
+        jbSaveProject.setIcon(saveIcon);
         jbCut.setIcon(cutIcon);
-        jmCopy.setIcon(copyIcon);
         jbCopy.setIcon(copyIcon);
-        jmPaste.setIcon(pasteIcon);
-        jbPaste.setIcon(pasteIcon);
+        jbPaste.setIcon(pasteIcon);                
+        jbRunQuantAnalysis.setIcon(runIcon);
         
-        jbShowChromatogram.setIcon(spectrumIcon);
+        //... Tabsheet and other shortcut icons ...//
+        JLabel jlRawFilesIcon = new JLabel("Raw Files                                 ");
+        Icon rawFilesIcon = new ImageIcon(getClass().getClassLoader().getResource("images/raw_file.gif"));
+        jlRawFilesIcon.setIcon(rawFilesIcon);
+        jlRawFilesIcon.setIconTextGap(5);
+        jlRawFilesIcon.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jtpRawFiles.setTabComponentAt(0, jlRawFilesIcon);
+        
+        JLabel jlIdentFilesIcon = new JLabel("Identification Files                    ");
+        Icon identFilesIcon = new ImageIcon(getClass().getClassLoader().getResource("images/ident_file.gif"));
+        jlIdentFilesIcon.setIcon(identFilesIcon);
+        jlIdentFilesIcon.setIconTextGap(5);
+        jlIdentFilesIcon.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jtpIdentFiles.setTabComponentAt(0, jlIdentFilesIcon);
+        
+        JLabel jlQuantFilesIcon = new JLabel("Quantitation Files                      ");
+        Icon quantFilesIcon = new ImageIcon(getClass().getClassLoader().getResource("images/quant_file.gif"));
+        jlQuantFilesIcon.setIcon(quantFilesIcon);
+        jlQuantFilesIcon.setIconTextGap(5);
+        jlQuantFilesIcon.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jtpQuantFiles.setTabComponentAt(0, jlQuantFilesIcon);        
+        
+        JLabel jlSpectrumIcon = new JLabel("Spectrum");
+        Icon spectrumIcon = new ImageIcon(getClass().getClassLoader().getResource("images/ident_file.gif"));
+        jlSpectrumIcon.setIcon(spectrumIcon);
+        jlSpectrumIcon.setIconTextGap(5);
+        jlSpectrumIcon.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jtpViewer.setTabComponentAt(0, jlSpectrumIcon);
+        
+        JLabel jlTICIcon = new JLabel("TIC");
+        Icon TICIcon = new ImageIcon(getClass().getClassLoader().getResource("images/chromat.gif"));
+        jlTICIcon.setIcon(TICIcon);
+        jlTICIcon.setIconTextGap(5);
+        jlTICIcon.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jtpViewer.setTabComponentAt(1, jlTICIcon);
+        
+        JLabel jlTwoDIcon = new JLabel("2D View");
+        Icon twoDIcon = new ImageIcon(getClass().getClassLoader().getResource("images/twod.gif"));
+        jlTwoDIcon.setIcon(twoDIcon);
+        jlTwoDIcon.setIconTextGap(5);
+        jlTwoDIcon.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jtpViewer.setTabComponentAt(2, jlTwoDIcon);
+        
+        JLabel jlThreeDIcon = new JLabel("3D View");
+        Icon threeDIcon = new ImageIcon(getClass().getClassLoader().getResource("images/threed.gif"));
+        jlThreeDIcon.setIcon(threeDIcon);
+        jlThreeDIcon.setIconTextGap(5);
+        jlThreeDIcon.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jtpViewer.setTabComponentAt(3, jlThreeDIcon);        
+
+        JLabel jlLogIcon = new JLabel("Log  ");
+        Icon logIcon = new ImageIcon(getClass().getClassLoader().getResource("images/log.gif"));
+        jlLogIcon.setIcon(logIcon);
+        jlLogIcon.setIconTextGap(5);
+        jlLogIcon.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jtpLog.setTabComponentAt(0, jlLogIcon);
+        
+        JLabel jlRawDataIcon = new JLabel("Raw data");
+        Icon rawDataIcon = new ImageIcon(getClass().getClassLoader().getResource("images/raw_data.gif"));
+        jlRawDataIcon.setIcon(rawDataIcon);
+        jlRawDataIcon.setIconTextGap(5);
+        jlRawDataIcon.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jtpLog.setTabComponentAt(1, jlRawDataIcon);
+        
+        JLabel jlPropertiesMzMLIcon = new JLabel("mzML View");
+        Icon propertiesMzMLIcon = new ImageIcon(getClass().getClassLoader().getResource("images/properties.gif"));
+        jlPropertiesMzMLIcon.setIcon(propertiesMzMLIcon);
+        jlPropertiesMzMLIcon.setIconTextGap(5);
+        jlPropertiesMzMLIcon.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jtpProperties.setTabComponentAt(0, jlPropertiesMzMLIcon);
+        
+        JLabel jlPropertiesMzQuantMLIcon = new JLabel("mzQuantML View");
+        Icon propertiesMzQuantMLIcon = new ImageIcon(getClass().getClassLoader().getResource("images/properties.gif"));
+        jlPropertiesMzQuantMLIcon.setIcon(propertiesMzQuantMLIcon);
+        jlPropertiesMzQuantMLIcon.setIconTextGap(5);
+        jlPropertiesMzQuantMLIcon.setHorizontalTextPosition(SwingConstants.RIGHT);
+        jtpProperties.setTabComponentAt(1, jlPropertiesMzQuantMLIcon);                
+        
+        //... Visualisation Icons ...//
+        jbShowChromatogram.setIcon(TICIcon);
         jbShow2D.setIcon(twoDIcon);
         
         //... Setting Window Height and Width ...//
@@ -156,12 +246,14 @@ public class ProteoSuiteView extends JFrame {
 
         //... Setting dividers ...//
         jspMainPanelView.setDividerLocation(250); //... Left Menu ...//
-        jspLeftPanelView.setDividerLocation(200);
-        jspLeftMenuBottom.setDividerLocation(200);
-        jspRightPanelView.setDividerLocation(650); //... Graphs X-axis ...//
-        jspViewer.setDividerLocation(460); //... Graphs Y-axis ...//
+        jspLeftMenuBottom.setDividerLocation(200); //... Ident and Quantitation separator ...//
+        jspLeftViewerDetails.setDividerLocation(480); //... Viewer Height ...//
+        jspViewerAndProperties.setDividerLocation(600); //... Viewer Width  ...//
         jspMzML.setDividerLocation(100); //... MzML data ...//
+        jspProjectDetails.setDividerLocation(200); //... MzML files ...//
+        jspLeftMenuBottom.setDividerLocation(200); //... IdentML files ...//
         jtpViewer.setSelectedIndex(0);
+        jlFiles.requestFocusInWindow();
         
         //... Configuring exit events...//
         this.pack();
@@ -186,13 +278,59 @@ public class ProteoSuiteView extends JFrame {
         jbCut = new javax.swing.JButton();
         jbCopy = new javax.swing.JButton();
         jbPaste = new javax.swing.JButton();
-        jpbStatus = new javax.swing.JProgressBar();
-        jLabel1 = new javax.swing.JLabel();
         jToolBar3 = new javax.swing.JToolBar();
-        jpMain = new javax.swing.JPanel();
+        jbRunQuantAnalysis = new javax.swing.JButton();
+        jpMainPanelView = new javax.swing.JPanel();
         jspMainPanelView = new javax.swing.JSplitPane();
-        jspRightPanelView = new javax.swing.JSplitPane();
+        jpLeftPanelView = new javax.swing.JPanel();
+        jspLeftPanelView = new javax.swing.JSplitPane();
+        jpProjectHeader = new javax.swing.JPanel();
+        jlFiles = new javax.swing.JLabel();
+        jpProjectDetails = new javax.swing.JPanel();
+        jspProjectDetails = new javax.swing.JSplitPane();
+        jpLeftMenuTop = new javax.swing.JPanel();
+        jtpRawFiles = new javax.swing.JTabbedPane();
+        jspRawFiles = new javax.swing.JScrollPane();
+        jtRawFiles = new javax.swing.JTable();
+        jpLeftMenuBottom = new javax.swing.JPanel();
+        jspLeftMenuBottom = new javax.swing.JSplitPane();
+        jpQuantFiles = new javax.swing.JPanel();
+        jtpQuantFiles = new javax.swing.JTabbedPane();
+        jspQuantFiles = new javax.swing.JScrollPane();
+        jtQuantFiles = new javax.swing.JTable();
+        jtpIdentFiles = new javax.swing.JTabbedPane();
+        jspIdentFiles = new javax.swing.JScrollPane();
+        jtIdentFiles = new javax.swing.JTable();
+        jpViewerAndProperties = new javax.swing.JPanel();
+        jspViewerAndProperties = new javax.swing.JSplitPane();
+        jpLeftViewer = new javax.swing.JPanel();
+        jspLeftViewer = new javax.swing.JSplitPane();
+        jspLeftViewerHeader = new javax.swing.JPanel();
+        jlViewer = new javax.swing.JLabel();
+        jpLeftViewerDetails = new javax.swing.JPanel();
+        jspLeftViewerDetails = new javax.swing.JSplitPane();
+        jpLeftViewerBottom = new javax.swing.JPanel();
+        jtpLog = new javax.swing.JTabbedPane();
+        jspLog = new javax.swing.JScrollPane();
+        jtaLog = new javax.swing.JTextArea();
+        jpRawDataValues = new javax.swing.JPanel();
+        jspRawDataValues = new javax.swing.JSplitPane();
+        jpRawDataValuesMenu = new javax.swing.JPanel();
+        jspRawData = new javax.swing.JScrollPane();
+        jtRawData = new javax.swing.JTable();
+        jtpViewer = new javax.swing.JTabbedPane();
+        jdpMS = new javax.swing.JDesktopPane();
+        jpTIC = new javax.swing.JPanel();
+        jdpTIC = new javax.swing.JDesktopPane();
+        jp2D = new javax.swing.JPanel();
+        jdp2D = new javax.swing.JDesktopPane();
+        jp3D = new javax.swing.JPanel();
+        jdp3D = new javax.swing.JDesktopPane();
+        jpPropertiesBox = new javax.swing.JPanel();
+        jspProperties = new javax.swing.JSplitPane();
         jpProperties = new javax.swing.JPanel();
+        jlProperties = new javax.swing.JLabel();
+        jpPropetiesTab = new javax.swing.JPanel();
         jtpProperties = new javax.swing.JTabbedPane();
         jpMzML = new javax.swing.JPanel();
         jspMzML = new javax.swing.JSplitPane();
@@ -201,40 +339,27 @@ public class ProteoSuiteView extends JFrame {
         jspMzMLDetail = new javax.swing.JSplitPane();
         jspMzMLSubDetail = new javax.swing.JScrollPane();
         jtMzML = new javax.swing.JTable();
-        jPanel1 = new javax.swing.JPanel();
+        jpMzMLMenu = new javax.swing.JPanel();
         jToolBar4 = new javax.swing.JToolBar();
+        jlVisualisationOptions = new javax.swing.JLabel();
         jbShowChromatogram = new javax.swing.JButton();
         jbShow2D = new javax.swing.JButton();
+        jlSearch = new javax.swing.JLabel();
         jpMzQuantML = new javax.swing.JPanel();
-        jSplitPane1 = new javax.swing.JSplitPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jspViewer = new javax.swing.JSplitPane();
-        jtpViewer = new javax.swing.JTabbedPane();
-        jdpMS = new javax.swing.JDesktopPane();
-        jpTIC = new javax.swing.JPanel();
-        jp2D = new javax.swing.JPanel();
-        jp3D = new javax.swing.JPanel();
-        jpViewer = new javax.swing.JPanel();
-        jtpLog = new javax.swing.JTabbedPane();
-        jspLog = new javax.swing.JScrollPane();
-        jtaLog = new javax.swing.JTextArea();
-        jpRawData = new javax.swing.JPanel();
-        jspRawData = new javax.swing.JScrollPane();
-        jtRawData = new javax.swing.JTable();
-        jspLeftPanelView = new javax.swing.JSplitPane();
-        jspLeftMenuBottom = new javax.swing.JSplitPane();
-        jtpIdentFiles = new javax.swing.JTabbedPane();
-        jspIdentFiles = new javax.swing.JScrollPane();
-        jtIdentFiles = new javax.swing.JTable();
-        jtpQuantFiles = new javax.swing.JTabbedPane();
-        jspQuantFiles = new javax.swing.JScrollPane();
-        jtQuantFiles = new javax.swing.JTable();
-        jtpRawFiles = new javax.swing.JTabbedPane();
-        jspRawFiles = new javax.swing.JScrollPane();
-        jtRawFiles = new javax.swing.JTable();
+        jspMzQuantML = new javax.swing.JSplitPane();
+        jspMzQuantMLHeader = new javax.swing.JScrollPane();
+        jtaMzQuantML = new javax.swing.JTextArea();
+        jspMzQuantMLView = new javax.swing.JScrollPane();
+        jtMzQuantMLView = new javax.swing.JTable();
+        jpProjectStatus = new javax.swing.JPanel();
+        jlRawFiles = new javax.swing.JLabel();
+        jlIdentFiles = new javax.swing.JLabel();
+        jlTechnique = new javax.swing.JLabel();
+        jlQuantFiles = new javax.swing.JLabel();
+        jlRawFilesStatus = new javax.swing.JLabel();
+        jlIdentFilesStatus = new javax.swing.JLabel();
+        jlQuantFilesStatus = new javax.swing.JLabel();
+        jcbTechnique = new javax.swing.JComboBox();
         jmMain = new javax.swing.JMenuBar();
         jmFile = new javax.swing.JMenu();
         jmNewProject = new javax.swing.JMenuItem();
@@ -291,9 +416,6 @@ public class ProteoSuiteView extends JFrame {
         jpToolBar.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
         jpToolBar.setPreferredSize(new java.awt.Dimension(933, 32));
 
-        jToolBar1.setFloatable(false);
-        jToolBar1.setRollover(true);
-
         jbNewProject.setToolTipText("New Project (Ctrl + N)");
         jbNewProject.setFocusable(false);
         jbNewProject.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -308,6 +430,9 @@ public class ProteoSuiteView extends JFrame {
         jbImportFile.setToolTipText("Import File (Ctrl + I)");
         jbImportFile.setFocusable(false);
         jbImportFile.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jbImportFile.setMaximumSize(new java.awt.Dimension(27, 21));
+        jbImportFile.setMinimumSize(new java.awt.Dimension(27, 21));
+        jbImportFile.setPreferredSize(new java.awt.Dimension(27, 21));
         jbImportFile.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jbImportFile.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -338,9 +463,6 @@ public class ProteoSuiteView extends JFrame {
         });
         jToolBar1.add(jbSaveProject);
 
-        jToolBar2.setFloatable(false);
-        jToolBar2.setRollover(true);
-
         jbCut.setToolTipText("Cut (Ctrl + X)");
         jbCut.setEnabled(false);
         jbCut.setFocusable(false);
@@ -360,58 +482,454 @@ public class ProteoSuiteView extends JFrame {
         jbPaste.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar2.add(jbPaste);
 
-        jLabel1.setText("Task monitor:");
-
-        jToolBar3.setFloatable(false);
-        jToolBar3.setRollover(true);
         jToolBar3.setMaximumSize(new java.awt.Dimension(34, 9));
         jToolBar3.setMinimumSize(new java.awt.Dimension(34, 9));
+
+        jbRunQuantAnalysis.setToolTipText("Run (F5)");
+        jbRunQuantAnalysis.setFocusable(false);
+        jbRunQuantAnalysis.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jbRunQuantAnalysis.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jbRunQuantAnalysis.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jbRunQuantAnalysisMouseClicked(evt);
+            }
+        });
+        jToolBar3.add(jbRunQuantAnalysis);
 
         javax.swing.GroupLayout jpToolBarLayout = new javax.swing.GroupLayout(jpToolBar);
         jpToolBar.setLayout(jpToolBarLayout);
         jpToolBarLayout.setHorizontalGroup(
             jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpToolBarLayout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToolBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 352, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jpbStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jToolBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(567, Short.MAX_VALUE))
         );
         jpToolBarLayout.setVerticalGroup(
             jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpToolBarLayout.createSequentialGroup()
-                .addComponent(jToolBar3, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpToolBarLayout.createSequentialGroup()
-                .addComponent(jToolBar2, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
-                .addGap(11, 11, 11))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpToolBarLayout.createSequentialGroup()
                 .addGroup(jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)
-                    .addComponent(jpbStatus, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6))
-            .addGroup(jpToolBarLayout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToolBar3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(jToolBar2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        jpMainPanelView.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+
+        jspMainPanelView.setBorder(null);
+        jspMainPanelView.setDividerLocation(280);
+        jspMainPanelView.setDividerSize(3);
+
+        jpLeftPanelView.setBackground(new java.awt.Color(204, 204, 255));
+
+        jspLeftPanelView.setBorder(null);
+        jspLeftPanelView.setDividerLocation(20);
+        jspLeftPanelView.setDividerSize(1);
+        jspLeftPanelView.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        jpProjectHeader.setMaximumSize(new java.awt.Dimension(32767, 25));
+        jpProjectHeader.setMinimumSize(new java.awt.Dimension(279, 25));
+        jpProjectHeader.setPreferredSize(new java.awt.Dimension(280, 25));
+
+        jlFiles.setBackground(new java.awt.Color(255, 255, 255));
+        jlFiles.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jlFiles.setForeground(new java.awt.Color(102, 102, 102));
+        jlFiles.setText("Files");
+
+        javax.swing.GroupLayout jpProjectHeaderLayout = new javax.swing.GroupLayout(jpProjectHeader);
+        jpProjectHeader.setLayout(jpProjectHeaderLayout);
+        jpProjectHeaderLayout.setHorizontalGroup(
+            jpProjectHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpProjectHeaderLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jlFiles)
+                .addContainerGap(245, Short.MAX_VALUE))
+        );
+        jpProjectHeaderLayout.setVerticalGroup(
+            jpProjectHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpProjectHeaderLayout.createSequentialGroup()
+                .addComponent(jlFiles)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jpMain.setBackground(new java.awt.Color(255, 255, 255));
+        jspLeftPanelView.setTopComponent(jpProjectHeader);
 
-        jspMainPanelView.setBackground(new java.awt.Color(255, 255, 255));
-        jspMainPanelView.setDividerLocation(280);
-        jspMainPanelView.setDividerSize(2);
+        jpProjectDetails.setBackground(new java.awt.Color(255, 255, 255));
 
-        jspRightPanelView.setBackground(new java.awt.Color(255, 255, 255));
-        jspRightPanelView.setDividerLocation(500);
-        jspRightPanelView.setDividerSize(2);
+        jspProjectDetails.setBackground(new java.awt.Color(255, 255, 255));
+        jspProjectDetails.setBorder(null);
+        jspProjectDetails.setDividerLocation(130);
+        jspProjectDetails.setDividerSize(2);
+        jspProjectDetails.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        jpProperties.setBackground(new java.awt.Color(255, 255, 255));
+        jtpRawFiles.setBackground(new java.awt.Color(255, 255, 255));
+
+        jspRawFiles.setBackground(new java.awt.Color(255, 255, 255));
+
+        jtRawFiles.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Name", "Path", "Type", "Version", "Scans"
+            }
+        ));
+        jtRawFiles.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jtRawFiles.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtRawFilesMouseClicked(evt);
+            }
+        });
+        jspRawFiles.setViewportView(jtRawFiles);
+
+        jtpRawFiles.addTab("Raw Files", jspRawFiles);
+
+        javax.swing.GroupLayout jpLeftMenuTopLayout = new javax.swing.GroupLayout(jpLeftMenuTop);
+        jpLeftMenuTop.setLayout(jpLeftMenuTopLayout);
+        jpLeftMenuTopLayout.setHorizontalGroup(
+            jpLeftMenuTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 280, Short.MAX_VALUE)
+            .addGroup(jpLeftMenuTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jtpRawFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
+        );
+        jpLeftMenuTopLayout.setVerticalGroup(
+            jpLeftMenuTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 130, Short.MAX_VALUE)
+            .addGroup(jpLeftMenuTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jtpRawFiles, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+        );
+
+        jspProjectDetails.setTopComponent(jpLeftMenuTop);
+
+        jspLeftMenuBottom.setDividerLocation(200);
+        jspLeftMenuBottom.setDividerSize(2);
+        jspLeftMenuBottom.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        jtpQuantFiles.setBackground(new java.awt.Color(255, 255, 255));
+
+        jtQuantFiles.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Name", "Path", "Type", "Version"
+            }
+        ));
+        jtQuantFiles.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jspQuantFiles.setViewportView(jtQuantFiles);
+
+        jtpQuantFiles.addTab("Quantitation Files", jspQuantFiles);
+
+        javax.swing.GroupLayout jpQuantFilesLayout = new javax.swing.GroupLayout(jpQuantFiles);
+        jpQuantFiles.setLayout(jpQuantFilesLayout);
+        jpQuantFilesLayout.setHorizontalGroup(
+            jpQuantFilesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jtpQuantFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+        );
+        jpQuantFilesLayout.setVerticalGroup(
+            jpQuantFilesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jtpQuantFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+        );
+
+        jspLeftMenuBottom.setRightComponent(jpQuantFiles);
+
+        jtpIdentFiles.setBackground(new java.awt.Color(255, 255, 255));
+
+        jtIdentFiles.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Name", "Path", "Type", "Version"
+            }
+        ));
+        jtIdentFiles.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jspIdentFiles.setViewportView(jtIdentFiles);
+
+        jtpIdentFiles.addTab("Identification Files", jspIdentFiles);
+
+        jspLeftMenuBottom.setTopComponent(jtpIdentFiles);
+
+        javax.swing.GroupLayout jpLeftMenuBottomLayout = new javax.swing.GroupLayout(jpLeftMenuBottom);
+        jpLeftMenuBottom.setLayout(jpLeftMenuBottomLayout);
+        jpLeftMenuBottomLayout.setHorizontalGroup(
+            jpLeftMenuBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspLeftMenuBottom, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+        );
+        jpLeftMenuBottomLayout.setVerticalGroup(
+            jpLeftMenuBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpLeftMenuBottomLayout.createSequentialGroup()
+                .addComponent(jspLeftMenuBottom, javax.swing.GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jspProjectDetails.setRightComponent(jpLeftMenuBottom);
+
+        javax.swing.GroupLayout jpProjectDetailsLayout = new javax.swing.GroupLayout(jpProjectDetails);
+        jpProjectDetails.setLayout(jpProjectDetailsLayout);
+        jpProjectDetailsLayout.setHorizontalGroup(
+            jpProjectDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspProjectDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+        );
+        jpProjectDetailsLayout.setVerticalGroup(
+            jpProjectDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspProjectDetails, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+        );
+
+        jspLeftPanelView.setRightComponent(jpProjectDetails);
+
+        javax.swing.GroupLayout jpLeftPanelViewLayout = new javax.swing.GroupLayout(jpLeftPanelView);
+        jpLeftPanelView.setLayout(jpLeftPanelViewLayout);
+        jpLeftPanelViewLayout.setHorizontalGroup(
+            jpLeftPanelViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspLeftPanelView)
+        );
+        jpLeftPanelViewLayout.setVerticalGroup(
+            jpLeftPanelViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspLeftPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
+        );
+
+        jspMainPanelView.setLeftComponent(jpLeftPanelView);
+
+        jpViewerAndProperties.setBackground(new java.awt.Color(204, 204, 255));
+
+        jspViewerAndProperties.setBorder(null);
+        jspViewerAndProperties.setDividerLocation(380);
+        jspViewerAndProperties.setDividerSize(3);
+
+        jspLeftViewer.setBorder(null);
+        jspLeftViewer.setDividerLocation(20);
+        jspLeftViewer.setDividerSize(1);
+        jspLeftViewer.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        jspLeftViewerHeader.setMaximumSize(new java.awt.Dimension(32767, 25));
+        jspLeftViewerHeader.setMinimumSize(new java.awt.Dimension(380, 25));
+        jspLeftViewerHeader.setPreferredSize(new java.awt.Dimension(380, 25));
+
+        jlViewer.setBackground(new java.awt.Color(255, 255, 255));
+        jlViewer.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jlViewer.setForeground(new java.awt.Color(102, 102, 102));
+        jlViewer.setText("Viewer");
+
+        javax.swing.GroupLayout jspLeftViewerHeaderLayout = new javax.swing.GroupLayout(jspLeftViewerHeader);
+        jspLeftViewerHeader.setLayout(jspLeftViewerHeaderLayout);
+        jspLeftViewerHeaderLayout.setHorizontalGroup(
+            jspLeftViewerHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jspLeftViewerHeaderLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jlViewer)
+                .addContainerGap(332, Short.MAX_VALUE))
+        );
+        jspLeftViewerHeaderLayout.setVerticalGroup(
+            jspLeftViewerHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jspLeftViewerHeaderLayout.createSequentialGroup()
+                .addComponent(jlViewer)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jspLeftViewer.setTopComponent(jspLeftViewerHeader);
+
+        jpLeftViewerDetails.setBackground(new java.awt.Color(255, 255, 255));
+
+        jspLeftViewerDetails.setDividerLocation(350);
+        jspLeftViewerDetails.setDividerSize(2);
+        jspLeftViewerDetails.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        jtaLog.setColumns(20);
+        jtaLog.setRows(5);
+        jspLog.setViewportView(jtaLog);
+
+        jtpLog.addTab("Log", jspLog);
+
+        jspRawDataValues.setBorder(null);
+        jspRawDataValues.setDividerLocation(26);
+        jspRawDataValues.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        jpRawDataValuesMenu.setMaximumSize(new java.awt.Dimension(32767, 50));
+        jpRawDataValuesMenu.setMinimumSize(new java.awt.Dimension(0, 50));
+        jpRawDataValuesMenu.setPreferredSize(new java.awt.Dimension(462, 50));
+
+        javax.swing.GroupLayout jpRawDataValuesMenuLayout = new javax.swing.GroupLayout(jpRawDataValuesMenu);
+        jpRawDataValuesMenu.setLayout(jpRawDataValuesMenuLayout);
+        jpRawDataValuesMenuLayout.setHorizontalGroup(
+            jpRawDataValuesMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 373, Short.MAX_VALUE)
+        );
+        jpRawDataValuesMenuLayout.setVerticalGroup(
+            jpRawDataValuesMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 26, Short.MAX_VALUE)
+        );
+
+        jspRawDataValues.setLeftComponent(jpRawDataValuesMenu);
+
+        jtRawData.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Index", "m/z", "Intensity"
+            }
+        ));
+        jtRawData.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        jspRawData.setViewportView(jtRawData);
+
+        jspRawDataValues.setBottomComponent(jspRawData);
+
+        javax.swing.GroupLayout jpRawDataValuesLayout = new javax.swing.GroupLayout(jpRawDataValues);
+        jpRawDataValues.setLayout(jpRawDataValuesLayout);
+        jpRawDataValuesLayout.setHorizontalGroup(
+            jpRawDataValuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspRawDataValues, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+        );
+        jpRawDataValuesLayout.setVerticalGroup(
+            jpRawDataValuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspRawDataValues, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+        );
+
+        jtpLog.addTab("Raw Data", jpRawDataValues);
+
+        javax.swing.GroupLayout jpLeftViewerBottomLayout = new javax.swing.GroupLayout(jpLeftViewerBottom);
+        jpLeftViewerBottom.setLayout(jpLeftViewerBottomLayout);
+        jpLeftViewerBottomLayout.setHorizontalGroup(
+            jpLeftViewerBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jtpLog, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
+        );
+        jpLeftViewerBottomLayout.setVerticalGroup(
+            jpLeftViewerBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jtpLog, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+        );
+
+        jspLeftViewerDetails.setRightComponent(jpLeftViewerBottom);
+
+        jdpMS.setBackground(new java.awt.Color(255, 255, 255));
+        jtpViewer.addTab("Spectrum", jdpMS);
+
+        jpTIC.setBackground(new java.awt.Color(255, 255, 255));
+
+        jdpTIC.setBackground(new java.awt.Color(255, 255, 255));
+        jdpTIC.setForeground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout jpTICLayout = new javax.swing.GroupLayout(jpTIC);
+        jpTIC.setLayout(jpTICLayout);
+        jpTICLayout.setHorizontalGroup(
+            jpTICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jdpTIC, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+        );
+        jpTICLayout.setVerticalGroup(
+            jpTICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jdpTIC, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
+        );
+
+        jtpViewer.addTab("TIC", jpTIC);
+
+        jp2D.setBackground(new java.awt.Color(255, 255, 255));
+
+        jdp2D.setForeground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout jp2DLayout = new javax.swing.GroupLayout(jp2D);
+        jp2D.setLayout(jp2DLayout);
+        jp2DLayout.setHorizontalGroup(
+            jp2DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2DLayout.createSequentialGroup()
+                .addContainerGap(347, Short.MAX_VALUE)
+                .addComponent(jdp2D, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        jp2DLayout.setVerticalGroup(
+            jp2DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2DLayout.createSequentialGroup()
+                .addContainerGap(282, Short.MAX_VALUE)
+                .addComponent(jdp2D, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jtpViewer.addTab("2D View", jp2D);
+
+        jp3D.setBackground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout jp3DLayout = new javax.swing.GroupLayout(jp3D);
+        jp3D.setLayout(jp3DLayout);
+        jp3DLayout.setHorizontalGroup(
+            jp3DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jp3DLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(jdp3D, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(243, Short.MAX_VALUE))
+        );
+        jp3DLayout.setVerticalGroup(
+            jp3DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jp3DLayout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addComponent(jdp3D, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(183, Short.MAX_VALUE))
+        );
+
+        jtpViewer.addTab("3D View", jp3D);
+
+        jspLeftViewerDetails.setTopComponent(jtpViewer);
+
+        javax.swing.GroupLayout jpLeftViewerDetailsLayout = new javax.swing.GroupLayout(jpLeftViewerDetails);
+        jpLeftViewerDetails.setLayout(jpLeftViewerDetailsLayout);
+        jpLeftViewerDetailsLayout.setHorizontalGroup(
+            jpLeftViewerDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspLeftViewerDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+        );
+        jpLeftViewerDetailsLayout.setVerticalGroup(
+            jpLeftViewerDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspLeftViewerDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+        );
+
+        jspLeftViewer.setRightComponent(jpLeftViewerDetails);
+
+        javax.swing.GroupLayout jpLeftViewerLayout = new javax.swing.GroupLayout(jpLeftViewer);
+        jpLeftViewer.setLayout(jpLeftViewerLayout);
+        jpLeftViewerLayout.setHorizontalGroup(
+            jpLeftViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspLeftViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+        );
+        jpLeftViewerLayout.setVerticalGroup(
+            jpLeftViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspLeftViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
+        );
+
+        jspViewerAndProperties.setLeftComponent(jpLeftViewer);
+
+        jspProperties.setBorder(null);
+        jspProperties.setDividerLocation(20);
+        jspProperties.setDividerSize(1);
+        jspProperties.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
+        jpProperties.setMaximumSize(new java.awt.Dimension(32767, 25));
+        jpProperties.setMinimumSize(new java.awt.Dimension(302, 25));
+        jpProperties.setPreferredSize(new java.awt.Dimension(313, 25));
+
+        jlProperties.setBackground(new java.awt.Color(255, 255, 255));
+        jlProperties.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jlProperties.setForeground(new java.awt.Color(102, 102, 102));
+        jlProperties.setText("Properties");
+
+        javax.swing.GroupLayout jpPropertiesLayout = new javax.swing.GroupLayout(jpProperties);
+        jpProperties.setLayout(jpPropertiesLayout);
+        jpPropertiesLayout.setHorizontalGroup(
+            jpPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpPropertiesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jlProperties)
+                .addContainerGap(244, Short.MAX_VALUE))
+        );
+        jpPropertiesLayout.setVerticalGroup(
+            jpPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpPropertiesLayout.createSequentialGroup()
+                .addComponent(jlProperties)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jspProperties.setTopComponent(jpProperties);
+
+        jpPropetiesTab.setBackground(new java.awt.Color(255, 255, 255));
+        jpPropetiesTab.setForeground(new java.awt.Color(153, 153, 255));
 
         jtpProperties.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -426,6 +944,7 @@ public class ProteoSuiteView extends JFrame {
 
         jspMzML.setLeftComponent(jspMzMLHeader);
 
+        jspMzMLDetail.setBorder(null);
         jspMzMLDetail.setDividerLocation(35);
         jspMzMLDetail.setDividerSize(2);
         jspMzMLDetail.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -435,9 +954,10 @@ public class ProteoSuiteView extends JFrame {
 
             },
             new String [] {
-                "", "Index", "ID", "MS", "Base peak m/z", "Base peak int", "Total ion curr", "Lowest obs m/z", "Highest obs m/z", "Ret Time (sec)", "Scan Win Min", "Scan Win Max"
+                "", "Index", "ID", "MS", "Base peak m/z", "Base peak int", "Total ion curr", "Lowest obs m/z", "Highest obs m/z", "Ret Time (sec-min)", "Scan Win Min", "Scan Win Max"
             }
         ));
+        jtMzML.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jtMzML.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jtMzMLMouseClicked(evt);
@@ -447,8 +967,9 @@ public class ProteoSuiteView extends JFrame {
 
         jspMzMLDetail.setRightComponent(jspMzMLSubDetail);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jpMzMLMenu.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
+        jToolBar4.setBorder(null);
         jToolBar4.setFloatable(false);
         jToolBar4.setRollover(true);
         jToolBar4.setMaximumSize(new java.awt.Dimension(100, 27));
@@ -456,10 +977,13 @@ public class ProteoSuiteView extends JFrame {
         jToolBar4.setPreferredSize(new java.awt.Dimension(100, 27));
         jToolBar4.setRequestFocusEnabled(false);
 
+        jlVisualisationOptions.setText("Visualisation options:");
+        jToolBar4.add(jlVisualisationOptions);
+
         jbShowChromatogram.setToolTipText("Show Chromatogram");
-        jbShowChromatogram.setMaximumSize(new java.awt.Dimension(35, 24));
-        jbShowChromatogram.setMinimumSize(new java.awt.Dimension(35, 24));
-        jbShowChromatogram.setPreferredSize(new java.awt.Dimension(35, 24));
+        jbShowChromatogram.setMaximumSize(new java.awt.Dimension(24, 24));
+        jbShowChromatogram.setMinimumSize(new java.awt.Dimension(24, 24));
+        jbShowChromatogram.setPreferredSize(new java.awt.Dimension(24, 24));
         jbShowChromatogram.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jbShowChromatogramMouseClicked(evt);
@@ -468,9 +992,9 @@ public class ProteoSuiteView extends JFrame {
         jToolBar4.add(jbShowChromatogram);
 
         jbShow2D.setToolTipText("Show 2D Plot");
-        jbShow2D.setMaximumSize(new java.awt.Dimension(35, 24));
-        jbShow2D.setMinimumSize(new java.awt.Dimension(35, 24));
-        jbShow2D.setPreferredSize(new java.awt.Dimension(35, 24));
+        jbShow2D.setMaximumSize(new java.awt.Dimension(24, 24));
+        jbShow2D.setMinimumSize(new java.awt.Dimension(24, 24));
+        jbShow2D.setPreferredSize(new java.awt.Dimension(24, 24));
         jbShow2D.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jbShow2DMouseClicked(evt);
@@ -478,22 +1002,21 @@ public class ProteoSuiteView extends JFrame {
         });
         jToolBar4.add(jbShow2D);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jToolBar4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(114, 114, 114))
+        jlSearch.setText("Search:");
+        jToolBar4.add(jlSearch);
+
+        javax.swing.GroupLayout jpMzMLMenuLayout = new javax.swing.GroupLayout(jpMzMLMenu);
+        jpMzMLMenu.setLayout(jpMzMLMenuLayout);
+        jpMzMLMenuLayout.setHorizontalGroup(
+            jpMzMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jToolBar4, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jToolBar4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+        jpMzMLMenuLayout.setVerticalGroup(
+            jpMzMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jToolBar4, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
         );
 
-        jspMzMLDetail.setLeftComponent(jPanel1);
+        jspMzMLDetail.setLeftComponent(jpMzMLMenu);
 
         jspMzML.setBottomComponent(jspMzMLDetail);
 
@@ -501,24 +1024,24 @@ public class ProteoSuiteView extends JFrame {
         jpMzML.setLayout(jpMzMLLayout);
         jpMzMLLayout.setHorizontalGroup(
             jpMzMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspMzML, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+            .addComponent(jspMzML, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
         );
         jpMzMLLayout.setVerticalGroup(
             jpMzMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspMzML, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
+            .addComponent(jspMzML, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
         );
 
         jtpProperties.addTab("mzML View", jpMzML);
 
-        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jspMzQuantML.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        jtaMzQuantML.setColumns(20);
+        jtaMzQuantML.setRows(5);
+        jspMzQuantMLHeader.setViewportView(jtaMzQuantML);
 
-        jSplitPane1.setTopComponent(jScrollPane1);
+        jspMzQuantML.setTopComponent(jspMzQuantMLHeader);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jtMzQuantMLView.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -526,217 +1049,133 @@ public class ProteoSuiteView extends JFrame {
                 "Column 1", "Column 2", "Column 3", "Column 4"
             }
         ));
-        jScrollPane2.setViewportView(jTable1);
+        jspMzQuantMLView.setViewportView(jtMzQuantMLView);
 
-        jSplitPane1.setRightComponent(jScrollPane2);
+        jspMzQuantML.setRightComponent(jspMzQuantMLView);
 
         javax.swing.GroupLayout jpMzQuantMLLayout = new javax.swing.GroupLayout(jpMzQuantML);
         jpMzQuantML.setLayout(jpMzQuantMLLayout);
         jpMzQuantMLLayout.setHorizontalGroup(
             jpMzQuantMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+            .addComponent(jspMzQuantML, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
         );
         jpMzQuantMLLayout.setVerticalGroup(
             jpMzQuantMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
+            .addComponent(jspMzQuantML, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
         );
 
         jtpProperties.addTab("mzQuantML View", jpMzQuantML);
 
-        javax.swing.GroupLayout jpPropertiesLayout = new javax.swing.GroupLayout(jpProperties);
-        jpProperties.setLayout(jpPropertiesLayout);
-        jpPropertiesLayout.setHorizontalGroup(
-            jpPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpProperties)
+        javax.swing.GroupLayout jpPropetiesTabLayout = new javax.swing.GroupLayout(jpPropetiesTab);
+        jpPropetiesTab.setLayout(jpPropetiesTabLayout);
+        jpPropetiesTabLayout.setHorizontalGroup(
+            jpPropetiesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jtpProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
         );
-        jpPropertiesLayout.setVerticalGroup(
-            jpPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpProperties)
-        );
-
-        jspRightPanelView.setRightComponent(jpProperties);
-
-        jspViewer.setBackground(new java.awt.Color(255, 255, 255));
-        jspViewer.setDividerLocation(400);
-        jspViewer.setDividerSize(2);
-        jspViewer.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-
-        jdpMS.setBackground(new java.awt.Color(255, 255, 255));
-        jtpViewer.addTab("Spectrum", jdpMS);
-
-        jpTIC.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout jpTICLayout = new javax.swing.GroupLayout(jpTIC);
-        jpTIC.setLayout(jpTICLayout);
-        jpTICLayout.setHorizontalGroup(
-            jpTICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 492, Short.MAX_VALUE)
-        );
-        jpTICLayout.setVerticalGroup(
-            jpTICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 371, Short.MAX_VALUE)
+        jpPropetiesTabLayout.setVerticalGroup(
+            jpPropetiesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jtpProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
         );
 
-        jtpViewer.addTab("TIC", jpTIC);
+        jspProperties.setRightComponent(jpPropetiesTab);
 
-        jp2D.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout jp2DLayout = new javax.swing.GroupLayout(jp2D);
-        jp2D.setLayout(jp2DLayout);
-        jp2DLayout.setHorizontalGroup(
-            jp2DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 492, Short.MAX_VALUE)
+        javax.swing.GroupLayout jpPropertiesBoxLayout = new javax.swing.GroupLayout(jpPropertiesBox);
+        jpPropertiesBox.setLayout(jpPropertiesBoxLayout);
+        jpPropertiesBoxLayout.setHorizontalGroup(
+            jpPropertiesBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
         );
-        jp2DLayout.setVerticalGroup(
-            jp2DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 371, Short.MAX_VALUE)
+        jpPropertiesBoxLayout.setVerticalGroup(
+            jpPropertiesBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
         );
 
-        jtpViewer.addTab("2D View", jp2D);
+        jspViewerAndProperties.setRightComponent(jpPropertiesBox);
 
-        jp3D.setBackground(new java.awt.Color(255, 255, 255));
-
-        javax.swing.GroupLayout jp3DLayout = new javax.swing.GroupLayout(jp3D);
-        jp3D.setLayout(jp3DLayout);
-        jp3DLayout.setHorizontalGroup(
-            jp3DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 492, Short.MAX_VALUE)
+        javax.swing.GroupLayout jpViewerAndPropertiesLayout = new javax.swing.GroupLayout(jpViewerAndProperties);
+        jpViewerAndProperties.setLayout(jpViewerAndPropertiesLayout);
+        jpViewerAndPropertiesLayout.setHorizontalGroup(
+            jpViewerAndPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspViewerAndProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
         );
-        jp3DLayout.setVerticalGroup(
-            jp3DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 371, Short.MAX_VALUE)
+        jpViewerAndPropertiesLayout.setVerticalGroup(
+            jpViewerAndPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspViewerAndProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
         );
 
-        jtpViewer.addTab("3D View", jp3D);
+        jspMainPanelView.setRightComponent(jpViewerAndProperties);
 
-        jspViewer.setTopComponent(jtpViewer);
-
-        jpViewer.setBackground(new java.awt.Color(255, 255, 255));
-
-        jtaLog.setColumns(20);
-        jtaLog.setRows(5);
-        jspLog.setViewportView(jtaLog);
-
-        jtpLog.addTab("Log", jspLog);
-
-        jtRawData.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Index", "m/z", "Intensity"
-            }
-        ));
-        jspRawData.setViewportView(jtRawData);
-
-        javax.swing.GroupLayout jpRawDataLayout = new javax.swing.GroupLayout(jpRawData);
-        jpRawData.setLayout(jpRawDataLayout);
-        jpRawDataLayout.setHorizontalGroup(
-            jpRawDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspRawData, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
+        javax.swing.GroupLayout jpMainPanelViewLayout = new javax.swing.GroupLayout(jpMainPanelView);
+        jpMainPanelView.setLayout(jpMainPanelViewLayout);
+        jpMainPanelViewLayout.setHorizontalGroup(
+            jpMainPanelViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 979, Short.MAX_VALUE)
         );
-        jpRawDataLayout.setVerticalGroup(
-            jpRawDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpRawDataLayout.createSequentialGroup()
-                .addGap(0, 27, Short.MAX_VALUE)
-                .addComponent(jspRawData, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+        jpMainPanelViewLayout.setVerticalGroup(
+            jpMainPanelViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jspMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
         );
 
-        jtpLog.addTab("Raw Data", jpRawData);
+        jpProjectStatus.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), " Project: ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(102, 102, 102))); // NOI18N
+        jpProjectStatus.setForeground(new java.awt.Color(153, 153, 153));
+        jpProjectStatus.setPreferredSize(new java.awt.Dimension(102, 26));
 
-        javax.swing.GroupLayout jpViewerLayout = new javax.swing.GroupLayout(jpViewer);
-        jpViewer.setLayout(jpViewerLayout);
-        jpViewerLayout.setHorizontalGroup(
-            jpViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpLog)
+        jlRawFiles.setText("1) Raw Files:");
+
+        jlIdentFiles.setText("2) Identification Files:");
+
+        jlTechnique.setText("3) Technique:");
+
+        jlQuantFiles.setBackground(new java.awt.Color(255, 255, 255));
+        jlQuantFiles.setText("4) Quant Files:");
+
+        jlRawFilesStatus.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jlRawFilesStatus.setForeground(new java.awt.Color(51, 102, 0));
+
+        jlIdentFilesStatus.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jlIdentFilesStatus.setForeground(new java.awt.Color(51, 102, 0));
+
+        jlQuantFilesStatus.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jlQuantFilesStatus.setForeground(new java.awt.Color(51, 102, 0));
+
+        jcbTechnique.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select technique", "SILAC", "iTRAQ", "15N", "Label free" }));
+        jcbTechnique.setToolTipText("Select a technique for the analysis");
+        jcbTechnique.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        javax.swing.GroupLayout jpProjectStatusLayout = new javax.swing.GroupLayout(jpProjectStatus);
+        jpProjectStatus.setLayout(jpProjectStatusLayout);
+        jpProjectStatusLayout.setHorizontalGroup(
+            jpProjectStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpProjectStatusLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jlRawFiles)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jlRawFilesStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jlIdentFiles)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jlIdentFilesStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jlTechnique)
+                .addGap(18, 18, 18)
+                .addComponent(jcbTechnique, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jlQuantFiles)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jlQuantFilesStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(325, Short.MAX_VALUE))
         );
-        jpViewerLayout.setVerticalGroup(
-            jpViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpLog, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE)
-        );
-
-        jspViewer.setRightComponent(jpViewer);
-
-        jspRightPanelView.setLeftComponent(jspViewer);
-
-        jspMainPanelView.setRightComponent(jspRightPanelView);
-
-        jspLeftPanelView.setBackground(new java.awt.Color(255, 255, 255));
-        jspLeftPanelView.setDividerLocation(150);
-        jspLeftPanelView.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-
-        jspLeftMenuBottom.setBackground(new java.awt.Color(255, 255, 255));
-        jspLeftMenuBottom.setDividerLocation(150);
-        jspLeftMenuBottom.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-
-        jtpIdentFiles.setBackground(new java.awt.Color(255, 255, 255));
-
-        jtIdentFiles.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID", "Name", "Version"
-            }
-        ));
-        jspIdentFiles.setViewportView(jtIdentFiles);
-
-        jtpIdentFiles.addTab("Identification Files", jspIdentFiles);
-
-        jspLeftMenuBottom.setTopComponent(jtpIdentFiles);
-
-        jtpQuantFiles.setBackground(new java.awt.Color(255, 255, 255));
-
-        jtQuantFiles.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID", "Name", "Version"
-            }
-        ));
-        jspQuantFiles.setViewportView(jtQuantFiles);
-
-        jtpQuantFiles.addTab("Quantitation Files", jspQuantFiles);
-
-        jspLeftMenuBottom.setRightComponent(jtpQuantFiles);
-
-        jspLeftPanelView.setBottomComponent(jspLeftMenuBottom);
-
-        jtpRawFiles.setBackground(new java.awt.Color(255, 255, 255));
-
-        jspRawFiles.setBackground(new java.awt.Color(255, 255, 255));
-
-        jtRawFiles.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID", "Name", "Version", "Spectra"
-            }
-        ));
-        jtRawFiles.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jtRawFilesMouseClicked(evt);
-            }
-        });
-        jspRawFiles.setViewportView(jtRawFiles);
-
-        jtpRawFiles.addTab("Raw Files", jspRawFiles);
-
-        jspLeftPanelView.setLeftComponent(jtpRawFiles);
-
-        jspMainPanelView.setLeftComponent(jspLeftPanelView);
-
-        javax.swing.GroupLayout jpMainLayout = new javax.swing.GroupLayout(jpMain);
-        jpMain.setLayout(jpMainLayout);
-        jpMainLayout.setHorizontalGroup(
-            jpMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 980, Short.MAX_VALUE)
-        );
-        jpMainLayout.setVerticalGroup(
-            jpMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
+        jpProjectStatusLayout.setVerticalGroup(
+            jpProjectStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpProjectStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(jlRawFiles)
+                .addComponent(jlRawFilesStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jlIdentFiles)
+                .addComponent(jlIdentFilesStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jlTechnique)
+                .addComponent(jcbTechnique, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jlQuantFiles)
+                .addComponent(jlQuantFilesStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jmFile.setText("File");
@@ -852,7 +1291,7 @@ public class ProteoSuiteView extends JFrame {
         });
         jmView.add(jmViewSpectrum);
 
-        jmViewXIC.setText("XIC");
+        jmViewXIC.setText("TIC");
         jmViewXIC.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmViewXICActionPerformed(evt);
@@ -998,22 +1437,28 @@ public class ProteoSuiteView extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jpMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jpToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 980, Short.MAX_VALUE)
+            .addComponent(jpMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jpProjectStatus, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 973, Short.MAX_VALUE)
+                    .addComponent(jpToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 973, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jpToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jpMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jpProjectStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(jpMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jmExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmExitActionPerformed
-        
+        //... Exiting from proteosuite ...//
         int iExit = JOptionPane.showConfirmDialog(this, "Do you want to exit?", "Exiting from ProteoSuite", JOptionPane.YES_NO_OPTION);
         if (iExit == JOptionPane.YES_OPTION) 
         {
@@ -1073,16 +1518,14 @@ public class ProteoSuiteView extends JFrame {
         chooser.setDialogTitle("Select the file(s) to analyze");
 
         //... Applying file extension filters ...//
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("mzML Files (*.mzML)", "mzML");
-        FileNameExtensionFilter filter2 = new FileNameExtensionFilter("mzIdentML Files (*.mzid)", "mzid");
-        FileNameExtensionFilter filter2a = new FileNameExtensionFilter("Mascot XML Files (*.xml)", "xml");
+        FileNameExtensionFilter filter1 = new FileNameExtensionFilter("Raw Files (*.mzML, *.mgf)", "mzML", "mgf");
+        FileNameExtensionFilter filter2 = new FileNameExtensionFilter("Identification Files (*.mzid, *.xml)", "mzid", "xml");
         FileNameExtensionFilter filter3 = new FileNameExtensionFilter("mzQuantML Files (*.mzq)", "mzq");
 
         //... Filters must be in descending order ...//
         chooser.setFileFilter(filter3);
         chooser.setFileFilter(filter2);
-        chooser.setFileFilter(filter2a);
-        chooser.setFileFilter(filter);
+        chooser.setFileFilter(filter1);
 
         //... Enable multiple file selection ...//
         chooser.setMultiSelectionEnabled(true);
@@ -1097,71 +1540,144 @@ public class ProteoSuiteView extends JFrame {
             this.bProjectModified = true;
             
             //... A common experiment will have around 4-20 raw files ....//
-            File [] aFiles = chooser.getSelectedFiles();
+            final File [] aFiles = chooser.getSelectedFiles();
 
 	    if (aFiles != null && aFiles.length > 0)
             {
                 //... Code to be inserted here ...//
                 if (aFiles[0].getName().indexOf(".mzML") > 0) 
-                {
-                    //... Setting progress bar ...// (To do: This needs to be set up in a thread)
-                    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                    
+                {                   
                     //... Fill JTable ...//
-                    DefaultTableModel model = new DefaultTableModel();
+                    final DefaultTableModel model = new DefaultTableModel();
                     jtRawFiles.setModel(model);
-                    model.addColumn("ID");
                     model.addColumn("Name");
+                    model.addColumn("Path");
+                    model.addColumn("Type");
                     model.addColumn("Version");
-                    model.addColumn("Spectra");
-    
-                    alUnmarshaller = new ArrayList<MzMLUnmarshaller>();
-
-                    //... Reading selected files ...//
-                    for (int iI = 0; iI < aFiles.length; iI++)
-                    {
-                        File xmlFile = new File(aFiles[iI].getPath());                        
-
-                        //... Unmarshall data using jzmzML API ...//
-                        unmarshalMzMLFile(model, iI, xmlFile);
-                    } //... For files ...//                    
+                    model.addColumn("Scans");   
                     
-                    setCursor(null); //... Turn off the wait cursor ...//                                        
+                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+                    final Thread thread = new Thread(new Runnable(){
+                        @Override
+                        public void run(){
+                            //... Progress Bar ...//
+                            progressBarDialog.setTitle("Reading mzML files");
+                            progressBarDialog.setVisible(true);
+                        }
+                    }, "ProgressBarDialog");
+                    thread.start();
+                    new Thread("LoadingThread"){
+                        @Override
+                        public void run(){
+                            alUnmarshaller = new ArrayList<MzMLUnmarshaller>();
+                            //... Reading selected files ...//
+                            for (int iI = 0; iI < aFiles.length; iI++)
+                            {
+                                File xmlFile = new File(aFiles[iI].getPath());                        
+
+                                //... Unmarshall data using jzmzML API ...//
+                                unmarshalMzMLFile(model, iI, xmlFile);
+                            } //... For files ...//
+                            
+                            progressBarDialog.setVisible(false);
+                            progressBarDialog.dispose();
+                        }
+                    }.start();  
+                    
+                    //... Project status pipeline ...//
+                    Icon loadRawFilesIcon = new ImageIcon(getClass().getClassLoader().getResource("images/fill.gif"));
+                    jlRawFilesStatus.setIcon(loadRawFilesIcon);
                 } //... From reading mzML files ...//
 
+                if (aFiles[0].getName().indexOf(".mgf") > 0) 
+                {                    
+                    //... Fill JTable ...//
+                    final DefaultTableModel model = new DefaultTableModel();
+                    jtRawFiles.setModel(model);
+                    model.addColumn("Name");
+                    model.addColumn("Path");
+                    model.addColumn("Type");
+                    model.addColumn("Version");
+    
+                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+                    final Thread thread = new Thread(new Runnable(){
+                        @Override
+                        public void run(){
+                            //... Progress Bar ...//
+                            progressBarDialog.setTitle("Reading MGF files");
+                            progressBarDialog.setVisible(true);
+                        }
+                    }, "ProgressBarDialog");
+                    thread.start();
+                    new Thread("LoadingThread"){
+                        @Override
+                        public void run(){
+                            //... Reading selected files ...//
+                            for (int iI = 0; iI < aFiles.length; iI++)
+                            {
+                                model.insertRow(model.getRowCount(), new Object[]{aFiles[iI].getName(), aFiles[iI].getPath(),
+                                                                                          "Mascot Generic File (.mgf)",
+                                                                                          "N/A"});
+                            } //... For files ...//    
+                            
+                            progressBarDialog.setVisible(false);
+                            progressBarDialog.dispose();
+                        }
+                    }.start();                                     
+                    
+                    //... Project status pipeline ...//
+                    Icon loadRawFilesIcon = new ImageIcon(getClass().getClassLoader().getResource("images/fill.gif"));
+                    jlRawFilesStatus.setIcon(loadRawFilesIcon);
+                } //... From reading mzML files ...//                
+                
                 if (aFiles[0].getName().indexOf(".xml") >0) 
                 {
-                    //... Setting progress bar ...// (To do: This needs to be set up in a thread)
-                    setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                     
                     //... Fill JTable ...//
-                    DefaultTableModel model = new DefaultTableModel();
+                    final DefaultTableModel model = new DefaultTableModel();
                     jtIdentFiles.setModel(model);
-                    model.addColumn("ID");
                     model.addColumn("Name");
+                    model.addColumn("Path");
+                    model.addColumn("Type");
                     model.addColumn("Version");
 
-                    //... Reading selected files ...//
-                    for (int iI = 0; iI < aFiles.length; iI++)
-                    {
-                        File xmlFile = new File(aFiles[iI].getPath());                        
+                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+                    final Thread thread = new Thread(new Runnable(){
+                        @Override
+                        public void run(){
+                            //... Progress Bar ...//
+                            progressBarDialog.setTitle("Reading MGF files");
+                            progressBarDialog.setVisible(true);
+                        }
+                    }, "ProgressBarDialog");
+                    thread.start();
+                    new Thread("LoadingThread"){
+                        @Override
+                        public void run(){
+                            //... Reading selected files ...//
+                            for (int iI = 0; iI < aFiles.length; iI++)
+                            {
+                                //... Unmarshall data using jzmzML API ...//
+                                model.insertRow(model.getRowCount(), new Object[]{aFiles[iI].getName(), aFiles[iI].getPath(), "Mascot XML file (.xml)", "N/A"});
+                            } //... For files ...// 
+                            
+                            progressBarDialog.setVisible(false);
+                            progressBarDialog.dispose();
+                        }
+                    }.start();                                                           
 
-                        //... Unmarshall data using jzmzML API ...//
-                        loadIdentFiles(model, aFiles[iI].getName(), aFiles[iI].getName(), "Mascot XML File", iI);
-                    } //... For files ...//                    
-                    
-                    setCursor(null); //... Turn off the wait cursor ...//                    
-                }                
-                
-                if (aFiles[0].getName().indexOf(".mzq") >0) 
-                {
-                    JOptionPane.showMessageDialog(this, "The module for .mzq files is under development.", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
-                }
+                    //... Project status pipeline ...//
+                    Icon loadIdentFilesIcon = new ImageIcon(getClass().getClassLoader().getResource("images/fill.gif"));
+                    jlIdentFilesStatus.setIcon(loadIdentFilesIcon);         
+                }                               
                 if (aFiles[0].getName().indexOf(".mzid") >0) 
                 {   
                     JOptionPane.showMessageDialog(this, "The module for .mzid files is under development.", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
                 }                
-                    
+                if (aFiles[0].getName().indexOf(".mzq") >0) 
+                {
+                    JOptionPane.showMessageDialog(this, "The module for .mzq files is under development.", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
+                }
 	    } //... From Files
             
         }  //... From If                
@@ -1225,7 +1741,7 @@ public class ProteoSuiteView extends JFrame {
 
     private void jmOpenRecentProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmOpenRecentProjectActionPerformed
         
-        jpbStatus.setIndeterminate(false);
+        
     }//GEN-LAST:event_jmOpenRecentProjectActionPerformed
 
     private void jmSaveProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmSaveProjectActionPerformed
@@ -1276,48 +1792,14 @@ public class ProteoSuiteView extends JFrame {
                 {
                     if (option == JOptionPane.NO_OPTION) 
                     {                    
-                        initProjectValues();
+                        initProjectValues();                        
                     }
                 }
             }
         }
     }//GEN-LAST:event_jmCloseProjectActionPerformed
 
-    private void jmRunQuantAnalysisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmRunQuantAnalysisActionPerformed
-        
-        //... Validate if we got some raw and identification files ...//
-        if (jtRawFiles.getRowCount()<=0)
-        {
-            JOptionPane.showMessageDialog(this, "Please select at least one raw file", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
-        } 
-        else if (jtIdentFiles.getRowCount()<=0)
-        {
-            JOptionPane.showMessageDialog(this, "Please select at least one identification file", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);            
-        }
-        else
-        {
-            final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
-            final Thread thread = new Thread(new Runnable(){
-                @Override
-                public void run(){
-                    progressBarDialog.setTitle("Running xTracker Core");
-                    progressBarDialog.setVisible(true);
-                }
-            }, "ProgressBarDialog");
-            thread.start();
-            new Thread("LoadingThread"){
-                @Override
-                public void run(){
-                    xTracker run = new xTracker("D:\\Data\\SILAC_Conf.xtc");
-                    progressBarDialog.setVisible(false);
-                    progressBarDialog.dispose();        
-                }
-            }.start();                    
-        }       
-    }//GEN-LAST:event_jmRunQuantAnalysisActionPerformed
-
     private void jbNewProjectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbNewProjectMouseClicked
-        
         this.jmNewProjectActionPerformed(null);
     }//GEN-LAST:event_jbNewProjectMouseClicked
 
@@ -1419,8 +1901,8 @@ public class ProteoSuiteView extends JFrame {
     private void jmMzML2MGFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmMzML2MGFActionPerformed
         
         //... Load MzML2MGF GUI ...//
-        MzML2MGFparams winParams = new MzML2MGFparams(this.sWorkspace);
-        final JFrame jfWinParams = new JFrame("Convert mzML files to MGF");
+        final JFrame jfWinParams = new JFrame("Convert mzML files to MGF");        
+        MzML2MGFView winParams = new MzML2MGFView(jfWinParams, this.sWorkspace);
         jfWinParams.setResizable(false);
         jfWinParams.setSize(400, 300);
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
@@ -1449,7 +1931,7 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jmMzML2MGFActionPerformed
 
     private void jmOptionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmOptionsActionPerformed
-        Configparams panelParams = new Configparams();
+        ProjectParamsView panelParams = new ProjectParamsView();
         final JFrame jfWinParams = new JFrame("Options");
         jfWinParams.setResizable(false);
         jfWinParams.setSize(580, 370);
@@ -1479,15 +1961,30 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jmOptionsActionPerformed
 
     private void jbShowChromatogramMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbShowChromatogramMouseClicked
-        this.showChromatogram(jtRawFiles.getSelectedRow(), jtRawFiles.getValueAt(jtRawFiles.getSelectedRow(), 1).toString());
+        //... Display chromatogram view ...//
+        if (jtRawFiles.getSelectedRow() < 0)
+        {
+            JOptionPane.showMessageDialog(this, "Select one raw file to display the chromatogram view", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else
+        {
+            showChromatogram(jtRawFiles.getSelectedRow(), jtRawFiles.getValueAt(jtRawFiles.getSelectedRow(), 1).toString());
+        }
     }//GEN-LAST:event_jbShowChromatogramMouseClicked
 
     private void jbShow2DMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbShow2DMouseClicked
-        this.show2DPlot(jtRawFiles.getSelectedRow(), jtRawFiles.getValueAt(jtRawFiles.getSelectedRow(), 1).toString());
+        //... Display 2D view ...//
+        if (jtRawFiles.getSelectedRow() < 0)
+        {
+            JOptionPane.showMessageDialog(this, "Select one raw file to display the 2D view", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else
+        {
+            this.show2DPlot(jtRawFiles.getSelectedRow(), jtRawFiles.getValueAt(jtRawFiles.getSelectedRow(), 1).toString());
+        }
     }//GEN-LAST:event_jbShow2DMouseClicked
 
     private void jmSubmitPRIDEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmSubmitPRIDEActionPerformed
-        // writeXTrackerConfigFiles();
         JOptionPane.showMessageDialog(this, "The module for submitting data into PRIDE is under development.", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jmSubmitPRIDEActionPerformed
 
@@ -1550,59 +2047,59 @@ public class ProteoSuiteView extends JFrame {
         jfQuantParams.pack();
         jfQuantParams.setVisible(true);        
     }//GEN-LAST:event_jmEditQuantActionPerformed
-
+    /*
+     * Description: This method allows the user to read our online documentation of proteosuite consisting of tutorials and user manuals.     
+     */
     private void jmHelpContentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmHelpContentActionPerformed
-	String url = "http://www.proteosuite.org/?q=tutorials";
-	String os = System.getProperty("os.name").toLowerCase();
-        Runtime rt = Runtime.getRuntime();
-	try{ 
-	    if (os.indexOf( "win" ) >= 0) {
-	        rt.exec( "rundll32 url.dll,FileProtocolHandler " + url);
- 
-	    } else if (os.indexOf( "mac" ) >= 0) {
-	        rt.exec( "open " + url);
-            } else if (os.indexOf( "nix") >=0 || os.indexOf( "nux") >=0) {
-	        String[] browsers = {"firefox","mozilla","konqueror","opera","links","lynx"};
- 
-	        StringBuilder cmd = new StringBuilder();
-	        for (int i=0; i<browsers.length; i++)
-	            cmd.append( (i==0  ? "" : " || " ) + browsers[i] +" \"" + url + "\" ");
-	        rt.exec(new String[] { "sh", "-c", cmd.toString() });
-           } else {
-                return;
-           }
-       }catch (Exception e){
-	    return;
-       }
+	OpenURL url = new OpenURL("http://www.proteosuite.org/?q=tutorials");
     }//GEN-LAST:event_jmHelpContentActionPerformed
-    
-    public class threadProgBar implements Runnable{
-        
-        private String sFile="";
-        public threadProgBar(String sFile){
-            this.sFile = sFile;
-        }        
-        public void run(){            
-            jpbStatus.setValue(0);            
-            jpbStatus.setStringPainted(true);            
-            for (int i=0; i<=100; i++){ //Progressively increment variable i
-                jpbStatus.setString(i+"%");
-                jpbStatus.setValue(i); //Set value
-                //jpbStatus.repaint(); 
-                try{Thread.sleep(50);} //Sleep 50 milliseconds
-                catch (InterruptedException err)
-                {}
-            }
-            jpbStatus.setString("Completed");
-            try{Thread.sleep(500);} 
-            catch (InterruptedException err)
-            {}
-            jpbStatus.setValue(0);            
-            jpbStatus.setStringPainted(false);                        
-            //jpbStatus.repaint();
+
+    private void jbRunQuantAnalysisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbRunQuantAnalysisMouseClicked
+        //... Call the quantitation method ...//
+        jmRunQuantAnalysisActionPerformed(null);
+    }//GEN-LAST:event_jbRunQuantAnalysisMouseClicked
+
+    private void jmRunQuantAnalysisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmRunQuantAnalysisActionPerformed
+        //... Validate if we got some raw and identification files ...//
+        if (jtRawFiles.getRowCount()<=0)
+        {
+            JOptionPane.showMessageDialog(this, "Please select at least one raw file. (Use the import file option in the menu).", "Error", JOptionPane.ERROR_MESSAGE);
+        } 
+        else if (jtIdentFiles.getRowCount()<=0)
+        {
+            JOptionPane.showMessageDialog(this, "Please select at least one identification file. (Use the import file option in the menu).", "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
-        
+        else if (jcbTechnique.getSelectedItem().equals("Select technique"))
+        {
+            JOptionPane.showMessageDialog(this, "Please specify the technique used in your pipeline (e.g. iTRAQ, SILAC, 15N, etc.)", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
+            //... In this thread, we call xTracker module based on the parameter files we generated using proteosuite ...//
+            final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+            final Thread thread = new Thread(new Runnable(){
+                @Override
+                public void run(){
+                    //... Progress Bar ...//
+                    progressBarDialog.setTitle("Running Quantitation Analysis via xTracker");
+                    progressBarDialog.setVisible(true);
+                }
+            }, "ProgressBarDialog");
+            thread.start();
+            new Thread("LoadingThread"){
+                @Override
+                public void run(){
+                    //... Generate config files for xTracker ...//
+                    writeXTrackerConfigFiles();
+                    //... Run xTracker ...///
+                    xTracker run = new xTracker(sWorkspace + "\\" + jcbTechnique.getSelectedItem().toString() + "_Conf.xtc");
+                    progressBarDialog.setVisible(false);
+                    progressBarDialog.dispose();
+                }
+            }.start();                    
+        }       
+    }//GEN-LAST:event_jmRunQuantAnalysisActionPerformed
+         
     private void showSpectrum(int iIndex, String sID) {                                             
                   
         jtpViewer.setSelectedIndex(0);
@@ -1671,6 +2168,7 @@ public class ProteoSuiteView extends JFrame {
            BinaryDataArray intenBinaryDataArray = (BinaryDataArray) bdal.get(1);
            Number[] intenNumbers = intenBinaryDataArray.getBinaryDataAsNumberArray();
            
+           double dSumIntensities = 0.0;
            for (int iI = 0; iI < mzNumbers.length; iI++)
            {
                if (intenNumbers[iI].doubleValue() > 0)
@@ -1679,9 +2177,15 @@ public class ProteoSuiteView extends JFrame {
                         iI,
                         String.format("%.4f", mzNumbers[iI].doubleValue()),
                         String.format("%.1f", intenNumbers[iI].doubleValue())
-                        });
+                        });      
+                    dSumIntensities = dSumIntensities + intenNumbers[iI].doubleValue();
                }
-           }                  
+           }               
+            model.insertRow(model.getRowCount(), new Object[]{
+                "",
+                "Sum intensities",
+                String.format("%.1f", dSumIntensities)
+                });           
         }
         catch (MzMLUnmarshallerException ume)
         {
@@ -1732,22 +2236,16 @@ public class ProteoSuiteView extends JFrame {
                {
                    intensities[iI] = intenNumbers[iI].doubleValue();
                }
+               jdpTIC.removeAll();
+               JInternalFrame jifViewChromatogram = getInternalFrame();            
                ChromatogramPanel panel = new ChromatogramPanel(rt, intensities, "RT (mins)", "Intensity (counts)");
-               JInternalFrame internal = new JInternalFrame("Chromatogram <" + sTitle + ">");
+               jifViewChromatogram.setTitle("Chromatogram <" + sTitle + ">");
                panel.setSize(new java.awt.Dimension(600, 400));
                panel.setPreferredSize(new java.awt.Dimension(600, 400));
-               panel.setMaxPadding(50);
-               Icon icon = new ImageIcon(getClass().getResource("/images/icon.gif"));
-               internal.setFrameIcon(icon);
-               internal.setResizable(true);
-               internal.setMaximizable(true);
-               internal.setClosable(true);
-               internal.setIconifiable(true);
-               
-               internal.add(panel);
-               internal.pack();
-               internal.setVisible(true);
-               jpTIC.add(internal);
+               jifViewChromatogram.add(panel);
+               jdpTIC.add(jifViewChromatogram);
+               jdpTIC.revalidate();
+               jdpTIC.repaint();
             }
             catch (MzMLUnmarshallerException ume)
             {
@@ -1769,8 +2267,10 @@ public class ProteoSuiteView extends JFrame {
             MzMLUnmarshaller unmarshaller = alUnmarshaller.get(iIndex);            
 
             MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
-            int iK = 0;
-            while ((spectrumIterator.hasNext()))
+            //int iK = 0;
+            String unitRT = "";
+            //while ((spectrumIterator.hasNext())&&(iK<1000))
+            while (spectrumIterator.hasNext())
             {
                 Spectrum spectrumobj = spectrumIterator.next();
                 String spectrumid = spectrumobj.getId();
@@ -1785,6 +2285,17 @@ public class ProteoSuiteView extends JFrame {
                        if (lCVParam.getAccession().equals("MS:1000016"))
                        {
                            rt = Double.parseDouble(lCVParam.getValue().trim());
+                           
+                           unitRT = lCVParam.getUnitAccession().trim();
+                           if (unitRT.equals("UO:0000031"))
+                           {
+                               rt = Float.parseFloat(lCVParam.getValue().trim());
+                               rt = rt * 60;
+                           }
+                           else
+                           {
+                               rt = Float.parseFloat(lCVParam.getValue().trim());
+                           }                           
                        }
                    }
 
@@ -1812,12 +2323,22 @@ public class ProteoSuiteView extends JFrame {
                 {
                     System.out.println(ume.getMessage());
                 }
-                iK++;
+                //iK++;
             }
             TwoDPlot demo2 = new TwoDPlot(sTitle, mz, intensities, art);
             jp2D.add(demo2);
             demo2.pack();
             demo2.setVisible(true);
+            
+//            jdp2D.removeAll();
+//            JInternalFrame jifView2D = getInternalFrame();            
+//            TwoDPlot panel = new TwoDPlot(sTitle, mz, intensities, art);
+//            panel.setSize(new java.awt.Dimension(600, 400));
+//            panel.setPreferredSize(new java.awt.Dimension(600, 400));
+//            jifView2D.add(panel);
+//            jdp2D.add(jifView2D);
+//            jdp2D.revalidate();
+//            jdp2D.repaint();
     } 
     private boolean saveProject() 
     {
@@ -1888,10 +2409,11 @@ public class ProteoSuiteView extends JFrame {
             for (int iI=0; iI<jtRawFiles.getRowCount(); iI++)
             {
                 out.write("         <rawFile ");
-                out.write(" id=\"" + jtRawFiles.getValueAt(iI, 0) + "\"");
-                out.write(" name=\"" + jtRawFiles.getValueAt(iI, 1) + "\"");
-                out.write(" version=\"" + jtRawFiles.getValueAt(iI, 2) + "\"");
-                out.write(" spectra=\"" + jtRawFiles.getValueAt(iI, 3) + "\" >");
+                out.write(" name=\"" + jtRawFiles.getValueAt(iI, 0) + "\"");
+                out.write(" path=\"" + jtRawFiles.getValueAt(iI, 1) + "\"");
+                out.write(" type=\"" + jtRawFiles.getValueAt(iI, 2) + "\"");
+                out.write(" version=\"" + jtRawFiles.getValueAt(iI, 3) + "\"");
+                out.write(" scans=\"" + jtRawFiles.getValueAt(iI, 4) + "\" >");
                 out.newLine();                
                 out.write("         </rawFile>");
                 out.newLine();
@@ -1929,7 +2451,7 @@ public class ProteoSuiteView extends JFrame {
         model.addColumn("Total ion current");
         model.addColumn("Lowest obs m/z");
         model.addColumn("Highest obs m/z");
-        model.addColumn("Ret Time (sec)");
+        model.addColumn("Ret Time (sec-min)");
         model.addColumn("Scan Win Min");
         model.addColumn("Scan Win Max");     
         String sOutput="";
@@ -2005,9 +2527,12 @@ public class ProteoSuiteView extends JFrame {
         float highestObsMZ = 0;
         String unitRT = "";
         float rt = 0;
+        float rtMin = 0;
         String scanWinMin = "";
         String scanWinMax = "";
         int iCount = 1;
+        double dScansMS1 = 0;
+        double dScansMS2 = 0;
         while (spectrumIterator.hasNext())
         {
             Spectrum spectrum = spectrumIterator.next();
@@ -2019,6 +2544,14 @@ public class ProteoSuiteView extends JFrame {
                if (lCVParam.getAccession().equals("MS:1000511")) 
                {
                    msLevel = lCVParam.getValue().trim();
+                   if (msLevel.equals("1"))
+                   {
+                       dScansMS1++;
+                   }
+                   else
+                   {
+                       dScansMS2++;
+                   }
                }
                if (lCVParam.getAccession().equals("MS:1000504")) 
                {
@@ -2050,11 +2583,14 @@ public class ProteoSuiteView extends JFrame {
                     unitRT = lCVParam.getUnitAccession().trim();
                     if (unitRT.equals("UO:0000031"))
                     {
-                        rt = Float.parseFloat(lCVParam.getValue().trim()) * 60;
+                        rt = Float.parseFloat(lCVParam.getValue().trim());
+                        rtMin = rt;
+                        rt = rt * 60;
                     }
                     else
                     {
                         rt = Float.parseFloat(lCVParam.getValue().trim());
+                        rtMin = rt/60;
                     }
                 }
             }
@@ -2081,12 +2617,26 @@ public class ProteoSuiteView extends JFrame {
                 String.format("%,.2f", totalIonCurrent),
                 String.format("%.2f", lowestObsMZ),
                 String.format("%.2f", highestObsMZ),
-                String.format("%.2f", rt),
+                String.format("%.2f-%.4f", rt, rtMin),
                 scanWinMin,
                 scanWinMax
                 });       
             iCount++;
         }
+        model.insertRow(model.getRowCount(), new Object[]{
+            "",
+            "", 
+            "Total MS1",
+            String.format("%.0f", dScansMS1),
+            "Total MS2",
+            String.format("%.0f", dScansMS2),
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+            });
         this.jtMzML.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer());
         
         for (int i = 0; i < jtMzML.getModel().getRowCount(); i++) {
@@ -2108,51 +2658,55 @@ public class ProteoSuiteView extends JFrame {
             return lbl;
         }
     }
-
-    /**
-     * Initialise project variables (Clean build).
-     *
-     */    
+    //... Initialise project settings (all modules) ...//
     private void initProjectValues() 
     {
-        //... Project settings ...//
-        initSettings();                  
-        initTables();
+        //... Loading values from config file ...//
+        initSettings();                     
+        initProjectStatus();
+        
+        //... Initialising components ...//
+        initTables();                       
         initTextAreas();
         initViews();
-    }
-     /**
-     * Initialise project settings (configuration file).
-     *
-     */    
+    }     
+    //... Initialise project settings (configuration file) ...//
     private void initSettings() 
     {
         //... Validate if config file exists ...//
         boolean exists = (new File("config.xml")).exists();
         if (exists)
         {
-            try{            
-                DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-                Document doc = docBuilder.parse (new File("config.xml"));
+            //... Read files using SAX (get workspace) ...//
+            try {
+                SAXParserFactory factory = SAXParserFactory.newInstance();
+                SAXParser saxParser = factory.newSAXParser();
 
-                doc.getDocumentElement().normalize();
-                NodeList projectList = doc.getElementsByTagName("ProteoSuiteApp");                
-                Node projectNode = projectList.item(0);
-                Element projectElement = (Element)projectNode;
-                this.sProjectName = "New";
-                this.sWorkspace = projectElement.getAttribute("workspace").toString();
-                this.bProjectModified = false;
-                
-            }catch (SAXParseException err) {
-                System.out.println ("** Parsing error" + ", line " + err.getLineNumber () + ", uri " + err.getSystemId ());
-                System.out.println(" " + err.getMessage ());
-            }catch (SAXException e) {
-                Exception x = e.getException ();
-                ((x == null) ? e : x).printStackTrace ();
-            }catch (Throwable t) {
-                t.printStackTrace ();
-            }                
+                DefaultHandler handler = new DefaultHandler() 
+                {                   
+                    boolean bWorkspace = false;
+                    
+                    @Override
+                    public void startElement(String uri, String localName, String qName, Attributes attributes)
+                    throws SAXException {
+                        if (qName.equalsIgnoreCase("workspace")) {
+                            bWorkspace = true;
+                        }
+                    }
+                    @Override
+                    public void characters(char ch[], int start, int length)
+                    throws SAXException {
+                        if (bWorkspace) {
+                            bWorkspace = false;
+                            sWorkspace = new String(ch, start, length);                            
+                        }
+                    }
+                };
+                saxParser.parse("config.xml", handler);
+
+            } catch (Exception e) {
+              e.printStackTrace();
+            }         
         }
         else
         {            
@@ -2165,41 +2719,75 @@ public class ProteoSuiteView extends JFrame {
             JOptionPane.showMessageDialog(this, sMessage, "Warning", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-    
-    /**
-     * Initialise table values.
-     *
-     */     
+    //... Initialise project status ...//
+    private void initProjectStatus()
+    {    
+        //... Project status pipeline ...//
+        Icon loadRawFilesIcon = new ImageIcon(getClass().getClassLoader().getResource("images/empty.gif"));
+        jlRawFilesStatus.setIcon(loadRawFilesIcon);
+        jlIdentFilesStatus.setIcon(loadRawFilesIcon);
+        jlQuantFilesStatus.setIcon(loadRawFilesIcon);
+        jcbTechnique.setSelectedIndex(0);
+    }    
+    //... Initialise table values ...//
     private void initTables()
     {
-        DefaultTableModel model = new DefaultTableModel();
-        DefaultTableModel model2 = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel();        
         jtRawFiles.setModel(model);
-        model.addColumn("ID");
         model.addColumn("Name");
+        model.addColumn("Path");        
+        model.addColumn("Type");
         model.addColumn("Version");
-        model.addColumn("Spectra");
+        model.addColumn("Scans");
         
-        jtMzML.setModel(model2);     
-        model2.addColumn("Index");
-        model2.addColumn("ID");
-        model2.addColumn("MS");
-        model2.addColumn("Base peak m/z");
-        model2.addColumn("Base peak int");
-        model2.addColumn("Total ion current");
-        model2.addColumn("Lowest obs m/z");
-        model2.addColumn("Highest obs m/z");
-        model2.addColumn("Ret Time (sec)");
-        model2.addColumn("Scan Win Min");
-        model2.addColumn("Scan Win Max");             
+        DefaultTableModel model2 = new DefaultTableModel();        
+        jtIdentFiles.setModel(model2);
+        model2.addColumn("Name");      
+        model2.addColumn("Path");        
+        model2.addColumn("Type");
+        model2.addColumn("Version");
+        
+        DefaultTableModel model3 = new DefaultTableModel();
+        jtQuantFiles.setModel(model3);
+        model3.addColumn("Name");
+        model3.addColumn("Path");
+        model3.addColumn("Type");
+        model3.addColumn("Version");
+        
+        DefaultTableModel model4 = new DefaultTableModel();        
+        jtRawData.setModel(model4);
+        model4.addColumn("Index");
+        model4.addColumn("m/z");
+        model4.addColumn("Intensity");
+        
+        DefaultTableModel model5 = new DefaultTableModel();
+        jtMzML.setModel(model5);     
+        model5.addColumn("Index");
+        model5.addColumn("ID");
+        model5.addColumn("MS");
+        model5.addColumn("Base peak m/z");
+        model5.addColumn("Base peak int");
+        model5.addColumn("Total ion current");
+        model5.addColumn("Lowest obs m/z");
+        model5.addColumn("Highest obs m/z");
+        model5.addColumn("Ret Time (sec-min)");
+        model5.addColumn("Scan Win Min");
+        model5.addColumn("Scan Win Max");
     }
+    //... Initialise Text Areas ...//
     private void initTextAreas()
     {
+        jtaLog.setText("");
         jtaMzML.setText("");
-    }
+        jtaMzQuantML.setText("");               
+    }    
+    //... Initialise Visualisation Windows ...//
     private void initViews()
     {
         jdpMS.removeAll();
+        jdpTIC.removeAll();
+        jdp2D.removeAll();
+        jdp3D.removeAll();
     }        
     private boolean openProject() 
     {
@@ -2239,8 +2827,9 @@ public class ProteoSuiteView extends JFrame {
                     jtRawFiles.setModel(model);
                     model.addColumn("ID");
                     model.addColumn("Name");
+                    model.addColumn("Type");
                     model.addColumn("Version");
-                    model.addColumn("Spectra");                   
+                    model.addColumn("Scans");                   
                     
                     for (int iI=0; iI<jtRawFiles.getRowCount(); iI++)
                     {                    
@@ -2284,11 +2873,11 @@ public class ProteoSuiteView extends JFrame {
             //... Fill JTable ...//
             DefaultTableModel model = new DefaultTableModel();
             jtRawFiles.setModel(model);
-            model.addColumn("ID");
             model.addColumn("Name");
+            model.addColumn("Path");
+            model.addColumn("Type");
             model.addColumn("Version");                
-            model.addColumn("Spectra");
-
+            model.addColumn("Scans");
 
             //... Reading raw files ...//
             NodeList rawFiles = doc.getElementsByTagName("rawFile");
@@ -2302,12 +2891,11 @@ public class ProteoSuiteView extends JFrame {
                 {
                     Element rawFileElement = (Element)rawFileNode;
                     
-                    model.insertRow(model.getRowCount(), new Object[]{rawFileElement.getAttribute("id").toString(),
-                                                                      rawFileElement.getAttribute("name").toString(),
+                    model.insertRow(model.getRowCount(), new Object[]{rawFileElement.getAttribute("name").toString(),
+                                                                      rawFileElement.getAttribute("path").toString(),
+                                                                      rawFileElement.getAttribute("type").toString(),
                                                                       rawFileElement.getAttribute("version").toString(),
-                                                                      rawFileElement.getAttribute("accession").toString(),
-                                                                      rawFileElement.getAttribute("cvs").toString(),
-                                                                      rawFileElement.getAttribute("spectra").toString()});
+                                                                      rawFileElement.getAttribute("scans").toString()});
                 }
             }
         }catch (SAXParseException err) {
@@ -2395,28 +2983,26 @@ public class ProteoSuiteView extends JFrame {
                 iK++;
             }
             model.insertRow(model.getRowCount(), new Object[]{unmarshaller.getMzMLId(),
-                                                                      xmlFile.getName(),
+                                                                      xmlFile.getPath(),
                                                                       unmarshaller.getMzMLVersion(),
                                                                       spectra});            
     }
-    private void loadIdentFiles(DefaultTableModel model, String sID, String sFileName, String sVersion, int iIndex)
-    {
-            model.insertRow(model.getRowCount(), new Object[]{sID, sFileName, sVersion});  
-    }    
+    //... Writing the XTrackerConfigFile module ...//
     private void writeXTrackerConfigFiles() 
-    {
-        String sExperiment = "SILAC";
-        writeXTrackerMain(sExperiment);
-        writeXTrackerRaw(sExperiment);
-        writeXTrackerIdent(sExperiment);
-        writeXTrackerPeakSel(sExperiment);
-        writeXTrackerOutput(sExperiment);
-        
-        JOptionPane.showMessageDialog(this, "xTracker files generated.", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
+    {       
+        //... xTracker consists of 5 different plugins (read more on www.x-tracker.info) ...//
+        writeXTrackerMain(jcbTechnique.getSelectedItem().toString());
+        writeXTrackerRaw(jcbTechnique.getSelectedItem().toString());
+        writeXTrackerIdent(jcbTechnique.getSelectedItem().toString());
+        writeXTrackerPeakSel(jcbTechnique.getSelectedItem().toString());
+        writeXTrackerQuantSel(jcbTechnique.getSelectedItem().toString());
+        writeXTrackerOutput(jcbTechnique.getSelectedItem().toString());
+        System.exit(0);
     }
+    //... Write xTrackerMain based on the technique ...//
     private void writeXTrackerMain(String sExperiment) 
     {
-        String sFileName = sExperiment + "_Conf.xtc";
+        String sFileName = sWorkspace + "\\" + sExperiment + "_Conf.xtc";
         try{
             FileWriter fstream = new FileWriter(sFileName);
             BufferedWriter out = new BufferedWriter(fstream);            
@@ -2424,51 +3010,58 @@ public class ProteoSuiteView extends JFrame {
             out.newLine();
             out.write("<!--");
             out.newLine();
-            out.write(" This XML file specifies the set of plugins used in this specific run of the pipeline X-Tracker together with  all the corresponding parameters.");
+            out.write("    *** FILE GENERATED VIA PROTEOSUITE ***");            
             out.newLine();
-            out.write(" For each plugin, if needed, parameters can be specified in turn as xml files specifying particular inputs.");
+            out.write("    This XML file specifies the set of plugins and the corresponding parameters used for this pipeline in X-Tracker.");
+            out.newLine();
+            out.write("    For each plugin, if needed, parameters can be specified as xml files.");
             out.newLine();
             out.write("-->");
             out.newLine();
             out.write("<xTrackerPipeline xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins\\xtracker.xsd\">");
             out.newLine();
-            out.write(" <!--");            
+            out.write("    <!--");            
             out.newLine();
-            out.write(" Specifies which Plugins to use as well as the parameters those plugins will work on.");
+            out.write("    The different tags MUST BE:");            
             out.newLine();
-            out.write(" There different tags MUST BE:");            
+            out.write("        rawdata_loadplugin");            
             out.newLine();
-            out.write("     rawdata_loadplugin");            
+            out.write("        identdata_loadplugin");
             out.newLine();
-            out.write("     identdata_loadplugin");
+            out.write("        peakselplugin");
             out.newLine();
-            out.write("     peakselplugin");
+            out.write("        quantplugin");
             out.newLine();
-            out.write("     quantplugin");
+            out.write("        outplugin");
             out.newLine();
-            out.write("     outplugin");
+            out.write("    and each one of them has to be present EXACTLY once within the whole xml file.");
             out.newLine();
-            out.write(" and each one of them has to be present EXACTLY once within the whole xml file.");
+            out.write("    The attribute \"filename\" will point to the .jar plugin (which needs to be placed in the \"Plugins\" folder)");
             out.newLine();
-            out.write(" The attribute \"filename\" will point to the .jar plugin (which has to be put in the Plugins folder)");
+            out.write("    and the configuration parameter file needs to be located within the tags");
             out.newLine();
-            out.write(" and the parameter file is the content of the tag");
-            out.newLine();
-            out.write("     (e.g. <peakselplugin filename=\"plugin2.jar\">15n14n.xml</peakselplugin>).");
+            out.write("        (e.g. <peakselplugin filename=\"plugin2.jar\">15n14n.xml</peakselplugin>)");
             out.newLine();
             out.write(" -->");
             out.newLine();
-            out.write("<rawdata_loadplugin filename=\"loadRawMzML111.jar\">D:/Data/SILAC_LoadRawDataParams.xtp</rawdata_loadplugin>");
+            
+            //... Based on the technique, select the plugins that are available to perform the quantitation ...//
+            String[] sPipeline;
+            sPipeline = new String[5];            
+            sPipeline = getPlugins(sExperiment);
+            out.write("    <rawdata_loadplugin filename=\"" + sPipeline[0] + ".jar\">" + sWorkspace + "\\" + jcbTechnique.getSelectedItem().toString() + "_LoadRawDataParams.xtp</rawdata_loadplugin>");
             out.newLine();
-            out.write("<identdata_loadplugin filename=\"loadMascotIdent111.jar\">D:/Data/SILAC_LoadIdentDataParams.xtp</identdata_loadplugin>");
+            out.write("    <identdata_loadplugin filename=\"" + sPipeline[1] + ".jar\">" + sWorkspace + "\\" + jcbTechnique.getSelectedItem().toString() + "_LoadIdentDataParams.xtp</identdata_loadplugin>");
             out.newLine();
-            out.write("<peakselplugin filename=\"metLabelingPeakSel.jar\">D:/Data/SILAC_PeakSel.xtp</peakselplugin>");
+            out.write("    <peakselplugin filename=\"" + sPipeline[2] + ".jar\">" + sWorkspace + "\\" + jcbTechnique.getSelectedItem().toString() + "_PeakSelParams.xtp</peakselplugin>");
             out.newLine();
-            out.write("<quantplugin filename=\"LcMsAreasSimpson.jar\"></quantplugin>");
+            out.write("    <quantplugin filename=\"" + sPipeline[3] + ".jar\">" + sWorkspace + "\\" + jcbTechnique.getSelectedItem().toString() + "_QuantParams.xtp</quantplugin>");
             out.newLine();
-            out.write("<outplugin filename=\"displayTable.jar\">D:/Data/SILAC_DisplayTableParam.xtp</outplugin>");
+            out.write("    <outplugin filename=\"" + sPipeline[4] + ".jar\">" + sWorkspace + "\\" + jcbTechnique.getSelectedItem().toString() + "_OutputParams.xtp</outplugin>");
             out.newLine();
+            
             out.write("</xTrackerPipeline>");
+            out.newLine();            
             out.close();
         }
         catch (Exception e)
@@ -2476,32 +3069,155 @@ public class ProteoSuiteView extends JFrame {
             System.err.println("Error: " + e.getMessage());
         }             
     }
+    //... This method gets the plugins based on the selected pipeline ...//
+    private String[] getPlugins(String sExperiment)
+    {
+        final List<List<String>> alPlugins = new ArrayList<List<String>>();
+        String[] sPipeline;
+        sPipeline = new String[5];
+        
+        //... Read files using SAX (Creates an Array of ArrayList) ...//
+        try {
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            SAXParser saxParser = factory.newSAXParser();
+
+            DefaultHandler handler = new DefaultHandler() 
+            {
+                boolean bpipelineTechnique = false;
+                boolean bpipelineLoadRawFiles = false;
+                boolean bpipelineLoadIdentFiles = false;
+                boolean bpipelinePeakSelection = false;
+                boolean bpipelineQuantitation = false;
+                boolean bpipelineOutput = false;                    
+                boolean bWorkspace = false;
+
+                String spipelineTechnique = "";
+                String spipelineLoadRawFiles = "";
+                String spipelineLoadIdentFiles = "";
+                String spipelinePeakSelection = "";
+                String spipelineQuantitation = "";
+                String spipelineOutput = "";
+                String sWorkspace = "";
+
+                @Override
+                public void startElement(String uri, String localName, String qName, Attributes attributes)
+                throws SAXException {
+                    if (qName.equalsIgnoreCase("workspace")) {
+                        bWorkspace = true;
+                    }
+                    if (qName.equalsIgnoreCase("pipelineTechnique")) {
+                        bpipelineTechnique = true;
+                    }
+                    if (qName.equalsIgnoreCase("pipelineLoadRawFiles")) {
+                        bpipelineLoadRawFiles = true;
+                    }
+                    if (qName.equalsIgnoreCase("pipelineLoadIdentFiles")) {
+                        bpipelineLoadIdentFiles = true;
+                    }
+                    if (qName.equalsIgnoreCase("pipelinePeakSelection")) {
+                        bpipelinePeakSelection = true;
+                    }
+                    if (qName.equalsIgnoreCase("pipelineQuantitation")) {
+                        bpipelineQuantitation = true;
+                    }
+                    if (qName.equalsIgnoreCase("pipelineOutput")) {
+                        bpipelineOutput = true;
+                    }
+                }
+                @Override
+                public void characters(char ch[], int start, int length)
+                throws SAXException {
+                    if (bWorkspace) {
+                        bWorkspace = false;
+                        sWorkspace = new String(ch, start, length);
+                    }                        
+                    if (bpipelineTechnique) {
+                        bpipelineTechnique = false;
+                        spipelineTechnique = new String(ch, start, length);
+                    }
+                    if (bpipelineLoadRawFiles) {
+                        bpipelineLoadRawFiles = false;
+                        spipelineLoadRawFiles = new String(ch, start, length);
+                    }
+                    if (bpipelineLoadIdentFiles) {
+                        bpipelineLoadIdentFiles = false;
+                        spipelineLoadIdentFiles = new String(ch, start, length);
+                    }
+                    if (bpipelinePeakSelection) {
+                        bpipelinePeakSelection = false;
+                        spipelinePeakSelection = new String(ch, start, length);
+                    }
+                    if (bpipelineQuantitation) {
+                        bpipelineQuantitation = false;
+                        spipelineQuantitation = new String(ch, start, length);
+                    }
+                    if (bpipelineOutput) {
+                        bpipelineOutput = false;
+                        spipelineOutput = new String(ch, start, length);
+                        alPlugins.add(Arrays.asList(spipelineTechnique, spipelineLoadRawFiles, spipelineLoadIdentFiles, spipelinePeakSelection, spipelineQuantitation, spipelineOutput));        
+                    }
+                }
+            };
+            saxParser.parse("config.xml", handler);
+
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+        
+        //... Using the array list we need to find the pipeline and corresponding plugins ...//        
+        for (int iI=0; iI < alPlugins.size(); iI++)
+        {
+            List<String> sublist = alPlugins.get(iI);            
+            String[] arrayOfStrings = (String[]) sublist.toArray();
+            if (arrayOfStrings[0].toString().equals(sExperiment))
+            {
+                sPipeline[0] = arrayOfStrings[1].toString();
+                sPipeline[1] = arrayOfStrings[2].toString();
+                sPipeline[2] = arrayOfStrings[3].toString();
+                sPipeline[3] = arrayOfStrings[4].toString();
+                sPipeline[4] = arrayOfStrings[5].toString();
+                break;
+            }
+        }
+        return sPipeline;
+    }
+    //... Write the raw files selected for quantitation ...//
     private void writeXTrackerRaw(String sExperiment) 
     {
-        String sFileName = sExperiment + "_LoadRawDataParams.xtp";
+        String sFileName = sWorkspace + "\\" + sExperiment + "_LoadRawDataParams.xtp";
         try{
             FileWriter fstream = new FileWriter(sFileName);
-            BufferedWriter out = new BufferedWriter(fstream);            
+            BufferedWriter out = new BufferedWriter(fstream);
             out.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
             out.newLine();
+            out.write("<!--");
+            out.newLine();
+            out.write("    *** FILE GENERATED VIA PROTEOSUITE ***");            
+            out.newLine();            
+            out.write("    This XML file specifies all raw files needed for the analysis.");
+            out.newLine();
+            out.write("-->");
+            out.newLine();
+ 
             out.write("<param xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins\\loadRawMzML.xsd\">");
             out.newLine();
             for (int iI=0; iI<jtRawFiles.getRowCount(); iI++)
             {
-                out.write(" <datafile>D:/Data/SILACData5000/" + jtRawFiles.getValueAt(iI, 1).toString() + "</datafile>");
+                out.write("    <datafile>" + jtRawFiles.getValueAt(iI, 1).toString() + "</datafile>");
                 out.newLine();
             }
             out.write("</param>");
+            out.newLine();
             out.close();
         }
         catch (Exception e)
         {
             System.err.println("Error: " + e.getMessage());
-        }             
+        }
     }
     private void writeXTrackerIdent(String sExperiment) 
     {
-        String sFileName = sExperiment + "_LoadIdentDataParams.xtp";
+        String sFileName = sWorkspace + "\\" + sExperiment + "_LoadIdentDataParams.xtp";
         try{
             FileWriter fstream = new FileWriter(sFileName);
             BufferedWriter out = new BufferedWriter(fstream);            
@@ -2509,48 +3225,47 @@ public class ProteoSuiteView extends JFrame {
             out.newLine();
             out.write("<!-- ");
             out.newLine();
-            out.write("This is the Load_raw and load_identification files parameters file. ");
+            out.write("    *** FILE GENERATED VIA PROTEOSUITE ***");            
             out.newLine();
-            out.write("It specifies a list of raw data files together with their identification files.");
+            out.write("    This XML file specifies a list of raw data files with their corresponding identification files.");
             out.newLine();
-            out.write("Also, modifications and mass shift induced by them are specified here since mascot does not report fixed modification mass shifts.");
+            out.write("    Also, modifications and mass shifts are specified here in case mascot does not report fixed modification mass shifts.");
             out.newLine();
-            out.write("Finally it specifies the threshold on \"pep_delta\" field to accept identifications. ");
+            out.write("    Finally, the minimum threshold use for the search engine is specified in the pop_score_threshold tag. ");
             out.newLine();
             out.write("-->");
             out.newLine();
             out.write("<param xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins\\loadMascotIdent.xsd\">");
             out.newLine();
-            out.write(" <!--");
             out.newLine();
-            out.write(" Specifies the rawdata file names and the corresponding identification names. Note that paths are relative to the xTracker folder.");
-            out.newLine();
-            out.write(" -->");
-            out.newLine();
-            out.write(" <inputFiles>");
+            out.write("    <inputFiles>");
             out.newLine();
             for (int iI=0; iI<jtIdentFiles.getRowCount(); iI++)
             {
-                out.write("     <datafile identification_file=\"D:/Data/SILACData5000/" + jtIdentFiles.getValueAt(iI, 1) + "\">D:/Data/SILACData200/" + jtRawFiles.getValueAt(iI, 1) + "</datafile>");
-                out.newLine();   
+                out.write("        <datafile identification_file=\"" + jtIdentFiles.getValueAt(iI, 1) + "\">" + jtRawFiles.getValueAt(iI, 1) + "</datafile>");
+                out.newLine();
             }           
-            out.write(" </inputFiles>");
+            out.write("    </inputFiles>");
             out.newLine();
             out.write("<!-- Modifications (including amino-acid affected) and mass shifts considered in the search are reported below.");
             out.newLine();
-            out.write(" NOTE THAT MONOISOTOPIC MASSES ARE USED IN THIS FILE!!!");
+            out.write("    NOTE THAT MONOISOTOPIC MASSES ARE USED IN THIS FILE!!!");
             out.newLine();
             out.write("-->");
             out.newLine();
-            out.write("<modificationData>");
+            out.write("    <modificationData>");
+            out.newLine();            
+            out.write("        <modification delta=\"57.021469\">Carbamidomethyl (C)</modification>");
+            out.newLine();                    
+            out.write("        <modification delta=\"144.1020633\">iTRAQ4plex (K)</modification>");
             out.newLine();
-            out.write(" <modification delta=\"42.010559\">Acetyl (K)</modification>");
+            out.write("        <modification delta=\"144.102063\">iTRAQ4plex (N-term)</modification>");
             out.newLine();
-            out.write("</modificationData>");
+            out.write("    </modificationData>");
             out.newLine();
-            out.write("<pep_score_threshold>30</pep_score_threshold>");
+            out.write("    <pep_score_threshold>20</pep_score_threshold>");
             out.newLine();
-            out.write("</params>");
+            out.write("</param>");
             out.newLine();
             out.close();
         }
@@ -2559,80 +3274,299 @@ public class ProteoSuiteView extends JFrame {
             System.err.println("Error: " + e.getMessage());
         }             
     }
+    
     private void writeXTrackerPeakSel(String sExperiment) 
-    {
-        String sFileName = sExperiment + "_PeakSel.xtp";
-        try{
-            FileWriter fstream = new FileWriter(sFileName);
-            BufferedWriter out = new BufferedWriter(fstream);            
-            out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-            out.newLine();
-            out.write("<!-- ");
-            out.newLine();
-            out.write("This is the SILAC method parameters file. ");
-            out.newLine();
-            out.write("-->");
-            out.newLine();            
-            out.write("<param xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins\\metLabelingPeakSel.xsd\">");
-            out.newLine();
-            out.write(" <!-- Specifies the mass values to use (it can be either \"monoisotopic\" or \"average\") -->");
-            out.newLine();
-            out.write(" <mass_type>monoisotopic</mass_type>");
-            out.newLine();
-            out.write(" <!-- Specifies the incorporation rate, normalized to 1 (i.e. 98.5% -> 0.985) -->");
-            out.newLine();
-            out.write(" <incorporation_rate>0.985</incorporation_rate>");
-            out.newLine();
-            out.write(" <!-- Specifies the Retention time mass window (in seconds) to consider while trying to match peaks -->");
-            out.newLine();
-            out.write(" <RT_window>10</RT_window>");
-            out.newLine();
-            out.write(" <!-- Specifies the M/Z tolerance +/- (in Daltons) to match a MS peak with  the theoretical computed form the parent ion Mz of a peptide +/- its mass shift -->	");
-            out.newLine();
-            out.write(" <mz_tolerance>0.1</mz_tolerance>");
-            out.newLine();
-            out.write(" <!-- Specifies the mass shift in Daltons for the C terminus -->");
-            out.newLine();
-            out.write(" <C_term>0</C_term>");
-            out.newLine();
-            out.write(" <!-- Specifies the mass shift in Daltons for the N terminus -->");
-            out.newLine();
-            out.write(" <N_term>0</N_term>");
-            out.newLine();
-            out.write(" <!-- ");
-            out.newLine();
-            out.write(" Specifies the mass shift in Daltons for each aminoacid ALL 20 aminoacids will have to be specified");
-            out.newLine();
-            out.write(" otherwise 0 Daltons shift will be assumed!");
-            out.newLine();
-            out.write(" -->");
-            out.newLine();
-            out.write(" <aminoShifts>");
-            out.newLine();
-            out.write("     <aminoacid value=\"A\">1.0087</aminoacid>");
-            out.newLine();
-            out.write(" </aminoShifts>");
-            out.newLine();
-            out.write("</params>");
-            out.newLine();
-            out.close();
+    {        
+        String sFileName = sWorkspace + "\\" + sExperiment + "_PeakSelParams.xtp";        
+        if (sExperiment.equals("SILAC"))
+        {            
+            try{
+                FileWriter fstream = new FileWriter(sFileName);
+                BufferedWriter out = new BufferedWriter(fstream);            
+                out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                out.newLine();
+                out.write("<!-- ");
+                out.newLine();                
+                out.write("    *** FILE GENERATED VIA PROTEOSUITE ***");                            
+                out.newLine();
+                out.write("    This plugin allows the specification of the parameters used for the SILAC pipeline. Here, we specify the mass type, ");
+                out.newLine();
+                out.write("    incorporation rate, retention time window, m/z tolerance and the shifts for the C-terminus, N-terminus and amino acid shifts.");
+                out.newLine();                
+                out.write("-->");
+                out.newLine();            
+                out.write("<param xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins\\metLabelingPeakSel.xsd\">");
+                out.newLine();
+                out.write("    <!-- Specifies the mass values to use (it can be either \"monoisotopic\" or \"average\") -->");
+                out.newLine();
+                out.write("    <mass_type>monoisotopic</mass_type>");
+                out.newLine();
+                out.newLine();
+                out.write("   <!-- Specifies the incorporation rate, normalized to 1 (i.e. 98.5% -> 0.985) -->");
+                out.newLine();                
+                out.write("   <incorporation_rate>1.000</incorporation_rate>");
+                out.newLine();
+                out.newLine();                
+                out.write("   <!-- Specifies the retention time mass window (in seconds) to consider while trying to match peaks -->");
+                out.newLine();
+                out.write("   <RT_window>10</RT_window>");
+                out.newLine();
+                out.newLine();                
+                out.write("   <!-- Specifies the M/Z tolerance +/- (in Daltons) to match a MS peak with the theoretical computed from the parent ion Mz of a peptide +/- its mass shift -->	");
+                out.newLine();
+                out.write("   <mz_tolerance>0.1</mz_tolerance>");
+                out.newLine();
+                out.newLine();                
+                out.write("   <!-- Specifies the mass shift in Daltons for the C terminus -->");
+                out.newLine();
+                out.write("   <C_term>0</C_term>");
+                out.newLine();
+                out.newLine();                
+                out.write("   <!-- Specifies the mass shift in Daltons for the N terminus -->");
+                out.newLine();
+                out.write("    <N_term>0</N_term>");
+                out.newLine();
+                out.newLine();                
+                out.write("    <!-- ");
+                out.newLine();
+                out.write("    Specifies the mass shift in Daltons for each amino acid. All 20 aminoacids will have to be specified");
+                out.newLine();
+                out.write("    otherwise 0 Daltons shift will be assumed!");
+                out.newLine();
+                out.write("    -->");
+                out.newLine();
+                out.write("    <aminoShifts>");
+                out.newLine();
+                out.write("        <aminoacid value=\"A\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"R\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"N\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"D\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"C\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"E\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"Q\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"G\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"H\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"I\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"L\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"K\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"M\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"F\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"P\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"S\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"T\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"W\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"Y\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("        <aminoacid value=\"V\">0.0000</aminoacid>");               
+                out.newLine();
+                out.write("    </aminoShifts>");
+                out.newLine();
+                out.write("</param>");
+                out.newLine();
+                out.close();
+            }
+            catch (Exception e)
+            {
+                System.err.println("Error: " + e.getMessage());
+            }
         }
-        catch (Exception e)
+        else if (sExperiment.equals("iTRAQ"))
         {
-            System.err.println("Error: " + e.getMessage());
-        }             
+            try{
+                FileWriter fstream = new FileWriter(sFileName);
+                BufferedWriter out = new BufferedWriter(fstream);            
+                out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                out.newLine();
+                out.write("<!-- ");
+                out.newLine();
+                out.write("    *** FILE GENERATED VIA PROTEOSUITE ***");                            
+                out.newLine();                
+                out.write("    This plugin allows the specification of the parameters used for the iTRAQ pipeline.");
+                out.newLine();
+                out.write("-->");
+                out.newLine();
+                out.write("<iTraq xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins\\iTraqNplexPeakSel.xsd\">");
+                out.newLine();
+                out.write("<settings>");
+                out.newLine();
+                out.write("    <mzLowerThreshold>0.05</mzLowerThreshold>");
+                out.newLine();
+                out.write("    <mzUpperThreshold>0.05</mzUpperThreshold>");
+                out.newLine();
+                out.write("</settings>");
+                out.newLine();                
+                out.write("<reporterIons>");
+                out.newLine();
+                out.write("    <reporter label=\"Label 114\" mz=\"114.11123\" />");
+                out.newLine();
+                out.write("    <reporter label=\"Label 115\" mz=\"115.10826\" />");
+                out.newLine();
+                out.write("    <reporter label=\"Label 116\" mz=\"116.11162\" />");
+                out.newLine();
+                out.write("    <reporter label=\"Label 117\" mz=\"117.11497\" />");
+                out.newLine();
+                out.write("</reporterIons>");
+                out.newLine();
+                out.write("</iTraq>");
+                out.newLine();
+                out.close();
+            }
+            catch (Exception e)
+            {
+                System.err.println("Error: " + e.getMessage());
+            }   
+        }        
+    }
+    private void writeXTrackerQuantSel(String sExperiment) 
+    {       
+        String sFileName = sWorkspace + "\\" + sExperiment + "_QuantParams.xtp";        
+        if (sExperiment.equals("SILAC"))
+        {            
+            
+        }
+        else if (sExperiment.equals("iTRAQ"))
+        {            
+            try{
+                FileWriter fstream = new FileWriter(sFileName);
+                BufferedWriter out = new BufferedWriter(fstream);            
+                out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                out.newLine();
+                out.write("<!-- ");
+                out.newLine();
+                out.write("    *** FILE GENERATED VIA PROTEOSUITE ***");                            
+                out.newLine();                
+                out.write("    This plugin allows the specification of the parameters used for the quantitation process in iTRAQ. Here, we");
+                out.newLine();                
+                out.write("    specify the quantitation method and the correction factors used for the reporter ions.");
+                out.newLine();
+                out.write("-->");                
+                out.write("<iTraq xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins\\iTraqNplexQuant.xsd\">");
+                out.newLine();
+                out.write("    <settings>");
+                out.newLine();
+                out.write("    <NumcorrFactors>4</NumcorrFactors>");
+                out.newLine();
+                out.write("    <NumReporterIons>4</NumReporterIons>");
+                out.newLine();
+                out.write("    <IntegrationMethod>SumIntensities</IntegrationMethod>");
+                out.newLine();                
+                out.write("    </settings>");
+                out.newLine();                
+                out.write("    <reporterIons>");
+                out.newLine();
+                out.write("        <reporter label=\"Label 114\" mz=\"114.11123\">");
+                out.newLine();
+                out.write("        <correctionFactors>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"-2\">0</factor>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"-1\">1.0</factor>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"+1\">5.9</factor>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"+2\">0.2</factor>");
+                out.newLine();
+                out.write("        </correctionFactors>");
+                out.newLine();
+                out.write("        </reporter>");
+                out.newLine();
+                out.write("        <reporter label=\"Label 115\" mz=\"115.10826\">");
+                out.newLine();
+                out.write("        <correctionFactors>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"-2\">0</factor>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"-1\">2</factor>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"+1\">5.6</factor>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"+2\">0.1</factor>");
+                out.newLine();
+                out.write("        </correctionFactors>");
+                out.newLine();
+                out.write("        </reporter>");
+                out.newLine();
+                out.write("        <reporter label=\"Label 116\" mz=\"116.11162\">");
+                out.newLine();
+                out.write("        <correctionFactors>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"-2\">0</factor>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"-1\">3</factor>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"+1\">4.5</factor>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"+2\">0.1</factor>");
+                out.newLine();
+                out.write("        </correctionFactors>");
+                out.newLine();
+                out.write("        </reporter>");
+                out.newLine();
+                out.write("        <reporter label=\"Label 117\" mz=\"117.11497\">");
+                out.newLine();
+                out.write("        <correctionFactors>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"-2\">0.1</factor>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"-1\">4</factor>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"+1\">3.5</factor>");
+                out.newLine();
+                out.write("            <factor deltaMass=\"+2\">0</factor>");
+                out.newLine();
+                out.write("        </correctionFactors>");
+                out.newLine();
+                out.write("        </reporter>");
+                out.newLine();
+                out.write("    </reporterIons>");
+                out.newLine();
+                out.write("</iTraq>");
+                out.newLine();
+                out.close();
+            }
+            catch (Exception e)
+            {
+                System.err.println("Error: " + e.getMessage());
+            }   
+        }        
     }
     private void writeXTrackerOutput(String sExperiment) 
     {
-        String sFileName = sExperiment + "_DisplayTableParam.xtp";
+        String sFileName = sWorkspace + "\\" + sExperiment + "_OutputParams.xtp";
         try{
             FileWriter fstream = new FileWriter(sFileName);
             BufferedWriter out = new BufferedWriter(fstream);            
             out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             out.newLine();
+            out.write("<!--");
+            out.newLine();
+            out.write("    *** FILE GENERATED VIA PROTEOSUITE ***");                            
+            out.newLine();                 
+            out.write("    This plugin allows the specification of the output format. In this file we can set up whether a normalisation process will be applied (yes/no) ...//");
+            out.newLine();
+	    out.write("-->");
+            out.newLine();       
             out.write("<param xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins\\displayTable.xsd\">");
             out.newLine();
-            out.write(" <normalisation>yes</normalisation>");
+            out.write("    <normalisation>no</normalisation>");
             out.newLine();
             out.write("</param>");
             out.newLine();
@@ -2657,10 +3591,6 @@ public class ProteoSuiteView extends JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -2668,9 +3598,6 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator7;
-    private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JToolBar jToolBar3;
@@ -2681,10 +3608,27 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JButton jbNewProject;
     private javax.swing.JButton jbOpenProject;
     private javax.swing.JButton jbPaste;
+    private javax.swing.JButton jbRunQuantAnalysis;
     private javax.swing.JButton jbSaveProject;
     private javax.swing.JButton jbShow2D;
     private javax.swing.JButton jbShowChromatogram;
+    private javax.swing.JComboBox jcbTechnique;
+    private javax.swing.JDesktopPane jdp2D;
+    private javax.swing.JDesktopPane jdp3D;
     private javax.swing.JDesktopPane jdpMS;
+    private javax.swing.JDesktopPane jdpTIC;
+    private javax.swing.JLabel jlFiles;
+    private javax.swing.JLabel jlIdentFiles;
+    private javax.swing.JLabel jlIdentFilesStatus;
+    private javax.swing.JLabel jlProperties;
+    private javax.swing.JLabel jlQuantFiles;
+    private javax.swing.JLabel jlQuantFilesStatus;
+    private javax.swing.JLabel jlRawFiles;
+    private javax.swing.JLabel jlRawFilesStatus;
+    private javax.swing.JLabel jlSearch;
+    private javax.swing.JLabel jlTechnique;
+    private javax.swing.JLabel jlViewer;
+    private javax.swing.JLabel jlVisualisationOptions;
     private javax.swing.JMenuItem jmAbout;
     private javax.swing.JMenu jmAnalyze;
     private javax.swing.JMenuItem jmCloseProject;
@@ -2725,36 +3669,59 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JMenu jmWindow;
     private javax.swing.JPanel jp2D;
     private javax.swing.JPanel jp3D;
-    private javax.swing.JPanel jpMain;
+    private javax.swing.JPanel jpLeftMenuBottom;
+    private javax.swing.JPanel jpLeftMenuTop;
+    private javax.swing.JPanel jpLeftPanelView;
+    private javax.swing.JPanel jpLeftViewer;
+    private javax.swing.JPanel jpLeftViewerBottom;
+    private javax.swing.JPanel jpLeftViewerDetails;
+    private javax.swing.JPanel jpMainPanelView;
     private javax.swing.JPanel jpMzML;
+    private javax.swing.JPanel jpMzMLMenu;
     private javax.swing.JPanel jpMzQuantML;
+    private javax.swing.JPanel jpProjectDetails;
+    private javax.swing.JPanel jpProjectHeader;
+    private javax.swing.JPanel jpProjectStatus;
     private javax.swing.JPanel jpProperties;
-    private javax.swing.JPanel jpRawData;
+    private javax.swing.JPanel jpPropertiesBox;
+    private javax.swing.JPanel jpPropetiesTab;
+    private javax.swing.JPanel jpQuantFiles;
+    private javax.swing.JPanel jpRawDataValues;
+    private javax.swing.JPanel jpRawDataValuesMenu;
     private javax.swing.JPanel jpTIC;
     private javax.swing.JPanel jpToolBar;
-    private javax.swing.JPanel jpViewer;
-    private javax.swing.JProgressBar jpbStatus;
+    private javax.swing.JPanel jpViewerAndProperties;
     private javax.swing.JScrollPane jspIdentFiles;
     private javax.swing.JSplitPane jspLeftMenuBottom;
     private javax.swing.JSplitPane jspLeftPanelView;
+    private javax.swing.JSplitPane jspLeftViewer;
+    private javax.swing.JSplitPane jspLeftViewerDetails;
+    private javax.swing.JPanel jspLeftViewerHeader;
     private javax.swing.JScrollPane jspLog;
     private javax.swing.JSplitPane jspMainPanelView;
     private javax.swing.JSplitPane jspMzML;
     private javax.swing.JSplitPane jspMzMLDetail;
     private javax.swing.JScrollPane jspMzMLHeader;
     private javax.swing.JScrollPane jspMzMLSubDetail;
+    private javax.swing.JSplitPane jspMzQuantML;
+    private javax.swing.JScrollPane jspMzQuantMLHeader;
+    private javax.swing.JScrollPane jspMzQuantMLView;
+    private javax.swing.JSplitPane jspProjectDetails;
+    private javax.swing.JSplitPane jspProperties;
     private javax.swing.JScrollPane jspQuantFiles;
     private javax.swing.JScrollPane jspRawData;
+    private javax.swing.JSplitPane jspRawDataValues;
     private javax.swing.JScrollPane jspRawFiles;
-    private javax.swing.JSplitPane jspRightPanelView;
-    private javax.swing.JSplitPane jspViewer;
+    private javax.swing.JSplitPane jspViewerAndProperties;
     private javax.swing.JTable jtIdentFiles;
     private javax.swing.JTable jtMzML;
+    private javax.swing.JTable jtMzQuantMLView;
     private javax.swing.JTable jtQuantFiles;
     private javax.swing.JTable jtRawData;
     private javax.swing.JTable jtRawFiles;
     private javax.swing.JTextArea jtaLog;
     private javax.swing.JTextArea jtaMzML;
+    private javax.swing.JTextArea jtaMzQuantML;
     private javax.swing.JTabbedPane jtpIdentFiles;
     private javax.swing.JTabbedPane jtpLog;
     private javax.swing.JTabbedPane jtpProperties;
