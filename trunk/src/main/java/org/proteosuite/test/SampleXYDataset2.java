@@ -1,4 +1,4 @@
-package org.proteosuite.utils;
+package org.proteosuite.test;
 
 import org.jfree.data.DomainInfo;
 import org.jfree.data.Range;

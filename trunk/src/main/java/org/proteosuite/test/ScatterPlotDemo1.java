@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.proteosuite.utils;
+package org.proteosuite.test;
 
 /* ---------------------
  * ScatterPlotDemo1.java
@@ -11,6 +11,7 @@ package org.proteosuite.utils;
  *
  */
 
+import org.proteosuite.test.SampleXYDataset2;
 import java.awt.Color;
 
 import java.awt.Shape;
