@@ -332,6 +332,7 @@ public class ProjectParamsView extends javax.swing.JPanel {
 
         jLabel4.setText("Note: Do not modify these settings unless you are familiar with xTracker plugins. More information on: ");
 
+        jlURL.setForeground(new java.awt.Color(0, 51, 153));
         jlURL.setText("www.x-tracker.info");
         jlURL.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -379,7 +380,7 @@ public class ProjectParamsView extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(jpxTrackerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jlURL))
+                    .addComponent(jlURL, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 

@@ -149,54 +149,28 @@
             <Property name="text" type="java.lang.String" value="View"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="jmViewSpectrum">
+            <MenuItem class="javax.swing.JMenuItem" name="jmShowProjectFiles">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Spectrum"/>
+                <Property name="text" type="java.lang.String" value="Show Project Files"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmViewSpectrumActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmShowProjectFilesActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jmViewXIC">
+            <MenuItem class="javax.swing.JMenuItem" name="jmShowViewer">
               <Properties>
-                <Property name="text" type="java.lang.String" value="TIC"/>
+                <Property name="text" type="java.lang.String" value="Show Viewer"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmViewXICActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmShowViewerActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jmView2D">
+            <MenuItem class="javax.swing.JMenuItem" name="jmShowProperties">
               <Properties>
-                <Property name="text" type="java.lang.String" value="2D View"/>
+                <Property name="text" type="java.lang.String" value="Show Properties"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmView2DActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jmView3D">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="3D View"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmView3DActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator7">
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jmViewMzML">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="mzML Data"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmViewMzMLActionPerformed"/>
-              </Events>
-            </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jmViewMzQuantML">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="mzQuantML Data"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmViewMzQuantMLActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmShowPropertiesActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>
@@ -296,6 +270,84 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Window"/>
           </Properties>
+          <SubComponents>
+            <MenuItem class="javax.swing.JMenuItem" name="jmSpectrum">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Spectrum"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmSpectrumActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jmTIC">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="TIC"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmTICActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jm2DView">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="2D View"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jm2DViewActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jm3DView">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="3D View"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jm3DViewActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator8">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jmMzMLView">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="mzML View"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmMzMLViewActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jmMascotXMLView">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Mascot XML View"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmMascotXMLViewActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jmMzQuantMLView">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="mzQuantML View"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmMzQuantMLViewActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator9">
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jmLog">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Log"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmLogActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jmRawData">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Raw Data"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmRawDataActionPerformed"/>
+              </Events>
+            </MenuItem>
+          </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jmHelp">
           <Properties>
@@ -356,8 +408,8 @@
           <Component id="jpMainPanelView" alignment="0" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jpProjectStatus" alignment="0" pref="973" max="32767" attributes="0"/>
-                  <Component id="jpToolBar" alignment="1" pref="973" max="32767" attributes="0"/>
+                  <Component id="jpProjectStatus" alignment="0" pref="983" max="32767" attributes="0"/>
+                  <Component id="jpToolBar" alignment="1" pref="983" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -397,7 +449,7 @@
                   <Component id="jToolBar2" min="-2" pref="132" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jToolBar3" min="-2" pref="121" max="-2" attributes="0"/>
-                  <EmptySpace pref="567" max="32767" attributes="0"/>
+                  <EmptySpace pref="577" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -544,7 +596,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jspMainPanelView" alignment="0" pref="979" max="32767" attributes="0"/>
+              <Component id="jspMainPanelView" alignment="0" pref="989" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -580,7 +632,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jspLeftPanelView" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jspLeftPanelView" alignment="0" pref="279" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -626,7 +678,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jlFiles" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="245" max="32767" attributes="0"/>
+                                  <EmptySpace pref="244" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -671,7 +723,7 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspProjectDetails" alignment="0" pref="280" max="32767" attributes="0"/>
+                              <Component id="jspProjectDetails" alignment="0" pref="279" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -706,9 +758,9 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <EmptySpace min="0" pref="280" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="279" max="32767" attributes="0"/>
                                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                                          <Component id="jtpRawFiles" alignment="0" pref="280" max="32767" attributes="0"/>
+                                          <Component id="jtpRawFiles" alignment="0" pref="279" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
@@ -767,6 +819,7 @@
                                           </Properties>
                                           <Events>
                                             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtRawFilesMouseClicked"/>
+                                            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtRawFilesMouseEntered"/>
                                           </Events>
                                         </Component>
                                       </SubComponents>
@@ -785,7 +838,7 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jspLeftMenuBottom" alignment="0" pref="280" max="32767" attributes="0"/>
+                                      <Component id="jspLeftMenuBottom" alignment="0" pref="279" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
@@ -817,7 +870,7 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jtpQuantFiles" alignment="0" pref="278" max="32767" attributes="0"/>
+                                              <Component id="jtpQuantFiles" alignment="0" pref="277" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
@@ -913,6 +966,9 @@
                                                   <JTableSelectionModel selectionMode="0"/>
                                                 </Property>
                                               </Properties>
+                                              <Events>
+                                                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtIdentFilesMouseClicked"/>
+                                              </Events>
                                             </Component>
                                           </SubComponents>
                                         </Container>
@@ -945,7 +1001,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jspViewerAndProperties" alignment="0" pref="696" max="32767" attributes="0"/>
+                      <Component id="jspViewerAndProperties" alignment="0" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -1127,6 +1183,9 @@
                                                 <Component class="javax.swing.JTextArea" name="jtaLog">
                                                   <Properties>
                                                     <Property name="columns" type="int" value="20"/>
+                                                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                                                      <Font name="Tahoma" size="11" style="0"/>
+                                                    </Property>
                                                     <Property name="rows" type="int" value="5"/>
                                                   </Properties>
                                                 </Component>
@@ -1359,29 +1418,15 @@
                                           <Layout>
                                             <DimensionLayout dim="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Group type="102" alignment="0" attributes="0">
-                                                      <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                                                      <Component id="jdp3D" min="-2" pref="100" max="-2" attributes="0"/>
-                                                      <EmptySpace pref="243" max="32767" attributes="0"/>
-                                                  </Group>
+                                                  <EmptySpace min="0" pref="373" max="32767" attributes="0"/>
                                               </Group>
                                             </DimensionLayout>
                                             <DimensionLayout dim="1">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Group type="102" alignment="0" attributes="0">
-                                                      <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
-                                                      <Component id="jdp3D" min="-2" pref="100" max="-2" attributes="0"/>
-                                                      <EmptySpace pref="183" max="32767" attributes="0"/>
-                                                  </Group>
+                                                  <EmptySpace min="0" pref="321" max="32767" attributes="0"/>
                                               </Group>
                                             </DimensionLayout>
                                           </Layout>
-                                          <SubComponents>
-                                            <Container class="javax.swing.JDesktopPane" name="jdp3D">
-
-                                              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout"/>
-                                            </Container>
-                                          </SubComponents>
                                         </Container>
                                       </SubComponents>
                                     </Container>
@@ -1403,7 +1448,7 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspProperties" alignment="0" pref="313" max="32767" attributes="0"/>
+                              <Component id="jspProperties" alignment="0" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -1449,7 +1494,7 @@
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jlProperties" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace pref="244" max="32767" attributes="0"/>
+                                          <EmptySpace pref="255" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
@@ -1497,7 +1542,7 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jtpProperties" alignment="0" pref="313" max="32767" attributes="0"/>
+                                      <Component id="jtpProperties" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
@@ -1528,7 +1573,7 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzML" alignment="0" pref="308" max="32767" attributes="0"/>
+                                              <Component id="jspMzML" alignment="0" pref="319" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
@@ -1574,7 +1619,7 @@
                                                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                                                   <Border info="null"/>
                                                 </Property>
-                                                <Property name="dividerLocation" type="int" value="35"/>
+                                                <Property name="dividerLocation" type="int" value="80"/>
                                                 <Property name="dividerSize" type="int" value="2"/>
                                                 <Property name="orientation" type="int" value="0"/>
                                               </Properties>
@@ -1601,19 +1646,15 @@
                                                     <Component class="javax.swing.JTable" name="jtMzML">
                                                       <Properties>
                                                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                          <Table columnCount="12" rowCount="0">
+                                                          <Table columnCount="8" rowCount="0">
                                                             <Column editable="true" title="" type="java.lang.Object"/>
                                                             <Column editable="true" title="Index" type="java.lang.Object"/>
                                                             <Column editable="true" title="ID" type="java.lang.Object"/>
                                                             <Column editable="true" title="MS" type="java.lang.Object"/>
                                                             <Column editable="true" title="Base peak m/z" type="java.lang.Object"/>
                                                             <Column editable="true" title="Base peak int" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Total ion curr" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Lowest obs m/z" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Highest obs m/z" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Ret Time (sec-min)" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Scan Win Min" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Scan Win Max" type="java.lang.Object"/>
+                                                            <Column editable="true" title="RT (sec)" type="java.lang.Object"/>
+                                                            <Column editable="true" title="RT (min)" type="java.lang.Object"/>
                                                           </Table>
                                                         </Property>
                                                         <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
@@ -1643,85 +1684,218 @@
                                                   <Layout>
                                                     <DimensionLayout dim="0">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jToolBar4" alignment="0" pref="302" max="32767" attributes="0"/>
+                                                          <Group type="102" alignment="0" attributes="0">
+                                                              <EmptySpace max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                                  <Component id="jlVisualisationOptions" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                              </Group>
+                                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                                  <Group type="102" alignment="0" attributes="0">
+                                                                      <Component id="jlScan" min="-2" max="-2" attributes="0"/>
+                                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                                      <Component id="jtScan" min="-2" pref="62" max="-2" attributes="0"/>
+                                                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                                                      <Component id="jlRT" min="-2" max="-2" attributes="0"/>
+                                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                                      <Component id="jtRT" min="-2" pref="62" max="-2" attributes="0"/>
+                                                                  </Group>
+                                                                  <Group type="102" alignment="0" attributes="0">
+                                                                      <Component id="jbShowChromatogram" min="-2" max="-2" attributes="0"/>
+                                                                      <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
+                                                                      <Component id="jbShow2D" min="-2" max="-2" attributes="0"/>
+                                                                  </Group>
+                                                              </Group>
+                                                              <EmptySpace max="32767" attributes="0"/>
+                                                          </Group>
                                                       </Group>
                                                     </DimensionLayout>
                                                     <DimensionLayout dim="1">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jToolBar4" alignment="0" pref="31" max="32767" attributes="0"/>
+                                                          <Group type="102" alignment="0" attributes="0">
+                                                              <EmptySpace max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="2" attributes="0">
+                                                                  <Component id="jlVisualisationOptions" alignment="2" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jbShowChromatogram" alignment="2" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jbShow2D" alignment="2" min="-2" max="-2" attributes="0"/>
+                                                              </Group>
+                                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="2" attributes="0">
+                                                                  <Component id="jLabel1" alignment="2" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jlScan" alignment="2" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jtScan" alignment="2" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jlRT" alignment="2" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jtRT" alignment="2" min="-2" max="-2" attributes="0"/>
+                                                              </Group>
+                                                              <EmptySpace max="32767" attributes="0"/>
+                                                          </Group>
                                                       </Group>
                                                     </DimensionLayout>
                                                   </Layout>
                                                   <SubComponents>
-                                                    <Container class="javax.swing.JToolBar" name="jToolBar4">
+                                                    <Component class="javax.swing.JLabel" name="jlVisualisationOptions">
                                                       <Properties>
+                                                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                                                          <Font name="Tahoma" size="11" style="1"/>
+                                                        </Property>
+                                                        <Property name="text" type="java.lang.String" value="View:"/>
+                                                      </Properties>
+                                                    </Component>
+                                                    <Component class="javax.swing.JButton" name="jbShowChromatogram">
+                                                      <Properties>
+                                                        <Property name="toolTipText" type="java.lang.String" value="Show Chromatogram"/>
                                                         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                                                           <Border info="null"/>
                                                         </Property>
-                                                        <Property name="floatable" type="boolean" value="false"/>
-                                                        <Property name="rollover" type="boolean" value="true"/>
                                                         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                          <Dimension value="[100, 27]"/>
+                                                          <Dimension value="[24, 24]"/>
                                                         </Property>
                                                         <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                          <Dimension value="[100, 27]"/>
+                                                          <Dimension value="[24, 24]"/>
                                                         </Property>
                                                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                          <Dimension value="[100, 27]"/>
+                                                          <Dimension value="[24, 24]"/>
                                                         </Property>
-                                                        <Property name="requestFocusEnabled" type="boolean" value="false"/>
                                                       </Properties>
-
-                                                      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
-                                                      <SubComponents>
-                                                        <Component class="javax.swing.JLabel" name="jlVisualisationOptions">
-                                                          <Properties>
-                                                            <Property name="text" type="java.lang.String" value="Visualisation options:"/>
-                                                          </Properties>
-                                                        </Component>
-                                                        <Component class="javax.swing.JButton" name="jbShowChromatogram">
-                                                          <Properties>
-                                                            <Property name="toolTipText" type="java.lang.String" value="Show Chromatogram"/>
-                                                            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                              <Dimension value="[24, 24]"/>
-                                                            </Property>
-                                                            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                              <Dimension value="[24, 24]"/>
-                                                            </Property>
-                                                            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                              <Dimension value="[24, 24]"/>
-                                                            </Property>
-                                                          </Properties>
-                                                          <Events>
-                                                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jbShowChromatogramMouseClicked"/>
-                                                          </Events>
-                                                        </Component>
-                                                        <Component class="javax.swing.JButton" name="jbShow2D">
-                                                          <Properties>
-                                                            <Property name="toolTipText" type="java.lang.String" value="Show 2D Plot"/>
-                                                            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                              <Dimension value="[24, 24]"/>
-                                                            </Property>
-                                                            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                              <Dimension value="[24, 24]"/>
-                                                            </Property>
-                                                            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                              <Dimension value="[24, 24]"/>
-                                                            </Property>
-                                                          </Properties>
-                                                          <Events>
-                                                            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jbShow2DMouseClicked"/>
-                                                          </Events>
-                                                        </Component>
-                                                        <Component class="javax.swing.JLabel" name="jlSearch">
-                                                          <Properties>
-                                                            <Property name="text" type="java.lang.String" value="Search:"/>
-                                                          </Properties>
-                                                        </Component>
-                                                      </SubComponents>
-                                                    </Container>
+                                                      <Events>
+                                                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jbShowChromatogramMouseClicked"/>
+                                                      </Events>
+                                                    </Component>
+                                                    <Component class="javax.swing.JButton" name="jbShow2D">
+                                                      <Properties>
+                                                        <Property name="toolTipText" type="java.lang.String" value="Show 2D Plot"/>
+                                                        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                                                          <Dimension value="[24, 24]"/>
+                                                        </Property>
+                                                        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                                                          <Dimension value="[24, 24]"/>
+                                                        </Property>
+                                                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                                                          <Dimension value="[24, 24]"/>
+                                                        </Property>
+                                                      </Properties>
+                                                      <Events>
+                                                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jbShow2DMouseClicked"/>
+                                                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbShow2DActionPerformed"/>
+                                                      </Events>
+                                                    </Component>
+                                                    <Component class="javax.swing.JLabel" name="jlScan">
+                                                      <Properties>
+                                                        <Property name="text" type="java.lang.String" value="Scan:"/>
+                                                      </Properties>
+                                                    </Component>
+                                                    <Component class="javax.swing.JTextField" name="jtScan">
+                                                      <Events>
+                                                        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtScanKeyPressed"/>
+                                                      </Events>
+                                                    </Component>
+                                                    <Component class="javax.swing.JLabel" name="jlRT">
+                                                      <Properties>
+                                                        <Property name="text" type="java.lang.String" value="RT (sec):"/>
+                                                      </Properties>
+                                                    </Component>
+                                                    <Component class="javax.swing.JTextField" name="jtRT">
+                                                      <Events>
+                                                        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtRTKeyPressed"/>
+                                                      </Events>
+                                                    </Component>
+                                                    <Component class="javax.swing.JLabel" name="jLabel1">
+                                                      <Properties>
+                                                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                                                          <Font name="Tahoma" size="11" style="1"/>
+                                                        </Property>
+                                                        <Property name="text" type="java.lang.String" value="Search:"/>
+                                                      </Properties>
+                                                    </Component>
                                                   </SubComponents>
                                                 </Container>
+                                              </SubComponents>
+                                            </Container>
+                                          </SubComponents>
+                                        </Container>
+                                      </SubComponents>
+                                    </Container>
+                                    <Container class="javax.swing.JPanel" name="jpMascotXML">
+                                      <Constraints>
+                                        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                                          <JTabbedPaneConstraints tabName="Mascot XML View">
+                                            <Property name="tabTitle" type="java.lang.String" value="Mascot XML View"/>
+                                          </JTabbedPaneConstraints>
+                                        </Constraint>
+                                      </Constraints>
+
+                                      <Layout>
+                                        <DimensionLayout dim="0">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="jspMascotXML" alignment="0" pref="319" max="32767" attributes="0"/>
+                                          </Group>
+                                        </DimensionLayout>
+                                        <DimensionLayout dim="1">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="jspMascotXML" alignment="0" pref="472" max="32767" attributes="0"/>
+                                          </Group>
+                                        </DimensionLayout>
+                                      </Layout>
+                                      <SubComponents>
+                                        <Container class="javax.swing.JSplitPane" name="jspMascotXML">
+                                          <Properties>
+                                            <Property name="orientation" type="int" value="0"/>
+                                          </Properties>
+
+                                          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
+                                          <SubComponents>
+                                            <Container class="javax.swing.JScrollPane" name="jspMascotXMLHeader">
+                                              <AuxValues>
+                                                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                                              </AuxValues>
+                                              <Constraints>
+                                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
+                                                  <JSplitPaneConstraints position="top"/>
+                                                </Constraint>
+                                              </Constraints>
+
+                                              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                                              <SubComponents>
+                                                <Component class="javax.swing.JTextArea" name="jtaMascotXML">
+                                                  <Properties>
+                                                    <Property name="columns" type="int" value="20"/>
+                                                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                                                      <Font name="Tahoma" size="11" style="0"/>
+                                                    </Property>
+                                                    <Property name="rows" type="int" value="5"/>
+                                                  </Properties>
+                                                </Component>
+                                              </SubComponents>
+                                            </Container>
+                                            <Container class="javax.swing.JScrollPane" name="jspMascotXMLView">
+                                              <AuxValues>
+                                                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                                              </AuxValues>
+                                              <Constraints>
+                                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
+                                                  <JSplitPaneConstraints position="right"/>
+                                                </Constraint>
+                                              </Constraints>
+
+                                              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                                              <SubComponents>
+                                                <Component class="javax.swing.JTable" name="jtMascotXMLView">
+                                                  <Properties>
+                                                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                                                      <Table columnCount="8" rowCount="0">
+                                                        <Column editable="true" title="Protein" type="java.lang.Object"/>
+                                                        <Column editable="true" title="Peptide" type="java.lang.Object"/>
+                                                        <Column editable="true" title="Exp Mz" type="java.lang.Object"/>
+                                                        <Column editable="true" title="Exp Mr" type="java.lang.Object"/>
+                                                        <Column editable="true" title="Charge" type="java.lang.Object"/>
+                                                        <Column editable="true" title="Score" type="java.lang.Object"/>
+                                                        <Column editable="true" title="Scan" type="java.lang.Object"/>
+                                                        <Column editable="true" title="RT" type="java.lang.Object"/>
+                                                      </Table>
+                                                    </Property>
+                                                  </Properties>
+                                                </Component>
                                               </SubComponents>
                                             </Container>
                                           </SubComponents>
@@ -1740,7 +1914,7 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzQuantML" alignment="0" pref="308" max="32767" attributes="0"/>
+                                              <Component id="jspMzQuantML" alignment="0" pref="319" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
@@ -1864,7 +2038,7 @@
                   <Component id="jlQuantFiles" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jlQuantFilesStatus" min="-2" pref="43" max="-2" attributes="0"/>
-                  <EmptySpace pref="325" max="32767" attributes="0"/>
+                  <EmptySpace pref="335" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
