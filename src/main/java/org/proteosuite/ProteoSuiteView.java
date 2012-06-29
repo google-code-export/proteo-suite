@@ -336,6 +336,9 @@ public class ProteoSuiteView extends JFrame {
         jpRawDataValuesMenu = new javax.swing.JPanel();
         jspRawData = new javax.swing.JScrollPane();
         jtRawData = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jtTemplate = new javax.swing.JTable();
         jtpViewer = new javax.swing.JTabbedPane();
         jdpMS = new javax.swing.JDesktopPane();
         jpTIC = new javax.swing.JPanel();
@@ -378,6 +381,7 @@ public class ProteoSuiteView extends JFrame {
         jtProtein = new javax.swing.JTextField();
         jlPeptide = new javax.swing.JLabel();
         jtPeptide = new javax.swing.JTextField();
+        jbGenerateTemplate = new javax.swing.JButton();
         jpMzQuantML = new javax.swing.JPanel();
         jspMzQuantML = new javax.swing.JSplitPane();
         jspMzQuantMLHeader = new javax.swing.JScrollPane();
@@ -546,7 +550,7 @@ public class ProteoSuiteView extends JFrame {
                 .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jToolBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(577, Short.MAX_VALUE))
+                .addContainerGap(688, Short.MAX_VALUE))
         );
         jpToolBarLayout.setVerticalGroup(
             jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -560,13 +564,11 @@ public class ProteoSuiteView extends JFrame {
 
         jpMainPanelView.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 
-        jspMainPanelView.setBorder(null);
         jspMainPanelView.setDividerLocation(280);
         jspMainPanelView.setDividerSize(3);
 
         jpLeftPanelView.setBackground(new java.awt.Color(204, 204, 255));
 
-        jspLeftPanelView.setBorder(null);
         jspLeftPanelView.setDividerLocation(20);
         jspLeftPanelView.setDividerSize(1);
         jspLeftPanelView.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -587,7 +589,7 @@ public class ProteoSuiteView extends JFrame {
             .addGroup(jpProjectHeaderLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jlFiles)
-                .addContainerGap(245, Short.MAX_VALUE))
+                .addContainerGap(244, Short.MAX_VALUE))
         );
         jpProjectHeaderLayout.setVerticalGroup(
             jpProjectHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -601,7 +603,6 @@ public class ProteoSuiteView extends JFrame {
         jpProjectDetails.setBackground(new java.awt.Color(255, 255, 255));
 
         jspProjectDetails.setBackground(new java.awt.Color(255, 255, 255));
-        jspProjectDetails.setBorder(null);
         jspProjectDetails.setDividerLocation(130);
         jspProjectDetails.setDividerSize(2);
         jspProjectDetails.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -635,15 +636,15 @@ public class ProteoSuiteView extends JFrame {
         jpLeftMenuTop.setLayout(jpLeftMenuTopLayout);
         jpLeftMenuTopLayout.setHorizontalGroup(
             jpLeftMenuTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 280, Short.MAX_VALUE)
+            .addGap(0, 277, Short.MAX_VALUE)
             .addGroup(jpLeftMenuTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jtpRawFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
+                .addComponent(jtpRawFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))
         );
         jpLeftMenuTopLayout.setVerticalGroup(
             jpLeftMenuTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 130, Short.MAX_VALUE)
+            .addGap(0, 129, Short.MAX_VALUE)
             .addGroup(jpLeftMenuTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jtpRawFiles, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+                .addComponent(jtpRawFiles, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE))
         );
 
         jspProjectDetails.setTopComponent(jpLeftMenuTop);
@@ -671,11 +672,11 @@ public class ProteoSuiteView extends JFrame {
         jpQuantFiles.setLayout(jpQuantFilesLayout);
         jpQuantFilesLayout.setHorizontalGroup(
             jpQuantFilesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpQuantFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+            .addComponent(jtpQuantFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
         );
         jpQuantFilesLayout.setVerticalGroup(
             jpQuantFilesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpQuantFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+            .addComponent(jtpQuantFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
         );
 
         jspLeftMenuBottom.setRightComponent(jpQuantFiles);
@@ -695,6 +696,9 @@ public class ProteoSuiteView extends JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jtIdentFilesMouseClicked(evt);
             }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                jtIdentFilesMouseEntered(evt);
+            }
         });
         jspIdentFiles.setViewportView(jtIdentFiles);
 
@@ -706,12 +710,12 @@ public class ProteoSuiteView extends JFrame {
         jpLeftMenuBottom.setLayout(jpLeftMenuBottomLayout);
         jpLeftMenuBottomLayout.setHorizontalGroup(
             jpLeftMenuBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspLeftMenuBottom, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+            .addComponent(jspLeftMenuBottom, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
         );
         jpLeftMenuBottomLayout.setVerticalGroup(
             jpLeftMenuBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpLeftMenuBottomLayout.createSequentialGroup()
-                .addComponent(jspLeftMenuBottom, javax.swing.GroupLayout.DEFAULT_SIZE, 357, Short.MAX_VALUE)
+                .addComponent(jspLeftMenuBottom, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -721,11 +725,11 @@ public class ProteoSuiteView extends JFrame {
         jpProjectDetails.setLayout(jpProjectDetailsLayout);
         jpProjectDetailsLayout.setHorizontalGroup(
             jpProjectDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspProjectDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+            .addComponent(jspProjectDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
         );
         jpProjectDetailsLayout.setVerticalGroup(
             jpProjectDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspProjectDetails, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+            .addComponent(jspProjectDetails, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
         );
 
         jspLeftPanelView.setRightComponent(jpProjectDetails);
@@ -734,22 +738,20 @@ public class ProteoSuiteView extends JFrame {
         jpLeftPanelView.setLayout(jpLeftPanelViewLayout);
         jpLeftPanelViewLayout.setHorizontalGroup(
             jpLeftPanelViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspLeftPanelView)
+            .addComponent(jspLeftPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE)
         );
         jpLeftPanelViewLayout.setVerticalGroup(
             jpLeftPanelViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspLeftPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
+            .addComponent(jspLeftPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 637, Short.MAX_VALUE)
         );
 
         jspMainPanelView.setLeftComponent(jpLeftPanelView);
 
         jpViewerAndProperties.setBackground(new java.awt.Color(204, 204, 255));
 
-        jspViewerAndProperties.setBorder(null);
         jspViewerAndProperties.setDividerLocation(380);
         jspViewerAndProperties.setDividerSize(3);
 
-        jspLeftViewer.setBorder(null);
         jspLeftViewer.setDividerLocation(20);
         jspLeftViewer.setDividerSize(1);
         jspLeftViewer.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -770,7 +772,7 @@ public class ProteoSuiteView extends JFrame {
             .addGroup(jspLeftViewerHeaderLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jlViewer)
-                .addContainerGap(332, Short.MAX_VALUE))
+                .addContainerGap(431, Short.MAX_VALUE))
         );
         jspLeftViewerHeaderLayout.setVerticalGroup(
             jspLeftViewerHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -794,7 +796,6 @@ public class ProteoSuiteView extends JFrame {
 
         jtpLog.addTab("Log", jspLog);
 
-        jspRawDataValues.setBorder(null);
         jspRawDataValues.setDividerLocation(26);
         jspRawDataValues.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
@@ -806,11 +807,11 @@ public class ProteoSuiteView extends JFrame {
         jpRawDataValuesMenu.setLayout(jpRawDataValuesMenuLayout);
         jpRawDataValuesMenuLayout.setHorizontalGroup(
             jpRawDataValuesMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 373, Short.MAX_VALUE)
+            .addGap(0, 470, Short.MAX_VALUE)
         );
         jpRawDataValuesMenuLayout.setVerticalGroup(
             jpRawDataValuesMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 26, Short.MAX_VALUE)
+            .addGap(0, 25, Short.MAX_VALUE)
         );
 
         jspRawDataValues.setLeftComponent(jpRawDataValuesMenu);
@@ -832,24 +833,47 @@ public class ProteoSuiteView extends JFrame {
         jpRawDataValues.setLayout(jpRawDataValuesLayout);
         jpRawDataValuesLayout.setHorizontalGroup(
             jpRawDataValuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspRawDataValues, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+            .addComponent(jspRawDataValues, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
         );
         jpRawDataValuesLayout.setVerticalGroup(
             jpRawDataValuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspRawDataValues, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+            .addComponent(jspRawDataValues, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
         );
 
         jtpLog.addTab("Raw Data", jpRawDataValues);
+
+        jtTemplate.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Peptide Index", "Isotope 1 m/z", "Isotope 1 Rel Int", "Isotope 2 m/z", "Isotope 2 Rel Int", "Isotope 3 m/z", "Isotope 3 Rel Int", "Isotope 4 m/z", "Isotope 4 Rel Int", "Isotope 5 m/z", "Isotope 5 Rel Int"
+            }
+        ));
+        jScrollPane1.setViewportView(jtTemplate);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE)
+        );
+
+        jtpLog.addTab("Template", jPanel1);
 
         javax.swing.GroupLayout jpLeftViewerBottomLayout = new javax.swing.GroupLayout(jpLeftViewerBottom);
         jpLeftViewerBottom.setLayout(jpLeftViewerBottomLayout);
         jpLeftViewerBottomLayout.setHorizontalGroup(
             jpLeftViewerBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpLog, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
+            .addComponent(jtpLog)
         );
         jpLeftViewerBottomLayout.setVerticalGroup(
             jpLeftViewerBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpLog, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+            .addComponent(jtpLog)
         );
 
         jspLeftViewerDetails.setRightComponent(jpLeftViewerBottom);
@@ -866,11 +890,11 @@ public class ProteoSuiteView extends JFrame {
         jpTIC.setLayout(jpTICLayout);
         jpTICLayout.setHorizontalGroup(
             jpTICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jdpTIC, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+            .addComponent(jdpTIC, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
         );
         jpTICLayout.setVerticalGroup(
             jpTICLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jdpTIC, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
+            .addComponent(jdpTIC, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
         );
 
         jtpViewer.addTab("TIC", jpTIC);
@@ -884,13 +908,13 @@ public class ProteoSuiteView extends JFrame {
         jp2DLayout.setHorizontalGroup(
             jp2DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2DLayout.createSequentialGroup()
-                .addContainerGap(347, Short.MAX_VALUE)
+                .addContainerGap(446, Short.MAX_VALUE)
                 .addComponent(jdp2D, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jp2DLayout.setVerticalGroup(
             jp2DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jp2DLayout.createSequentialGroup()
-                .addContainerGap(282, Short.MAX_VALUE)
+                .addContainerGap(59, Short.MAX_VALUE)
                 .addComponent(jdp2D, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -902,11 +926,11 @@ public class ProteoSuiteView extends JFrame {
         jp3D.setLayout(jp3DLayout);
         jp3DLayout.setHorizontalGroup(
             jp3DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 373, Short.MAX_VALUE)
+            .addGap(0, 472, Short.MAX_VALUE)
         );
         jp3DLayout.setVerticalGroup(
             jp3DLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 321, Short.MAX_VALUE)
+            .addGap(0, 98, Short.MAX_VALUE)
         );
 
         jtpViewer.addTab("3D View", jp3D);
@@ -917,11 +941,11 @@ public class ProteoSuiteView extends JFrame {
         jpLeftViewerDetails.setLayout(jpLeftViewerDetailsLayout);
         jpLeftViewerDetailsLayout.setHorizontalGroup(
             jpLeftViewerDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspLeftViewerDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+            .addComponent(jspLeftViewerDetails)
         );
         jpLeftViewerDetailsLayout.setVerticalGroup(
             jpLeftViewerDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspLeftViewerDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+            .addComponent(jspLeftViewerDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
         );
 
         jspLeftViewer.setRightComponent(jpLeftViewerDetails);
@@ -930,16 +954,15 @@ public class ProteoSuiteView extends JFrame {
         jpLeftViewer.setLayout(jpLeftViewerLayout);
         jpLeftViewerLayout.setHorizontalGroup(
             jpLeftViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspLeftViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+            .addComponent(jspLeftViewer)
         );
         jpLeftViewerLayout.setVerticalGroup(
             jpLeftViewerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspLeftViewer, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
+            .addComponent(jspLeftViewer)
         );
 
         jspViewerAndProperties.setLeftComponent(jpLeftViewer);
 
-        jspProperties.setBorder(null);
         jspProperties.setDividerLocation(20);
         jspProperties.setDividerSize(1);
         jspProperties.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -960,7 +983,7 @@ public class ProteoSuiteView extends JFrame {
             .addGroup(jpPropertiesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jlProperties)
-                .addContainerGap(255, Short.MAX_VALUE))
+                .addContainerGap(257, Short.MAX_VALUE))
         );
         jpPropertiesLayout.setVerticalGroup(
             jpPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -987,7 +1010,6 @@ public class ProteoSuiteView extends JFrame {
 
         jspMzML.setLeftComponent(jspMzMLHeader);
 
-        jspMzMLDetail.setBorder(null);
         jspMzMLDetail.setDividerLocation(80);
         jspMzMLDetail.setDividerSize(2);
         jspMzMLDetail.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -1016,7 +1038,6 @@ public class ProteoSuiteView extends JFrame {
         jlVisualisationOptions.setText("View:");
 
         jbShowChromatogram.setToolTipText("Show Chromatogram");
-        jbShowChromatogram.setBorder(null);
         jbShowChromatogram.setMaximumSize(new java.awt.Dimension(24, 24));
         jbShowChromatogram.setMinimumSize(new java.awt.Dimension(24, 24));
         jbShowChromatogram.setPreferredSize(new java.awt.Dimension(24, 24));
@@ -1111,11 +1132,11 @@ public class ProteoSuiteView extends JFrame {
         jpMzML.setLayout(jpMzMLLayout);
         jpMzMLLayout.setHorizontalGroup(
             jpMzMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspMzML, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+            .addComponent(jspMzML, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
         );
         jpMzMLLayout.setVerticalGroup(
             jpMzMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspMzML, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+            .addComponent(jspMzML, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE)
         );
 
         jtpProperties.addTab("mzML View", jpMzML);
@@ -1137,7 +1158,7 @@ public class ProteoSuiteView extends JFrame {
 
             },
             new String [] {
-                "Protein", "Peptide", "Composition", "Exp Mz", "Exp Mr", "Charge", "Score", "Scan", "RT (sec)"
+                "Index", "Protein", "Peptide", "Composition", "Exp Mz", "Exp Mr", "Charge", "Score", "Scan", "RT (sec)"
             }
         ));
         jtMascotXMLView.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1168,14 +1189,20 @@ public class ProteoSuiteView extends JFrame {
             }
         });
 
+        jbGenerateTemplate.setText("Generate Template");
+        jbGenerateTemplate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbGenerateTemplateActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jpMascotXMLMenuLayout = new javax.swing.GroupLayout(jpMascotXMLMenu);
         jpMascotXMLMenu.setLayout(jpMascotXMLMenuLayout);
         jpMascotXMLMenuLayout.setHorizontalGroup(
             jpMascotXMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpMascotXMLMenuLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jpMascotXMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jlSearchMascotXML)
+                .addGroup(jpMascotXMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jpMascotXMLMenuLayout.createSequentialGroup()
                         .addComponent(jlProtein)
                         .addGap(10, 10, 10)
@@ -1183,21 +1210,27 @@ public class ProteoSuiteView extends JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jlPeptide)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtPeptide, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(34, Short.MAX_VALUE))
+                        .addComponent(jtPeptide, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jpMascotXMLMenuLayout.createSequentialGroup()
+                        .addComponent(jlSearchMascotXML)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jbGenerateTemplate)))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         jpMascotXMLMenuLayout.setVerticalGroup(
             jpMascotXMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpMascotXMLMenuLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jlSearchMascotXML)
+                .addGroup(jpMascotXMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jlSearchMascotXML)
+                    .addComponent(jbGenerateTemplate))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jpMascotXMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jlProtein)
                     .addComponent(jtProtein, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jlPeptide)
                     .addComponent(jtPeptide, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jspMascotXMLSubDetail.setLeftComponent(jpMascotXMLMenu);
@@ -1208,11 +1241,11 @@ public class ProteoSuiteView extends JFrame {
         jpMascotXML.setLayout(jpMascotXMLLayout);
         jpMascotXMLLayout.setHorizontalGroup(
             jpMascotXMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspMascotXML, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+            .addComponent(jspMascotXML, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
         );
         jpMascotXMLLayout.setVerticalGroup(
             jpMascotXMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspMascotXML, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+            .addComponent(jspMascotXML, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE)
         );
 
         jtpProperties.addTab("Mascot XML View", jpMascotXML);
@@ -1241,11 +1274,11 @@ public class ProteoSuiteView extends JFrame {
         jpMzQuantML.setLayout(jpMzQuantMLLayout);
         jpMzQuantMLLayout.setHorizontalGroup(
             jpMzQuantMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspMzQuantML, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+            .addComponent(jspMzQuantML, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
         );
         jpMzQuantMLLayout.setVerticalGroup(
             jpMzQuantMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspMzQuantML, javax.swing.GroupLayout.DEFAULT_SIZE, 472, Short.MAX_VALUE)
+            .addComponent(jspMzQuantML, javax.swing.GroupLayout.DEFAULT_SIZE, 579, Short.MAX_VALUE)
         );
 
         jtpProperties.addTab("mzQuantML View", jpMzQuantML);
@@ -1254,11 +1287,11 @@ public class ProteoSuiteView extends JFrame {
         jpPropetiesTab.setLayout(jpPropetiesTabLayout);
         jpPropetiesTabLayout.setHorizontalGroup(
             jpPropetiesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpProperties)
+            .addComponent(jtpProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
         );
         jpPropetiesTabLayout.setVerticalGroup(
             jpPropetiesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+            .addComponent(jtpProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
         );
 
         jspProperties.setRightComponent(jpPropetiesTab);
@@ -1267,11 +1300,11 @@ public class ProteoSuiteView extends JFrame {
         jpPropertiesBox.setLayout(jpPropertiesBoxLayout);
         jpPropertiesBoxLayout.setHorizontalGroup(
             jpPropertiesBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspProperties)
+            .addComponent(jspProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
         );
         jpPropertiesBoxLayout.setVerticalGroup(
             jpPropertiesBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
+            .addComponent(jspProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 635, Short.MAX_VALUE)
         );
 
         jspViewerAndProperties.setRightComponent(jpPropertiesBox);
@@ -1280,11 +1313,11 @@ public class ProteoSuiteView extends JFrame {
         jpViewerAndProperties.setLayout(jpViewerAndPropertiesLayout);
         jpViewerAndPropertiesLayout.setHorizontalGroup(
             jpViewerAndPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspViewerAndProperties)
+            .addComponent(jspViewerAndProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
         );
         jpViewerAndPropertiesLayout.setVerticalGroup(
             jpViewerAndPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspViewerAndProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
+            .addComponent(jspViewerAndProperties)
         );
 
         jspMainPanelView.setRightComponent(jpViewerAndProperties);
@@ -1293,11 +1326,11 @@ public class ProteoSuiteView extends JFrame {
         jpMainPanelView.setLayout(jpMainPanelViewLayout);
         jpMainPanelViewLayout.setHorizontalGroup(
             jpMainPanelViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 989, Short.MAX_VALUE)
+            .addComponent(jspMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 1100, Short.MAX_VALUE)
         );
         jpMainPanelViewLayout.setVerticalGroup(
             jpMainPanelViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
+            .addComponent(jspMainPanelView)
         );
 
         jpProjectStatus.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), " Project: ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(102, 102, 102))); // NOI18N
@@ -1347,7 +1380,7 @@ public class ProteoSuiteView extends JFrame {
                 .addComponent(jlQuantFiles)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jlQuantFilesStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(335, Short.MAX_VALUE))
+                .addContainerGap(446, Short.MAX_VALUE))
         );
         jpProjectStatusLayout.setVerticalGroup(
             jpProjectStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1674,8 +1707,8 @@ public class ProteoSuiteView extends JFrame {
             .addComponent(jpMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jpProjectStatus, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 983, Short.MAX_VALUE)
-                    .addComponent(jpToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 983, Short.MAX_VALUE))
+                    .addComponent(jpProjectStatus, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1094, Short.MAX_VALUE)
+                    .addComponent(jpToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 1094, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -2434,11 +2467,74 @@ public class ProteoSuiteView extends JFrame {
 
     private void jtMascotXMLViewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtMascotXMLViewMouseClicked
         if (evt.getButton() == 1){            
-            new ViewChartGUI(jtMascotXMLView.getValueAt(jtMascotXMLView.getSelectedRow(), 1).toString(), 
-                    jtMascotXMLView.getValueAt(jtMascotXMLView.getSelectedRow(), 5).toString(),
+            new ViewChartGUI(jtMascotXMLView.getValueAt(jtMascotXMLView.getSelectedRow(), 2).toString(), 
+                    jtMascotXMLView.getValueAt(jtMascotXMLView.getSelectedRow(), 6).toString(),
                     "10000").setVisible(true);     
         }            
     }//GEN-LAST:event_jtMascotXMLViewMouseClicked
+
+    private void jbGenerateTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbGenerateTemplateActionPerformed
+        //... Check selection .../
+        if (jtMascotXMLView.getSelectedRow()<0)
+        {
+            JOptionPane.showMessageDialog(this, "Please select at least one peptide", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
+            loadTemplate(Integer.parseInt(jtMascotXMLView.getValueAt(jtMascotXMLView.getSelectedRow(), 0).toString()));
+        }
+    }//GEN-LAST:event_jbGenerateTemplateActionPerformed
+
+    private void jtIdentFilesMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtIdentFilesMouseEntered
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jtIdentFilesMouseEntered
+    private void loadTemplate(int iIndex)     
+    {
+        DefaultTableModel model = new DefaultTableModel()
+        {  
+            Class[] types = new Class [] {             
+                    java.lang.Integer.class, 
+                    java.lang.Double.class, java.lang.Double.class,
+                    java.lang.Double.class, java.lang.Double.class,
+                    java.lang.Double.class, java.lang.Double.class,
+                    java.lang.Double.class, java.lang.Double.class,
+                    java.lang.Double.class, java.lang.Double.class
+            };  
+            @Override  
+            public Class getColumnClass(int columnIndex) {  
+                return types [columnIndex];  
+            }  
+        };
+        jtTemplate.setModel(model);
+        model.addColumn("Peptide Index");
+        model.addColumn("Isotope 1 m/z");
+        model.addColumn("Isotope 1 Relative Intensity");
+        model.addColumn("Isotope 2 m/z");
+        model.addColumn("Isotope 2 Relative Intensity");
+        model.addColumn("Isotope 3 m/z");
+        model.addColumn("Isotope 3 Relative Intensity");   
+        model.addColumn("Isotope 4 m/z");
+        model.addColumn("Isotope 4 Relative Intensity");
+        model.addColumn("Isotope 5 m/z");
+        model.addColumn("Isotope 5 Relative Intensity");
+        
+        model.insertRow(model.getRowCount(), new Object[]{
+                    iIndex,
+                    Float.parseFloat(String.format("%.4f", 2.0)),
+                    Float.parseFloat(String.format("%.4f", 2.0)),
+                    Float.parseFloat(String.format("%.4f", 2.0)),
+                    Float.parseFloat(String.format("%.4f", 2.0)),
+                    Float.parseFloat(String.format("%.4f", 2.0)),
+                    Float.parseFloat(String.format("%.4f", 2.0)),
+                    Float.parseFloat(String.format("%.4f", 2.0)),
+                    Float.parseFloat(String.format("%.4f", 2.0)),
+                    Float.parseFloat(String.format("%.4f", 2.0)),
+                    Float.parseFloat(String.format("%.4f", 2.0))
+                });
+        jtpLog.setSelectedIndex(2);
+        RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);            
+        jtTemplate.setRowSorter(sorter);         
+    }    
     private void searchValueInMzML(String sChain, int iColumn)     
     {
         DefaultTableModel dtm = (DefaultTableModel) jtMzML.getModel();
@@ -2475,11 +2571,8 @@ public class ProteoSuiteView extends JFrame {
         MzMLUnmarshaller unmarshaller = alUnmarshaller.get(iIndex);            
         try
         {
-           System.out.println("Hello1");
-            Spectrum spectrum = unmarshaller.getSpectrumById(sID);
-           System.out.println("Hello2");
+           Spectrum spectrum = unmarshaller.getSpectrumById(sID);
            List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList().getBinaryDataArray();
-           System.out.println("Hello3");
 
            //... Reading mz Values ...//           
            BinaryDataArray mzBinaryDataArray = (BinaryDataArray) bdal.get(0);
@@ -3008,7 +3101,7 @@ public class ProteoSuiteView extends JFrame {
         DefaultTableModel model = new DefaultTableModel()
         {  
             Class[] types = new Class [] {             
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class,
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class,
                 java.lang.Integer.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Double.class
             };  
             @Override  
@@ -3017,6 +3110,7 @@ public class ProteoSuiteView extends JFrame {
             }  
         };                
         jtMascotXMLView.setModel(model);
+        model.addColumn("Index");
         model.addColumn("Protein");
         model.addColumn("Peptide");
         model.addColumn("Composition");
@@ -3046,6 +3140,7 @@ public class ProteoSuiteView extends JFrame {
             NodeList hitsList = nodeLst.getChildNodes();                             
             
             //... Initializing proteinId, peptide sequence and other variables ...//
+            Integer iIndex = 0;
             String proteinId = "";
             String peptideSeq = "";
             String peptideCompos = "";
@@ -3212,6 +3307,7 @@ public class ProteoSuiteView extends JFrame {
                                                             retTime = 0;                                                            
                                                         }
                                                         model.insertRow(model.getRowCount(), new Object[]{
+                                                            iIndex,
                                                             proteinId,
                                                             peptideSeq, 
                                                             peptideCompos,
@@ -3220,7 +3316,8 @@ public class ProteoSuiteView extends JFrame {
                                                             dbCharge,
                                                             hitScore,
                                                             scanNumber,
-                                                            retTime});       
+                                                            retTime});
+                                                        iIndex++;
                                                     }
                                                 }
                                             }
@@ -4386,6 +4483,8 @@ public class ProteoSuiteView extends JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -4399,6 +4498,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JToolBar jToolBar3;
     private javax.swing.JButton jbCopy;
     private javax.swing.JButton jbCut;
+    private javax.swing.JButton jbGenerateTemplate;
     private javax.swing.JButton jbImportFile;
     private javax.swing.JButton jbNewProject;
     private javax.swing.JButton jbOpenProject;
@@ -4535,6 +4635,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JTable jtRawData;
     private javax.swing.JTable jtRawFiles;
     private javax.swing.JTextField jtScan;
+    private javax.swing.JTable jtTemplate;
     private javax.swing.JTextArea jtaLog;
     private javax.swing.JTextArea jtaMascotXML;
     private javax.swing.JTextArea jtaMzML;
