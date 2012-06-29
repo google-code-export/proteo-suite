@@ -632,7 +632,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jspLeftPanelView" alignment="0" pref="279" max="32767" attributes="0"/>
+                      <Component id="jspLeftPanelView" alignment="0" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -678,7 +678,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jlFiles" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="244" max="32767" attributes="0"/>
+                                  <EmptySpace pref="245" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -723,7 +723,7 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspProjectDetails" alignment="0" pref="279" max="32767" attributes="0"/>
+                              <Component id="jspProjectDetails" alignment="0" pref="280" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -758,9 +758,9 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <EmptySpace min="0" pref="279" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="280" max="32767" attributes="0"/>
                                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                                          <Component id="jtpRawFiles" alignment="0" pref="279" max="32767" attributes="0"/>
+                                          <Component id="jtpRawFiles" alignment="0" pref="280" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
@@ -838,7 +838,7 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jspLeftMenuBottom" alignment="0" pref="279" max="32767" attributes="0"/>
+                                      <Component id="jspLeftMenuBottom" alignment="0" pref="280" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
@@ -870,7 +870,7 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jtpQuantFiles" alignment="0" pref="277" max="32767" attributes="0"/>
+                                              <Component id="jtpQuantFiles" alignment="0" pref="278" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
@@ -1688,7 +1688,7 @@
                                                               <EmptySpace max="-2" attributes="0"/>
                                                               <Group type="103" groupAlignment="0" attributes="0">
                                                                   <Component id="jlVisualisationOptions" min="-2" max="-2" attributes="0"/>
-                                                                  <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jlSearchMzML" alignment="0" min="-2" max="-2" attributes="0"/>
                                                               </Group>
                                                               <EmptySpace type="separate" max="-2" attributes="0"/>
                                                               <Group type="103" groupAlignment="0" attributes="0">
@@ -1722,7 +1722,7 @@
                                                               </Group>
                                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                               <Group type="103" groupAlignment="2" attributes="0">
-                                                                  <Component id="jLabel1" alignment="2" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jlSearchMzML" alignment="2" min="-2" max="-2" attributes="0"/>
                                                                   <Component id="jlScan" alignment="2" min="-2" max="-2" attributes="0"/>
                                                                   <Component id="jtScan" alignment="2" min="-2" max="-2" attributes="0"/>
                                                                   <Component id="jlRT" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -1800,7 +1800,7 @@
                                                         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtRTKeyPressed"/>
                                                       </Events>
                                                     </Component>
-                                                    <Component class="javax.swing.JLabel" name="jLabel1">
+                                                    <Component class="javax.swing.JLabel" name="jlSearchMzML">
                                                       <Properties>
                                                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                                                           <Font name="Tahoma" size="11" style="1"/>
@@ -1868,34 +1868,129 @@
                                                 </Component>
                                               </SubComponents>
                                             </Container>
-                                            <Container class="javax.swing.JScrollPane" name="jspMascotXMLView">
-                                              <AuxValues>
-                                                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                                              </AuxValues>
+                                            <Container class="javax.swing.JSplitPane" name="jspMascotXMLSubDetail">
+                                              <Properties>
+                                                <Property name="dividerLocation" type="int" value="80"/>
+                                                <Property name="orientation" type="int" value="0"/>
+                                              </Properties>
                                               <Constraints>
                                                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
                                                   <JSplitPaneConstraints position="right"/>
                                                 </Constraint>
                                               </Constraints>
 
-                                              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                                              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
                                               <SubComponents>
-                                                <Component class="javax.swing.JTable" name="jtMascotXMLView">
-                                                  <Properties>
-                                                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                      <Table columnCount="8" rowCount="0">
-                                                        <Column editable="true" title="Protein" type="java.lang.Object"/>
-                                                        <Column editable="true" title="Peptide" type="java.lang.Object"/>
-                                                        <Column editable="true" title="Exp Mz" type="java.lang.Object"/>
-                                                        <Column editable="true" title="Exp Mr" type="java.lang.Object"/>
-                                                        <Column editable="true" title="Charge" type="java.lang.Object"/>
-                                                        <Column editable="true" title="Score" type="java.lang.Object"/>
-                                                        <Column editable="true" title="Scan" type="java.lang.Object"/>
-                                                        <Column editable="true" title="RT" type="java.lang.Object"/>
-                                                      </Table>
-                                                    </Property>
-                                                  </Properties>
-                                                </Component>
+                                                <Container class="javax.swing.JScrollPane" name="jspMascotXMLDetail">
+                                                  <AuxValues>
+                                                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                                                  </AuxValues>
+                                                  <Constraints>
+                                                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
+                                                      <JSplitPaneConstraints position="right"/>
+                                                    </Constraint>
+                                                  </Constraints>
+
+                                                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                                                  <SubComponents>
+                                                    <Component class="javax.swing.JTable" name="jtMascotXMLView">
+                                                      <Properties>
+                                                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                                                          <Table columnCount="9" rowCount="0">
+                                                            <Column editable="true" title="Protein" type="java.lang.Object"/>
+                                                            <Column editable="true" title="Peptide" type="java.lang.Object"/>
+                                                            <Column editable="true" title="Composition" type="java.lang.Object"/>
+                                                            <Column editable="true" title="Exp Mz" type="java.lang.Object"/>
+                                                            <Column editable="true" title="Exp Mr" type="java.lang.Object"/>
+                                                            <Column editable="true" title="Charge" type="java.lang.Object"/>
+                                                            <Column editable="true" title="Score" type="java.lang.Object"/>
+                                                            <Column editable="true" title="Scan" type="java.lang.Object"/>
+                                                            <Column editable="true" title="RT (sec)" type="java.lang.Object"/>
+                                                          </Table>
+                                                        </Property>
+                                                      </Properties>
+                                                      <Events>
+                                                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtMascotXMLViewMouseClicked"/>
+                                                      </Events>
+                                                    </Component>
+                                                  </SubComponents>
+                                                </Container>
+                                                <Container class="javax.swing.JPanel" name="jpMascotXMLMenu">
+                                                  <Constraints>
+                                                    <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
+                                                      <JSplitPaneConstraints position="left"/>
+                                                    </Constraint>
+                                                  </Constraints>
+
+                                                  <Layout>
+                                                    <DimensionLayout dim="0">
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <Group type="102" attributes="0">
+                                                              <EmptySpace max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                                  <Component id="jlSearchMascotXML" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                                  <Group type="102" alignment="0" attributes="0">
+                                                                      <Component id="jlProtein" min="-2" max="-2" attributes="0"/>
+                                                                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                                                                      <Component id="jtProtein" min="-2" pref="82" max="-2" attributes="0"/>
+                                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                                      <Component id="jlPeptide" min="-2" max="-2" attributes="0"/>
+                                                                      <EmptySpace max="-2" attributes="0"/>
+                                                                      <Component id="jtPeptide" min="-2" pref="87" max="-2" attributes="0"/>
+                                                                  </Group>
+                                                              </Group>
+                                                              <EmptySpace pref="34" max="32767" attributes="0"/>
+                                                          </Group>
+                                                      </Group>
+                                                    </DimensionLayout>
+                                                    <DimensionLayout dim="1">
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <Group type="102" alignment="0" attributes="0">
+                                                              <EmptySpace max="-2" attributes="0"/>
+                                                              <Component id="jlSearchMascotXML" min="-2" max="-2" attributes="0"/>
+                                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="3" attributes="0">
+                                                                  <Component id="jlProtein" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jtProtein" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jlPeptide" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jtPeptide" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                              </Group>
+                                                              <EmptySpace pref="23" max="32767" attributes="0"/>
+                                                          </Group>
+                                                      </Group>
+                                                    </DimensionLayout>
+                                                  </Layout>
+                                                  <SubComponents>
+                                                    <Component class="javax.swing.JLabel" name="jlSearchMascotXML">
+                                                      <Properties>
+                                                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                                                          <Font name="Tahoma" size="11" style="1"/>
+                                                        </Property>
+                                                        <Property name="text" type="java.lang.String" value="Search:"/>
+                                                      </Properties>
+                                                    </Component>
+                                                    <Component class="javax.swing.JLabel" name="jlProtein">
+                                                      <Properties>
+                                                        <Property name="text" type="java.lang.String" value="Protein:"/>
+                                                      </Properties>
+                                                    </Component>
+                                                    <Component class="javax.swing.JTextField" name="jtProtein">
+                                                      <Events>
+                                                        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtProteinKeyPressed"/>
+                                                      </Events>
+                                                    </Component>
+                                                    <Component class="javax.swing.JLabel" name="jlPeptide">
+                                                      <Properties>
+                                                        <Property name="text" type="java.lang.String" value="Peptide:"/>
+                                                      </Properties>
+                                                    </Component>
+                                                    <Component class="javax.swing.JTextField" name="jtPeptide">
+                                                      <Events>
+                                                        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtPeptideKeyPressed"/>
+                                                      </Events>
+                                                    </Component>
+                                                  </SubComponents>
+                                                </Container>
                                               </SubComponents>
                                             </Container>
                                           </SubComponents>

@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -59,6 +61,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.proteosuite.gui.*;
+import org.proteosuite.test.ViewChartGUI;
 import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.ProgressBarDialog;
 import org.proteosuite.utils.TwoDPlot;
@@ -361,13 +364,20 @@ public class ProteoSuiteView extends JFrame {
         jtScan = new javax.swing.JTextField();
         jlRT = new javax.swing.JLabel();
         jtRT = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
+        jlSearchMzML = new javax.swing.JLabel();
         jpMascotXML = new javax.swing.JPanel();
         jspMascotXML = new javax.swing.JSplitPane();
         jspMascotXMLHeader = new javax.swing.JScrollPane();
         jtaMascotXML = new javax.swing.JTextArea();
-        jspMascotXMLView = new javax.swing.JScrollPane();
+        jspMascotXMLSubDetail = new javax.swing.JSplitPane();
+        jspMascotXMLDetail = new javax.swing.JScrollPane();
         jtMascotXMLView = new javax.swing.JTable();
+        jpMascotXMLMenu = new javax.swing.JPanel();
+        jlSearchMascotXML = new javax.swing.JLabel();
+        jlProtein = new javax.swing.JLabel();
+        jtProtein = new javax.swing.JTextField();
+        jlPeptide = new javax.swing.JLabel();
+        jtPeptide = new javax.swing.JTextField();
         jpMzQuantML = new javax.swing.JPanel();
         jspMzQuantML = new javax.swing.JSplitPane();
         jspMzQuantMLHeader = new javax.swing.JScrollPane();
@@ -566,7 +576,7 @@ public class ProteoSuiteView extends JFrame {
         jpProjectHeader.setPreferredSize(new java.awt.Dimension(280, 25));
 
         jlFiles.setBackground(new java.awt.Color(255, 255, 255));
-        jlFiles.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jlFiles.setFont(new java.awt.Font("Tahoma", 1, 11));
         jlFiles.setForeground(new java.awt.Color(102, 102, 102));
         jlFiles.setText("Files");
 
@@ -577,7 +587,7 @@ public class ProteoSuiteView extends JFrame {
             .addGroup(jpProjectHeaderLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jlFiles)
-                .addContainerGap(244, Short.MAX_VALUE))
+                .addContainerGap(245, Short.MAX_VALUE))
         );
         jpProjectHeaderLayout.setVerticalGroup(
             jpProjectHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -625,9 +635,9 @@ public class ProteoSuiteView extends JFrame {
         jpLeftMenuTop.setLayout(jpLeftMenuTopLayout);
         jpLeftMenuTopLayout.setHorizontalGroup(
             jpLeftMenuTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 279, Short.MAX_VALUE)
+            .addGap(0, 280, Short.MAX_VALUE)
             .addGroup(jpLeftMenuTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jtpRawFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE))
+                .addComponent(jtpRawFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
         );
         jpLeftMenuTopLayout.setVerticalGroup(
             jpLeftMenuTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -661,7 +671,7 @@ public class ProteoSuiteView extends JFrame {
         jpQuantFiles.setLayout(jpQuantFilesLayout);
         jpQuantFilesLayout.setHorizontalGroup(
             jpQuantFilesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpQuantFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+            .addComponent(jtpQuantFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
         );
         jpQuantFilesLayout.setVerticalGroup(
             jpQuantFilesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -696,7 +706,7 @@ public class ProteoSuiteView extends JFrame {
         jpLeftMenuBottom.setLayout(jpLeftMenuBottomLayout);
         jpLeftMenuBottomLayout.setHorizontalGroup(
             jpLeftMenuBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspLeftMenuBottom, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+            .addComponent(jspLeftMenuBottom, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
         );
         jpLeftMenuBottomLayout.setVerticalGroup(
             jpLeftMenuBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -711,7 +721,7 @@ public class ProteoSuiteView extends JFrame {
         jpProjectDetails.setLayout(jpProjectDetailsLayout);
         jpProjectDetailsLayout.setHorizontalGroup(
             jpProjectDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspProjectDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+            .addComponent(jspProjectDetails, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
         );
         jpProjectDetailsLayout.setVerticalGroup(
             jpProjectDetailsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -724,7 +734,7 @@ public class ProteoSuiteView extends JFrame {
         jpLeftPanelView.setLayout(jpLeftPanelViewLayout);
         jpLeftPanelViewLayout.setHorizontalGroup(
             jpLeftPanelViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspLeftPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+            .addComponent(jspLeftPanelView)
         );
         jpLeftPanelViewLayout.setVerticalGroup(
             jpLeftPanelViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -778,7 +788,7 @@ public class ProteoSuiteView extends JFrame {
         jspLeftViewerDetails.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jtaLog.setColumns(20);
-        jtaLog.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        jtaLog.setFont(new java.awt.Font("Tahoma", 0, 11));
         jtaLog.setRows(5);
         jspLog.setViewportView(jtaLog);
 
@@ -971,7 +981,7 @@ public class ProteoSuiteView extends JFrame {
         jspMzML.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jtaMzML.setColumns(20);
-        jtaMzML.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        jtaMzML.setFont(new java.awt.Font("Tahoma", 0, 11));
         jtaMzML.setRows(5);
         jspMzMLHeader.setViewportView(jtaMzML);
 
@@ -1002,7 +1012,7 @@ public class ProteoSuiteView extends JFrame {
 
         jpMzMLMenu.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jlVisualisationOptions.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jlVisualisationOptions.setFont(new java.awt.Font("Tahoma", 1, 11));
         jlVisualisationOptions.setText("View:");
 
         jbShowChromatogram.setToolTipText("Show Chromatogram");
@@ -1047,8 +1057,8 @@ public class ProteoSuiteView extends JFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel1.setText("Search:");
+        jlSearchMzML.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jlSearchMzML.setText("Search:");
 
         javax.swing.GroupLayout jpMzMLMenuLayout = new javax.swing.GroupLayout(jpMzMLMenu);
         jpMzMLMenu.setLayout(jpMzMLMenuLayout);
@@ -1058,7 +1068,7 @@ public class ProteoSuiteView extends JFrame {
                 .addContainerGap()
                 .addGroup(jpMzMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jlVisualisationOptions)
-                    .addComponent(jLabel1))
+                    .addComponent(jlSearchMzML))
                 .addGap(18, 18, 18)
                 .addGroup(jpMzMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpMzMLMenuLayout.createSequentialGroup()
@@ -1085,7 +1095,7 @@ public class ProteoSuiteView extends JFrame {
                     .addComponent(jbShow2D, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jpMzMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel1)
+                    .addComponent(jlSearchMzML)
                     .addComponent(jlScan)
                     .addComponent(jtScan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jlRT)
@@ -1113,23 +1123,86 @@ public class ProteoSuiteView extends JFrame {
         jspMascotXML.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jtaMascotXML.setColumns(20);
-        jtaMascotXML.setFont(new java.awt.Font("Tahoma", 0, 11)); // NOI18N
+        jtaMascotXML.setFont(new java.awt.Font("Tahoma", 0, 11));
         jtaMascotXML.setRows(5);
         jspMascotXMLHeader.setViewportView(jtaMascotXML);
 
         jspMascotXML.setTopComponent(jspMascotXMLHeader);
+
+        jspMascotXMLSubDetail.setDividerLocation(80);
+        jspMascotXMLSubDetail.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jtMascotXMLView.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Protein", "Peptide", "Exp Mz", "Exp Mr", "Charge", "Score", "Scan", "RT"
+                "Protein", "Peptide", "Composition", "Exp Mz", "Exp Mr", "Charge", "Score", "Scan", "RT (sec)"
             }
         ));
-        jspMascotXMLView.setViewportView(jtMascotXMLView);
+        jtMascotXMLView.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtMascotXMLViewMouseClicked(evt);
+            }
+        });
+        jspMascotXMLDetail.setViewportView(jtMascotXMLView);
 
-        jspMascotXML.setRightComponent(jspMascotXMLView);
+        jspMascotXMLSubDetail.setRightComponent(jspMascotXMLDetail);
+
+        jlSearchMascotXML.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jlSearchMascotXML.setText("Search:");
+
+        jlProtein.setText("Protein:");
+
+        jtProtein.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jtProteinKeyPressed(evt);
+            }
+        });
+
+        jlPeptide.setText("Peptide:");
+
+        jtPeptide.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jtPeptideKeyPressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jpMascotXMLMenuLayout = new javax.swing.GroupLayout(jpMascotXMLMenu);
+        jpMascotXMLMenu.setLayout(jpMascotXMLMenuLayout);
+        jpMascotXMLMenuLayout.setHorizontalGroup(
+            jpMascotXMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpMascotXMLMenuLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jpMascotXMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jlSearchMascotXML)
+                    .addGroup(jpMascotXMLMenuLayout.createSequentialGroup()
+                        .addComponent(jlProtein)
+                        .addGap(10, 10, 10)
+                        .addComponent(jtProtein, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jlPeptide)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jtPeptide, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(34, Short.MAX_VALUE))
+        );
+        jpMascotXMLMenuLayout.setVerticalGroup(
+            jpMascotXMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jpMascotXMLMenuLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jlSearchMascotXML)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jpMascotXMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jlProtein)
+                    .addComponent(jtProtein, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jlPeptide)
+                    .addComponent(jtPeptide, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+
+        jspMascotXMLSubDetail.setLeftComponent(jpMascotXMLMenu);
+
+        jspMascotXML.setRightComponent(jspMascotXMLSubDetail);
 
         javax.swing.GroupLayout jpMascotXMLLayout = new javax.swing.GroupLayout(jpMascotXML);
         jpMascotXML.setLayout(jpMascotXMLLayout);
@@ -2321,7 +2394,7 @@ public class ProteoSuiteView extends JFrame {
     private void jtScanKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtScanKeyPressed
         String sChain = "";
         sChain = jtScan.getText() + evt.getKeyChar();
-        searchValueInMzML(sChain, 1);
+        searchValueInMzML(sChain, 2);
     }//GEN-LAST:event_jtScanKeyPressed
 
     private void jtRTKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtRTKeyPressed
@@ -2329,12 +2402,49 @@ public class ProteoSuiteView extends JFrame {
         sChain = jtRT.getText() + evt.getKeyChar();
         searchValueInMzML(sChain, 6);        
     }//GEN-LAST:event_jtRTKeyPressed
+
+    private void jtProteinKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtProteinKeyPressed
+        String sChain = "";
+        sChain = "" + evt.getKeyChar();
+            
+        Pattern p = Pattern.compile("^[a-zA-Z0-9]*$"); 
+        Matcher m = p.matcher(sChain);
+        if (m.find())
+        {
+            sChain = jtProtein.getText() + evt.getKeyChar();
+            sChain = sChain.toUpperCase();
+            searchValueInMascotXML(sChain, 0); 
+        }
+    }//GEN-LAST:event_jtProteinKeyPressed
+
+    private void jtPeptideKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtPeptideKeyPressed
+        
+        String sChain = "";
+        sChain = "" + evt.getKeyChar();
+            
+        Pattern p = Pattern.compile("^[a-zA-Z0-9]*$"); 
+        Matcher m = p.matcher(sChain);
+        if (m.find())
+        {
+            sChain = jtPeptide.getText() + evt.getKeyChar();            
+            sChain = sChain.toUpperCase();
+            searchValueInMascotXML(sChain, 1); 
+        }
+    }//GEN-LAST:event_jtPeptideKeyPressed
+
+    private void jtMascotXMLViewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtMascotXMLViewMouseClicked
+        if (evt.getButton() == 1){            
+            new ViewChartGUI(jtMascotXMLView.getValueAt(jtMascotXMLView.getSelectedRow(), 1).toString(), 
+                    jtMascotXMLView.getValueAt(jtMascotXMLView.getSelectedRow(), 5).toString(),
+                    "10000").setVisible(true);     
+        }            
+    }//GEN-LAST:event_jtMascotXMLViewMouseClicked
     private void searchValueInMzML(String sChain, int iColumn)     
     {
         DefaultTableModel dtm = (DefaultTableModel) jtMzML.getModel();
         int nRow = dtm.getRowCount();
         for (int iI = 0 ; iI < nRow ; iI++)
-        {    
+        {                
             if (dtm.getValueAt(iI,iColumn).toString().contains(sChain))
             {
                 jtMzML.setRowSelectionInterval(iI, iI);
@@ -2343,6 +2453,20 @@ public class ProteoSuiteView extends JFrame {
             }
         }
     }
+    private void searchValueInMascotXML(String sChain, int iColumn)     
+    {
+        DefaultTableModel dtm = (DefaultTableModel) jtMascotXMLView.getModel();
+        int nRow = dtm.getRowCount();       
+        for (int iI = 0 ; iI < nRow ; iI++)
+        {
+            if (dtm.getValueAt(iI,iColumn).toString().contains(sChain))
+            {
+                jtMascotXMLView.setRowSelectionInterval(iI, iI);
+                jtMascotXMLView.scrollRectToVisible(new Rectangle(jtMascotXMLView.getCellRect(iI, 0, true)));
+                break;
+            }
+        }
+    }    
     private void showSpectrum(int iIndex, String sID) {                                             
                   
         jtpLog.setSelectedIndex(0);
@@ -2351,10 +2475,13 @@ public class ProteoSuiteView extends JFrame {
         MzMLUnmarshaller unmarshaller = alUnmarshaller.get(iIndex);            
         try
         {
-           Spectrum spectrum = unmarshaller.getSpectrumById(sID);
+           System.out.println("Hello1");
+            Spectrum spectrum = unmarshaller.getSpectrumById(sID);
+           System.out.println("Hello2");
            List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList().getBinaryDataArray();
+           System.out.println("Hello3");
 
-           //... Reading mz Values ...//
+           //... Reading mz Values ...//           
            BinaryDataArray mzBinaryDataArray = (BinaryDataArray) bdal.get(0);
            Number[] mzNumbers = mzBinaryDataArray.getBinaryDataAsNumberArray();
            double[] mz = new double[mzNumbers.length];
@@ -2881,7 +3008,7 @@ public class ProteoSuiteView extends JFrame {
         DefaultTableModel model = new DefaultTableModel()
         {  
             Class[] types = new Class [] {             
-                java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class,
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class,
                 java.lang.Integer.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Double.class
             };  
             @Override  
@@ -2892,15 +3019,15 @@ public class ProteoSuiteView extends JFrame {
         jtMascotXMLView.setModel(model);
         model.addColumn("Protein");
         model.addColumn("Peptide");
+        model.addColumn("Composition");
         model.addColumn("Exp m/z");
         model.addColumn("Exp Mr");
         model.addColumn("Charge");
         model.addColumn("Score");       
         model.addColumn("Scan");
-        model.addColumn("RT");
+        model.addColumn("RT (sec)");
         String sOutput="";
-                
-        
+                       
         sOutput = "Name:\t" + jtIdentFiles.getValueAt(jtIdentFiles.getSelectedRow(), 0).toString() + "\n";
         sOutput = sOutput + "Path:\t" + jtIdentFiles.getValueAt(jtIdentFiles.getSelectedRow(), 1).toString() + "\n";
         jtaMascotXML.setText(sOutput);  
@@ -2921,6 +3048,7 @@ public class ProteoSuiteView extends JFrame {
             //... Initializing proteinId, peptide sequence and other variables ...//
             String proteinId = "";
             String peptideSeq = "";
+            String peptideCompos = "";
             float hitScore = 0.0f;
             float retTime = 0.0f;
             int scanNumber = 0;
@@ -2977,6 +3105,9 @@ public class ProteoSuiteView extends JFrame {
                                                 if (peptideElem.getNodeName().equals("pep_seq")) 
                                                 {
                                                     peptideSeq = peptideElem.getTextContent().toString();
+                                                    
+                                                    //... Calculate the residue composition ...//
+                                                    peptideCompos = getResidueComposition(peptideSeq);
                                                 } 
                                                 else if (peptideElem.getNodeName().equals("pep_exp_mz")) 
                                                 {
@@ -3083,6 +3214,7 @@ public class ProteoSuiteView extends JFrame {
                                                         model.insertRow(model.getRowCount(), new Object[]{
                                                             proteinId,
                                                             peptideSeq, 
+                                                            peptideCompos,
                                                             parIonMz,
                                                             parIonMr,
                                                             dbCharge,
@@ -3102,13 +3234,210 @@ public class ProteoSuiteView extends JFrame {
             }
             RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
             jtMascotXMLView.setRowSorter(sorter);
-            System.out.println("LoadMascotIdent completed!");
         } 
         catch (Exception e) 
         {
             System.out.println("LoadMascotIdent: Exception while reading " + file + "\n" + e);
             System.exit(1);
         }
+    }    
+    private String getResidueComposition(String sPeptide) 
+    {
+        /*         
+         * -------------------------------------------------------------
+         * Name            3-Sym  1-Sym     Mono        Avg     Residues
+         * -------------------------------------------------------------
+         * Alanine         Ala     A        71.03711    71.08   C3H5NO
+         * Arginine        Arg     R        156.10111   156.2   C6H12N4O
+         * Asparagine      Asn     N        114.04293   114.1   C4H6N2O2
+         * Aspartic Acid   Asp     D        115.02694   115.1   C4H5NO3
+         * Cysteine        Cys     C        103.00919   103.1   C3H5NOS
+         * Glutamic Acid   Glu     E        129.04259   129.1   C5H7NO3 
+         * Glutamine       Gln     Q        128.05858   128.1   C5H8N2O2
+         * Glycine         Gly     G        57.02146    57.05   C2H3NO
+         * Histidine       His     H        137.05891   137.1   C6H7N3O
+         * Isoleucine      Ile     I        113.08406   113.2   C6H11NO
+         * Leucine         Leu     L        113.08406   113.2   C6H11NO
+         * Lysine          Lys     K        128.09496   128.2   C6H12N2O
+         * Methionine      Met     M        131.04049   131.2   C5H9NOS
+         * Phenyalanine    Phe     F        147.06841   147.2   C9H9NO
+         * Proline         Pro     P        97.05276    97.12   C5H7NO
+         * Serine          Ser     S        87.03203    87.08   C3H5NO2
+         * Threonine       Thr     T        101.04768   101.1   C4H7NO2
+         * Tryptophan      Trp     W        186.07931   186.2   C11H10N2O
+         * Tyrosine        Tyr     Y        163.06333   163.2   C9H9NO2
+         * Valine          Val     V        99.06841    99.13   C5H9NO
+        */
+        
+        int iCarb=0, iHydro=3, iNitro=0, iOxy=1, iSulf=0; //... Water molecule (H2O) + H1 ...//
+        String sPeptideRet="";
+        for (int iI = 0; iI < sPeptide.length(); iI++) {
+            switch (sPeptide.toUpperCase().charAt(iI)) {
+                case 'A': {
+                    iCarb+=3;
+                    iHydro+=5;
+                    iNitro++;
+                    iOxy++;
+                    break;
+                }   
+                case 'R': {
+                    iCarb+=6;
+                    iHydro+=12;
+                    iNitro+=4;
+                    iOxy++;
+                    break;
+                }                       
+                case 'N': {
+                    iCarb+=4;
+                    iHydro+=6;
+                    iNitro+=2;
+                    iOxy+=2;
+                    break;
+                }   
+                case 'D': {
+                    iCarb+=4;
+                    iHydro+=5;
+                    iNitro++;
+                    iOxy+=3;
+                    break;
+                }   
+                case 'C': {
+                    iCarb+=3;
+                    iHydro+=5;
+                    iNitro++;
+                    iOxy++;
+                    iSulf++;
+                    break;
+                }   
+                case 'E': {
+                    iCarb+=5;
+                    iHydro+=7;
+                    iNitro++;
+                    iOxy+=3;
+                    break;
+                }   
+                case 'Q': {
+                    iCarb+=5;
+                    iHydro+=8;
+                    iNitro+=2;
+                    iOxy+=2;
+                    break;
+                }   
+                case 'G': {
+                    iCarb+=2;
+                    iHydro+=3;
+                    iNitro++;
+                    iOxy++;
+                    break;
+                }   
+                case 'H': {
+                    iCarb+=6;
+                    iHydro+=7;
+                    iNitro+=3;
+                    iOxy++;
+                    break;
+                }   
+                case 'I': {
+                    iCarb+=6;
+                    iHydro+=11;
+                    iNitro++;
+                    iOxy++;
+                    break;
+                }   
+                case 'L': {
+                    iCarb+=6;
+                    iHydro+=11;
+                    iNitro++;
+                    iOxy++;
+                    break;
+                }   
+                case 'K': {
+                    iCarb+=6;
+                    iHydro+=12;
+                    iNitro+=2;
+                    iOxy++;
+                    break;
+                }   
+                case 'M': {
+                    iCarb+=5;
+                    iHydro+=9;
+                    iNitro++;
+                    iOxy++;
+                    iSulf++;
+                    break;
+                }   
+                case 'F': {
+                    iCarb+=9;
+                    iHydro+=9;
+                    iNitro++;
+                    iOxy++;
+                    break;
+                }   
+                case 'P': {
+                    iCarb+=5;
+                    iHydro+=7;
+                    iNitro++;
+                    iOxy++;
+                    break;
+                }   
+                case 'S': {
+                    iCarb+=3;
+                    iHydro+=5;
+                    iNitro++;
+                    iOxy+=2;
+                    break;
+                }   
+                case 'T': {
+                    iCarb+=4;
+                    iHydro+=7;
+                    iNitro++;
+                    iOxy+=2;
+                    break;
+                }   
+                case 'W': {
+                    iCarb+=11;
+                    iHydro+=10;
+                    iNitro+=2;
+                    iOxy++;
+                    break;
+                }   
+                case 'Y': {
+                    iCarb+=9;
+                    iHydro+=9;
+                    iNitro++;
+                    iOxy+=2;
+                    break;
+                }   
+                case 'V': {
+                    iCarb+=5;
+                    iHydro+=9;
+                    iNitro++;
+                    iOxy++;
+                    break;
+                }    
+            }
+        }
+        if (iCarb>0)
+        {
+            sPeptideRet = "C" + iCarb;
+        }
+        if (iHydro>0)
+        {
+            sPeptideRet = sPeptideRet + "H" + iHydro;
+        }
+        if (iNitro>0)
+        {
+            sPeptideRet = sPeptideRet + "N" + iNitro;
+        }
+        if (iOxy>0)
+        {
+            sPeptideRet = sPeptideRet + "O" + iOxy;
+        }
+        if (iSulf>0)
+        {
+            sPeptideRet = sPeptideRet + "S" + iSulf;
+        }        
+        return sPeptideRet;
     }    
     private class ImageRenderer extends DefaultTableCellRenderer {
         JLabel lbl = new JLabel();
@@ -4057,7 +4386,6 @@ public class ProteoSuiteView extends JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -4086,13 +4414,17 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JLabel jlFiles;
     private javax.swing.JLabel jlIdentFiles;
     private javax.swing.JLabel jlIdentFilesStatus;
+    private javax.swing.JLabel jlPeptide;
     private javax.swing.JLabel jlProperties;
+    private javax.swing.JLabel jlProtein;
     private javax.swing.JLabel jlQuantFiles;
     private javax.swing.JLabel jlQuantFilesStatus;
     private javax.swing.JLabel jlRT;
     private javax.swing.JLabel jlRawFiles;
     private javax.swing.JLabel jlRawFilesStatus;
     private javax.swing.JLabel jlScan;
+    private javax.swing.JLabel jlSearchMascotXML;
+    private javax.swing.JLabel jlSearchMzML;
     private javax.swing.JLabel jlTechnique;
     private javax.swing.JLabel jlViewer;
     private javax.swing.JLabel jlVisualisationOptions;
@@ -4150,6 +4482,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JPanel jpLeftViewerDetails;
     private javax.swing.JPanel jpMainPanelView;
     private javax.swing.JPanel jpMascotXML;
+    private javax.swing.JPanel jpMascotXMLMenu;
     private javax.swing.JPanel jpMzML;
     private javax.swing.JPanel jpMzMLMenu;
     private javax.swing.JPanel jpMzQuantML;
@@ -4174,8 +4507,9 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JScrollPane jspLog;
     private javax.swing.JSplitPane jspMainPanelView;
     private javax.swing.JSplitPane jspMascotXML;
+    private javax.swing.JScrollPane jspMascotXMLDetail;
     private javax.swing.JScrollPane jspMascotXMLHeader;
-    private javax.swing.JScrollPane jspMascotXMLView;
+    private javax.swing.JSplitPane jspMascotXMLSubDetail;
     private javax.swing.JSplitPane jspMzML;
     private javax.swing.JSplitPane jspMzMLDetail;
     private javax.swing.JScrollPane jspMzMLHeader;
@@ -4194,6 +4528,8 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JTable jtMascotXMLView;
     private javax.swing.JTable jtMzML;
     private javax.swing.JTable jtMzQuantMLView;
+    private javax.swing.JTextField jtPeptide;
+    private javax.swing.JTextField jtProtein;
     private javax.swing.JTable jtQuantFiles;
     private javax.swing.JTextField jtRT;
     private javax.swing.JTable jtRawData;
