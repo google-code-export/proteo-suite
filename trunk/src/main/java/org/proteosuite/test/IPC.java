@@ -91,7 +91,7 @@ public class IPC {
         }
         results.timeTook = (System.currentTimeMillis() - startTime) / 1000;
         if (options.isPrintOutput()) {
-            System.out.println(results.toString());
+            //System.out.println(results.toString());
             //System.out.println(options.getComponents());
         }
         if (options.isBreakProcess()) {
@@ -115,7 +115,8 @@ public class IPC {
 
     public static void main(String[] args) {
         String[] argsToAdd = {};
-        argsToAdd = new String[]{"-a", "LSVDDAGDVEPLDVDEDGGMNNMMESFRDFNSMDEDSDDEWDK", "-fc", "-z", "3", "-f", "1000", "-g", "-s", "-r", "10000"};
+        //argsToAdd = new String[]{"-a", "ITITNDK", "-fc", "-z", "2", "-f", "1000", "-g", "-r", "10000"};
+        argsToAdd = new String[]{"-a", "ITITNDK", "-fc", "-z", "2", "-f", "1000", "-r", "10000"};
         //argsToAdd = new String[]{"-a", "QVLFSADDR", "-f", "1000", "-s",};
         String[] newArgs = new String[args.length + argsToAdd.length];
         for (int i = 0; i < args.length; i++) {
@@ -129,10 +130,33 @@ public class IPC {
             usage();
             System.exit(0);
         }
-        IPC ipc = new IPC(); 
+        IPC ipc = new IPC();                 
         Options options = Options.parseArgs(args);
-        options.setPrintOutput(true);
-        ipc.execute(options);
+        options.setPrintOutput(false);
+        Results res = ipc.execute(options);
+        Object[] objArray = res.getPeaks().toArray();
+        for(int iI=0; iI<objArray.length; iI++)
+        {
+            System.out.println(res.getPeaks().first().getMass());
+            System.out.println(res.getPeaks().first().getP()*100);
+            System.out.println(res.getPeaks().first().getRelInt());
+            res.getPeaks().pollFirst();            
+        }
+        
+//        IPC ipc = new IPC();                 
+//        Options options = Options.parseArgs(args);
+//        options.setPrintOutput(false);
+//        Results res = ipc.execute(options);
+//        
+//        Iterator iterator;
+//        iterator = res.getPeaks().iterator();        
+//        while (iterator.hasNext())
+//        {                        
+//            System.out.println(iterator.next());
+//            System.out.println(res.getPeaks().first().getP());
+//            System.out.println(res.getPeaks().first().getRelInt());
+//            res.getPeaks().pollFirst();
+//        }
     }
 
     public static void usage() {

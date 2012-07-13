@@ -601,7 +601,7 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jspMainPanelView" alignment="0" max="32767" attributes="0"/>
+              <Component id="jspMainPanelView" alignment="0" pref="639" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
       </Layout>
@@ -722,7 +722,7 @@
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspProjectDetails" alignment="1" pref="609" max="32767" attributes="0"/>
+                              <Component id="jspProjectDetails" alignment="1" pref="615" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
@@ -835,7 +835,7 @@
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jspLeftMenuBottom" pref="465" max="32767" attributes="0"/>
+                                          <Component id="jspLeftMenuBottom" pref="471" max="32767" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
@@ -866,7 +866,7 @@
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jtpQuantFiles" alignment="0" pref="262" max="32767" attributes="0"/>
+                                              <Component id="jtpQuantFiles" alignment="0" pref="268" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
@@ -993,12 +993,12 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jspViewerAndProperties" alignment="0" pref="814" max="32767" attributes="0"/>
+                      <Component id="jspViewerAndProperties" alignment="0" pref="816" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jspViewerAndProperties" alignment="0" max="32767" attributes="0"/>
+                      <Component id="jspViewerAndProperties" alignment="0" pref="637" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -1021,12 +1021,12 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspLeftViewer" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jspLeftViewer" alignment="0" pref="382" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspLeftViewer" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jspLeftViewer" alignment="0" pref="635" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
@@ -1064,7 +1064,7 @@
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jlViewer" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace pref="431" max="32767" attributes="0"/>
+                                          <EmptySpace pref="332" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
@@ -1109,12 +1109,12 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jspLeftViewerDetails" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jspLeftViewerDetails" alignment="0" pref="380" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jspLeftViewerDetails" alignment="0" pref="607" max="32767" attributes="0"/>
+                                      <Component id="jspLeftViewerDetails" alignment="0" pref="613" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
@@ -1138,12 +1138,12 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jtpLog" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="jtpLog" alignment="0" pref="378" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jtpLog" alignment="0" max="32767" attributes="0"/>
+                                              <Component id="jtpLog" alignment="0" pref="260" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
@@ -1189,12 +1189,12 @@
                                               <Layout>
                                                 <DimensionLayout dim="0">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jspRawDataValues" alignment="0" pref="472" max="32767" attributes="0"/>
+                                                      <Component id="jspRawDataValues" alignment="0" pref="373" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                                 <DimensionLayout dim="1">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jspRawDataValues" alignment="1" pref="449" max="32767" attributes="0"/>
+                                                      <Component id="jspRawDataValues" alignment="1" pref="232" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                               </Layout>
@@ -1228,12 +1228,12 @@
                                                       <Layout>
                                                         <DimensionLayout dim="0">
                                                           <Group type="103" groupAlignment="0" attributes="0">
-                                                              <EmptySpace min="0" pref="470" max="32767" attributes="0"/>
+                                                              <EmptySpace min="0" pref="371" max="32767" attributes="0"/>
                                                           </Group>
                                                         </DimensionLayout>
                                                         <DimensionLayout dim="1">
                                                           <Group type="103" groupAlignment="0" attributes="0">
-                                                              <EmptySpace min="0" pref="25" max="32767" attributes="0"/>
+                                                              <EmptySpace min="0" pref="50" max="32767" attributes="0"/>
                                                           </Group>
                                                         </DimensionLayout>
                                                       </Layout>
@@ -1273,8 +1273,8 @@
                                             <Container class="javax.swing.JPanel" name="jPanel1">
                                               <Constraints>
                                                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                                                  <JTabbedPaneConstraints tabName="Template">
-                                                    <Property name="tabTitle" type="java.lang.String" value="Template"/>
+                                                  <JTabbedPaneConstraints tabName="Template 1">
+                                                    <Property name="tabTitle" type="java.lang.String" value="Template 1"/>
                                                   </JTabbedPaneConstraints>
                                                 </Constraint>
                                               </Constraints>
@@ -1282,12 +1282,22 @@
                                               <Layout>
                                                 <DimensionLayout dim="0">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jScrollPane1" alignment="0" pref="472" max="32767" attributes="0"/>
+                                                      <Group type="102" alignment="0" attributes="0">
+                                                          <EmptySpace max="-2" attributes="0"/>
+                                                          <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                                                          <EmptySpace pref="200" max="32767" attributes="0"/>
+                                                      </Group>
+                                                      <Component id="jScrollPane1" alignment="0" pref="373" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                                 <DimensionLayout dim="1">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jScrollPane1" alignment="0" pref="449" max="32767" attributes="0"/>
+                                                      <Group type="102" alignment="0" attributes="0">
+                                                          <EmptySpace max="-2" attributes="0"/>
+                                                          <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                                                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                          <Component id="jScrollPane1" pref="187" max="32767" attributes="0"/>
+                                                      </Group>
                                                   </Group>
                                                 </DimensionLayout>
                                               </Layout>
@@ -1302,18 +1312,63 @@
                                                     <Component class="javax.swing.JTable" name="jtTemplate">
                                                       <Properties>
                                                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                          <Table columnCount="11" rowCount="0">
+                                                          <Table columnCount="3" rowCount="0">
                                                             <Column editable="true" title="Peptide Index" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Isotope 1 m/z" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Isotope 1 Rel Int" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Isotope 2 m/z" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Isotope 2 Rel Int" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Isotope 3 m/z" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Isotope 3 Rel Int" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Isotope 4 m/z" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Isotope 4 Rel Int" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Isotope 5 m/z" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Isotope 5 Rel Int" type="java.lang.Object"/>
+                                                            <Column editable="true" title="Isotope m/z" type="java.lang.Object"/>
+                                                            <Column editable="true" title="Isotope Rel Int" type="java.lang.Object"/>
+                                                          </Table>
+                                                        </Property>
+                                                      </Properties>
+                                                    </Component>
+                                                  </SubComponents>
+                                                </Container>
+                                                <Component class="javax.swing.JButton" name="jButton1">
+                                                  <Properties>
+                                                    <Property name="text" type="java.lang.String" value="Generate Second Template"/>
+                                                  </Properties>
+                                                  <Events>
+                                                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+                                                  </Events>
+                                                </Component>
+                                              </SubComponents>
+                                            </Container>
+                                            <Container class="javax.swing.JPanel" name="jPanel2">
+                                              <Constraints>
+                                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
+                                                  <JTabbedPaneConstraints tabName="Template 2">
+                                                    <Property name="tabTitle" type="java.lang.String" value="Template 2"/>
+                                                  </JTabbedPaneConstraints>
+                                                </Constraint>
+                                              </Constraints>
+
+                                              <Layout>
+                                                <DimensionLayout dim="0">
+                                                  <Group type="103" groupAlignment="0" attributes="0">
+                                                      <Component id="jScrollPane2" alignment="0" pref="373" max="32767" attributes="0"/>
+                                                  </Group>
+                                                </DimensionLayout>
+                                                <DimensionLayout dim="1">
+                                                  <Group type="103" groupAlignment="0" attributes="0">
+                                                      <Component id="jScrollPane2" alignment="0" pref="232" max="32767" attributes="0"/>
+                                                  </Group>
+                                                </DimensionLayout>
+                                              </Layout>
+                                              <SubComponents>
+                                                <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+                                                  <AuxValues>
+                                                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                                                  </AuxValues>
+
+                                                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                                                  <SubComponents>
+                                                    <Component class="javax.swing.JTable" name="jtTemplate2">
+                                                      <Properties>
+                                                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
+                                                          <Table columnCount="4" rowCount="0">
+                                                            <Column editable="true" title="m/z Index" type="java.lang.Object"/>
+                                                            <Column editable="true" title="x" type="java.lang.Object"/>
+                                                            <Column editable="true" title="y" type="java.lang.Object"/>
+                                                            <Column editable="true" title="i" type="java.lang.Object"/>
                                                           </Table>
                                                         </Property>
                                                       </Properties>
@@ -1368,12 +1423,12 @@
                                           <Layout>
                                             <DimensionLayout dim="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="jdpTIC" alignment="0" pref="472" max="32767" attributes="0"/>
+                                                  <Component id="jdpTIC" alignment="0" pref="373" max="32767" attributes="0"/>
                                               </Group>
                                             </DimensionLayout>
                                             <DimensionLayout dim="1">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="jdpTIC" alignment="0" pref="98" max="32767" attributes="0"/>
+                                                  <Component id="jdpTIC" alignment="0" pref="321" max="32767" attributes="0"/>
                                               </Group>
                                             </DimensionLayout>
                                           </Layout>
@@ -1410,7 +1465,7 @@
                                             <DimensionLayout dim="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
                                                   <Group type="102" alignment="1" attributes="0">
-                                                      <EmptySpace pref="446" max="32767" attributes="0"/>
+                                                      <EmptySpace pref="347" max="32767" attributes="0"/>
                                                       <Component id="jdp2D" min="-2" pref="26" max="-2" attributes="0"/>
                                                   </Group>
                                               </Group>
@@ -1418,7 +1473,7 @@
                                             <DimensionLayout dim="1">
                                               <Group type="103" groupAlignment="0" attributes="0">
                                                   <Group type="102" alignment="1" attributes="0">
-                                                      <EmptySpace pref="59" max="32767" attributes="0"/>
+                                                      <EmptySpace pref="282" max="32767" attributes="0"/>
                                                       <Component id="jdp2D" min="-2" pref="39" max="-2" attributes="0"/>
                                                   </Group>
                                               </Group>
@@ -1453,12 +1508,12 @@
                                           <Layout>
                                             <DimensionLayout dim="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <EmptySpace min="0" pref="472" max="32767" attributes="0"/>
+                                                  <EmptySpace min="0" pref="373" max="32767" attributes="0"/>
                                               </Group>
                                             </DimensionLayout>
                                             <DimensionLayout dim="1">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <EmptySpace min="0" pref="98" max="32767" attributes="0"/>
+                                                  <EmptySpace min="0" pref="321" max="32767" attributes="0"/>
                                               </Group>
                                             </DimensionLayout>
                                           </Layout>
@@ -1483,7 +1538,7 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspProperties" alignment="0" pref="328" max="32767" attributes="0"/>
+                              <Component id="jspProperties" alignment="0" pref="432" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
@@ -1526,7 +1581,7 @@
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jlProperties" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace pref="257" max="32767" attributes="0"/>
+                                          <EmptySpace pref="361" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
@@ -1574,12 +1629,12 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jtpProperties" alignment="0" pref="326" max="32767" attributes="0"/>
+                                      <Component id="jtpProperties" alignment="0" pref="430" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jtpProperties" alignment="0" pref="607" max="32767" attributes="0"/>
+                                      <Component id="jtpProperties" alignment="0" pref="613" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
@@ -1605,12 +1660,12 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzML" alignment="0" pref="321" max="32767" attributes="0"/>
+                                              <Component id="jspMzML" alignment="0" pref="425" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzML" alignment="0" pref="579" max="32767" attributes="0"/>
+                                              <Component id="jspMzML" alignment="0" pref="585" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
@@ -1736,7 +1791,7 @@
                                                                       <Component id="jbShow2D" min="-2" max="-2" attributes="0"/>
                                                                   </Group>
                                                               </Group>
-                                                              <EmptySpace max="32767" attributes="0"/>
+                                                              <EmptySpace pref="114" max="32767" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                     </DimensionLayout>
@@ -1854,12 +1909,12 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMascotXML" alignment="0" pref="321" max="32767" attributes="0"/>
+                                              <Component id="jspMascotXML" alignment="0" pref="425" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMascotXML" alignment="0" pref="579" max="32767" attributes="0"/>
+                                              <Component id="jspMascotXML" alignment="0" pref="585" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
@@ -1954,23 +2009,25 @@
                                                       <Group type="103" groupAlignment="0" attributes="0">
                                                           <Group type="102" attributes="0">
                                                               <EmptySpace max="-2" attributes="0"/>
-                                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                                  <Group type="102" alignment="0" attributes="0">
-                                                                      <Component id="jlProtein" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                                                                      <Component id="jtProtein" min="-2" pref="82" max="-2" attributes="0"/>
-                                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                                      <Component id="jlPeptide" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace max="-2" attributes="0"/>
-                                                                      <Component id="jtPeptide" min="-2" pref="87" max="-2" attributes="0"/>
-                                                                  </Group>
-                                                                  <Group type="102" alignment="0" attributes="1">
+                                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                                  <Group type="102" attributes="0">
                                                                       <Component id="jlSearchMascotXML" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace max="32767" attributes="0"/>
+                                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                                      <Component id="jlProtein" min="-2" max="-2" attributes="0"/>
+                                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                                      <Component id="jtProtein" min="-2" pref="66" max="-2" attributes="0"/>
+                                                                      <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                                                                      <Component id="jlPeptide" min="-2" max="-2" attributes="0"/>
+                                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                                      <Component id="jtPeptide" pref="171" max="32767" attributes="0"/>
+                                                                  </Group>
+                                                                  <Group type="102" alignment="0" attributes="0">
                                                                       <Component id="jbGenerateTemplate" min="-2" max="-2" attributes="0"/>
+                                                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                                      <Component id="jbShowIsotopeDistrib" min="-2" max="-2" attributes="0"/>
                                                                   </Group>
                                                               </Group>
-                                                              <EmptySpace pref="36" max="32767" attributes="0"/>
+                                                              <EmptySpace max="-2" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                     </DimensionLayout>
@@ -1979,15 +2036,16 @@
                                                           <Group type="102" alignment="0" attributes="0">
                                                               <EmptySpace max="-2" attributes="0"/>
                                                               <Group type="103" groupAlignment="3" attributes="0">
-                                                                  <Component id="jlSearchMascotXML" alignment="3" min="-2" max="-2" attributes="0"/>
                                                                   <Component id="jbGenerateTemplate" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jbShowIsotopeDistrib" alignment="3" min="-2" max="-2" attributes="0"/>
                                                               </Group>
-                                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                              <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
                                                               <Group type="103" groupAlignment="3" attributes="0">
+                                                                  <Component id="jtPeptide" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jlSearchMascotXML" alignment="3" min="-2" max="-2" attributes="0"/>
                                                                   <Component id="jlProtein" alignment="3" min="-2" max="-2" attributes="0"/>
                                                                   <Component id="jtProtein" alignment="3" min="-2" max="-2" attributes="0"/>
                                                                   <Component id="jlPeptide" alignment="3" min="-2" max="-2" attributes="0"/>
-                                                                  <Component id="jtPeptide" alignment="3" min="-2" max="-2" attributes="0"/>
                                                               </Group>
                                                               <EmptySpace pref="14" max="32767" attributes="0"/>
                                                           </Group>
@@ -2031,6 +2089,14 @@
                                                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbGenerateTemplateActionPerformed"/>
                                                       </Events>
                                                     </Component>
+                                                    <Component class="javax.swing.JButton" name="jbShowIsotopeDistrib">
+                                                      <Properties>
+                                                        <Property name="text" type="java.lang.String" value="Show Isotopes"/>
+                                                      </Properties>
+                                                      <Events>
+                                                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbShowIsotopeDistribActionPerformed"/>
+                                                      </Events>
+                                                    </Component>
                                                   </SubComponents>
                                                 </Container>
                                               </SubComponents>
@@ -2051,12 +2117,12 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzQuantML" alignment="0" pref="321" max="32767" attributes="0"/>
+                                              <Component id="jspMzQuantML" alignment="0" pref="425" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzQuantML" alignment="0" pref="579" max="32767" attributes="0"/>
+                                              <Component id="jspMzQuantML" alignment="0" pref="585" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>

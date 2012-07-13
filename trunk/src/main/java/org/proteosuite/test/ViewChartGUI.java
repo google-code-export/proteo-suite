@@ -134,6 +134,7 @@ public class ViewChartGUI
         double c13 = ipc.findElement(null, "C").last().getP();
         c13Spin.setValue(c13);        
         remakeChart();
+        
     }
 
     private void loadProperties(String sPeptide, String sCharge, String sResol) {
@@ -905,8 +906,8 @@ public class ViewChartGUI
                         return ipcResults;
 
                     }
-
                     if (ipcResults == null && !ipcOptions.isBreakProcess()) {
+
                         System.err.println("SOMETHING CRASHED, " + ipcOptions.isBreakProcess());
                     }
 
