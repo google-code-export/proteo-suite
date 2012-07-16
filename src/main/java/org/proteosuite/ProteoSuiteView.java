@@ -337,6 +337,11 @@ public class ProteoSuiteView extends JFrame {
         jpRawDataValues = new javax.swing.JPanel();
         jspRawDataValues = new javax.swing.JSplitPane();
         jpRawDataValuesMenu = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jtMSIndex = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jtMSMz = new javax.swing.JTextField();
         jspRawData = new javax.swing.JScrollPane();
         jtRawData = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
@@ -346,6 +351,10 @@ public class ProteoSuiteView extends JFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jtTemplate2 = new javax.swing.JTable();
+        jButton2 = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jtpViewer = new javax.swing.JTabbedPane();
         jdpMS = new javax.swing.JDesktopPane();
         jpTIC = new javax.swing.JPanel();
@@ -804,22 +813,60 @@ public class ProteoSuiteView extends JFrame {
 
         jtpLog.addTab("Log", jspLog);
 
-        jspRawDataValues.setDividerLocation(26);
+        jspRawDataValues.setDividerLocation(40);
         jspRawDataValues.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jpRawDataValuesMenu.setMaximumSize(new java.awt.Dimension(32767, 50));
         jpRawDataValuesMenu.setMinimumSize(new java.awt.Dimension(0, 50));
         jpRawDataValuesMenu.setPreferredSize(new java.awt.Dimension(462, 50));
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setText("Search:");
+
+        jtMSIndex.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jtMSIndexKeyPressed(evt);
+            }
+        });
+
+        jLabel2.setText("Index:");
+
+        jLabel3.setText("m/z:");
+
+        jtMSMz.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jtMSMzKeyPressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jpRawDataValuesMenuLayout = new javax.swing.GroupLayout(jpRawDataValuesMenu);
         jpRawDataValuesMenu.setLayout(jpRawDataValuesMenuLayout);
         jpRawDataValuesMenuLayout.setHorizontalGroup(
             jpRawDataValuesMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 371, Short.MAX_VALUE)
+            .addGroup(jpRawDataValuesMenuLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2)
+                .addGap(18, 18, 18)
+                .addComponent(jtMSIndex, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jtMSMz, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(109, Short.MAX_VALUE))
         );
         jpRawDataValuesMenuLayout.setVerticalGroup(
             jpRawDataValuesMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
+            .addGroup(jpRawDataValuesMenuLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jpRawDataValuesMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jtMSIndex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(jtMSMz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jspRawDataValues.setLeftComponent(jpRawDataValuesMenu);
@@ -893,23 +940,61 @@ public class ProteoSuiteView extends JFrame {
 
             },
             new String [] {
-                "m/z Index", "x", "y", "i"
+                "Template Index", "x", "y", "i"
             }
         ));
         jScrollPane2.setViewportView(jtTemplate2);
+
+        jButton2.setText("Generate third template");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(188, Short.MAX_VALUE))
             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButton2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))
         );
 
         jtpLog.addTab("Template 2", jPanel2);
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Template number", "x (m/z index)", "y (scan index)", "w (quant intensities)"
+            }
+        ));
+        jScrollPane3.setViewportView(jTable1);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+        );
+
+        jtpLog.addTab("Template 3", jPanel3);
 
         javax.swing.GroupLayout jpLeftViewerBottomLayout = new javax.swing.GroupLayout(jpLeftViewerBottom);
         jpLeftViewerBottom.setLayout(jpLeftViewerBottomLayout);
@@ -2559,6 +2644,36 @@ public class ProteoSuiteView extends JFrame {
             loadTemplate2();
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jtMSIndexKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtMSIndexKeyPressed
+        String sChain = "";
+        sChain = "" + evt.getKeyChar();
+            
+        Pattern p = Pattern.compile("^[a-zA-Z0-9]*$"); 
+        Matcher m = p.matcher(sChain);
+        if (m.find())
+        {
+            sChain = jtMSIndex.getText() + evt.getKeyChar();
+            searchValueInRawData(sChain, 0); 
+        }
+    }//GEN-LAST:event_jtMSIndexKeyPressed
+
+    private void jtMSMzKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtMSMzKeyPressed
+        String sChain = "";
+        sChain = "" + evt.getKeyChar();
+            
+        Pattern p = Pattern.compile("^[a-zA-Z0-9]*$"); 
+        Matcher m = p.matcher(sChain);
+        if (m.find())
+        {
+            sChain = jtMSMz.getText() + evt.getKeyChar();
+            searchValueInRawData(sChain, 1); 
+        }        
+    }//GEN-LAST:event_jtMSMzKeyPressed
     private void loadTemplate()     
     {
         DefaultTableModel model = new DefaultTableModel();
@@ -2638,13 +2753,27 @@ public class ProteoSuiteView extends JFrame {
         }
         jtpLog.setSelectedIndex(3);
     }
+     private void searchValueInRawData(String sChain, int iColumn)     
+    {
+        DefaultTableModel dtm = (DefaultTableModel) jtRawData.getModel();
+        int nRow = dtm.getRowCount();
+        for (int iI = 0 ; iI < nRow ; iI++)
+        {                
+            if (dtm.getValueAt(iI,iColumn).toString().startsWith(sChain))
+            {
+                jtRawData.setRowSelectionInterval(iI, iI);
+                jtRawData.scrollRectToVisible(new Rectangle(jtRawData.getCellRect(iI, 0, true)));
+                break;
+            }
+        }
+    }   
     private void searchValueInMzML(String sChain, int iColumn)     
     {
         DefaultTableModel dtm = (DefaultTableModel) jtMzML.getModel();
         int nRow = dtm.getRowCount();
         for (int iI = 0 ; iI < nRow ; iI++)
         {                
-            if (dtm.getValueAt(iI,iColumn).toString().contains(sChain))
+            if (dtm.getValueAt(iI,iColumn).toString().startsWith(sChain))
             {
                 jtMzML.setRowSelectionInterval(iI, iI);
                 jtMzML.scrollRectToVisible(new Rectangle(jtMzML.getCellRect(iI, 0, true)));
@@ -3019,185 +3148,205 @@ public class ProteoSuiteView extends JFrame {
     }
     private void loadMzMLView() 
     {                    
-        DefaultTableModel model = new DefaultTableModel();
-//        {  
-//            Class[] types = new Class [] {             
-//                java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class,
-//                java.lang.Float.class, java.lang.Float.class, java.lang.Float.class, java.lang.Float.class
-//            };  
-//            @Override  
-//            public Class getColumnClass(int columnIndex) {  
-//                return types [columnIndex];  
-//            }  
-//        };
-        jtMzML.setModel(model);
-        model.addColumn("");
-        model.addColumn("Index");
-        model.addColumn("ID");
-        model.addColumn("MS");
-        model.addColumn("Base peak m/z");        
-        model.addColumn("Base peak int");       
-        model.addColumn("RT (sec)");
-        model.addColumn("RT (min)");
-        String sOutput="";
-        String sVar="";
         
-        MzMLUnmarshaller unmarshaller = alUnmarshaller.get(jtRawFiles.getSelectedRow());
-        
-        sOutput = "Name:\t\t" + unmarshaller.getMzMLId() + "\n";
-        FileDescription fdList = unmarshaller.unmarshalFromXpath("/fileDescription", FileDescription.class);
-        List<CVParam> descParam = fdList.getSourceFileList().getSourceFile().get(0).getCvParam();
-        for (Iterator lCVParamIterator = descParam.iterator(); lCVParamIterator.hasNext();)
-        {
-            CVParam lCVParam = (CVParam) lCVParamIterator.next();
-            if (lCVParam.getAccession().equals("MS:1000768"))
-            {
-                sVar = lCVParam.getName().trim();
-            }                        
-        } 
-        sOutput = sOutput + "Format:\t\t" + sVar + "\n";
-        
-        sVar = "";
-        ReferenceableParamGroupList rpgList = unmarshaller.unmarshalFromXpath("/referenceableParamGroupList", ReferenceableParamGroupList.class);
-        List<CVParam> refParam = rpgList.getReferenceableParamGroup().get(0).getCvParam();
-        for (Iterator lCVParamIterator = refParam.iterator(); lCVParamIterator.hasNext();)
-        {
-            CVParam lCVParam = (CVParam) lCVParamIterator.next();
-            sVar = sVar + lCVParam.getName().trim() + " ";
-        } 
-        sOutput = sOutput + "Instrument:\t\t" + sVar + "\n";
-        
-        sVar = "";
-        SoftwareList softList = unmarshaller.unmarshalFromXpath("/softwareList", SoftwareList.class);
-        List<CVParam> softParam = softList.getSoftware().get(0).getCvParam();
-        for (Iterator lCVParamIterator = softParam.iterator(); lCVParamIterator.hasNext();)
-        {
-            CVParam lCVParam = (CVParam) lCVParamIterator.next();
-            sVar = sVar + lCVParam.getName().trim() + " ";
-        }
-        sOutput = sOutput + "Software:\t\t" + sVar + "\n";
+        final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+        final Thread thread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                //... Progress Bar ...//
+                progressBarDialog.setTitle("Loading parameters in table");
+                progressBarDialog.setVisible(true);
+            }
+        }, "ProgressBarDialog");
+        thread.start();
+        new Thread("LoadingThread"){
+            @Override
+            public void run(){
+                    
+                DefaultTableModel model = new DefaultTableModel();
+        //        {  
+        //            Class[] types = new Class [] {             
+        //                java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class,
+        //                java.lang.Float.class, java.lang.Float.class, java.lang.Float.class, java.lang.Float.class
+        //            };  
+        //            @Override  
+        //            public Class getColumnClass(int columnIndex) {  
+        //                return types [columnIndex];  
+        //            }  
+        //        };
+                jtMzML.setModel(model);
+                model.addColumn("");
+                model.addColumn("Index");
+                model.addColumn("ID");
+                model.addColumn("MS");
+                model.addColumn("Base peak m/z");        
+                model.addColumn("Base peak int");       
+                model.addColumn("RT (sec)");
+                model.addColumn("RT (min)");
+                String sOutput="";
+                String sVar="";
 
-        sVar = "Source: ";
-        InstrumentConfigurationList icList = unmarshaller.unmarshalFromXpath("/instrumentConfigurationList", InstrumentConfigurationList.class);
-        List<CVParam> icParam = icList.getInstrumentConfiguration().get(0).getComponentList().getSource().get(0).getCvParam();
-        for (Iterator lCVParamIterator = icParam.iterator(); lCVParamIterator.hasNext();)
-        {
-            CVParam lCVParam = (CVParam) lCVParamIterator.next();
-            sVar = sVar + lCVParam.getName().trim() + ", ";
-        }
-        sVar = sVar + " Analyzer: ";
-        List<CVParam> icParam2 = icList.getInstrumentConfiguration().get(0).getComponentList().getAnalyzer().get(0).getCvParam();
-        for (Iterator lCVParamIterator = icParam2.iterator(); lCVParamIterator.hasNext();)
-        {
-            CVParam lCVParam = (CVParam) lCVParamIterator.next();
-            sVar = sVar + lCVParam.getName().trim() + " ";
-        }
-        sVar = sVar + " Detector: ";
-        List<CVParam> icParam3 = icList.getInstrumentConfiguration().get(0).getComponentList().getDetector().get(0).getCvParam();
-        for (Iterator lCVParamIterator = icParam3.iterator(); lCVParamIterator.hasNext();)
-        {
-            CVParam lCVParam = (CVParam) lCVParamIterator.next();
-            sVar = sVar + lCVParam.getName().trim() + " ";
-        }
-        sOutput = sOutput + "Configuration:\t" + sVar + "\n";
-        jtaMzML.setText(sOutput);
-        jtpProperties.setSelectedIndex(0);
-     
-        //... Reading spectrum data ...//
-        MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
-        String msLevel = "";
-        float basePeakMZ = 0;
-        float basePeakInt = 0;
-        String unitRT = "";
-        float rt = 0;
-        float rtMin = 0;
-        int iCount = 1;
-        double dScansMS1 = 0;
-        double dScansMS2 = 0;
-        while (spectrumIterator.hasNext())
-        {
-            Spectrum spectrum = spectrumIterator.next();
-            
-            List<CVParam> specParam = spectrum.getCvParam();
-            for (Iterator lCVParamIterator = specParam.iterator(); lCVParamIterator.hasNext();)
-            {
-               CVParam lCVParam = (CVParam) lCVParamIterator.next();
-               if (lCVParam.getAccession().equals("MS:1000511")) 
-               {
-                   msLevel = lCVParam.getValue().trim();
-                   if (msLevel.equals("1"))
-                   {
-                       dScansMS1++;
-                   }
-                   else
-                   {
-                       dScansMS2++;
-                   }
-               }
-               if (lCVParam.getAccession().equals("MS:1000504")) 
-               {
-                   basePeakMZ = Float.parseFloat(lCVParam.getValue().trim());
-               }
-               if (lCVParam.getAccession().equals("MS:1000505")) 
-               {
-                   basePeakInt = Float.parseFloat(lCVParam.getValue().trim());
-               }
-            }
-            List<CVParam> scanParam = spectrum.getScanList().getScan().get(0).getCvParam();
-            for (Iterator lCVParamIterator = scanParam.iterator(); lCVParamIterator.hasNext();)
-            {
-                CVParam lCVParam = (CVParam) lCVParamIterator.next();
-                if (lCVParam.getAccession().equals("MS:1000016"))
+                MzMLUnmarshaller unmarshaller = alUnmarshaller.get(jtRawFiles.getSelectedRow());
+
+                sOutput = "Name:\t\t" + unmarshaller.getMzMLId() + "\n";
+                FileDescription fdList = unmarshaller.unmarshalFromXpath("/fileDescription", FileDescription.class);
+                List<CVParam> descParam = fdList.getSourceFileList().getSourceFile().get(0).getCvParam();
+                for (Iterator lCVParamIterator = descParam.iterator(); lCVParamIterator.hasNext();)
                 {
-                    unitRT = lCVParam.getUnitAccession().trim();
-                    if (unitRT.equals("UO:0000031"))
+                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                    if (lCVParam.getAccession().equals("MS:1000768"))
                     {
-                        rt = Float.parseFloat(lCVParam.getValue().trim());
-                        rtMin = rt;
-                        rt = rt * 60;
-                    }
-                    else
-                    {
-                        rt = Float.parseFloat(lCVParam.getValue().trim());
-                        rtMin = rt/60;
-                    }
+                        sVar = lCVParam.getName().trim();
+                    }                        
+                } 
+                sOutput = sOutput + "Format:\t\t" + sVar + "\n";
+
+                sVar = "";
+                ReferenceableParamGroupList rpgList = unmarshaller.unmarshalFromXpath("/referenceableParamGroupList", ReferenceableParamGroupList.class);
+                List<CVParam> refParam = rpgList.getReferenceableParamGroup().get(0).getCvParam();
+                for (Iterator lCVParamIterator = refParam.iterator(); lCVParamIterator.hasNext();)
+                {
+                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                    sVar = sVar + lCVParam.getName().trim() + " ";
+                } 
+                sOutput = sOutput + "Instrument:\t\t" + sVar + "\n";
+
+                sVar = "";
+                SoftwareList softList = unmarshaller.unmarshalFromXpath("/softwareList", SoftwareList.class);
+                List<CVParam> softParam = softList.getSoftware().get(0).getCvParam();
+                for (Iterator lCVParamIterator = softParam.iterator(); lCVParamIterator.hasNext();)
+                {
+                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                    sVar = sVar + lCVParam.getName().trim() + " ";
                 }
+                sOutput = sOutput + "Software:\t\t" + sVar + "\n";
+
+                sVar = "Source: ";
+                InstrumentConfigurationList icList = unmarshaller.unmarshalFromXpath("/instrumentConfigurationList", InstrumentConfigurationList.class);
+                List<CVParam> icParam = icList.getInstrumentConfiguration().get(0).getComponentList().getSource().get(0).getCvParam();
+                for (Iterator lCVParamIterator = icParam.iterator(); lCVParamIterator.hasNext();)
+                {
+                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                    sVar = sVar + lCVParam.getName().trim() + ", ";
+                }
+                sVar = sVar + " Analyzer: ";
+                List<CVParam> icParam2 = icList.getInstrumentConfiguration().get(0).getComponentList().getAnalyzer().get(0).getCvParam();
+                for (Iterator lCVParamIterator = icParam2.iterator(); lCVParamIterator.hasNext();)
+                {
+                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                    sVar = sVar + lCVParam.getName().trim() + " ";
+                }
+                sVar = sVar + " Detector: ";
+                List<CVParam> icParam3 = icList.getInstrumentConfiguration().get(0).getComponentList().getDetector().get(0).getCvParam();
+                for (Iterator lCVParamIterator = icParam3.iterator(); lCVParamIterator.hasNext();)
+                {
+                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                    sVar = sVar + lCVParam.getName().trim() + " ";
+                }
+                sOutput = sOutput + "Configuration:\t" + sVar + "\n";
+                jtaMzML.setText(sOutput);
+                jtpProperties.setSelectedIndex(0);
+
+                //... Reading spectrum data ...//
+                MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+                String msLevel = "";
+                float basePeakMZ = 0;
+                float basePeakInt = 0;
+                String unitRT = "";
+                float rt = 0;
+                float rtMin = 0;
+                int iCount = 1;
+                double dScansMS1 = 0;
+                double dScansMS2 = 0;
+                while (spectrumIterator.hasNext())
+                {
+                    Spectrum spectrum = spectrumIterator.next();
+
+                    List<CVParam> specParam = spectrum.getCvParam();
+                    for (Iterator lCVParamIterator = specParam.iterator(); lCVParamIterator.hasNext();)
+                    {
+                       CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                       if (lCVParam.getAccession().equals("MS:1000511")) 
+                       {
+                           msLevel = lCVParam.getValue().trim();
+                           if (msLevel.equals("1"))
+                           {
+                               dScansMS1++;
+                           }
+                           else
+                           {
+                               dScansMS2++;
+                           }
+                       }
+                       if (lCVParam.getAccession().equals("MS:1000504")) 
+                       {
+                           basePeakMZ = Float.parseFloat(lCVParam.getValue().trim());
+                       }
+                       if (lCVParam.getAccession().equals("MS:1000505")) 
+                       {
+                           basePeakInt = Float.parseFloat(lCVParam.getValue().trim());
+                       }
+                    }
+                    List<CVParam> scanParam = spectrum.getScanList().getScan().get(0).getCvParam();
+                    for (Iterator lCVParamIterator = scanParam.iterator(); lCVParamIterator.hasNext();)
+                    {
+                        CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                        if (lCVParam.getAccession().equals("MS:1000016"))
+                        {
+                            unitRT = lCVParam.getUnitAccession().trim();
+                            if (unitRT.equals("UO:0000031"))
+                            {
+                                rt = Float.parseFloat(lCVParam.getValue().trim());
+                                rtMin = rt;
+                                rt = rt * 60;
+                            }
+                            else
+                            {
+                                rt = Float.parseFloat(lCVParam.getValue().trim());
+                                rtMin = rt/60;
+                            }
+                        }
+                    }
+                    model.insertRow(model.getRowCount(), new Object[]{
+                        "",
+                        Integer.parseInt(spectrum.getIndex().toString()), 
+                        spectrum.getId().toString(),
+                        msLevel,
+                        Float.parseFloat(String.format("%.2f", basePeakMZ)),
+                        Float.parseFloat(String.format("%.2f", basePeakInt)),
+                        Float.parseFloat(String.format("%.2f", rt)),
+                        Float.parseFloat(String.format("%.2f", rtMin))                
+                        });
+                    iCount++;
+                }
+
+        //        RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+        //
+        //        jtMzML.setRowSorter(sorter);
+
+        //        model.insertRow(model.getRowCount(), new Object[]{
+        //            "",
+        //            "", 
+        //            "Total MS1",
+        //            String.format("%.0f", dScansMS1),
+        //            "Total MS2",
+        //            String.format("%.0f", dScansMS2),
+        //            ""
+        //            });
+                jtMzML.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer());
+
+                for (int i = 0; i < jtMzML.getModel().getRowCount(); i++) {
+                   for (int j = 0; j < jtMzML.getModel().getColumnCount(); j++) {
+                      DefaultTableCellRenderer renderer =
+                         (DefaultTableCellRenderer)jtMzML.getCellRenderer(i, j);
+                      renderer.setHorizontalAlignment(JTextField.RIGHT);
+                   } 
+                } 
+                
+                progressBarDialog.setVisible(false);
+                progressBarDialog.dispose();
             }
-            model.insertRow(model.getRowCount(), new Object[]{
-                "",
-                Integer.parseInt(spectrum.getIndex().toString()), 
-                spectrum.getId().toString(),
-                msLevel,
-                Float.parseFloat(String.format("%.2f", basePeakMZ)),
-                Float.parseFloat(String.format("%.2f", basePeakInt)),
-                Float.parseFloat(String.format("%.2f", rt)),
-                Float.parseFloat(String.format("%.2f", rtMin))                
-                });
-            iCount++;
-        }
-        
-//        RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-//
-//        jtMzML.setRowSorter(sorter);
-        
-//        model.insertRow(model.getRowCount(), new Object[]{
-//            "",
-//            "", 
-//            "Total MS1",
-//            String.format("%.0f", dScansMS1),
-//            "Total MS2",
-//            String.format("%.0f", dScansMS2),
-//            ""
-//            });
-        this.jtMzML.getColumnModel().getColumn(0).setCellRenderer(new ImageRenderer());
-        
-        for (int i = 0; i < jtMzML.getModel().getRowCount(); i++) {
-           for (int j = 0; j < jtMzML.getModel().getColumnCount(); j++) {
-              DefaultTableCellRenderer renderer =
-                 (DefaultTableCellRenderer)jtMzML.getCellRenderer(i, j);
-              renderer.setHorizontalAlignment(JTextField.RIGHT);
-           } 
-        }        
+        }.start();                
     }   
     private void loadMascotView() 
     {  
@@ -4587,10 +4736,16 @@ public class ProteoSuiteView extends JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -4599,6 +4754,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JPopupMenu.Separator jSeparator9;
+    private javax.swing.JTable jTable1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JToolBar jToolBar3;
@@ -4732,6 +4888,8 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JScrollPane jspRawFiles;
     private javax.swing.JSplitPane jspViewerAndProperties;
     private javax.swing.JTable jtIdentFiles;
+    private javax.swing.JTextField jtMSIndex;
+    private javax.swing.JTextField jtMSMz;
     private javax.swing.JTable jtMascotXMLView;
     private javax.swing.JTable jtMzML;
     private javax.swing.JTable jtMzQuantMLView;
