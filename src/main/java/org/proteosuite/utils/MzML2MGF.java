@@ -137,7 +137,7 @@ public class MzML2MGF {
                             out.write("BEGIN IONS");
                             out.newLine();
                             
-                            sOut = "TITLE=Spectrum1 scans:" + spectrum.getIndex() + ", (rt=" + rt + ")";
+                            sOut = "TITLE=Scan:" + spectrum.getIndex() + ", (rt:" + rt + "), (id:" + spectrum.getId() + ")";
                             out.write(sOut);
                             out.newLine();
                             

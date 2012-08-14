@@ -31,7 +31,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="jTabbedPane1" pref="437" max="32767" attributes="0"/>
+                      <Component id="jTabbedPane1" pref="393" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="jbConvert" alignment="0" max="32767" attributes="1"/>
@@ -41,11 +41,11 @@
                   </Group>
                   <Component id="jlInstructions1" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="jlInstructions2" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jSeparator1" alignment="0" pref="514" max="32767" attributes="0"/>
+                  <Component id="jSeparator1" alignment="0" pref="470" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jtWorkspace" pref="358" max="32767" attributes="0"/>
+                      <Component id="jtWorkspace" pref="314" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jbBrowse" min="-2" pref="71" max="-2" attributes="1"/>
                   </Group>
@@ -177,12 +177,12 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jlInstructions1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Select your mzML files to convert them into Mascot Generic Format (MGF). Output files include the"/>
+        <Property name="text" type="java.lang.String" value="Select your mzML files to convert them  into Mascot Generic Format (MGF). Output files will include"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jlInstructions2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="specification of retention times in the scan title."/>
+        <Property name="text" type="java.lang.String" value="retention time values in the scan title. E.g. TITLE=Spectrum1 scans:32, (rt=951.3872)"/>
       </Properties>
     </Component>
   </SubComponents>
