@@ -112,7 +112,6 @@
                                           <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jTextField5" min="-2" pref="62" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -623,69 +622,35 @@
                                   <Component id="jtCorr3Label113" min="-2" max="-2" attributes="0"/>
                                   <Component id="jtLabel113" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jtLabel118" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jlLabel118" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
-                                      </Group>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jtLabel118" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jlLabel118" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                                      <Component id="jtCorr1Label118" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                                      <Component id="jtCorr2Label118" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                                      <Component id="jtCorr3Label118" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="jtCorr1Label118" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jtCorr2Label118" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jtCorr3Label118" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jtLabel119" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jlLabel119" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
-                                      </Group>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jtLabel119" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jlLabel119" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                                      <Component id="jtCorr1Label119" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                                      <Component id="jtCorr2Label119" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                                      <Component id="jtCorr3Label119" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="jtCorr1Label119" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jtCorr2Label119" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jtCorr3Label119" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="jtLabel121" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jlLabel121" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
-                                      </Group>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jtLabel121" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jlLabel121" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                                      <Component id="jtCorr1Label121" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                                      <Component id="jtCorr2Label121" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="10" pref="10" max="10" attributes="0"/>
-                                      <Component id="jtCorr3Label121" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="jtCorr1Label121" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jtCorr2Label121" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jtCorr3Label121" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" attributes="0">
@@ -698,7 +663,7 @@
                               <Component id="jtCorr4Label121" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="41" max="32767" attributes="0"/>
+                      <EmptySpace pref="35" max="32767" attributes="0"/>
                       <Component id="jbDefaultValues" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>

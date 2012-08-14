@@ -18,6 +18,7 @@ import com.compomics.util.gui.spectrum.SpectrumPanel;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -29,14 +30,18 @@ import java.io.FileWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -60,6 +65,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.proteosuite.data.Template1;
+import org.proteosuite.data.Template2;
 import org.proteosuite.gui.*;
 import org.proteosuite.test.IPC;
 import org.proteosuite.test.IPC.Options;
@@ -346,15 +353,10 @@ public class ProteoSuiteView extends JFrame {
         jtRawData = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jtTemplate = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
+        jtTemplate1 = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jtTemplate2 = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jtpViewer = new javax.swing.JTabbedPane();
         jdpMS = new javax.swing.JDesktopPane();
         jpTIC = new javax.swing.JPanel();
@@ -397,7 +399,6 @@ public class ProteoSuiteView extends JFrame {
         jtProtein = new javax.swing.JTextField();
         jlPeptide = new javax.swing.JLabel();
         jtPeptide = new javax.swing.JTextField();
-        jbGenerateTemplate = new javax.swing.JButton();
         jbShowIsotopeDistrib = new javax.swing.JButton();
         jpMzQuantML = new javax.swing.JPanel();
         jspMzQuantML = new javax.swing.JSplitPane();
@@ -820,7 +821,7 @@ public class ProteoSuiteView extends JFrame {
         jpRawDataValuesMenu.setMinimumSize(new java.awt.Dimension(0, 50));
         jpRawDataValuesMenu.setPreferredSize(new java.awt.Dimension(462, 50));
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11));
         jLabel1.setText("Search:");
 
         jtMSIndex.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -892,45 +893,32 @@ public class ProteoSuiteView extends JFrame {
         );
         jpRawDataValuesLayout.setVerticalGroup(
             jpRawDataValuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspRawDataValues, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+            .addComponent(jspRawDataValues, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
         );
 
         jtpLog.addTab("Raw Data", jpRawDataValues);
 
-        jtTemplate.setModel(new javax.swing.table.DefaultTableModel(
+        jtTemplate1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Peptide Index", "Isotope m/z", "Isotope Rel Int"
+                "m/z Index", "Scan Index", "Quant", "Template2 Index"
             }
         ));
-        jScrollPane1.setViewportView(jtTemplate);
-
-        jButton1.setText("Generate Second Template");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        jScrollPane1.setViewportView(jtTemplate1);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1)
-                .addContainerGap(200, Short.MAX_VALUE))
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE))
+                .addGap(40, 40, 40)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
         );
 
         jtpLog.addTab("Template 1", jPanel1);
@@ -945,56 +933,20 @@ public class ProteoSuiteView extends JFrame {
         ));
         jScrollPane2.setViewportView(jtTemplate2);
 
-        jButton2.setText("Generate third template");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(188, Short.MAX_VALUE))
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))
+                .addGap(37, 37, 37)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
         );
 
         jtpLog.addTab("Template 2", jPanel2);
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Template number", "x (m/z index)", "y (scan index)", "w (quant intensities)"
-            }
-        ));
-        jScrollPane3.setViewportView(jTable1);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
-        );
-
-        jtpLog.addTab("Template 3", jPanel3);
 
         javax.swing.GroupLayout jpLeftViewerBottomLayout = new javax.swing.GroupLayout(jpLeftViewerBottom);
         jpLeftViewerBottom.setLayout(jpLeftViewerBottomLayout);
@@ -1004,7 +956,7 @@ public class ProteoSuiteView extends JFrame {
         );
         jpLeftViewerBottomLayout.setVerticalGroup(
             jpLeftViewerBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpLog, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
+            .addComponent(jtpLog, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
         );
 
         jspLeftViewerDetails.setRightComponent(jpLeftViewerBottom);
@@ -1289,7 +1241,7 @@ public class ProteoSuiteView extends JFrame {
 
             },
             new String [] {
-                "Index", "Protein", "Peptide", "Composition", "Exp Mz", "Exp Mr", "Charge", "Score", "Scan", "RT (sec)"
+                "Index", "Protein", "Peptide", "Composition", "Exp Mz", "Exp Mr", "Charge", "Score", "Scan", "Scan ID", "RT (sec)"
             }
         ));
         jtMascotXMLView.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1320,13 +1272,6 @@ public class ProteoSuiteView extends JFrame {
             }
         });
 
-        jbGenerateTemplate.setText("Generate Template");
-        jbGenerateTemplate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbGenerateTemplateActionPerformed(evt);
-            }
-        });
-
         jbShowIsotopeDistrib.setText("Show Isotopes");
         jbShowIsotopeDistrib.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1351,20 +1296,15 @@ public class ProteoSuiteView extends JFrame {
                         .addComponent(jlPeptide)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jtPeptide, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE))
-                    .addGroup(jpMascotXMLMenuLayout.createSequentialGroup()
-                        .addComponent(jbGenerateTemplate)
-                        .addGap(18, 18, 18)
-                        .addComponent(jbShowIsotopeDistrib)))
+                    .addComponent(jbShowIsotopeDistrib))
                 .addContainerGap())
         );
         jpMascotXMLMenuLayout.setVerticalGroup(
             jpMascotXMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpMascotXMLMenuLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jpMascotXMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jbGenerateTemplate)
-                    .addComponent(jbShowIsotopeDistrib))
-                .addGap(11, 11, 11)
+                .addGap(16, 16, 16)
+                .addComponent(jbShowIsotopeDistrib)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jpMascotXMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jtPeptide, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jlSearchMascotXML)
@@ -2058,7 +1998,7 @@ public class ProteoSuiteView extends JFrame {
                         @Override
                         public void run(){
                             //... Progress Bar ...//
-                            progressBarDialog.setTitle("Reading MGF files");
+                            progressBarDialog.setTitle("Reading Mascot XML files");
                             progressBarDialog.setVisible(true);
                         }
                     }, "ProgressBarDialog");
@@ -2069,8 +2009,8 @@ public class ProteoSuiteView extends JFrame {
                             //... Reading selected files ...//
                             for (int iI = 0; iI < aFiles.length; iI++)
                             {
-                                //... Unmarshall data using jzmzML API ...//
                                 model.insertRow(model.getRowCount(), new Object[]{aFiles[iI].getName(), aFiles[iI].getPath(), "Mascot XML file (.xml)", "N/A"});
+                                loadMascotView(aFiles[iI].getName(), aFiles[iI].getPath());
                             } //... For files ...// 
                             
                             progressBarDialog.setVisible(false);
@@ -2504,12 +2444,39 @@ public class ProteoSuiteView extends JFrame {
             new Thread("LoadingThread"){
                 @Override
                 public void run(){
-                    //... Generate config files for xTracker ...//
-                    writeXTrackerConfigFiles();
-                    //... Run xTracker ...///
-                    xTracker run = new xTracker(sWorkspace + "\\" + jcbTechnique.getSelectedItem().toString() + "_Conf.xtc");
-                    progressBarDialog.setVisible(false);
-                    progressBarDialog.dispose();
+                    if (jcbTechnique.getSelectedItem().toString().equals("Label free")) //... Label free will be performed in proteosuite ...//
+                    {
+                        progressBarDialog.setVisible(false);
+                        progressBarDialog.dispose();        
+                        
+                        final JPanel run = new JPanel();                        
+                        JLabel jLabel1 = new JLabel("Please specify the parameters to perform the label free method.");
+                        JLabel jLabel2 = new JLabel("Scan Window:");
+                        JLabel jLabel3 = new JLabel("To:");
+                        JTextField jTextField1 = new JTextField("");
+                        JTextField jTextField2 = new JTextField("");
+                        GridLayout layout=new GridLayout(5,1);
+                        run.setLayout(layout);
+                        run.add(jLabel1);
+                        run.add(jLabel2);
+                        run.add(jTextField1);
+                        run.add(jLabel3);
+                        run.add(jTextField2);
+                        int iOption = JOptionPane.showConfirmDialog(null, run, "Edit Quantitation Parameters", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+                        if (iOption == JOptionPane.OK_OPTION) 
+                        {                        
+                            generateTemplate(Integer.parseInt(jTextField1.getText()), Integer.parseInt(jTextField2.getText()));
+                        }
+                    }
+                    else
+                    {                    
+                        //... Generate config files for xTracker ...//
+                        writeXTrackerConfigFiles();
+                        //... Run xTracker ...///
+                        xTracker run = new xTracker(sWorkspace + "\\" + jcbTechnique.getSelectedItem().toString() + "_Conf.xtc");
+                        progressBarDialog.setVisible(false);
+                        progressBarDialog.dispose();                        
+                    }
                 }
             }.start();                    
         }       
@@ -2553,7 +2520,7 @@ public class ProteoSuiteView extends JFrame {
 
     private void jtIdentFilesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtIdentFilesMouseClicked
         if ((evt.getButton() == 1)&&(jtIdentFiles.getValueAt(jtIdentFiles.getSelectedRow(), 2).toString().equals("Mascot XML file (.xml)"))) {            
-            loadMascotView();
+            loadMascotView(jtIdentFiles.getValueAt(jtIdentFiles.getSelectedRow(), 0).toString(), jtIdentFiles.getValueAt(jtIdentFiles.getSelectedRow(), 1).toString());
         }        
     }//GEN-LAST:event_jtIdentFilesMouseClicked
 
@@ -2610,20 +2577,8 @@ public class ProteoSuiteView extends JFrame {
 
     }//GEN-LAST:event_jtMascotXMLViewMouseClicked
 
-    private void jbGenerateTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbGenerateTemplateActionPerformed
-        //... Check selection .../
-        if (jtMascotXMLView.getSelectedRow()<0)
-        {
-            JOptionPane.showMessageDialog(this, "Please select at least one peptide", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
-            loadTemplate();
-        }
-    }//GEN-LAST:event_jbGenerateTemplateActionPerformed
-
     private void jtIdentFilesMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtIdentFilesMouseEntered
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_jtIdentFilesMouseEntered
 
     private void jbShowIsotopeDistribActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbShowIsotopeDistribActionPerformed
@@ -2633,51 +2588,317 @@ public class ProteoSuiteView extends JFrame {
                 
     }//GEN-LAST:event_jbShowIsotopeDistribActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //... Check selection .../
-        if (jtTemplate.getSelectedRow()<0)
+    private void jtMSMzKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtMSMzKeyPressed
+        String sChain = "";         
+        sChain = "" + evt.getKeyChar();          
+        Pattern p = Pattern.compile("^[a-zA-Z0-9]*$");         
+        Matcher m = p.matcher(sChain);         
+        if (m.find()) 
+        {             
+            sChain = jtMSMz.getText() + evt.getKeyChar();             
+            searchValueInRawData(sChain, 1);         
+        }
+    }//GEN-LAST:event_jtMSMzKeyPressed
+
+    private void jtMSIndexKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtMSIndexKeyPressed
+        String sChain = "";         
+        sChain = "" + evt.getKeyChar();          
+        Pattern p = Pattern.compile("^[a-zA-Z0-9]*$");         
+        Matcher m = p.matcher(sChain);         
+        if (m.find()) 
+        {             
+            sChain = jtMSIndex.getText() + evt.getKeyChar();             
+            searchValueInRawData(sChain, 0);         
+        }
+    }//GEN-LAST:event_jtMSIndexKeyPressed
+    private void generateTemplate(int scanIndex1, int scanIndex2)     
+    {
+        int iFileIndex = 0; //... Index to mzML raw data ...//
+        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model2 = new DefaultTableModel();
+        jtTemplate1.setModel(model);
+        jtTemplate2.setModel(model2);        
+        model.addColumn("m/z Index");
+        model.addColumn("Scan Index");
+        model.addColumn("Quant");
+        model.addColumn("Template2 Index");        
+        model2.addColumn("Template Index");
+        model2.addColumn("x");
+        model2.addColumn("y");
+        model2.addColumn("i");
+                
+        //... 1) Select MS/MS identifications that are specified in the parameter window (e.g. From scan 1671 to 1671)  ...//
+        Map<String, ArrayList<String>> hmPeptides = new HashMap<String, ArrayList<String>>();
+        int iCountPeptides = 0; //... Peptide counter ...//
+        boolean blnExists = false; 
+        for(int iI=0; iI<jtMascotXMLView.getRowCount(); iI++)
         {
-            JOptionPane.showMessageDialog(this, "Please select at least one peptide", "Error", JOptionPane.ERROR_MESSAGE);
+            //... Range based on scan number ...//
+            if ((scanIndex1<=Integer.parseInt(jtMascotXMLView.getValueAt(iI, 8).toString()))&&(scanIndex2>=Integer.parseInt(jtMascotXMLView.getValueAt(iI, 8).toString())))
+            {
+                ArrayList al = new ArrayList();                         
+                al.add(Integer.toString(iI));                           //... Index in the grid ...//                
+                al.add(jtMascotXMLView.getValueAt(iI, 3).toString());   //... 2) Peptide molecular composition which was calculated previously ...//
+                al.add(jtMascotXMLView.getValueAt(iI, 8).toString());   //... Scan index ...//
+                al.add(jtMascotXMLView.getValueAt(iI, 9).toString());   //... Scan ID (jmzml API only supports getElementBy(scanID) ...//
+                al.add(jtMascotXMLView.getValueAt(iI, 10).toString());  //... Retention time ...//
+                //... Check if peptide has been added previously ...//
+                blnExists = hmPeptides.containsKey(jtMascotXMLView.getValueAt(iI, 2).toString());
+                if (blnExists == false)
+                {
+                    hmPeptides.put(jtMascotXMLView.getValueAt(iI, 2).toString(), al); //... This eliminates peptides which have been identified more than once (e.g. for different proteins) ...//
+                    iCountPeptides++; //... Total peptides (identifications) in the scan range ...//
+                }
+            }
+        }
+        if (iCountPeptides > 0)
+        {            
+            System.out.println("Peptides in range = " + iCountPeptides);
+
+            final int RESOLUTION = 4; //... Number of peaks to retrieve (width of the template, e.g. 4 left, 4 right) ...//
+            final int MAX_ISOTOPES = 6; //... Number of isotopes estimated by IPC ...//
+            final int NUMBER_PEAKS = RESOLUTION*2+1; //... Number of peaks for each isotope ...//
+
+            System.out.println("RESOLUTION="+RESOLUTION);
+            System.out.println("MAX_ISOTOPES="+MAX_ISOTOPES);
+            System.out.println("NUMBER_PEAKS="+NUMBER_PEAKS);
+
+            int iTemp2Index = 0; //... Index for template 2 ...//
+            int iCountTemp1 = 0; //... Counter for template 1 ...//
+
+            int[] aPeakIndexes = new int[RESOLUTION*2+1];
+            Template2[] aTemplate2 = new Template2[iCountPeptides*MAX_ISOTOPES];
+            Template1[] aTemplate1 = new Template1[(iCountPeptides*MAX_ISOTOPES)*(NUMBER_PEAKS)];
+
+            //... Initialize arrays (Template 1 and Template 2) ...//S
+            for(int iI=0; iI<aTemplate2.length; iI++)
+            {
+                aTemplate2[iI] = new Template2();
+            }
+            for(int iI=0; iI<aTemplate1.length; iI++)
+            {
+                aTemplate1[iI] = new Template1();            
+            }
+
+            //... For each peptide, calculate the isotopic pattern distribution ...//
+            String sScanID = "";        
+            for (Map.Entry<String, ArrayList<String>> entry : hmPeptides.entrySet())
+            {
+                System.out.println("Calculating the Isotopic Patter Distribution (IPD) for peptide " + entry.getKey());
+
+                //... Specify parameters ...//
+                ArrayList<String> saParams = entry.getValue();
+                Object saArray[] = saParams.toArray();
+                Iterator<String> itr = saParams.iterator();
+                while (itr.hasNext()) //... Show the parameters in the array list (index, molecular composition, scanNumber, scanID, rt) ...//
+                {
+                    System.out.println("Param = " + itr.next().toString() + "; "); 
+                }
+                //... 3) Using IPC to calculate the isotopic pattern distribution ...//
+                String[] args = {};
+                args = new String[]{"-a", entry.getKey().toString(), 
+                    "-fc", "-z", jtMascotXMLView.getValueAt(Integer.parseInt(saArray[0].toString()), 6).toString(), 
+                    "-f", "1000", "-r", "10000"};
+                if (args.length == 0) {
+                    System.exit(0);
+                }
+                IPC ipc = new IPC();                 
+                Options options = Options.parseArgs(args);
+                options.setPrintOutput(false);
+                Results res = ipc.execute(options);
+                Object[] objArray = res.getPeaks().toArray();     
+                float[] aMz = new float[objArray.length];           //... There will be six isotopes estimated using the IPC class ...//
+                float[] aRelIntens = new float[objArray.length];     
+                System.out.println("==== IPD ====");
+                for(int iI=0; iI<objArray.length; iI++)
+                {
+                    aMz[iI] = Float.parseFloat(String.format("%.4f", res.getPeaks().first().getMass()));
+                    aRelIntens[iI] = Float.parseFloat(String.format("%.4f", res.getPeaks().first().getRelInt()*100));        
+                    System.out.println(aMz[iI] + "\t" + aRelIntens[iI]);
+                    res.getPeaks().pollFirst();
+                }
+
+                //... 4) Generate templates for seaMass by getting the m/z indexes for each isotope ...//                                                
+                MzMLUnmarshaller unmarshaller = alUnmarshaller.get(iFileIndex);
+                try{
+                    //... 4.1) Get precursor ion ...//
+                    sScanID = saArray[3].toString();
+                    Spectrum spectrum = unmarshaller.getSpectrumById(sScanID);
+                    PrecursorList plist = spectrum.getPrecursorList(); //... Get precursor ion ...//
+                    if (plist != null)
+                    {                    
+                        if (plist.getCount().intValue() == 1)
+                        {
+                            Spectrum precursor = unmarshaller.getSpectrumById(plist.getPrecursor().get(0).getSpectrumRef());
+
+                            //... Get binary raw data from the precursor ion ...//
+                            List<BinaryDataArray> bdal = precursor.getBinaryDataArrayList().getBinaryDataArray();
+
+                            //... Reading m/z Values (Peaks) ...//
+                            BinaryDataArray mzBinaryDataArray = (BinaryDataArray) bdal.get(0);
+                            Number[] mzValues = mzBinaryDataArray.getBinaryDataAsNumberArray();
+
+                            //... Perform a binary search to find the m/z index based on the m/z values estimated from the IPC ...//
+                            int iPos = -1, iPosPrev = -1;
+                            iPos = binarySearch(mzValues, 0, mzValues.length, aMz[0]);
+                            aPeakIndexes = getPeaks(mzValues, iPos, RESOLUTION);  //... Get n=9 values (4 left and 4 right) from the array ...//    
+
+                            //... Generate Template2 (index, {x, y, i}) ...//
+                            aTemplate2[iTemp2Index].setIndex(iTemp2Index);
+                            aTemplate2[iTemp2Index].setCoords(0, aRelIntens[0]);
+
+                            //... Generate Template1 (mzIndex, scanIndex, quant, temp2Index) ...//
+                            for (int iI=0; iI<NUMBER_PEAKS; iI++)
+                            {
+                                aTemplate1[iI+iCountTemp1].setTemplate(aPeakIndexes[iI], plist.getPrecursor().get(0).getSpectrumRef().toString(), 0, iTemp2Index);
+                            }
+                            iTemp2Index++;
+                            iCountTemp1+=NUMBER_PEAKS;
+                            iPosPrev = iPos;                       
+
+                            iPos = binarySearch(mzValues, 0, mzValues.length, aMz[1]);
+                            aPeakIndexes = getPeaks(mzValues, iPos, RESOLUTION);
+                            aTemplate2[iTemp2Index].setIndex(iTemp2Index);
+                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[1]);
+                            for (int iI=0; iI<NUMBER_PEAKS; iI++)
+                            {
+                                aTemplate1[iI+iCountTemp1].setTemplate(aPeakIndexes[iI], plist.getPrecursor().get(0).getSpectrumRef().toString(), 0, iTemp2Index);
+                            }                        
+                            iTemp2Index++;
+                            iCountTemp1+=NUMBER_PEAKS;                 
+
+                            iPos = binarySearch(mzValues, 0, mzValues.length, aMz[2]);
+                            aPeakIndexes = getPeaks(mzValues, iPos, RESOLUTION);
+                            aTemplate2[iTemp2Index].setIndex(iTemp2Index);
+                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[2]);
+                            for (int iI=0; iI<NUMBER_PEAKS; iI++)
+                            {
+                                aTemplate1[iI+iCountTemp1].setTemplate(aPeakIndexes[iI], plist.getPrecursor().get(0).getSpectrumRef().toString(), 0, iTemp2Index);
+                            }                        
+                            iTemp2Index++;
+                            iCountTemp1+=NUMBER_PEAKS;
+
+                            iPos = binarySearch(mzValues, 0, mzValues.length, aMz[3]);
+                            aPeakIndexes = getPeaks(mzValues, iPos, RESOLUTION);
+                            aTemplate2[iTemp2Index].setIndex(iTemp2Index);
+                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[3]);
+                            for (int iI=0; iI<NUMBER_PEAKS; iI++)
+                            {
+                                aTemplate1[iI+iCountTemp1].setTemplate(aPeakIndexes[iI], plist.getPrecursor().get(0).getSpectrumRef().toString(), 0, iTemp2Index);
+                            }                        
+                            iTemp2Index++;
+                            iCountTemp1+=NUMBER_PEAKS;
+
+                            iPos = binarySearch(mzValues, 0, mzValues.length, aMz[4]);
+                            aPeakIndexes = getPeaks(mzValues, iPos, RESOLUTION);
+                            aTemplate2[iTemp2Index].setIndex(iTemp2Index);
+                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[4]);
+                            for (int iI=0; iI<NUMBER_PEAKS; iI++)
+                            {
+                                aTemplate1[iI+iCountTemp1].setTemplate(aPeakIndexes[iI], plist.getPrecursor().get(0).getSpectrumRef().toString(), 0, iTemp2Index);
+                            }                        
+                            iTemp2Index++;
+                            iCountTemp1+=NUMBER_PEAKS;
+
+                            iPos = binarySearch(mzValues, 0, mzValues.length, aMz[5]);
+                            aPeakIndexes = getPeaks(mzValues, iPos, RESOLUTION);
+                            aTemplate2[iTemp2Index].setIndex(iTemp2Index);
+                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[5]);
+                            for (int iI=0; iI<NUMBER_PEAKS; iI++)
+                            {                            
+                                aTemplate1[iI+iCountTemp1].setTemplate(aPeakIndexes[iI], plist.getPrecursor().get(0).getSpectrumRef().toString(), 0, iTemp2Index);
+                            }                            
+                            iTemp2Index++;
+                            iCountTemp1+=NUMBER_PEAKS;
+                        }                    
+                    }  //... If precursor ion ...//
+                    jtpLog.setSelectedIndex(2);
+                }
+                catch(MzMLUnmarshallerException e){
+                    System.out.println(e);
+                }            
+            } //... From For ...//
+
+            //... Populate the Grids ...//
+            for(int iI=0; iI<aTemplate1.length; iI++)
+            {
+                model.insertRow(model.getRowCount(), new Object[]{aTemplate1[iI].getMzIndex(),
+                aTemplate1[iI].getScanIndex(),
+                aTemplate1[iI].getQuantIntensities(),
+                aTemplate1[iI].getTemplate2Index()
+                });                            
+            }
+            for(int iI=0; iI<aTemplate2.length; iI++)
+            {                            
+                for (int iJ=0; iJ<aTemplate2[iI].getCoords().length; iJ++)
+                {                                
+                    model2.insertRow(model2.getRowCount(), new Object[]{aTemplate2[iI].getIndex(),
+                    aTemplate2[iI].getCoord(iJ).getX(),
+                    aTemplate2[iI].getCoord(iJ).getY(),
+                    aTemplate2[iI].getCoord(iJ).getRelIntensity()
+                    });  
+                }                           
+            }      
+        } //... From if countPeptides ...//        
+    }    
+    public static int[] getPeaks(Number[] nArray, int iIndex, int iOffset)
+    {
+        int[] aPeaks = new int[iOffset*2+1];
+        int iCount = 0;
+        if ((iIndex-iOffset-1 > 0)&&(iIndex+iOffset < nArray.length-iOffset))
+        {
+            for (int iI=iIndex-iOffset-1; iI<iIndex+iOffset; iI++)
+            {
+                aPeaks[iCount] = iI;
+                iCount++;
+                System.out.println("Index="+iI+"\t"+nArray[iI].floatValue());
+            }
+        }
+        return aPeaks;
+    }    
+    public static int binarySearch(Number[] nArray, int iLowerBound, int iUpperBound, float fKey)
+    {
+        int iPos;
+        int iCompCount = 1;    
+
+        iPos = (iLowerBound + iUpperBound) / 2;
+        while((Round(nArray[iPos].floatValue(), 3) != Round(fKey,3)) && (iLowerBound <= iUpperBound))
+        {
+             iCompCount++;
+             if (Round(nArray[iPos].floatValue(), 3) > Round(fKey,3))             
+             {                                              
+                iUpperBound = iPos - 1;  
+             }                                                            
+             else                                                  
+             {                                                       
+                iLowerBound = iPos + 1;   
+             }
+             iPos = (iLowerBound + iUpperBound) / 2;
+        }
+        System.out.println("Searching for m/z = " + Round(fKey,3) + " in array");
+        if (iLowerBound <= iUpperBound)
+        {
+            System.out.println("The number was found in array at position " + iPos);
+            System.out.println("The binary search found the number after " + iCompCount + " comparisons.");
         }
         else
         {
-            loadTemplate2();
+            System.out.println("Sorry, the number is not in this array. The binary search made " + iCompCount  + " comparisons."); 
+            System.out.println("The closest indexes were iLowerBound=" + iLowerBound + " and iUpperBound=" + iUpperBound); 
+            iPos = iLowerBound;
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jtMSIndexKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtMSIndexKeyPressed
-        String sChain = "";
-        sChain = "" + evt.getKeyChar();
-            
-        Pattern p = Pattern.compile("^[a-zA-Z0-9]*$"); 
-        Matcher m = p.matcher(sChain);
-        if (m.find())
-        {
-            sChain = jtMSIndex.getText() + evt.getKeyChar();
-            searchValueInRawData(sChain, 0); 
-        }
-    }//GEN-LAST:event_jtMSIndexKeyPressed
-
-    private void jtMSMzKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtMSMzKeyPressed
-        String sChain = "";
-        sChain = "" + evt.getKeyChar();
-            
-        Pattern p = Pattern.compile("^[a-zA-Z0-9]*$"); 
-        Matcher m = p.matcher(sChain);
-        if (m.find())
-        {
-            sChain = jtMSMz.getText() + evt.getKeyChar();
-            searchValueInRawData(sChain, 1); 
-        }        
-    }//GEN-LAST:event_jtMSMzKeyPressed
+        return iPos;
+    }     
+    public static float Round(float Rval, int Rpl) {
+        float p = (float)Math.pow(10,Rpl);
+        Rval = Rval * p;
+        float tmp = Math.round(Rval);
+        return (float)tmp/p;
+    }
     private void loadTemplate()     
     {
         DefaultTableModel model = new DefaultTableModel();
-        jtTemplate.setModel(model);
+        jtTemplate1.setModel(model);
         model.addColumn("Peptide Index");
         model.addColumn("Isotope m/z");
         model.addColumn("Isotope Relative Intensity");
@@ -2709,7 +2930,6 @@ public class ProteoSuiteView extends JFrame {
             }                    
         }
         jtpLog.setSelectedIndex(2);
-                
     }    
     private void loadTemplate2()     
     {
@@ -2720,14 +2940,14 @@ public class ProteoSuiteView extends JFrame {
         model.addColumn("y");
         model.addColumn("i");
         
-        int rowIndexStart = jtTemplate.getSelectedRow();
-        int rowIndexEnd = jtTemplate.getSelectionModel().getMaxSelectionIndex();
+        int rowIndexStart = jtTemplate1.getSelectedRow();
+        int rowIndexEnd = jtTemplate1.getSelectionModel().getMaxSelectionIndex();
         float factor1 = 0.0f, factor2 = 0.0f, relInt=0.0f;
         factor1 = (float)1/36;
         factor2 = (float)4/9;
 
         for (int r=rowIndexStart; r<=rowIndexEnd; r++) {
-            relInt = Float.valueOf(jtTemplate.getValueAt(r, 2).toString().trim()).floatValue();
+            relInt = Float.valueOf(jtTemplate1.getValueAt(r, 2).toString().trim()).floatValue();
 
             for (int x=-1; x<2; x++)
             {
@@ -2736,7 +2956,7 @@ public class ProteoSuiteView extends JFrame {
                     if((x!=0)||(y!=0))
                     {
                         model.insertRow(model.getRowCount(), new Object[]{
-                            Float.parseFloat(jtTemplate.getValueAt(r, 1).toString()),
+                            Float.parseFloat(jtTemplate1.getValueAt(r, 1).toString()),
                             x,
                             y,
                             factor1*relInt
@@ -2745,7 +2965,7 @@ public class ProteoSuiteView extends JFrame {
                 }
             }
             model.insertRow(model.getRowCount(), new Object[]{
-                Float.parseFloat(jtTemplate.getValueAt(r, 1).toString()),
+                Float.parseFloat(jtTemplate1.getValueAt(r, 1).toString()),
                 0,
                 0,
                 factor2*relInt
@@ -3348,13 +3568,13 @@ public class ProteoSuiteView extends JFrame {
             }
         }.start();                
     }   
-    private void loadMascotView() 
+    private void loadMascotView(String sFileName, String sFilePath) 
     {  
         DefaultTableModel model = new DefaultTableModel()
         {  
             Class[] types = new Class [] {             
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Double.class, java.lang.Double.class,
-                java.lang.Integer.class, java.lang.Double.class, java.lang.Integer.class, java.lang.Double.class
+                java.lang.Integer.class, java.lang.Double.class, java.lang.Integer.class, java.lang.String.class, java.lang.Double.class
             };  
             @Override  
             public Class getColumnClass(int columnIndex) {  
@@ -3371,16 +3591,17 @@ public class ProteoSuiteView extends JFrame {
         model.addColumn("Charge");
         model.addColumn("Score");       
         model.addColumn("Scan");
+        model.addColumn("Scan ID");
         model.addColumn("RT (sec)");
         String sOutput="";
                        
-        sOutput = "Name:\t" + jtIdentFiles.getValueAt(jtIdentFiles.getSelectedRow(), 0).toString() + "\n";
-        sOutput = sOutput + "Path:\t" + jtIdentFiles.getValueAt(jtIdentFiles.getSelectedRow(), 1).toString() + "\n";
+        sOutput = "Name:\t" + sFileName + "\n";
+        sOutput = sOutput + "Path:\t" + sFilePath + "\n";
         jtaMascotXML.setText(sOutput);  
         jtpProperties.setSelectedIndex(1);
         
         //... Open mascot file and extract identifications ...//
-        File file = new File(jtIdentFiles.getValueAt(jtIdentFiles.getSelectedRow(), 1).toString());
+        File file = new File(sFilePath);
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         try 
@@ -3398,6 +3619,7 @@ public class ProteoSuiteView extends JFrame {
             String peptideCompos = "";
             float hitScore = 0.0f;
             float retTime = 0.0f;
+            String idRef = "";
             int scanNumber = 0;
             float parIonMz = 0.0f;
             float parIonMr = 0.0f;
@@ -3526,13 +3748,14 @@ public class ProteoSuiteView extends JFrame {
                                                     } 
                                                     else if (peptideElem.getNodeName().equals("pep_scan_title")) //... Only in some cases the rt is specified in the scan title ...//
                                                     {
-                                                        if (peptideElem.getTextContent().toString().indexOf("rt=")>0) //... Option 1, reading on scan title ...//
+                                                        if (peptideElem.getTextContent().toString().indexOf("rt:")>0) //... Option 1, reading on scan title ...//
                                                         {
                                                             String myTmpString = peptideElem.getTextContent().toString();
                                                             int ind = 0;
                                                             int ind1 = 0;
 
-                                                            ind = myTmpString.indexOf("(rt=");
+                                                            //... Get retention time ...//
+                                                            ind = myTmpString.indexOf("(rt:");
                                                             if(ind>0)
                                                             {
                                                                 ind1 = myTmpString.indexOf(")");
@@ -3542,11 +3765,25 @@ public class ProteoSuiteView extends JFrame {
                                                             {
                                                                 retTime=0;
                                                             }
-                                                            ind = myTmpString.indexOf("scans:");
+                                                            
+                                                            //... Get ID ref ...//
+                                                            ind = myTmpString.indexOf("(id:");
                                                             if(ind>0)
                                                             {
+                                                                ind1 = myTmpString.lastIndexOf(")");
+                                                                idRef = myTmpString.substring(ind + 4, ind1);
+                                                            }
+                                                            else
+                                                            {
+                                                                idRef="";
+                                                            }                                                            
+                                                            
+                                                            //... Get scan number ...//
+                                                            ind = myTmpString.indexOf("Scan:");
+                                                            if(ind>-1)
+                                                            {
                                                                 ind1 = myTmpString.indexOf(",");
-                                                                scanNumber = Double.valueOf(myTmpString.substring(ind + 6, ind1)).intValue();
+                                                                scanNumber = Double.valueOf(myTmpString.substring(ind + 5, ind1)).intValue();
                                                             }
                                                             else
                                                             {
@@ -3568,6 +3805,7 @@ public class ProteoSuiteView extends JFrame {
                                                             dbCharge,
                                                             hitScore,
                                                             scanNumber,
+                                                            idRef,
                                                             retTime});
                                                         iIndex++;
                                                     }
@@ -4735,17 +4973,13 @@ public class ProteoSuiteView extends JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -4754,13 +4988,11 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator6;
     private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JPopupMenu.Separator jSeparator9;
-    private javax.swing.JTable jTable1;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JToolBar jToolBar3;
     private javax.swing.JButton jbCopy;
     private javax.swing.JButton jbCut;
-    private javax.swing.JButton jbGenerateTemplate;
     private javax.swing.JButton jbImportFile;
     private javax.swing.JButton jbNewProject;
     private javax.swing.JButton jbOpenProject;
@@ -4900,7 +5132,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JTable jtRawData;
     private javax.swing.JTable jtRawFiles;
     private javax.swing.JTextField jtScan;
-    private javax.swing.JTable jtTemplate;
+    private javax.swing.JTable jtTemplate1;
     private javax.swing.JTable jtTemplate2;
     private javax.swing.JTextArea jtaLog;
     private javax.swing.JTextArea jtaMascotXML;

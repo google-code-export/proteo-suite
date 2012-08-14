@@ -8,7 +8,7 @@
  * Notes:             GUI generated using NetBeans IDE 7.0.1
  * Read our documentation file under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
- * Project Website: http://www.proteosuite.org/Test
+ * Project Website: http://www.proteosuite.org
  * --------------------------------------------------------------------------
  */
 package org.proteosuite.gui;
