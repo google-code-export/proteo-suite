@@ -2,7 +2,7 @@
 
 == Introduction  ==
 
-The following instructions describe the different steps that you need to run *ProteoSuite* in your local machine and make changes to the current code. We have written this page in the most comprehensive manner so that you can easily configure the project locally. However, if you still have a doubt or query send us an e-mail and we will be very happy to help you.
+The following instructions describe the different steps that you need to follow to run *ProteoSuite* in your local machine and make changes to the current code. We have written this page in the most comprehensive manner so that you can easily configure the project locally. However, if you still have a doubt or query send us an e-mail and we will be very happy to help you.
 
 *ProteoSuite Team*
 
@@ -11,10 +11,10 @@ URL: http://www.proteosuite.org
 
 == System requirements ==
 
-ProteoSuite has been written in Java using the NetBeans 7.0.1 GUI environment. You can download the most recent version at http://netbeans.org/.
+*ProteoSuite* has been written in Java using the NetBeans 7.0.1 GUI environment. You can download the most recent version at http://netbeans.org/.
 
 === Software ===
-  * NetBeans 7.0.1 (or above). We recommend to download the full version which includes all components needed for this project. 
+  * NetBeans 7.0.1 (or above). We recommend to download the full version of NetBeans which includes all components needed for this project. 
   * Any Subversion client such as [http://tortoisesvn.net/ TortoiseSVN].
 
 === Hardware ===
@@ -30,15 +30,16 @@ The following instructions are oriented to Windows users, however, these steps a
   # Install NetBeans.
   # Install TortoiseSVN or your preferred SVN client.
   # Create a folder for the source code in your local machine. E.g. D:\ProteoSuite
-  # Using TortoiseSVN right click on the folder and select `SVN Checkout`
-  # In `URL of repository` type http://proteo-suite.googlecode.com/svn/trunk/ your checkout directory must point to the folder you have created. Click `OK`. 
-  # At this stage you have downloaded all files for ProteoSuite available at Google Code (http://code.google.com/p/proteo-suite/).
+  # Using TortoiseSVN right click on the folder and select *`SVN Checkout`*
+  # In *`URL of repository`* type http://proteo-suite.googlecode.com/svn/trunk/. Your *'Checkout directory'* must point to the folder you have created. Click *`OK`*. 
+  # At this stage you have downloaded all files available at Google Code (http://code.google.com/p/proteo-suite/).
   # Open NetBeans and locate the project folder.
-  # ProteoSuite uses several dependencies which are automatically downloaded when compiling the project. Therefore, you will need internet connection when compiling the project. Additionally, ProteoSuite uses some APIs which are often modified by their owners. For these we have selected several stable versions. The following libraries need to be installed manually:
-* jcommon-1.0.16.jar			jfree.org		(For general charts)
-* jfreechart-1.0.13.jar			jfree.org		(For general charts)
-* utilities-3.0.16.jar			compomics.org	(For GUIs, spectrum and chromatogram)
-* x-Tracker-1.0-SNAPSHOT.jar	xtracker.info	
+  # *ProteoSuite* uses several dependencies (E.g. jmzml, jmzidentml, etc.) which are automatically downloaded when compiling the project. Therefore, you will need internet connection when compiling the project. Additionally, *ProteoSuite* uses some APIs which are periodically modified by their owners. For these APIs we have selected several stable versions which need to be installed manually:
+
+  * jcommon-1.0.16.jar URL=jfree.org (For general charts)
+  * jfreechart-1.0.13.jar URL=jfree.org	(For general charts)
+  * utilities-3.0.16.jar URL=compomics.org (For GUIs, spectrum and chromatogram)
+  * x-Tracker-1.0-SNAPSHOT.jar URL=xtracker.info
 
 Note: These libraries can be found under the /src/main/resources/lib/ directory.
 
