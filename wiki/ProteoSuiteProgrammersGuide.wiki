@@ -1,0 +1,18 @@
+#summary Guide for Programmers - Description on how to install ProteoSuite in your local machine.
+#labels Phase-Implementation,Phase-Deploy
+
+= Introduction  =
+
+The following instructions describe the different steps that you need to follow if you want to run ProteoSuite in your local machine and make changes to the current code. We have written this page in the most comprehensive manner so that you can easily configure the project locally. If you still have a doubt or query send us an e-mail and we will be very happy to help you.
+
+ProteoSuite Team
+http://www.proteosuite.org
+
+
+= System requirements =
+
+ProteoSuite has been written in Java usin the NetBeans 7.0.1 GUI environment. You can download the most recent version at http://netbeans.org/.
+
+  * NetBeans 7.0.1 (or above)
+
+= Installation =
