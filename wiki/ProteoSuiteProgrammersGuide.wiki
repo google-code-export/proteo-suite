@@ -41,7 +41,7 @@ The following instructions are oriented to Windows users, however, these steps a
   * *utilities-3.0.16.jar* Owner=compomics.org (For GUIs, spectrum and chromatogram)
   * *x-Tracker-1.0-SNAPSHOT.jar* Owner=xtracker.info
 
-Note: These libraries can be found under the /src/main/resources/lib/ directory or [http://code.google.com/p/proteo-suite/source/browse/#svn%2Ftrunk%2Fsrc%2Fmain%2Fresources%2Flib online].
+Note: These libraries can be found under the /src/main/resources/lib/ directory or [http://code.google.com/p/proteo-suite/source/browse/#svn%2Ftrunk%2Fsrc%2Fmain%2Fresources%2Flib here].
 
 == License ==
 
