@@ -12,11 +12,11 @@ Use one of the following set of instructions depending on your operating system.
 
   * Download the latest release at http://code.google.com/p/proteo-suite/downloads/list.
 
-  * Save the *`ProteoSuite-X.X.X.ZIP`* file into one of your local drives. 
+  * Save the *`ProteoSuite-X.X.X.zip`* file into one of your local drives. 
 
   * Uncompress the program in any local drive. E.g. C:\ProteoSuite-X.X.X
 
-  * Locate and execute (double click) the jar file (proteosuite-X.X.X-jar-with-dependencies.jar) to start ProteoSuite.
+  * Locate and execute (double click) the jar file (*`proteosuite-X.X.X-jar-with-dependencies.jar`*) to start ProteoSuite.
 
 Tip: You can create a shortcut to this file and place it into your desktop.
 
@@ -24,7 +24,7 @@ Tip: You can create a shortcut to this file and place it into your desktop.
 
   * Download the latest release at http://code.google.com/p/proteo-suite/downloads/list.
 
-  * Save the *`ProteoSuite-X.X.X.ZIP`* file into one of your local drives. 
+  * Save the *`ProteoSuite-X.X.X.zip`* file into one of your local drives. 
 
   * Uncompress the program in any local drive. E.g. /home/useraccount/ProteoSuite-X.X.X/
 
@@ -33,3 +33,13 @@ Tip: You can create a shortcut to this file and place it into your desktop.
   * Double click on the launcher. 
    
 === OSX ===
+
+  * Download the latest release at http://code.google.com/p/proteo-suite/downloads/list.
+
+  * Save the *`ProteoSuite-X.X.X.zip`* file into one of your local drives. 
+
+  * Uncompress the program in any local drive. E.g. /Documents/ProteoSuite-X.X.X
+
+  * Locate and execute (double click) the jar file (*`proteosuite-X.X.X-jar-with-dependencies.jar`*) to start ProteoSuite.
+
+Tip: You can create a shortcut to this file and place it into your desktop.
