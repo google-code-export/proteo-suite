@@ -2,16 +2,26 @@
 
 = Introduction  =
 
-The following instructions describe the different steps that you need to follow if you want to run ProteoSuite in your local machine and make changes to the current code. We have written this page in the most comprehensive manner so that you can easily configure the project locally. If you still have a doubt or query send us an e-mail and we will be very happy to help you.
+The following instructions describe the different steps that you need to follow if you want to run *ProteoSuite* in your local machine and make changes to the current code. We have written this page in the most comprehensive manner so that you can easily configure the project locally. However, if you still have a doubt or query send us an e-mail and we will be very happy to help you.
 
 ProteoSuite Team
+
 http://www.proteosuite.org
 
 
 = System requirements =
 
-ProteoSuite has been written in Java usin the NetBeans 7.0.1 GUI environment. You can download the most recent version at http://netbeans.org/.
+ProteoSuite has been written in Java using the NetBeans 7.0.1 GUI environment. You can download the most recent version at http://netbeans.org/.
 
-  * NetBeans 7.0.1 (or above)
+== Software ==
+  * NetBeans 7.0.1 (or above). We recommend to download the full version which includes all components. 
+  * Any Subversion client such as [http://tortoisesvn.net/ TortoiseSVN].
+
+== Hardware ==
+  * Processing: 1 GHz (32-bit|64-bit) processor (2-4 cores recommended).
+  * Memory: 2GB RAM (4GB recommended).
+  * Secondary storage: 1GB hard disk.
+
+
 
 = Installation =
