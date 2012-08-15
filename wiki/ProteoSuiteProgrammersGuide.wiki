@@ -31,17 +31,17 @@ The following instructions are oriented to Windows users, however, these steps a
   # Install TortoiseSVN or your preferred SVN client.
   # Create a folder for the source code in your local machine. E.g. D:\ProteoSuite
   # Using TortoiseSVN right click on the folder and select *`SVN Checkout`*
-  # In *`URL of repository`* type http://proteo-suite.googlecode.com/svn/trunk/. Your *'Checkout directory'* must point to the folder you have created. Click *`OK`*. 
+  # In *`URL of repository`* type http://proteo-suite.googlecode.com/svn/trunk/. Your *`Checkout directory`* must point to the folder you have created. Click *`OK`*. 
   # At this stage you have downloaded all files available at Google Code (http://code.google.com/p/proteo-suite/).
   # Open NetBeans and locate the project folder.
-  # *ProteoSuite* uses several dependencies (E.g. jmzml, jmzidentml, etc.) which are automatically downloaded when compiling the project. Therefore, you will need internet connection when compiling the project. Additionally, *ProteoSuite* uses some APIs which are periodically modified by their owners. For these APIs we have selected several stable versions which need to be installed manually:
+  # *ProteoSuite* uses several dependencies (E.g. jmzml, jmzidentml, etc.) which are automatically downloaded when compiling the project. Therefore, you will need internet connection when compiling the project. Additionally, *ProteoSuite* uses several APIs which are periodically modified by their owners. For these APIs, we have selected several stable versions which need to be installed manually:
 
-  * jcommon-1.0.16.jar URL=jfree.org (For general charts)
-  * jfreechart-1.0.13.jar URL=jfree.org	(For general charts)
-  * utilities-3.0.16.jar URL=compomics.org (For GUIs, spectrum and chromatogram)
-  * x-Tracker-1.0-SNAPSHOT.jar URL=xtracker.info
+  * *jcommon-1.0.16.jar* Owner=jfree.org (For general charts)
+  * *jfreechart-1.0.13.jar* Owner=jfree.org	(For general charts)
+  * *utilities-3.0.16.jar* Owner=compomics.org (For GUIs, spectrum and chromatogram)
+  * *x-Tracker-1.0-SNAPSHOT.jar* Owner=xtracker.info
 
-Note: These libraries can be found under the /src/main/resources/lib/ directory.
+Note: These libraries can be found under the /src/main/resources/lib/ directory or [http://code.google.com/p/proteo-suite/source/browse/#svn%2Ftrunk%2Fsrc%2Fmain%2Fresources%2Flib online].
 
 == License ==
 
