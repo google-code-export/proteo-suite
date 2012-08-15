@@ -1,5 +1,4 @@
 #summary Guide for Programmers - Description on how to install ProteoSuite in your local machine.
-#labels Phase-Implementation,Phase-Deploy
 
 = Introduction  =
 
