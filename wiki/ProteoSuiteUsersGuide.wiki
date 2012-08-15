@@ -6,6 +6,7 @@
 Use one of the following set of instructions depending on your operating system.
 
 
+
 == Installation ==
 
 === Windows ===
@@ -43,3 +44,7 @@ Tip: You can create a shortcut to this file and place it into your desktop.
   * Locate and execute (double click) the jar file (*`proteosuite-X.X.X-jar-with-dependencies.jar`*) to start ProteoSuite.
 
 Tip: You can create a shortcut to this file and place it into your desktop.
+
+
+
+== Running ProteoSuite ==
