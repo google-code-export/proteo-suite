@@ -1,0 +1,35 @@
+#summary Guide for Users - Description on how to run ProteoSuite in your local machine.
+
+== Introduction ==
+
+*ProteoSuite* can run in multiple platforms (Windows, Linux and Mac OS X). 
+Use one of the following set of instructions depending on your operating system.
+
+
+== Installation ==
+
+=== Windows ===
+
+  * Download the latest release at http://code.google.com/p/proteo-suite/downloads/list.
+
+  * Save the *`ProteoSuite-X.X.X.ZIP`* file into one of your local drives. 
+
+  * Uncompress the program in any local drive. E.g. C:\ProteoSuite-X.X.X
+
+  * Locate and execute (double click) the jar file (proteosuite-X.X.X-jar-with-dependencies.jar) to start ProteoSuite.
+
+Tip: You can create a shortcut to this file and place it into your desktop.
+
+=== Linux ===
+
+  * Download the latest release at http://code.google.com/p/proteo-suite/downloads/list.
+
+  * Save the *`ProteoSuite-X.X.X.ZIP`* file into one of your local drives. 
+
+  * Uncompress the program in any local drive. E.g. /home/useraccount/ProteoSuite-X.X.X/
+
+  * Create a shortcut (launcher) to *ProteoSuite* and place it into your desktop. i.e. Right click on your desktop. Then *`Create Launcher`*. Enter the following information for the launcher: *`Type`*: Application *`Name`*: ProteoSuite *`Command`*: java -jar /home/useraccount/Downloads/proteosuite-X.X.X-jar-with-dependencies.jar *`Comment`*: ProteoSuite   
+
+  * Double click on the launcher. 
+   
+=== OSX ===
