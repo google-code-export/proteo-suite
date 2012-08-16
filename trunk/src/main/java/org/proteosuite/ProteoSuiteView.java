@@ -2668,8 +2668,8 @@ public class ProteoSuiteView extends JFrame {
             int iCountTemp1 = 0; //... Counter for template 1 ...//
 
             int[] aPeakIndexes = new int[RESOLUTION*2+1];
-            Template2[] aTemplate2 = new Template2[iCountPeptides*MAX_ISOTOPES];
-            Template1[] aTemplate1 = new Template1[(iCountPeptides*MAX_ISOTOPES)*(NUMBER_PEAKS)];
+            Template2[] aTemplate2 = new Template2[iCountPeptides];
+            Template1[] aTemplate1 = new Template1[iCountPeptides*NUMBER_PEAKS];
 
             //... Initialize arrays (Template 1 and Template 2) ...//S
             for(int iI=0; iI<aTemplate2.length; iI++)
@@ -2746,71 +2746,36 @@ public class ProteoSuiteView extends JFrame {
 
                             //... Generate Template2 (index, {x, y, i}) ...//
                             aTemplate2[iTemp2Index].setIndex(iTemp2Index);
-                            aTemplate2[iTemp2Index].setCoords(0, aRelIntens[0]);
+                            aTemplate2[iTemp2Index].setCoords(0, aRelIntens[0], 0);
 
                             //... Generate Template1 (mzIndex, scanIndex, quant, temp2Index) ...//
                             for (int iI=0; iI<NUMBER_PEAKS; iI++)
                             {
-                                aTemplate1[iI+iCountTemp1].setTemplate(aPeakIndexes[iI], plist.getPrecursor().get(0).getSpectrumRef().toString(), 0, iTemp2Index);
+                                aTemplate1[iI+iCountTemp1].setTemplate(aPeakIndexes[iI], plist.getPrecursor().get(0).getSpectrumRef().toString(), 1, iTemp2Index);
                             }
-                            iTemp2Index++;
                             iCountTemp1+=NUMBER_PEAKS;
                             iPosPrev = iPos;                       
 
                             iPos = binarySearch(mzValues, 0, mzValues.length, aMz[1]);
                             aPeakIndexes = getPeaks(mzValues, iPos, RESOLUTION);
-                            aTemplate2[iTemp2Index].setIndex(iTemp2Index);
-                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[1]);
-                            for (int iI=0; iI<NUMBER_PEAKS; iI++)
-                            {
-                                aTemplate1[iI+iCountTemp1].setTemplate(aPeakIndexes[iI], plist.getPrecursor().get(0).getSpectrumRef().toString(), 0, iTemp2Index);
-                            }                        
-                            iTemp2Index++;
-                            iCountTemp1+=NUMBER_PEAKS;                 
+                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[1], 1);                
 
                             iPos = binarySearch(mzValues, 0, mzValues.length, aMz[2]);
                             aPeakIndexes = getPeaks(mzValues, iPos, RESOLUTION);
-                            aTemplate2[iTemp2Index].setIndex(iTemp2Index);
-                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[2]);
-                            for (int iI=0; iI<NUMBER_PEAKS; iI++)
-                            {
-                                aTemplate1[iI+iCountTemp1].setTemplate(aPeakIndexes[iI], plist.getPrecursor().get(0).getSpectrumRef().toString(), 0, iTemp2Index);
-                            }                        
-                            iTemp2Index++;
-                            iCountTemp1+=NUMBER_PEAKS;
+                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[2], 2);
 
                             iPos = binarySearch(mzValues, 0, mzValues.length, aMz[3]);
                             aPeakIndexes = getPeaks(mzValues, iPos, RESOLUTION);
-                            aTemplate2[iTemp2Index].setIndex(iTemp2Index);
-                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[3]);
-                            for (int iI=0; iI<NUMBER_PEAKS; iI++)
-                            {
-                                aTemplate1[iI+iCountTemp1].setTemplate(aPeakIndexes[iI], plist.getPrecursor().get(0).getSpectrumRef().toString(), 0, iTemp2Index);
-                            }                        
-                            iTemp2Index++;
-                            iCountTemp1+=NUMBER_PEAKS;
+                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[3], 3);
 
                             iPos = binarySearch(mzValues, 0, mzValues.length, aMz[4]);
                             aPeakIndexes = getPeaks(mzValues, iPos, RESOLUTION);
-                            aTemplate2[iTemp2Index].setIndex(iTemp2Index);
-                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[4]);
-                            for (int iI=0; iI<NUMBER_PEAKS; iI++)
-                            {
-                                aTemplate1[iI+iCountTemp1].setTemplate(aPeakIndexes[iI], plist.getPrecursor().get(0).getSpectrumRef().toString(), 0, iTemp2Index);
-                            }                        
-                            iTemp2Index++;
-                            iCountTemp1+=NUMBER_PEAKS;
+                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[4], 4);
 
                             iPos = binarySearch(mzValues, 0, mzValues.length, aMz[5]);
                             aPeakIndexes = getPeaks(mzValues, iPos, RESOLUTION);
-                            aTemplate2[iTemp2Index].setIndex(iTemp2Index);
-                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[5]);
-                            for (int iI=0; iI<NUMBER_PEAKS; iI++)
-                            {                            
-                                aTemplate1[iI+iCountTemp1].setTemplate(aPeakIndexes[iI], plist.getPrecursor().get(0).getSpectrumRef().toString(), 0, iTemp2Index);
-                            }                            
+                            aTemplate2[iTemp2Index].setCoords(iPos - iPosPrev, aRelIntens[5], 5);                           
                             iTemp2Index++;
-                            iCountTemp1+=NUMBER_PEAKS;
                         }                    
                     }  //... If precursor ion ...//
                     jtpLog.setSelectedIndex(2);
@@ -2819,6 +2784,22 @@ public class ProteoSuiteView extends JFrame {
                     System.out.println(e);
                 }            
             } //... From For ...//
+            
+            //... Perform normalisation ...//
+            float fSum=0.0f;
+            float fNewValue=0.0f;
+            for(int iI=0; iI<aTemplate2.length; iI++)
+            {
+                for (int iJ=0; iJ<aTemplate2[iI].getCoords().length; iJ++)
+                {                                
+                    fSum+=Math.pow(aTemplate2[iI].getCoord(iJ).getRelIntensity(), 2.0);  
+                }
+                for (int iJ=0; iJ<aTemplate2[iI].getCoords().length; iJ++)
+                {                                
+                    fNewValue = aTemplate2[iI].getCoord(iJ).getRelIntensity()/fSum;  
+                    aTemplate2[iI].setCoords(aTemplate2[iI].getCoord(iJ).getX(), aTemplate2[iI].getCoord(iJ).getY(), fNewValue, iJ);
+                }                
+            }            
 
             //... Populate the Grids ...//
             for(int iI=0; iI<aTemplate1.length; iI++)
@@ -2839,7 +2820,9 @@ public class ProteoSuiteView extends JFrame {
                     aTemplate2[iI].getCoord(iJ).getRelIntensity()
                     });  
                 }                           
-            }      
+            }    
+         
+            
         } //... From if countPeptides ...//        
     }    
     public static int[] getPeaks(Number[] nArray, int iIndex, int iOffset)

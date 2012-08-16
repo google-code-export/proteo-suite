@@ -5,11 +5,11 @@ package org.proteosuite.data;
  */
 public class Template2 {
     private int templateIndex;
-    private Coord[] aCoords = new Coord[9];
+    private Coord[] aCoords = new Coord[54];
 
     public Template2() {
         this.templateIndex=0;
-        for (int iI=0; iI<9; iI++)
+        for (int iI=0; iI<54; iI++)
         {
             this.aCoords[iI] = new Coord();
         }        
@@ -49,12 +49,16 @@ public class Template2 {
     {
         return templateIndex;
     }
-    public void setCoords(int iOffset, float relInt)
+    public void setCoords(float x, float y, float relInt, int iPos)
+    {
+        aCoords[iPos].setCoord(x, y, relInt);
+    }
+    public void setCoords(int iOffset, float relInt, int iIndexTemp1)
     {        
         float factor1 = 0.0f, factor2 = 0.0f;
         factor1 = (float)1/36;
         factor2 = (float)4/9;
-        int iCount = 0;
+        int iCount = iIndexTemp1*9;
         
         for (int x=iOffset-1; x<iOffset+2; x++)
         {
