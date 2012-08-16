@@ -2456,6 +2456,7 @@ public class ProteoSuiteView extends JFrame {
                         JTextField jTextField1 = new JTextField("");
                         JTextField jTextField2 = new JTextField("");
                         GridLayout layout=new GridLayout(5,1);
+                        jTextField1.requestFocusInWindow();                        
                         run.setLayout(layout);
                         run.add(jLabel1);
                         run.add(jLabel2);
@@ -2845,9 +2846,9 @@ public class ProteoSuiteView extends JFrame {
     {
         int[] aPeaks = new int[iOffset*2+1];
         int iCount = 0;
-        if ((iIndex-iOffset-1 > 0)&&(iIndex+iOffset < nArray.length-iOffset))
+        if ((iIndex-iOffset > 0)&&(iIndex+iOffset < nArray.length))
         {
-            for (int iI=iIndex-iOffset-1; iI<iIndex+iOffset; iI++)
+            for (int iI=iIndex-iOffset; iI<=iIndex+iOffset; iI++)
             {
                 aPeaks[iCount] = iI;
                 iCount++;
@@ -2862,10 +2863,10 @@ public class ProteoSuiteView extends JFrame {
         int iCompCount = 1;    
 
         iPos = (iLowerBound + iUpperBound) / 2;
-        while((Round(nArray[iPos].floatValue(), 3) != Round(fKey,3)) && (iLowerBound <= iUpperBound))
+        while((Round(nArray[iPos].floatValue(), 4) != Round(fKey,4)) && (iLowerBound <= iUpperBound))
         {
              iCompCount++;
-             if (Round(nArray[iPos].floatValue(), 3) > Round(fKey,3))             
+             if (Round(nArray[iPos].floatValue(), 4) > Round(fKey,4))             
              {                                              
                 iUpperBound = iPos - 1;  
              }                                                            
@@ -2875,7 +2876,7 @@ public class ProteoSuiteView extends JFrame {
              }
              iPos = (iLowerBound + iUpperBound) / 2;
         }
-        System.out.println("Searching for m/z = " + Round(fKey,3) + " in array");
+        System.out.println("Searching for m/z = " + Round(fKey,4) + " in array");
         if (iLowerBound <= iUpperBound)
         {
             System.out.println("The number was found in array at position " + iPos);
@@ -2886,6 +2887,11 @@ public class ProteoSuiteView extends JFrame {
             System.out.println("Sorry, the number is not in this array. The binary search made " + iCompCount  + " comparisons."); 
             System.out.println("The closest indexes were iLowerBound=" + iLowerBound + " and iUpperBound=" + iUpperBound); 
             iPos = iLowerBound;
+            if (Math.abs(fKey-nArray[iPos].floatValue())>Math.abs(fKey-nArray[iPos-1].floatValue()))
+            {
+                iPos = iPos - 1;
+            }   
+            System.out.println("The pointer was set up to Index=" + iPos); 
         }
         return iPos;
     }     
@@ -2895,85 +2901,7 @@ public class ProteoSuiteView extends JFrame {
         float tmp = Math.round(Rval);
         return (float)tmp/p;
     }
-    private void loadTemplate()     
-    {
-        DefaultTableModel model = new DefaultTableModel();
-        jtTemplate1.setModel(model);
-        model.addColumn("Peptide Index");
-        model.addColumn("Isotope m/z");
-        model.addColumn("Isotope Relative Intensity");
-        
-        int rowIndexStart = jtMascotXMLView.getSelectedRow();
-        int rowIndexEnd = jtMascotXMLView.getSelectionModel().getMaxSelectionIndex();
-
-        for (int r=rowIndexStart; r<=rowIndexEnd; r++) {
-            String[] args = {};
-            args = new String[]{"-a", jtMascotXMLView.getValueAt(r, 2).toString(), 
-                "-fc", "-z", jtMascotXMLView.getValueAt(r, 6).toString(), 
-                "-f", "1000", "-r", "10000"};
-            if (args.length == 0) {
-                System.exit(0);
-            }
-            IPC ipc = new IPC();                 
-            Options options = Options.parseArgs(args);
-            options.setPrintOutput(false);
-            Results res = ipc.execute(options);
-            Object[] objArray = res.getPeaks().toArray();
-            for(int iI=0; iI<objArray.length; iI++)
-            {
-                model.insertRow(model.getRowCount(), new Object[]{
-                        Integer.parseInt(jtMascotXMLView.getValueAt(r, 0).toString()),
-                        Float.parseFloat(String.format("%.4f", res.getPeaks().first().getMass())),
-                        Float.parseFloat(String.format("%.4f", res.getPeaks().first().getRelInt()*100))                        
-                    });                
-                res.getPeaks().pollFirst();
-            }                    
-        }
-        jtpLog.setSelectedIndex(2);
-    }    
-    private void loadTemplate2()     
-    {
-        DefaultTableModel model = new DefaultTableModel();
-        jtTemplate2.setModel(model);
-        model.addColumn("m/z Index");
-        model.addColumn("x");
-        model.addColumn("y");
-        model.addColumn("i");
-        
-        int rowIndexStart = jtTemplate1.getSelectedRow();
-        int rowIndexEnd = jtTemplate1.getSelectionModel().getMaxSelectionIndex();
-        float factor1 = 0.0f, factor2 = 0.0f, relInt=0.0f;
-        factor1 = (float)1/36;
-        factor2 = (float)4/9;
-
-        for (int r=rowIndexStart; r<=rowIndexEnd; r++) {
-            relInt = Float.valueOf(jtTemplate1.getValueAt(r, 2).toString().trim()).floatValue();
-
-            for (int x=-1; x<2; x++)
-            {
-                for (int y=-1;y<2;y++)
-                {
-                    if((x!=0)||(y!=0))
-                    {
-                        model.insertRow(model.getRowCount(), new Object[]{
-                            Float.parseFloat(jtTemplate1.getValueAt(r, 1).toString()),
-                            x,
-                            y,
-                            factor1*relInt
-                        });
-                    }
-                }
-            }
-            model.insertRow(model.getRowCount(), new Object[]{
-                Float.parseFloat(jtTemplate1.getValueAt(r, 1).toString()),
-                0,
-                0,
-                factor2*relInt
-            });
-        }
-        jtpLog.setSelectedIndex(3);
-    }
-     private void searchValueInRawData(String sChain, int iColumn)     
+    private void searchValueInRawData(String sChain, int iColumn)     
     {
         DefaultTableModel dtm = (DefaultTableModel) jtRawData.getModel();
         int nRow = dtm.getRowCount();

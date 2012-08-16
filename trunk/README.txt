@@ -28,7 +28,7 @@ http://www.apache.org/licenses/LICENSE-2.0.html
 3. Installation
 ---------------------
 
-ProteoSuite can run in multiplatforms (Windows, Linux and Mac). 
+ProteoSuite can run in multiple platforms (Windows, Linux and Mac). 
 Use one of the following set of instructions depending on your operating system.
 
 ----------
