@@ -4,7 +4,7 @@
 
 *ProteoSuite* can run in multiple platforms (Windows, Linux and Mac OS X). 
 Use one of the following set of instructions depending on your operating system.
-
+<br />
 
 
 == Installation (ProteoSuite 0.2.0 and above) ==
@@ -45,8 +45,11 @@ Tip: You can create a shortcut to this file and place it into your desktop.
 
 Tip: You can create a shortcut to this file and place it into your desktop.
 
-
+<br />
+<br />
 
 == Running ProteoSuite ==
 
 Try the [http://www.proteosuite.org/?q=tutorials tutorials] described on our [http://www.proteosuite.org/ official website]. 
+<br />
+<br />
