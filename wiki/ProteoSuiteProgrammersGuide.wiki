@@ -35,7 +35,7 @@ The following instructions are oriented to Windows users, however, these steps a
   # In *`URL of repository`* type http://proteo-suite.googlecode.com/svn/trunk/. Your *`Checkout directory`* must point to the folder you have created. Click *`OK`*. 
   # At this stage you have downloaded all files available at Google Code (http://code.google.com/p/proteo-suite/).
   # Open NetBeans and locate the project folder.
-  # *ProteoSuite* uses several dependencies (E.g. jmzml, jmzidentml, etc.) which are automatically downloaded when compiling the project. Therefore, you will need internet connection when compiling the project. Additionally, *ProteoSuite* uses several APIs which are periodically modified by their owners. For these APIs, we have selected several stable versions which need to be installed manually:
+  # *ProteoSuite* uses several dependencies (E.g. jmzml, jmzidentml, etc.) which are automatically downloaded when compiling the project. Therefore, you will need internet connection for compiling the project. Additionally, *ProteoSuite* uses several APIs which are periodically modified by their owners. For these APIs, we have selected several stable versions which need to be installed manually:
 
   * *jcommon-1.0.16.jar* Owner=jfree.org (For general charts)
   * *jfreechart-1.0.13.jar* Owner=jfree.org	(For general charts)
