@@ -7,7 +7,7 @@ Use one of the following set of instructions depending on your operating system.
 
 
 
-== Installation ==
+== Installation (ProteoSuite 0.2.0 and above) ==
 
 === Windows ===
 
@@ -48,3 +48,5 @@ Tip: You can create a shortcut to this file and place it into your desktop.
 
 
 == Running ProteoSuite ==
+
+Try the [tutorials http://www.proteosuite.org/?q=tutorials] described on our [official website http://www.proteosuite.org/]. 
