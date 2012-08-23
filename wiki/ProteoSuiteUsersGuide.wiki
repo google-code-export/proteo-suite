@@ -49,4 +49,4 @@ Tip: You can create a shortcut to this file and place it into your desktop.
 
 == Running ProteoSuite ==
 
-Try the [tutorials http://www.proteosuite.org/?q=tutorials] described on our [official website http://www.proteosuite.org/]. 
+Try the [http://www.proteosuite.org/?q=tutorials tutorials] described on our [http://www.proteosuite.org/ official website]. 
