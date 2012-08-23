@@ -44,8 +44,6 @@ Tip: You can create a shortcut to this file and place it into your desktop.
   * Locate and execute (double click) the jar file (*`proteosuite-X.X.X-jar-with-dependencies.jar`*) to start ProteoSuite.
 
 Tip: You can create a shortcut to this file and place it into your desktop.
-
-<br />
 <br />
 
 == Running ProteoSuite ==
