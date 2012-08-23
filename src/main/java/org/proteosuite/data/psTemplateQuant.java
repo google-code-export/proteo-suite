@@ -4,14 +4,14 @@ package org.proteosuite.data;
  *
  * @author faviel
  */
-public class Template1 {
+public class psTemplateQuant {
     int mzIndex;
     String scanID;
     int scanIndex;
     float quantIntensities;
     int template2Index;
 
-    public Template1() {
+    public psTemplateQuant() {
         this.mzIndex = 0;
         this.scanID = "";
         this.scanIndex = 0;

@@ -30,7 +30,6 @@ import java.io.FileWriter;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -41,7 +40,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -65,13 +63,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.proteosuite.data.SyntheticArray;
-import org.proteosuite.data.Template1;
-import org.proteosuite.data.Template2;
+import org.proteosuite.data.psSyntheticArray;
+import org.proteosuite.data.psTemplateQuant;
+import org.proteosuite.data.psTemplate;
 import org.proteosuite.gui.*;
-import org.proteosuite.test.IPC;
-import org.proteosuite.test.IPC.Options;
-import org.proteosuite.test.IPC.Results;
+import org.proteosuite.external.IPC;
+import org.proteosuite.external.IPC.Options;
+import org.proteosuite.external.IPC.Results;
 import org.proteosuite.test.ViewChartGUI;
 import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.ProgressBarDialog;
@@ -2058,8 +2056,7 @@ public class ProteoSuiteView extends JFrame {
                 {
                     JOptionPane.showMessageDialog(this, "The module for .mzq files is under development.", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
                 }
-	    } //... From Files
-            
+	    } //... From Files            
         }  //... From If                
     }//GEN-LAST:event_jmImportFileActionPerformed
 
@@ -2695,17 +2692,17 @@ public class ProteoSuiteView extends JFrame {
             int iCountTemp1 = 0; //... Counter for template 1 ...//
 
             int[] aPeakIndexes = new int[RESOLUTION*2+1];
-            Template2[] aTemplate2 = new Template2[iCountPeptides];
-            Template1[] aTemplate1 = new Template1[iCountPeptides*NUMBER_PEAKS];
+            psTemplate[] aTemplate2 = new psTemplate[iCountPeptides];
+            psTemplateQuant[] aTemplate1 = new psTemplateQuant[iCountPeptides*NUMBER_PEAKS];
 
             //... Initialize arrays (Template 1 and Template 2) ...//S
             for(int iI=0; iI<aTemplate2.length; iI++)
             {
-                aTemplate2[iI] = new Template2();
+                aTemplate2[iI] = new psTemplate();
             }
             for(int iI=0; iI<aTemplate1.length; iI++)
             {
-                aTemplate1[iI] = new Template1();            
+                aTemplate1[iI] = new psTemplateQuant();            
             }
 
             //... For each peptide, calculate the isotopic pattern distribution ...//
@@ -2773,11 +2770,11 @@ public class ProteoSuiteView extends JFrame {
                             iPos = binarySearch(mzValues, 0, mzValues.length, aMz[0]);
                             aPeakIndexes = getPeaks(mzValues, iPos, RESOLUTION);  //... Get n=9 values (4 left and 4 right) from the array ...//    
 
-                            //... Generate Template2 (index, {x, y, i}) ...//
+                            //... Generate psTemplate (index, {x, y, i}) ...//
                             aTemplate2[iTemp2Index].setIndex(iTemp2Index);
                             aTemplate2[iTemp2Index].setCoords(0, aRelIntens[0], 0);
 
-                            //... Generate Template1 (mzIndex, scanIndex, quant, temp2Index) ...//
+                            //... Generate psTemplateQuant (mzIndex, scanIndex, quant, temp2Index) ...//
                             for (int iI=0; iI<NUMBER_PEAKS; iI++)
                             {
                                 aTemplate1[iI+iCountTemp1].setTemplate(aPeakIndexes[iI], plist.getPrecursor().get(0).getSpectrumRef().toString(), iScanIndex, 1, iTemp2Index);

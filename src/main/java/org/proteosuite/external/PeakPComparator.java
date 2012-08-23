@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.proteosuite.test;
+package org.proteosuite.external;
 
 import java.util.Comparator;
 

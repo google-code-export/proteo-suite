@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.proteosuite.test;
+package org.proteosuite.external;
 
 import java.io.File;
 import java.io.BufferedReader;
@@ -1022,7 +1022,7 @@ public class IPC {
     }
 
     BufferedReader openFile(String filename) {        
-        String sTemp = "D:\\Resources\\ProteoSuite\\src\\main\\java\\org\\proteosuite\\test\\"+filename;
+        String sTemp = "D:\\Resources\\ProteoSuite\\src\\main\\java\\org\\proteosuite\\external\\"+filename;
         //System.out.println(sTemp);
         File file = new File(sTemp);
                 

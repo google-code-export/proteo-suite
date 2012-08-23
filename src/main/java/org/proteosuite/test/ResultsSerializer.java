@@ -4,9 +4,9 @@ package org.proteosuite.test;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-import org.proteosuite.test.IPC;
-import org.proteosuite.test.IPC.Options;
-import org.proteosuite.test.IPC.Results;
+import org.proteosuite.external.IPC;
+import org.proteosuite.external.IPC.Options;
+import org.proteosuite.external.IPC.Results;
 import org.proteosuite.test.ViewChartGUI;
 import java.io.File;
 import java.io.FileInputStream;

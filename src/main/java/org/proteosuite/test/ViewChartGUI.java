@@ -6,12 +6,12 @@
  */
 package org.proteosuite.test;
 
-import org.proteosuite.test.IPC;
-import org.proteosuite.test.Peak;
-import static org.proteosuite.test.IPC.*;
-import org.proteosuite.test.Plot;
-import org.proteosuite.test.Plot.FixedRange;
-import org.proteosuite.test.Plot.RangeChangeListener;
+import org.proteosuite.external.IPC;
+import org.proteosuite.external.Peak;
+import static org.proteosuite.external.IPC.*;
+import org.proteosuite.external.Plot;
+import org.proteosuite.external.Plot.FixedRange;
+import org.proteosuite.external.Plot.RangeChangeListener;
 import org.proteosuite.test.ResultsSerializer;
 import java.awt.BorderLayout;
 import java.awt.Color;
