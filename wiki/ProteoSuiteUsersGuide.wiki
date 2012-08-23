@@ -1,4 +1,4 @@
-#summary Guide for Users - Description on how to run ProteoSuite in your local machine.
+#summary Guide for Users - Description on how to run ProteoSuite on your local machine.
 
 == Introduction ==
 
