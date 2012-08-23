@@ -1,17 +1,18 @@
-#summary Guide for Programmers - Description on how to install ProteoSuite in your local machine.
+#summary Guide for Programmers - Description on how to install ProteoSuite on your local machine.
 
 == Introduction  ==
 
-The following instructions describe the different steps that you need to follow to run *ProteoSuite* in your local machine and make changes to the current code. We have written this page in the most comprehensive manner so that you can easily configure the project locally. However, if you still have a doubt or query send us an e-mail and we will be very happy to help you.
+The following instructions describe the different steps that you need to follow to run *ProteoSuite* on your local machine and make changes to the current code. We have written this page in the most comprehensive manner so that you can easily configure the project locally. However, if you still have a doubt or query send us an e-mail and we will be very happy to help you.
 
 *ProteoSuite Team*
 
 URL: http://www.proteosuite.org
-
+<br />
 
 == System requirements ==
 
 *ProteoSuite* has been written in Java using the NetBeans 7.0.1 GUI environment. You can download the most recent version at http://netbeans.org/.
+<br />
 
 === Software ===
   * NetBeans 7.0.1 (or above). We recommend to download the full version of NetBeans which includes all components needed for this project. 
@@ -21,7 +22,7 @@ URL: http://www.proteosuite.org
   * Processing: 1 GHz (32-bit|64-bit) processor (2-4 cores recommended).
   * Memory: 2GB RAM (4GB recommended).
   * Secondary storage: 1GB hard disk.
-
+<br />
 
 == Installation ==
 
@@ -42,7 +43,10 @@ The following instructions are oriented to Windows users, however, these steps a
   * *x-Tracker-1.0-SNAPSHOT.jar* Owner=xtracker.info
 
 Note: These libraries can be found under the /src/main/resources/lib/ directory or [http://code.google.com/p/proteo-suite/source/browse/#svn%2Ftrunk%2Fsrc%2Fmain%2Fresources%2Flib here].
+<br />
 
 == License ==
 
 This software is released under the Apache 2.0 license which means that it can be used for commercial and non-commercial purposes. See Apache 2.0 license for further details. http://www.apache.org/licenses/LICENSE-2.0.html
+<br />
+<br />
