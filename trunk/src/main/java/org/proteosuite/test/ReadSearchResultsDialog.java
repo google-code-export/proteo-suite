@@ -10,8 +10,8 @@
  */
 package org.proteosuite.test;
 
-import org.proteosuite.test.IPC.Options;
-import org.proteosuite.test.IPC.Results;
+import org.proteosuite.external.IPC.Options;
+import org.proteosuite.external.IPC.Results;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;

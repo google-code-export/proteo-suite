@@ -3,11 +3,11 @@ package org.proteosuite.data;
  *
  * @author faviel
  */
-public class Template2 {
+public class psTemplate {
     private int templateIndex;
     private Coord[] aCoords = new Coord[54];
 
-    public Template2() {
+    public psTemplate() {
         this.templateIndex=0;
         for (int iI=0; iI<54; iI++)
         {

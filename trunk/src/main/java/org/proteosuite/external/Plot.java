@@ -1,5 +1,6 @@
-package org.proteosuite.test;
+package org.proteosuite.external;
 
+import org.proteosuite.external.IPC;
 import java.awt.Color;
 import java.io.Serializable;
 import java.text.NumberFormat;

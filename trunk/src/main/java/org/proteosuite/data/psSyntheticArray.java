@@ -8,11 +8,11 @@ package org.proteosuite.data;
  *
  * @author faviel
  */
-public class SyntheticArray {
+public class psSyntheticArray {
     String[] aScanIndex;
     float[][] aQuantValues;
     float[] aMzValues;
-    public SyntheticArray(int iMaxScans, int iMaxMzValues)
+    public psSyntheticArray(int iMaxScans, int iMaxMzValues)
     {
         aScanIndex = new String[iMaxScans];
         aQuantValues = new float[iMaxScans][iMaxMzValues];
