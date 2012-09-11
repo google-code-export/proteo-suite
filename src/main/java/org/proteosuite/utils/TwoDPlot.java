@@ -2,11 +2,11 @@
  * --------------------------------------------------------------------------
  * TwoDPlot.java
  * --------------------------------------------------------------------------
- * Description:       Object to display mzml data in 2D
+ * Description:       Object to display mzml raw data as 2D plot
  * Developer:         Faviel Gonzalez
  * Created:           08 February 2011
  * Notes:             
- * Read our documentation file under our Google SVN repository
+ * Read our documentation under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
  * Project Website: http://www.proteosuite.org/
  * --------------------------------------------------------------------------

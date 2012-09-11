@@ -26,7 +26,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.GZIPInputStream;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -70,7 +74,7 @@ import org.proteosuite.gui.*;
 import org.proteosuite.external.IPC;
 import org.proteosuite.external.IPC.Options;
 import org.proteosuite.external.IPC.Results;
-import org.proteosuite.test.ViewChartGUI;
+import org.proteosuite.external.ViewChartGUI;
 import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.ProgressBarDialog;
 import org.proteosuite.utils.TwoDPlot;
@@ -716,9 +720,6 @@ public class ProteoSuiteView extends JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jtIdentFilesMouseClicked(evt);
             }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jtIdentFilesMouseEntered(evt);
-            }
         });
         jspIdentFiles.setViewportView(jtIdentFiles);
 
@@ -895,7 +896,7 @@ public class ProteoSuiteView extends JFrame {
         );
         jpRawDataValuesLayout.setVerticalGroup(
             jpRawDataValuesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jspRawDataValues, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
+            .addComponent(jspRawDataValues, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
         );
 
         jtpLog.addTab("Raw Data", jpRawDataValues);
@@ -920,7 +921,7 @@ public class ProteoSuiteView extends JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(128, 128, 128)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE))
         );
 
         jtpLog.addTab("Template 1", jPanel1);
@@ -945,7 +946,7 @@ public class ProteoSuiteView extends JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(136, 136, 136)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE))
         );
 
         jtpLog.addTab("Template 2", jPanel2);
@@ -968,7 +969,7 @@ public class ProteoSuiteView extends JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
         );
 
         jtpLog.addTab("Synthetic Array", jPanel3);
@@ -981,7 +982,7 @@ public class ProteoSuiteView extends JFrame {
         );
         jpLeftViewerBottomLayout.setVerticalGroup(
             jpLeftViewerBottomLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jtpLog, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
+            .addComponent(jtpLog, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE)
         );
 
         jspLeftViewerDetails.setRightComponent(jpLeftViewerBottom);
@@ -1269,11 +1270,6 @@ public class ProteoSuiteView extends JFrame {
                 "Index", "Protein", "Peptide", "Composition", "Exp Mz", "Exp Mr", "Charge", "Score", "Scan", "Scan ID", "RT (sec)"
             }
         ));
-        jtMascotXMLView.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jtMascotXMLViewMouseClicked(evt);
-            }
-        });
         jspMascotXMLDetail.setViewportView(jtMascotXMLView);
 
         jspMascotXMLSubDetail.setRightComponent(jspMascotXMLDetail);
@@ -1606,7 +1602,7 @@ public class ProteoSuiteView extends JFrame {
 
         jmView.setText("View");
 
-        jmShowProjectFiles.setText("Show Project Files");
+        jmShowProjectFiles.setText("Show/Hide Project Files");
         jmShowProjectFiles.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmShowProjectFilesActionPerformed(evt);
@@ -1614,7 +1610,7 @@ public class ProteoSuiteView extends JFrame {
         });
         jmView.add(jmShowProjectFiles);
 
-        jmShowViewer.setText("Show Viewer");
+        jmShowViewer.setText("Show/Hide Viewer");
         jmShowViewer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmShowViewerActionPerformed(evt);
@@ -1622,7 +1618,7 @@ public class ProteoSuiteView extends JFrame {
         });
         jmView.add(jmShowViewer);
 
-        jmShowProperties.setText("Show Properties");
+        jmShowProperties.setText("Show/Hide Properties");
         jmShowProperties.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jmShowPropertiesActionPerformed(evt);
@@ -1891,8 +1887,8 @@ public class ProteoSuiteView extends JFrame {
         chooser.setDialogTitle("Select the file(s) to analyze");
 
         //... Applying file extension filters ...//
-        FileNameExtensionFilter filter1 = new FileNameExtensionFilter("Raw Files (*.mzML, *.mgf)", "mzML", "mgf");
-        FileNameExtensionFilter filter2 = new FileNameExtensionFilter("Identification Files (*.mzid, *.xml)", "mzid", "xml");
+        FileNameExtensionFilter filter1 = new FileNameExtensionFilter("Raw Files (*.mzML, *.mzML.gz, *.mgf)", "mzML", "gz", "mgf");
+        FileNameExtensionFilter filter2 = new FileNameExtensionFilter("Identification Files (*.mzid, *.gz, *.xml)", "mzid", "mzid.gz", "xml");
         FileNameExtensionFilter filter3 = new FileNameExtensionFilter("mzQuantML Files (*.mzq)", "mzq");
 
         //... Filters must be in descending order ...//
@@ -1916,10 +1912,10 @@ public class ProteoSuiteView extends JFrame {
             final File [] aFiles = chooser.getSelectedFiles();
 
 	    if (aFiles != null && aFiles.length > 0)
-            {
+            {                              
                 //... Code to be inserted here ...//
-                if (aFiles[0].getName().indexOf(".mzML") > 0) 
-                {                   
+                if ((aFiles[0].getName().indexOf(".mzML") > 0)||(aFiles[0].getName().indexOf(".mzML.gz") > 0))
+                {                                                                                                  
                     //... Fill JTable ...//
                     final DefaultTableModel model = new DefaultTableModel();
                     jtRawFiles.setModel(model);
@@ -1941,28 +1937,59 @@ public class ProteoSuiteView extends JFrame {
                     thread.start();
                     new Thread("LoadingThread"){
                         @Override
-                        public void run(){
+                        public void run(){                            
+                            long lTime = System.currentTimeMillis();
+                            String sTimeUncompress = "";
+                            String sTimeUnmarshalling = "";
                             alUnmarshaller = new ArrayList<MzMLUnmarshaller>();
                             //... Reading selected files ...//
                             for (int iI = 0; iI < aFiles.length; iI++)
                             {
-                                File xmlFile = new File(aFiles[iI].getPath());                        
+                                File xmlFile = new File(aFiles[iI].getPath());
+                                if (aFiles[0].getName().indexOf(".mzML.gz") > 0)
+                                {
+                                    try{                                                                            
+                                        progressBarDialog.setTitle("Uncompressing " + xmlFile.getName());
+                                        progressBarDialog.setVisible(true);
+                                
+                                        File outFile = null;
+                                        FileOutputStream fos = null;
 
+                                        GZIPInputStream gin = new GZIPInputStream(new FileInputStream(xmlFile));
+                                        outFile = new File(aFiles[0].getParent(), aFiles[0].getName().replaceAll("\\.gz$", ""));
+                                        fos = new FileOutputStream(outFile);
+                                        byte[] buf = new byte[100000];
+                                        int len;
+                                        while ((len = gin.read(buf)) > 0) {
+                                            fos.write(buf, 0, len);
+                                        }
+                                        fos.close();      
+                                        xmlFile = outFile;
+                                        lTime = System.currentTimeMillis()-lTime;
+                                        sTimeUncompress = "Uncompressing ends after " + (lTime/1000) + " secs, ";            
+                                        lTime = System.currentTimeMillis();
+                                    }
+                                    catch(IOException ioe){
+                                          System.out.println("Exception has been thrown" + ioe);
+                                    }                                    
+                                }
                                 progressBarDialog.setTitle("Reading " + xmlFile.getName());
-                                progressBarDialog.setVisible(true);                                
+                                progressBarDialog.setVisible(true);
                                 //... Unmarshall data using jzmzML API ...//
                                 unmarshalMzMLFile(model, iI, xmlFile);
                             } //... For files ...//
+                            lTime = System.currentTimeMillis()-lTime;
+                            sTimeUnmarshalling = "Unmarshalling ends after " + (lTime/1000) + " secs";
                             
                             progressBarDialog.setVisible(false);
                             progressBarDialog.dispose();
+                            jtaLog.setText("Raw files imported successfully! " + sTimeUncompress + sTimeUnmarshalling);
                         }
                     }.start();  
                     
                     //... Project status pipeline ...//
                     Icon loadRawFilesIcon = new ImageIcon(getClass().getClassLoader().getResource("images/fill.gif"));
-                    jlRawFilesStatus.setIcon(loadRawFilesIcon);
-                    jtaLog.setText("Raw files imported successfully!");
+                    jlRawFilesStatus.setIcon(loadRawFilesIcon);                    
                 } //... From reading mzML files ...//
 
                 if (aFiles[0].getName().indexOf(".mgf") > 0) 
@@ -2283,7 +2310,7 @@ public class ProteoSuiteView extends JFrame {
         final JFrame jfWinParams = new JFrame("Convert mzML files to MGF");        
         MzML2MGFView winParams = new MzML2MGFView(jfWinParams, this.sWorkspace);
         jfWinParams.setResizable(false);
-        jfWinParams.setSize(400, 300);
+        jfWinParams.setSize(500, 400);
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
         Action escapeAction = new AbstractAction() 
         {
@@ -2597,14 +2624,6 @@ public class ProteoSuiteView extends JFrame {
             searchValueInMascotXML(sChain, 1); 
         }
     }//GEN-LAST:event_jtPeptideKeyPressed
-
-    private void jtMascotXMLViewMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtMascotXMLViewMouseClicked
-
-    }//GEN-LAST:event_jtMascotXMLViewMouseClicked
-
-    private void jtIdentFilesMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtIdentFilesMouseEntered
-        
-    }//GEN-LAST:event_jtIdentFilesMouseEntered
 
     private void jbShowIsotopeDistribActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbShowIsotopeDistribActionPerformed
           new ViewChartGUI(jtMascotXMLView.getValueAt(jtMascotXMLView.getSelectedRow(), 2).toString(), 
@@ -3394,49 +3413,49 @@ public class ProteoSuiteView extends JFrame {
                 } 
                 sOutput = sOutput + "Format:\t\t" + sVar + "\n";
 
-                sVar = "";
-                ReferenceableParamGroupList rpgList = unmarshaller.unmarshalFromXpath("/referenceableParamGroupList", ReferenceableParamGroupList.class);
-                List<CVParam> refParam = rpgList.getReferenceableParamGroup().get(0).getCvParam();
-                for (Iterator lCVParamIterator = refParam.iterator(); lCVParamIterator.hasNext();)
-                {
-                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
-                    sVar = sVar + lCVParam.getName().trim() + " ";
-                } 
-                sOutput = sOutput + "Instrument:\t\t" + sVar + "\n";
+//                sVar = "";
+//                ReferenceableParamGroupList rpgList = unmarshaller.unmarshalFromXpath("/referenceableParamGroupList", ReferenceableParamGroupList.class);
+//                List<CVParam> refParam = rpgList.getReferenceableParamGroup().get(0).getCvParam();
+//                for (Iterator lCVParamIterator = refParam.iterator(); lCVParamIterator.hasNext();)
+//                {
+//                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+//                    sVar = sVar + lCVParam.getName().trim() + " ";
+//                } 
+//                sOutput = sOutput + "Instrument:\t\t" + sVar + "\n";
 
                 sVar = "";
-                SoftwareList softList = unmarshaller.unmarshalFromXpath("/softwareList", SoftwareList.class);
-                List<CVParam> softParam = softList.getSoftware().get(0).getCvParam();
-                for (Iterator lCVParamIterator = softParam.iterator(); lCVParamIterator.hasNext();)
-                {
-                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
-                    sVar = sVar + lCVParam.getName().trim() + " ";
-                }
-                sOutput = sOutput + "Software:\t\t" + sVar + "\n";
-
-                sVar = "Source: ";
-                InstrumentConfigurationList icList = unmarshaller.unmarshalFromXpath("/instrumentConfigurationList", InstrumentConfigurationList.class);
-                List<CVParam> icParam = icList.getInstrumentConfiguration().get(0).getComponentList().getSource().get(0).getCvParam();
-                for (Iterator lCVParamIterator = icParam.iterator(); lCVParamIterator.hasNext();)
-                {
-                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
-                    sVar = sVar + lCVParam.getName().trim() + ", ";
-                }
-                sVar = sVar + " Analyzer: ";
-                List<CVParam> icParam2 = icList.getInstrumentConfiguration().get(0).getComponentList().getAnalyzer().get(0).getCvParam();
-                for (Iterator lCVParamIterator = icParam2.iterator(); lCVParamIterator.hasNext();)
-                {
-                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
-                    sVar = sVar + lCVParam.getName().trim() + " ";
-                }
-                sVar = sVar + " Detector: ";
-                List<CVParam> icParam3 = icList.getInstrumentConfiguration().get(0).getComponentList().getDetector().get(0).getCvParam();
-                for (Iterator lCVParamIterator = icParam3.iterator(); lCVParamIterator.hasNext();)
-                {
-                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
-                    sVar = sVar + lCVParam.getName().trim() + " ";
-                }
-                sOutput = sOutput + "Configuration:\t" + sVar + "\n";
+//                SoftwareList softList = unmarshaller.unmarshalFromXpath("/softwareList", SoftwareList.class);
+//                List<CVParam> softParam = softList.getSoftware().get(0).getCvParam();
+//                for (Iterator lCVParamIterator = softParam.iterator(); lCVParamIterator.hasNext();)
+//                {
+//                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+//                    sVar = sVar + lCVParam.getName().trim() + " ";
+//                }
+//                sOutput = sOutput + "Software:\t\t" + sVar + "\n";
+//
+//                sVar = "Source: ";
+//                InstrumentConfigurationList icList = unmarshaller.unmarshalFromXpath("/instrumentConfigurationList", InstrumentConfigurationList.class);
+//                List<CVParam> icParam = icList.getInstrumentConfiguration().get(0).getComponentList().getSource().get(0).getCvParam();
+//                for (Iterator lCVParamIterator = icParam.iterator(); lCVParamIterator.hasNext();)
+//                {
+//                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+//                    sVar = sVar + lCVParam.getName().trim() + ", ";
+//                }
+//                sVar = sVar + " Analyzer: ";
+//                List<CVParam> icParam2 = icList.getInstrumentConfiguration().get(0).getComponentList().getAnalyzer().get(0).getCvParam();
+//                for (Iterator lCVParamIterator = icParam2.iterator(); lCVParamIterator.hasNext();)
+//                {
+//                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+//                    sVar = sVar + lCVParam.getName().trim() + " ";
+//                }
+//                sVar = sVar + " Detector: ";
+//                List<CVParam> icParam3 = icList.getInstrumentConfiguration().get(0).getComponentList().getDetector().get(0).getCvParam();
+//                for (Iterator lCVParamIterator = icParam3.iterator(); lCVParamIterator.hasNext();)
+//                {
+//                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+//                    sVar = sVar + lCVParam.getName().trim() + " ";
+//                }
+//                sOutput = sOutput + "Configuration:\t" + sVar + "\n";
                 jtaMzML.setText(sOutput);
                 jtpProperties.setSelectedIndex(0);
 

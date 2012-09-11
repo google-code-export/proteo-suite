@@ -8,8 +8,9 @@
  *
  * Created on Apr 27, 2009, 11:48:52 PM
  */
-package org.proteosuite.test;
+package org.proteosuite.external;
 
+import org.proteosuite.external.ViewChartGUI;
 import org.proteosuite.external.IPC.Options;
 import org.proteosuite.external.IPC.Results;
 import java.awt.Color;

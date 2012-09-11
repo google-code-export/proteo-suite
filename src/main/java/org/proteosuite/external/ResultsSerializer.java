@@ -1,4 +1,4 @@
-package org.proteosuite.test;
+package org.proteosuite.external;
 
 /*
  * To change this template, choose Tools | Templates
@@ -7,7 +7,7 @@ package org.proteosuite.test;
 import org.proteosuite.external.IPC;
 import org.proteosuite.external.IPC.Options;
 import org.proteosuite.external.IPC.Results;
-import org.proteosuite.test.ViewChartGUI;
+import org.proteosuite.external.ViewChartGUI;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
