@@ -6,7 +6,7 @@
  * Developer:         Faviel Gonzalez
  * Created:           08 February 2011
  * Notes:             GUI generated using NetBeans IDE 7.0.1
- * Read our documentation file under our Google SVN repository
+ * Read our documentation under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
  * Project Website: http://www.proteosuite.org
  * --------------------------------------------------------------------------

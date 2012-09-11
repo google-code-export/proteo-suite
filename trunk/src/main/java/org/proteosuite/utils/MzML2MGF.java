@@ -5,7 +5,7 @@
  * Description:       Plugin to Convert mzML files to MGF
  * Developer:         Faviel Gonzalez
  * Created:           09 February 2012
- * Read our documentation file under our Google SVN repository
+ * Read our documentation under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
  * Project Website: http://www.proteosuite.org/
  * --------------------------------------------------------------------------
@@ -27,8 +27,9 @@ import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 /**
- * This plugin allows the conversion of MzML files to MGF, considering rt in the scan title.
- * @param paramFile a string containing the file name
+ * This plugin allows the conversion of MzML files to MGF, considering retention time in the scan title.
+ * @param xmlFile a string containing the file name
+ * @param sPath a string for the path where the file is located 
  * @author faviel
  */
 public class MzML2MGF {

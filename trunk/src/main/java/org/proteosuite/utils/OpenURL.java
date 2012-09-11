@@ -6,16 +6,17 @@
  * Developer:         Faviel Gonzalez
  * Created:           08 February 2011
  * Notes:             GUI generated using NetBeans IDE 7.0.1
- * Read our documentation file under our Google SVN repository
+ * Read our documentation under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
- * Project Website: http://www.proteosuite.org/Test
+ * Project Website: http://www.proteosuite.org/
  * --------------------------------------------------------------------------
  */
 package org.proteosuite.utils;
 
 /**
- * This class allows the opening of an URL on any browser.
+ * This class allows to open a URL on any browser.
  * @author faviel
+ * @param url URL
  */
 public class OpenURL {
     String sUrl = "";
@@ -39,7 +40,7 @@ public class OpenURL {
 
                 StringBuilder cmd = new StringBuilder();
                 for (int i=0; i<browsers.length; i++)
-                    cmd.append( (i==0  ? "" : " || " ) + browsers[i] +" \"" + sUrl + "\" ");
+                    cmd.append((i==0  ? "" : " || " ) + browsers[i] + " \"" + sUrl + "\" ");
                 rt.exec(new String[] { "sh", "-c", cmd.toString() });
            } else {
                 return;

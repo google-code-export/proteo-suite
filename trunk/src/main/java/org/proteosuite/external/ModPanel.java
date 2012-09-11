@@ -8,7 +8,7 @@
  *
  * Created on Sep 1, 2009, 1:03:40 PM
  */
-package org.proteosuite.test;
+package org.proteosuite.external;
 
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;

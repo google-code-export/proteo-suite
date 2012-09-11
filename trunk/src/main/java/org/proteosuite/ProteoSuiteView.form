@@ -151,7 +151,7 @@
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jmShowProjectFiles">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Show Project Files"/>
+                <Property name="text" type="java.lang.String" value="Show/Hide Project Files"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmShowProjectFilesActionPerformed"/>
@@ -159,7 +159,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jmShowViewer">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Show Viewer"/>
+                <Property name="text" type="java.lang.String" value="Show/Hide Viewer"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmShowViewerActionPerformed"/>
@@ -167,7 +167,7 @@
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jmShowProperties">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Show Properties"/>
+                <Property name="text" type="java.lang.String" value="Show/Hide Properties"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmShowPropertiesActionPerformed"/>
@@ -959,7 +959,6 @@
                                               </Properties>
                                               <Events>
                                                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtIdentFilesMouseClicked"/>
-                                                <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtIdentFilesMouseEntered"/>
                                               </Events>
                                             </Component>
                                           </SubComponents>
@@ -2075,9 +2074,6 @@
                                                           </Table>
                                                         </Property>
                                                       </Properties>
-                                                      <Events>
-                                                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtMascotXMLViewMouseClicked"/>
-                                                      </Events>
                                                     </Component>
                                                   </SubComponents>
                                                 </Container>

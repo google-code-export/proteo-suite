@@ -1,12 +1,12 @@
 /*
  * --------------------------------------------------------------------------
- * TemplateParamsView.java
+ * TemplatesParamsView.java
  * --------------------------------------------------------------------------
  * Description:       Parameter settings for quantitation using Label Free
  * Developer:         Faviel Gonzalez
  * Created:           17 July 2012
  * Notes:             GUI generated using NetBeans IDE 7.0.1
- * Read our documentation file under our Google SVN repository
+ * Read our documentation under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
  * Project Website: http://www.proteosuite.org
  * --------------------------------------------------------------------------
@@ -14,16 +14,17 @@
 package org.proteosuite.gui;
 
 /**
- *
+ * This form allows to capture the parameters used for quantifying using label free.
+ * @param void
  * @author faviel
  */
-public class TemplateParamsView extends javax.swing.JPanel {
+public class TemplatesParamsView extends javax.swing.JPanel {
 
     int scanIndex1=0;
     int scanIndex2=0;
     
-    /** Creates new form TemplateParamsView */
-    public TemplateParamsView() {
+    /** Creates new form TemplatesParamsView */
+    public TemplatesParamsView() {
         initComponents();
         scanIndex1=0;
         scanIndex2=0;

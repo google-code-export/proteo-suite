@@ -5,7 +5,7 @@
  * Description:       Progress Bar Dialog
  * Developer:         Faviel Gonzalez
  * Created:           09 February 2012
- * Read our documentation file under our Google SVN repository
+ * Read our documentation under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
  * Project Website: http://www.proteosuite.org/
  * --------------------------------------------------------------------------
@@ -14,7 +14,7 @@
 package org.proteosuite.utils;
 
 /**
- * Progress bar used in different long tasks.
+ * Progress bar used for long procedures (tasks).
  * @author faviel
  * @param parent JFrame which will be used to plot the progress bar.
  * @param modal Access to super class.

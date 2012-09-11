@@ -4,7 +4,7 @@
  *
  * Created on Aug 28, 2009, 1:05:04 PM
  */
-package org.proteosuite.test;
+package org.proteosuite.external;
 
 import org.proteosuite.external.IPC;
 import org.proteosuite.external.Peak;
@@ -12,7 +12,7 @@ import static org.proteosuite.external.IPC.*;
 import org.proteosuite.external.Plot;
 import org.proteosuite.external.Plot.FixedRange;
 import org.proteosuite.external.Plot.RangeChangeListener;
-import org.proteosuite.test.ResultsSerializer;
+import org.proteosuite.external.ResultsSerializer;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dialog;
