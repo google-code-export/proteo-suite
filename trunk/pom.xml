@@ -1,7 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
+<!-- 
+    ==========================================================
+    PROJECT DETAILS 
+    ==========================================================
+-->
     <groupId>org.proteosuite</groupId>
     <artifactId>proteosuite</artifactId>
     <packaging>jar</packaging>
@@ -14,7 +17,34 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    
+    <developers>
+        <developer>
+            <name>Faviel Gonzalez</name>
+            <id>fgonzalez</id>
+            <email>f.galarza@liv.ac.uk</email>
+            <organization>University of Liverpool</organization>            
+        </developer>
+    </developers>    
   
+<!-- 
+    =============================================================================
+    PROJECT DEPENDENCIES 
+    =============================================================================
+    * junit - Testing framework - Automatic installation
+    * utilities - Utilities from compomics.org - Automatic installation
+    * jfreechart - Utilities from jfree.org - Requires manual installation
+    * jcommon - Utilities from jfree.org - Requires manual installation
+    * jmzml - mzML API - Automatic installation via maven
+    * jmzidentml - mzIdentML API - Automatic installation via maven
+    * jmzquantml - mzQuantML API - Automatic installation via maven
+    * xtracker - Module for quantitation analysis - Requires manual installation
+    
+    * Notes: For those dependencies that require manual installation, 
+             JAR files are located under resources/lib
+             
+    =============================================================================
+-->  
     <dependencies>
         <dependency>
           <groupId>junit</groupId>
@@ -36,31 +66,44 @@
           <groupId>org.jfree</groupId>
           <artifactId>jcommon</artifactId>
           <version>1.0.16</version>
-        </dependency>
+        </dependency>    
         <dependency>
             <groupId>uk.ac.ebi.jmzml</groupId>
             <artifactId>jmzml</artifactId>
             <version>1.6.7</version>
-        </dependency>    
+        </dependency>        
         <dependency>
             <groupId>uk.ac.ebi.jmzidml</groupId>
             <artifactId>jmzidentml</artifactId>
             <version>1.1.2</version>
         </dependency>
         <dependency>
-            <groupId>info.xtracker</groupId>
+            <groupId>uk.ac.liv</groupId>
+            <artifactId>jmzquantml</artifactId>
+            <version>1.0.0-rc2-1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>xtracker</groupId>
             <artifactId>xTracker</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>jmzml</artifactId>
-                    <groupId>uk.ac.ebi.jmzml</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
     
+<!-- 
+    ==============================================================
+    PROJECT REPOSITORIES 
+    ==============================================================
+    * jmzquantml-maven-repo @ Google code (jmzQuantML)
+    * ebi-repo @ EBI (jmzML, jmzIndentML)
+    * genesis-maven2-repository @ Universiteit Gent (compomics) 
+    ==============================================================
+-->     
     <repositories>
+        <repository>
+            <id>jmzquantml-maven-repo</id>
+            <name>Maven Repository for jmzquantml release</name>
+            <url>http://jmzquantml.googlecode.com/svn/maven/repo</url>
+        </repository>
         <repository>
             <id>ebi-repo</id>
             <name>The EBI Maven 2 repository</name>
@@ -85,6 +128,11 @@
         </repository>        
     </repositories>   
     
+<!-- 
+    ==========================================================
+    PROJECT BUILT 
+    ==========================================================
+-->      
     <build>
         <plugins>
             <plugin>
@@ -112,7 +160,7 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>             
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -128,6 +176,12 @@
                 </configuration>
             </plugin>             
         </plugins>        
-    </build>
-    
+        <extensions>
+            <extension>
+                <groupId>org.jvnet.wagon-svn</groupId>
+                <artifactId>wagon-svn</artifactId>
+                <version>1.12</version>
+            </extension>
+        </extensions>        
+    </build>    
 </project>

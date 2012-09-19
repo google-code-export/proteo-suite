@@ -39,7 +39,7 @@ public class MzML2MGF {
     public MzML2MGF(File xmlFile, String sPath) {
         
         String paramFile = xmlFile.getName();
-        paramFile = sPath + "\\" + paramFile.replace(".mzML", ".mgf");
+        paramFile = sPath + "/" + paramFile.replace(".mzML", ".mgf");
         String sOut = "";
         try{            
             FileWriter fstream = new FileWriter(paramFile);

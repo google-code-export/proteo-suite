@@ -2,7 +2,7 @@
  * --------------------------------------------------------------------------
  * TwoDPlot.java
  * --------------------------------------------------------------------------
- * Description:       Object to display mzml raw data as 2D plot
+ * Description:       Displays mzml raw data as 2D plot
  * Developer:         Faviel Gonzalez
  * Created:           08 February 2011
  * Notes:             

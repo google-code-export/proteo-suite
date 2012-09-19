@@ -1022,8 +1022,8 @@ public class IPC {
     }
 
     BufferedReader openFile(String filename) {        
-        String sTemp = "D:\\Resources\\ProteoSuite\\src\\main\\java\\org\\proteosuite\\external\\"+filename;
-        //System.out.println(sTemp);
+        String sTemp = getClass().getClassLoader().getResource("config/"+ filename).getPath();
+        System.out.println(sTemp);
         File file = new File(sTemp);
                 
         boolean exists = (file).exists();
