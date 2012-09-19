@@ -138,7 +138,7 @@ public class ProteoSuiteView extends JFrame {
         setTitle("ProteoSuite 0.2.0 (Beta Version) - <Project: " + sProjectName +  ">         http://www.proteosuite.org");
         
         //... Setting project icons ...//        
-        Image iconApp = new ImageIcon(this.getClass().getClassLoader().getResource("images/icon.gif")).getImage();
+        Image iconApp = new ImageIcon(getClass().getClassLoader().getResource("images/icon.gif")).getImage();
         setIconImage(iconApp);
         
         //... Main Menu icons ...//        
@@ -454,6 +454,7 @@ public class ProteoSuiteView extends JFrame {
         jmTools = new javax.swing.JMenu();
         jmConverters = new javax.swing.JMenu();
         jmMzML2MGF = new javax.swing.JMenuItem();
+        jmCustomize = new javax.swing.JMenuItem();
         jmOptions = new javax.swing.JMenuItem();
         jmDatabases = new javax.swing.JMenu();
         jmSubmitPRIDE = new javax.swing.JMenuItem();
@@ -472,6 +473,9 @@ public class ProteoSuiteView extends JFrame {
         jmHelp = new javax.swing.JMenu();
         jmHelpContent = new javax.swing.JMenuItem();
         jSeparator5 = new javax.swing.JPopupMenu.Separator();
+        jmContactUs = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jSeparator7 = new javax.swing.JPopupMenu.Separator();
         jmAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -1678,6 +1682,10 @@ public class ProteoSuiteView extends JFrame {
 
         jmTools.add(jmConverters);
 
+        jmCustomize.setText("Customize");
+        jmCustomize.setEnabled(false);
+        jmTools.add(jmCustomize);
+
         jmOptions.setText("Options");
         jmOptions.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1790,6 +1798,19 @@ public class ProteoSuiteView extends JFrame {
         jmHelp.add(jmHelpContent);
         jmHelp.add(jSeparator5);
 
+        jmContactUs.setText("Contact us");
+        jmContactUs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jmContactUsActionPerformed(evt);
+            }
+        });
+        jmHelp.add(jmContactUs);
+
+        jMenuItem2.setText("Check for updates");
+        jMenuItem2.setEnabled(false);
+        jmHelp.add(jMenuItem2);
+        jmHelp.add(jSeparator7);
+
         jmAbout.setText("About ProteoSuite");
         jmAbout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1888,8 +1909,8 @@ public class ProteoSuiteView extends JFrame {
 
         //... Applying file extension filters ...//
         FileNameExtensionFilter filter1 = new FileNameExtensionFilter("Raw Files (*.mzML, *.mzML.gz, *.mgf)", "mzML", "gz", "mgf");
-        FileNameExtensionFilter filter2 = new FileNameExtensionFilter("Identification Files (*.mzid, *.gz, *.xml)", "mzid", "mzid.gz", "xml");
-        FileNameExtensionFilter filter3 = new FileNameExtensionFilter("mzQuantML Files (*.mzq)", "mzq");
+        FileNameExtensionFilter filter2 = new FileNameExtensionFilter("Identification Files (*.mzid, *.mzid.gz, *.xml)", "mzid", "gz", "xml");
+        FileNameExtensionFilter filter3 = new FileNameExtensionFilter("mzQuantML Files (*.mzq, *.mzq.gz)", "mzq");
 
         //... Filters must be in descending order ...//
         chooser.setFileFilter(filter3);
@@ -2655,6 +2676,10 @@ public class ProteoSuiteView extends JFrame {
             searchValueInRawData(sChain, 0);         
         }
     }//GEN-LAST:event_jtMSIndexKeyPressed
+
+    private void jmContactUsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmContactUsActionPerformed
+        OpenURL url = new OpenURL("http://www.proteosuite.org/?q=contact");
+    }//GEN-LAST:event_jmContactUsActionPerformed
     private void generateTemplate(int scanIndex1, int scanIndex2)     
     {
         int iFileIndex = 0; //... Index to mzML raw data ...//
@@ -3411,7 +3436,7 @@ public class ProteoSuiteView extends JFrame {
                         sVar = lCVParam.getName().trim();
                     }                        
                 } 
-                sOutput = sOutput + "Format:\t\t" + sVar + "\n";
+//                sOutput = sOutput + "Format:\t\t" + sVar + "\n";
 
 //                sVar = "";
 //                ReferenceableParamGroupList rpgList = unmarshaller.unmarshalFromXpath("/referenceableParamGroupList", ReferenceableParamGroupList.class);
@@ -4968,6 +4993,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -4980,6 +5006,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JPopupMenu.Separator jSeparator5;
     private javax.swing.JPopupMenu.Separator jSeparator6;
+    private javax.swing.JPopupMenu.Separator jSeparator7;
     private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JTable jTable1;
@@ -5023,8 +5050,10 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JMenuItem jmAbout;
     private javax.swing.JMenu jmAnalyze;
     private javax.swing.JMenuItem jmCloseProject;
+    private javax.swing.JMenuItem jmContactUs;
     private javax.swing.JMenu jmConverters;
     private javax.swing.JMenuItem jmCopy;
+    private javax.swing.JMenuItem jmCustomize;
     private javax.swing.JMenuItem jmCut;
     private javax.swing.JMenu jmDatabases;
     private javax.swing.JMenu jmEdit;
