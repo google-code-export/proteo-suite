@@ -15,15 +15,17 @@ package org.proteosuite.gui;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.proteosuite.utils.OpenURL;
-import org.xml.sax.Attributes;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This form corresponds to the main settings of the project. Users can customised their settings by changing the 
@@ -62,100 +64,52 @@ public class ProjectParamsView extends javax.swing.JPanel {
             //... Fill JTable ...//
             final DefaultTableModel model = new DefaultTableModel();
             jtxTracker.setModel(model);
-            model.addColumn("Technique");
-            model.addColumn("Load Raw Files");
-            model.addColumn("Load Ident Files");
-            model.addColumn("Peak Selection");
-            model.addColumn("Quantitation Method");
-            model.addColumn("Output");
+            model.addColumn("Type");
+            model.addColumn("Format / Technique");
+            model.addColumn("Plugin");
+            model.addColumn("Description");
         
-            //... Read files using SAX ...//
-            try {
-                SAXParserFactory factory = SAXParserFactory.newInstance();
-                SAXParser saxParser = factory.newSAXParser();
-
-                DefaultHandler handler = new DefaultHandler() 
-                {
-                    boolean bpipelineTechnique = false;
-                    boolean bpipelineLoadRawFiles = false;
-                    boolean bpipelineLoadIdentFiles = false;
-                    boolean bpipelinePeakSelection = false;
-                    boolean bpipelineQuantitation = false;
-                    boolean bpipelineOutput = false;                    
-                    boolean bWorkspace = false;
-                    
-                    String spipelineTechnique = "";
-                    String spipelineLoadRawFiles = "";
-                    String spipelineLoadIdentFiles = "";
-                    String spipelinePeakSelection = "";
-                    String spipelineQuantitation = "";
-                    String spipelineOutput = "";
-                    String sWorkspace = "";
-                    
-                    @Override
-                    public void startElement(String uri, String localName, String qName, Attributes attributes)
-                    throws SAXException {
-                        if (qName.equalsIgnoreCase("workspace")) {
-                            bWorkspace = true;
-                        }
-                        if (qName.equalsIgnoreCase("pipelineTechnique")) {
-                            bpipelineTechnique = true;
-                        }
-                        if (qName.equalsIgnoreCase("pipelineLoadRawFiles")) {
-                            bpipelineLoadRawFiles = true;
-                        }
-                        if (qName.equalsIgnoreCase("pipelineLoadIdentFiles")) {
-                            bpipelineLoadIdentFiles = true;
-                        }
-                        if (qName.equalsIgnoreCase("pipelinePeakSelection")) {
-                            bpipelinePeakSelection = true;
-                        }
-                        if (qName.equalsIgnoreCase("pipelineQuantitation")) {
-                            bpipelineQuantitation = true;
-                        }
-                        if (qName.equalsIgnoreCase("pipelineOutput")) {
-                            bpipelineOutput = true;
-                        }
-                    }
-                    @Override
-                    public void characters(char ch[], int start, int length)
-                    throws SAXException {
-                        if (bWorkspace) {
-                            bWorkspace = false;
-                            sWorkspace = new String(ch, start, length);
-                            jtWorkspace.setText(sWorkspace);
-                        }                        
-                        if (bpipelineTechnique) {
-                            bpipelineTechnique = false;
-                            spipelineTechnique = new String(ch, start, length);
-                        }
-                        if (bpipelineLoadRawFiles) {
-                            bpipelineLoadRawFiles = false;
-                            spipelineLoadRawFiles = new String(ch, start, length);
-                        }
-                        if (bpipelineLoadIdentFiles) {
-                            bpipelineLoadIdentFiles = false;
-                            spipelineLoadIdentFiles = new String(ch, start, length);
-                        }
-                        if (bpipelinePeakSelection) {
-                            bpipelinePeakSelection = false;
-                            spipelinePeakSelection = new String(ch, start, length);
-                        }
-                        if (bpipelineQuantitation) {
-                            bpipelineQuantitation = false;
-                            spipelineQuantitation = new String(ch, start, length);
-                        }
-                        if (bpipelineOutput) {
-                            bpipelineOutput = false;
-                            spipelineOutput = new String(ch, start, length);
-                            model.insertRow(model.getRowCount(), new Object[]{spipelineTechnique, spipelineLoadRawFiles, spipelineLoadIdentFiles, 
-                                spipelinePeakSelection, spipelineQuantitation, spipelineOutput});
-                        }
-                    }
-                };
-                saxParser.parse("config.xml", handler);
-
-            } catch (Exception e) {
+            //... Read files using simple xml parser ...//
+            try{
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                DocumentBuilder db = dbf.newDocumentBuilder();
+                Document document = db.parse(new File("config.xml"));
+                NodeList nodeList = document.getElementsByTagName("workspace");
+                jtWorkspace.setText(nodeList.item(0).getTextContent());
+                
+                nodeList = document.getElementsByTagName("pluginLoadIdentFiles");
+                for(int x=0,size= nodeList.getLength(); x<size; x++) {
+                    model.insertRow(model.getRowCount(), new Object[]{nodeList.item(x).getAttributes().getNamedItem("type").getNodeValue(), 
+                                                                      nodeList.item(x).getAttributes().getNamedItem("id").getNodeValue(), 
+                                                                      nodeList.item(x).getAttributes().getNamedItem("value").getNodeValue(),
+                                                                      nodeList.item(x).getAttributes().getNamedItem("desc").getNodeValue()});
+                }
+                nodeList = document.getElementsByTagName("pluginLoadRawFiles");
+                for(int x=0,size= nodeList.getLength(); x<size; x++) {
+                    model.insertRow(model.getRowCount(), new Object[]{nodeList.item(x).getAttributes().getNamedItem("type").getNodeValue(), 
+                                                                      nodeList.item(x).getAttributes().getNamedItem("id").getNodeValue(),
+                                                                      nodeList.item(x).getAttributes().getNamedItem("value").getNodeValue(),
+                                                                      nodeList.item(x).getAttributes().getNamedItem("desc").getNodeValue()});
+                }
+                nodeList = document.getElementsByTagName("pluginQuantitation");
+                for(int x=0,size= nodeList.getLength(); x<size; x++) {
+                    model.insertRow(model.getRowCount(), new Object[]{nodeList.item(x).getAttributes().getNamedItem("type").getNodeValue(), 
+                                                                      nodeList.item(x).getAttributes().getNamedItem("id").getNodeValue(),
+                                                                      nodeList.item(x).getAttributes().getNamedItem("value").getNodeValue(),
+                                                                      nodeList.item(x).getAttributes().getNamedItem("desc").getNodeValue()});
+                }
+                nodeList = document.getElementsByTagName("pluginOutput");
+                for(int x=0,size= nodeList.getLength(); x<size; x++) {
+                    model.insertRow(model.getRowCount(), new Object[]{nodeList.item(x).getAttributes().getNamedItem("type").getNodeValue(), 
+                                                                      nodeList.item(x).getAttributes().getNamedItem("id").getNodeValue(),
+                                                                      nodeList.item(x).getAttributes().getNamedItem("value").getNodeValue(),
+                                                                      nodeList.item(x).getAttributes().getNamedItem("desc").getNodeValue()});
+                }
+            }catch ( ParserConfigurationException e) {
+              e.printStackTrace();
+            } catch ( SAXException e) {
+              e.printStackTrace();
+            } catch ( IOException e) {
               e.printStackTrace();
             }
     }      
@@ -171,39 +125,87 @@ public class ProjectParamsView extends javax.swing.JPanel {
             out.write("<ProteoSuiteApplication xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ");
             out.write("xsi:schemaLocation=\"ProteoSuiteApplication.xsd\" >");
             out.newLine();
-            out.write(" <configSettings>");
+            out.write("    <configSettings>");
             out.newLine();
-            out.write("     <generalSettings>");            
+            out.write("        <generalSettings>");            
             out.newLine();
-            out.write("         <workspace>" + jtWorkspace.getText() + "</workspace>");
+            out.write("            <workspace>" + jtWorkspace.getText() + "</workspace>");
             out.newLine();
-            out.write("     </generalSettings>");
+            out.write("        </generalSettings>");
             out.newLine();
-            out.write("     <xTrackerSettings>");            
+            out.write("        <xTrackerSettings>");
+            out.newLine();
+            out.write("            <plugins>");
+            out.newLine();
+            out.write("                <pluginsLoadIdentFilesList>");
             out.newLine();
             //... Write xTracker plugins ...//
             for (int iI=0; iI<jtxTracker.getRowCount(); iI++)
             {
-                out.write("         <pipeline>");
-                out.newLine();
-                out.write("             <pipelineTechnique>" + jtxTracker.getValueAt(iI, 0) + "</pipelineTechnique>");
-                out.newLine();
-                out.write("             <pipelineLoadRawFiles>" + jtxTracker.getValueAt(iI, 1) + "</pipelineLoadRawFiles>");
-                out.newLine();
-                out.write("             <pipelineLoadIdentFiles>" + jtxTracker.getValueAt(iI, 2) + "</pipelineLoadIdentFiles>");
-                out.newLine();
-                out.write("             <pipelinePeakSelection>" + jtxTracker.getValueAt(iI, 3) + "</pipelinePeakSelection>");
-                out.newLine();
-                out.write("             <pipelineQuantitation>" + jtxTracker.getValueAt(iI, 4) + "</pipelineQuantitation>");
-                out.newLine();
-                out.write("             <pipelineOutput>" + jtxTracker.getValueAt(iI, 5) + "</pipelineOutput>");
-                out.newLine();
-                out.write("         </pipeline>");
-                out.newLine();
+                if (jtxTracker.getValueAt(iI, 0).toString().equals("LoadIdent"))
+                {
+                    out.write("                    <pluginLoadIdentFiles id=\"" + jtxTracker.getValueAt(iI, 1).toString() + "\" ");
+                    out.write("type=\"" + jtxTracker.getValueAt(iI, 0).toString() + "\" ");
+                    out.write("value=\"" + jtxTracker.getValueAt(iI, 2).toString() + "\" ");
+                    out.write("desc=\"" + jtxTracker.getValueAt(iI, 3).toString() + "\" />");
+                    out.newLine();
+                }
             }
-            out.write("     </xTrackerSettings>");
+            out.write("                </pluginsLoadIdentFilesList>");
+            out.newLine();
+            out.write("                <pluginsLoadRawFilesList>");
+            out.newLine();
+            //... Write xTracker plugins ...//
+            for (int iI=0; iI<jtxTracker.getRowCount(); iI++)
+            {
+                if (jtxTracker.getValueAt(iI, 0).toString().equals("LoadRaw"))
+                {
+                    out.write("                    <pluginLoadRawFiles id=\"" + jtxTracker.getValueAt(iI, 1).toString() + "\" ");
+                    out.write("type=\"" + jtxTracker.getValueAt(iI, 0).toString() + "\" ");
+                    out.write("value=\"" + jtxTracker.getValueAt(iI, 2).toString() + "\" ");
+                    out.write("desc=\"" + jtxTracker.getValueAt(iI, 3).toString() + "\" />");
+                    out.newLine();
+                }
+            }
+            out.write("                </pluginsLoadRawFilesList>");
+            out.newLine();
+            out.write("                <pluginsQuantitationList>");
+            out.newLine();
+            //... Write xTracker plugins ...//
+            for (int iI=0; iI<jtxTracker.getRowCount(); iI++)
+            {
+                if (jtxTracker.getValueAt(iI, 0).toString().equals("Technique"))
+                {
+                    out.write("                    <pluginQuantitation id=\"" + jtxTracker.getValueAt(iI, 1).toString() + "\" ");
+                    out.write("type=\"" + jtxTracker.getValueAt(iI, 0).toString() + "\" ");
+                    out.write("value=\"" + jtxTracker.getValueAt(iI, 2).toString() + "\" ");
+                    out.write("desc=\"" + jtxTracker.getValueAt(iI, 3).toString() + "\" />");
+                    out.newLine();
+                }
+            }
+            out.write("                </pluginsQuantitationList>");
+            out.newLine();
+            out.write("                <pluginsOutputList>");
+            out.newLine();
+            //... Write xTracker plugins ...//
+            for (int iI=0; iI<jtxTracker.getRowCount(); iI++)
+            {
+                if (jtxTracker.getValueAt(iI, 0).toString().equals("Output"))
+                {
+                    out.write("                    <pluginOutput id=\"" + jtxTracker.getValueAt(iI, 1).toString() + "\" ");
+                    out.write("type=\"" + jtxTracker.getValueAt(iI, 0).toString() + "\" ");
+                    out.write("value=\"" + jtxTracker.getValueAt(iI, 2).toString() + "\" ");
+                    out.write("desc=\"" + jtxTracker.getValueAt(iI, 3).toString() + "\" />");
+                    out.newLine();
+                }
+            }
+            out.write("                </pluginsOutputList>");
+            out.newLine();
+            out.write("            </plugins>");
+            out.newLine();
+            out.write("          </xTrackerSettings>");
             out.newLine();            
-            out.write(" </configSettings>");
+            out.write("       </configSettings>");
             out.newLine();            
             out.write("</ProteoSuiteApplication>");
             out.close();
@@ -309,7 +311,7 @@ public class ProjectParamsView extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Technique", "Load Raw Files", "Load Ident Files", "Peak Selection", "Quantitation Method", "Output"
+                "Type", "Format / Technique", "Plugin", "Description"
             }
         ));
         jspxTracker.setViewportView(jtxTracker);

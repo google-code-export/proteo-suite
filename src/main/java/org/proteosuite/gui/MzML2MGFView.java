@@ -57,9 +57,9 @@ public class MzML2MGFView extends javax.swing.JPanel {
         jlInstructions2 = new javax.swing.JLabel();
         jlInstructions3 = new javax.swing.JLabel();
 
-        setMaximumSize(new java.awt.Dimension(490, 350));
-        setMinimumSize(new java.awt.Dimension(490, 350));
-        setPreferredSize(new java.awt.Dimension(490, 350));
+        setMaximumSize(new java.awt.Dimension(490, 390));
+        setMinimumSize(new java.awt.Dimension(490, 390));
+        setPreferredSize(new java.awt.Dimension(490, 390));
 
         jbConvert.setText("Convert");
         jbConvert.setEnabled(false);
@@ -125,11 +125,8 @@ public class MzML2MGFView extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jlInstructions1)
-                                    .addComponent(jlInstructions2))
-                                .addGap(2, 2, 2))
+                            .addComponent(jlInstructions1)
+                            .addComponent(jlInstructions2)
                             .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jlInstructions3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -173,7 +170,7 @@ public class MzML2MGFView extends javax.swing.JPanel {
                     .addComponent(jbAdd)
                     .addComponent(jbRemove)
                     .addComponent(jbConvert))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

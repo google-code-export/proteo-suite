@@ -23,13 +23,16 @@ public class QuantParamsView extends javax.swing.JPanel {
 
     //... Class constructor ...//
     public QuantParamsView() {
+        //... Initialising components and values ...//        
         initComponents();
+        jtpTechniques.setEnabledAt(0, false);
+        jtpTechniques.setSelectedIndex(1);
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jtpTechniques = new javax.swing.JTabbedPane();
         jpSILAC = new javax.swing.JPanel();
         jTextField5 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -122,7 +125,7 @@ public class QuantParamsView extends javax.swing.JPanel {
         jl2Pos8plex = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jbDefaultValues = new javax.swing.JButton();
-        jToggleButton1 = new javax.swing.JToggleButton();
+        jbSave = new javax.swing.JToggleButton();
 
         jLabel6.setText("N-terminus shift:");
 
@@ -214,7 +217,7 @@ public class QuantParamsView extends javax.swing.JPanel {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(jLabel2)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE))
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE))
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpSILACLayout.createSequentialGroup()
                                     .addComponent(jLabel5)
                                     .addGap(22, 22, 22)
@@ -224,8 +227,7 @@ public class QuantParamsView extends javax.swing.JPanel {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(jLabel6)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addGroup(jpSILACLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel11)
@@ -272,7 +274,7 @@ public class QuantParamsView extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("SILAC", jpSILAC);
+        jtpTechniques.addTab("SILAC", jpSILAC);
 
         jliTraqMinMz.setText("Min m/z:");
 
@@ -282,15 +284,15 @@ public class QuantParamsView extends javax.swing.JPanel {
 
         jtiTraqMaxMz.setText("0.05");
 
-        jlReporterIons.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jlReporterIons.setFont(new java.awt.Font("Tahoma", 1, 11));
         jlReporterIons.setText("Reporter Ions");
 
-        jlFourPlex.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jlFourPlex.setFont(new java.awt.Font("Tahoma", 1, 11));
         jlFourPlex.setForeground(new java.awt.Color(102, 102, 102));
         jlFourPlex.setText("a) 4-plex");
 
         jlEightPlex.setBackground(new java.awt.Color(102, 102, 102));
-        jlEightPlex.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jlEightPlex.setFont(new java.awt.Font("Tahoma", 1, 11));
         jlEightPlex.setForeground(new java.awt.Color(102, 102, 102));
         jlEightPlex.setText("b) 8-plex");
 
@@ -332,7 +334,7 @@ public class QuantParamsView extends javax.swing.JPanel {
         jtLabel119.setMinimumSize(new java.awt.Dimension(60, 20));
         jtLabel119.setPreferredSize(new java.awt.Dimension(60, 20));
 
-        jlCorrectionFactors.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jlCorrectionFactors.setFont(new java.awt.Font("Tahoma", 1, 11));
         jlCorrectionFactors.setText("Correction factors");
 
         jl2Neg4plex.setText("-2");
@@ -396,7 +398,7 @@ public class QuantParamsView extends javax.swing.JPanel {
 
         jl2Pos8plex.setText("+2");
 
-        jbDefaultValues.setText("Default values");
+        jbDefaultValues.setText("Restore to default values");
         jbDefaultValues.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbDefaultValuesActionPerformed(evt);
@@ -639,52 +641,30 @@ public class QuantParamsView extends javax.swing.JPanel {
                             .addComponent(jtCorr2Label113, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jtCorr3Label113, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jtLabel113, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(10, 10, 10)
                         .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jpiTraqLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jtLabel118, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jlLabel118, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jpiTraqLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jtCorr1Label118, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jpiTraqLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jtCorr2Label118, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jpiTraqLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jtCorr3Label118, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jtLabel118, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jlLabel118, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jtCorr1Label118, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtCorr2Label118, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtCorr3Label118, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
                         .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jpiTraqLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jtLabel119, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jlLabel119, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jpiTraqLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jtCorr1Label119, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jpiTraqLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jtCorr2Label119, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jpiTraqLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jtCorr3Label119, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jtLabel119, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jlLabel119, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jtCorr1Label119, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtCorr2Label119, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtCorr3Label119, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10)
                         .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jpiTraqLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jtLabel121, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jlLabel121, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jpiTraqLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jtCorr1Label121, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jpiTraqLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jtCorr2Label121, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jpiTraqLayout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jtCorr3Label121, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jtLabel121, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jlLabel121, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jtCorr1Label121, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtCorr2Label121, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jtCorr3Label121, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jpiTraqLayout.createSequentialGroup()
                         .addComponent(jtCorr4Label113, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
@@ -693,14 +673,14 @@ public class QuantParamsView extends javax.swing.JPanel {
                         .addComponent(jtCorr4Label119, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
                         .addComponent(jtCorr4Label121, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
                 .addComponent(jbDefaultValues)
                 .addContainerGap())
         );
 
-        jTabbedPane1.addTab("iTRAQ", jpiTraq);
+        jtpTechniques.addTab("iTRAQ", jpiTraq);
 
-        jToggleButton1.setText("Save");
+        jbSave.setText("Save");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -709,17 +689,17 @@ public class QuantParamsView extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE))
+                    .addComponent(jbSave, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jtpTechniques, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+                .addComponent(jtpTechniques, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToggleButton1)
+                .addComponent(jbSave)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -779,16 +759,15 @@ public class QuantParamsView extends javax.swing.JPanel {
     private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
-    private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JButton jbDefaultValues;
+    private javax.swing.JToggleButton jbSave;
     private javax.swing.JLabel jl1Neg4plex;
     private javax.swing.JLabel jl1Neg8plex;
     private javax.swing.JLabel jl1Pos4plex;
@@ -855,5 +834,6 @@ public class QuantParamsView extends javax.swing.JPanel {
     private javax.swing.JTextField jtLabel121;
     private javax.swing.JTextField jtiTraqMaxMz;
     private javax.swing.JTextField jtiTraqMinMz;
+    private javax.swing.JTabbedPane jtpTechniques;
     // End of variables declaration//GEN-END:variables
 }

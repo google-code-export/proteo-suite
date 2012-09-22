@@ -183,6 +183,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jmEditIdent">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Set Identification Parameters"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmEditIdentActionPerformed"/>
@@ -215,11 +216,6 @@
               </Events>
             </MenuItem>
           </SubComponents>
-        </Menu>
-        <Menu class="javax.swing.JMenu" name="jmStatistics">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Statistics"/>
-          </Properties>
         </Menu>
         <Menu class="javax.swing.JMenu" name="jmTools">
           <Properties>
@@ -1568,32 +1564,15 @@
                                           <Layout>
                                             <DimensionLayout dim="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Group type="102" alignment="1" attributes="0">
-                                                      <EmptySpace pref="347" max="32767" attributes="0"/>
-                                                      <Component id="jdp2D" min="-2" pref="26" max="-2" attributes="0"/>
-                                                  </Group>
+                                                  <EmptySpace min="0" pref="373" max="32767" attributes="0"/>
                                               </Group>
                                             </DimensionLayout>
                                             <DimensionLayout dim="1">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Group type="102" alignment="1" attributes="0">
-                                                      <EmptySpace pref="282" max="32767" attributes="0"/>
-                                                      <Component id="jdp2D" min="-2" pref="39" max="-2" attributes="0"/>
-                                                  </Group>
+                                                  <EmptySpace min="0" pref="321" max="32767" attributes="0"/>
                                               </Group>
                                             </DimensionLayout>
                                           </Layout>
-                                          <SubComponents>
-                                            <Container class="javax.swing.JDesktopPane" name="jdp2D">
-                                              <Properties>
-                                                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                                                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                                                </Property>
-                                              </Properties>
-
-                                              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout"/>
-                                            </Container>
-                                          </SubComponents>
                                         </Container>
                                         <Container class="javax.swing.JPanel" name="jp3D">
                                           <Properties>
@@ -2256,11 +2235,8 @@
                                                 <Component class="javax.swing.JTable" name="jtMzQuantMLView">
                                                   <Properties>
                                                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                      <Table columnCount="4" rowCount="0">
-                                                        <Column editable="true" title="Column 1" type="java.lang.Object"/>
-                                                        <Column editable="true" title="Column 2" type="java.lang.Object"/>
-                                                        <Column editable="true" title="Column 3" type="java.lang.Object"/>
-                                                        <Column editable="true" title="Column 4" type="java.lang.Object"/>
+                                                      <Table columnCount="1" rowCount="0">
+                                                        <Column editable="true" title="mzQuantML Output" type="java.lang.Object"/>
                                                       </Table>
                                                     </Property>
                                                   </Properties>
@@ -2327,22 +2303,30 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jlQuantFiles" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="jcbOutputFormat" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jlQuantFilesStatus" min="-2" pref="43" max="-2" attributes="0"/>
-                  <EmptySpace pref="446" max="32767" attributes="0"/>
+                  <EmptySpace pref="353" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jlRawFiles" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jlRawFilesStatus" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
-                  <Component id="jlIdentFiles" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jlIdentFilesStatus" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
-                  <Component id="jlTechnique" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jcbTechnique" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jlQuantFiles" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jlQuantFilesStatus" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jlRawFiles" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlRawFilesStatus" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
+                          <Component id="jlIdentFiles" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlIdentFilesStatus" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
+                          <Component id="jlTechnique" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbTechnique" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlQuantFiles" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jcbOutputFormat" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="jlQuantFilesStatus" alignment="0" min="-2" pref="20" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -2417,6 +2401,17 @@
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder/>
               </Border>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="jcbOutputFormat">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="3">
+                <StringItem index="0" value="Select format"/>
+                <StringItem index="1" value="mzq"/>
+                <StringItem index="2" value="CSV"/>
+              </StringArray>
             </Property>
           </Properties>
         </Component>
