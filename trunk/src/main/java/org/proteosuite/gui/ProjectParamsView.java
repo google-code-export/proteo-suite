@@ -61,57 +61,57 @@ public class ProjectParamsView extends javax.swing.JPanel {
     //... Read configuration settings ...//
     private void readConfigFile()
     {  
-            //... Fill JTable ...//
-            final DefaultTableModel model = new DefaultTableModel();
-            jtxTracker.setModel(model);
-            model.addColumn("Type");
-            model.addColumn("Format / Technique");
-            model.addColumn("Plugin");
-            model.addColumn("Description");
-        
-            //... Read files using simple xml parser ...//
-            try{
-                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-                DocumentBuilder db = dbf.newDocumentBuilder();
-                Document document = db.parse(new File("config.xml"));
-                NodeList nodeList = document.getElementsByTagName("workspace");
-                jtWorkspace.setText(nodeList.item(0).getTextContent());
-                
-                nodeList = document.getElementsByTagName("pluginLoadIdentFiles");
-                for(int x=0,size= nodeList.getLength(); x<size; x++) {
-                    model.insertRow(model.getRowCount(), new Object[]{nodeList.item(x).getAttributes().getNamedItem("type").getNodeValue(), 
-                                                                      nodeList.item(x).getAttributes().getNamedItem("id").getNodeValue(), 
-                                                                      nodeList.item(x).getAttributes().getNamedItem("value").getNodeValue(),
-                                                                      nodeList.item(x).getAttributes().getNamedItem("desc").getNodeValue()});
-                }
-                nodeList = document.getElementsByTagName("pluginLoadRawFiles");
-                for(int x=0,size= nodeList.getLength(); x<size; x++) {
-                    model.insertRow(model.getRowCount(), new Object[]{nodeList.item(x).getAttributes().getNamedItem("type").getNodeValue(), 
-                                                                      nodeList.item(x).getAttributes().getNamedItem("id").getNodeValue(),
-                                                                      nodeList.item(x).getAttributes().getNamedItem("value").getNodeValue(),
-                                                                      nodeList.item(x).getAttributes().getNamedItem("desc").getNodeValue()});
-                }
-                nodeList = document.getElementsByTagName("pluginQuantitation");
-                for(int x=0,size= nodeList.getLength(); x<size; x++) {
-                    model.insertRow(model.getRowCount(), new Object[]{nodeList.item(x).getAttributes().getNamedItem("type").getNodeValue(), 
-                                                                      nodeList.item(x).getAttributes().getNamedItem("id").getNodeValue(),
-                                                                      nodeList.item(x).getAttributes().getNamedItem("value").getNodeValue(),
-                                                                      nodeList.item(x).getAttributes().getNamedItem("desc").getNodeValue()});
-                }
-                nodeList = document.getElementsByTagName("pluginOutput");
-                for(int x=0,size= nodeList.getLength(); x<size; x++) {
-                    model.insertRow(model.getRowCount(), new Object[]{nodeList.item(x).getAttributes().getNamedItem("type").getNodeValue(), 
-                                                                      nodeList.item(x).getAttributes().getNamedItem("id").getNodeValue(),
-                                                                      nodeList.item(x).getAttributes().getNamedItem("value").getNodeValue(),
-                                                                      nodeList.item(x).getAttributes().getNamedItem("desc").getNodeValue()});
-                }
-            }catch ( ParserConfigurationException e) {
-              e.printStackTrace();
-            } catch ( SAXException e) {
-              e.printStackTrace();
-            } catch ( IOException e) {
-              e.printStackTrace();
+        //... Fill JTable ...//
+        final DefaultTableModel model = new DefaultTableModel();
+        jtxTracker.setModel(model);
+        model.addColumn("Type");
+        model.addColumn("Format / Technique");
+        model.addColumn("Plugin");
+        model.addColumn("Description");
+
+        //... Read files using simple xml parser ...//
+        try{
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            Document document = db.parse(new File("config.xml"));
+            NodeList nodeList = document.getElementsByTagName("workspace");
+            jtWorkspace.setText(nodeList.item(0).getTextContent());
+
+            nodeList = document.getElementsByTagName("pluginLoadIdentFiles");
+            for(int x=0,size= nodeList.getLength(); x<size; x++) {
+                model.insertRow(model.getRowCount(), new Object[]{nodeList.item(x).getAttributes().getNamedItem("type").getNodeValue(), 
+                                                                  nodeList.item(x).getAttributes().getNamedItem("id").getNodeValue(), 
+                                                                  nodeList.item(x).getAttributes().getNamedItem("value").getNodeValue(),
+                                                                  nodeList.item(x).getAttributes().getNamedItem("desc").getNodeValue()});
             }
+            nodeList = document.getElementsByTagName("pluginLoadRawFiles");
+            for(int x=0,size= nodeList.getLength(); x<size; x++) {
+                model.insertRow(model.getRowCount(), new Object[]{nodeList.item(x).getAttributes().getNamedItem("type").getNodeValue(), 
+                                                                  nodeList.item(x).getAttributes().getNamedItem("id").getNodeValue(),
+                                                                  nodeList.item(x).getAttributes().getNamedItem("value").getNodeValue(),
+                                                                  nodeList.item(x).getAttributes().getNamedItem("desc").getNodeValue()});
+            }
+            nodeList = document.getElementsByTagName("pluginQuantitation");
+            for(int x=0,size= nodeList.getLength(); x<size; x++) {
+                model.insertRow(model.getRowCount(), new Object[]{nodeList.item(x).getAttributes().getNamedItem("type").getNodeValue(), 
+                                                                  nodeList.item(x).getAttributes().getNamedItem("id").getNodeValue(),
+                                                                  nodeList.item(x).getAttributes().getNamedItem("value").getNodeValue(),
+                                                                  nodeList.item(x).getAttributes().getNamedItem("desc").getNodeValue()});
+            }
+            nodeList = document.getElementsByTagName("pluginOutput");
+            for(int x=0,size= nodeList.getLength(); x<size; x++) {
+                model.insertRow(model.getRowCount(), new Object[]{nodeList.item(x).getAttributes().getNamedItem("type").getNodeValue(), 
+                                                                  nodeList.item(x).getAttributes().getNamedItem("id").getNodeValue(),
+                                                                  nodeList.item(x).getAttributes().getNamedItem("value").getNodeValue(),
+                                                                  nodeList.item(x).getAttributes().getNamedItem("desc").getNodeValue()});
+            }
+        }catch ( ParserConfigurationException e) {
+          e.printStackTrace();
+        } catch ( SAXException e) {
+          e.printStackTrace();
+        } catch ( IOException e) {
+          e.printStackTrace();
+        }
     }      
     //... Saving configuration settings ...//
     private void saveConfigFile()
@@ -203,9 +203,9 @@ public class ProjectParamsView extends javax.swing.JPanel {
             out.newLine();
             out.write("            </plugins>");
             out.newLine();
-            out.write("          </xTrackerSettings>");
+            out.write("        </xTrackerSettings>");
             out.newLine();            
-            out.write("       </configSettings>");
+            out.write("    </configSettings>");
             out.newLine();            
             out.write("</ProteoSuiteApplication>");
             out.close();
@@ -463,8 +463,7 @@ public class ProjectParamsView extends javax.swing.JPanel {
             DefaultTableModel model = (DefaultTableModel) jtxTracker.getModel();
             model.removeRow(jtxTracker.getSelectedRow());
             jtxTracker.setModel(model);
-        }
-                
+        }                
     }//GEN-LAST:event_jbRemoveActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -71,6 +71,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.validation.Validator;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import org.proteosuite.data.psSyntheticArray;
 import org.proteosuite.data.psTemplateQuant;
 import org.proteosuite.data.psTemplate;
@@ -2079,8 +2084,7 @@ public class ProteoSuiteView extends JFrame {
                 } //... From reading mzML files ...//                
                 
                 if (aFiles[0].getName().indexOf(".xml") >0) 
-                {
-                    
+                {                    
                     //... Fill JTable ...//
                     final DefaultTableModel model = new DefaultTableModel();
                     jtIdentFiles.setModel(model);
@@ -2121,7 +2125,42 @@ public class ProteoSuiteView extends JFrame {
                 }                               
                 if (aFiles[0].getName().indexOf(".mzid") >0) 
                 {   
-                    JOptionPane.showMessageDialog(this, "The module for .mzid files is under development.", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
+                    //... Fill JTable ...//
+                    final DefaultTableModel model = new DefaultTableModel();
+                    jtIdentFiles.setModel(model);
+                    model.addColumn("Name");
+                    model.addColumn("Path");
+                    model.addColumn("Type");
+                    model.addColumn("Version");
+
+                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+                    final Thread thread = new Thread(new Runnable(){
+                        @Override
+                        public void run(){
+                            //... Progress Bar ...//
+                            progressBarDialog.setTitle("Reading mzIdentML files");
+                            progressBarDialog.setVisible(true);
+                        }
+                    }, "ProgressBarDialog");
+                    thread.start();
+                    new Thread("LoadingThread"){
+                        @Override
+                        public void run(){
+                            //... Reading selected files ...//
+                            for (int iI = 0; iI < aFiles.length; iI++)
+                            {
+                                model.insertRow(model.getRowCount(), new Object[]{aFiles[iI].getName(), aFiles[iI].getPath(), "mzid", "1.1"});
+                            } //... For files ...// 
+                            
+                            progressBarDialog.setVisible(false);
+                            progressBarDialog.dispose();
+                        }
+                    }.start();                                                           
+
+                    //... Project status pipeline ...//
+                    Icon loadIdentFilesIcon = new ImageIcon(getClass().getClassLoader().getResource("images/fill.gif"));
+                    jlIdentFilesStatus.setIcon(loadIdentFilesIcon);         
+                    jtaLog.setText("Identification files imported successfully!");
                 }                
                 if (aFiles[0].getName().indexOf(".mzq") >0) 
                 {
@@ -4542,11 +4581,11 @@ public class ProteoSuiteView extends JFrame {
         
 
         //... xTracker consists of 4 main plugins (read more on www.x-tracker.info) ...//                
-        writeXTrackerIdent(jcbTechnique.getSelectedItem().toString(), sPipeline[0]); 
+        writeXTrackerIdent(sPipeline[0]);         
+        writeXTrackerRaw(sPipeline[1]);        
+        writeXTrackerQuant(sPipeline[2]);        
+        writeXTrackerOutput(sPipeline[3]);  
         System.exit(0);
-        writeXTrackerRaw(jcbTechnique.getSelectedItem().toString(), sPipeline[1]);
-        writeXTrackerQuant(jcbTechnique.getSelectedItem().toString(), sPipeline[2]);
-        writeXTrackerOutput(jcbTechnique.getSelectedItem().toString(), sPipeline[3]);  
     }
     //... This method gets the plugins based on the selected pipeline ...//
     private String[] getPlugins(String sExperiment)
@@ -4607,7 +4646,6 @@ public class ProteoSuiteView extends JFrame {
             if (arrayOfStrings[1].toString().toLowerCase().equals(jtIdentFiles.getValueAt(0, 2).toString().toLowerCase()))
             {
                 sPipeline[0] = arrayOfStrings[2].toString();
-                System.out.println(sPipeline[0]);
                 break;
             }
         }
@@ -4619,7 +4657,6 @@ public class ProteoSuiteView extends JFrame {
             if (arrayOfStrings[1].toString().toLowerCase().equals(jtRawFiles.getValueAt(0, 2).toString().toLowerCase()))
             {
                 sPipeline[1] = arrayOfStrings[2].toString();
-                System.out.println(sPipeline[1]);
                 break;
             }
         }        
@@ -4631,7 +4668,6 @@ public class ProteoSuiteView extends JFrame {
             if (arrayOfStrings[1].toString().toLowerCase().equals(sExperiment.toLowerCase()))
             {
                 sPipeline[2] = arrayOfStrings[2].toString();
-                System.out.println(sPipeline[2]);
                 break;
             }
         }        
@@ -4643,16 +4679,14 @@ public class ProteoSuiteView extends JFrame {
             if (arrayOfStrings[1].toString().toLowerCase().equals(jcbOutputFormat.getSelectedItem().toString().toLowerCase()))
             {
                 sPipeline[3] = arrayOfStrings[2].toString();
-                System.out.println(sPipeline[3]);
                 break;
             }
         }
         
         return sPipeline;
     }
-    private void writeXTrackerIdent(String sExperiment, String sPlugin) 
-    {
-        
+    private void writeXTrackerIdent(String sPlugin) 
+    {        
         String sFileName = sWorkspace + "/xTracker_" + sPlugin + ".xtp";
         try{
             FileWriter fstream = new FileWriter(sFileName);
@@ -4665,24 +4699,76 @@ public class ProteoSuiteView extends JFrame {
             out.newLine();
             out.write("-->");
             out.newLine();
-            out.write("<SpectralIdentificationList xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins/loadMascotIdent.xsd\">");
-            out.newLine();
-            for (int iI=0; iI<jtIdentFiles.getRowCount(); iI++)
+            if (sPlugin.equals("loadMascotIdent"))
             {
-                out.write("        <SpectralIdentificationPair spectra=\"" + jtRawFiles.getValueAt(iI, 1) + "\" identification=\"" + jtIdentFiles.getValueAt(iI, 1) + "\" />");
+                out.write("<!-- ");                
+                out.write("    This XML file specifies a list of raw data files with their corresponding identification files.");
                 out.newLine();
+                out.write("    Also, modifications and mass shifts are specified here in case mascot does not report fixed modification mass shifts.");
+                out.newLine();
+                out.write("    Finally, the minimum threshold use for the search engine is specified in the pop_score_threshold tag. ");
+                out.newLine();
+                out.write("-->");
+                out.newLine();
+                out.write("<param xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins\\loadMzIdentML.xsd\">");
+                out.newLine();
+                out.newLine();
+                out.write("    <inputFiles>");
+                out.newLine();
+                for (int iI=0; iI<jtIdentFiles.getRowCount(); iI++)
+                {
+                    out.write("        <datafile identification_file=\"" + jtIdentFiles.getValueAt(iI, 1) + "\">" + jtRawFiles.getValueAt(iI, 1) + "</datafile>");
+                    out.newLine();
+                }           
+                out.write("    </inputFiles>");
+                out.newLine();
+                out.write("<!-- Modifications (including amino-acid affected) and mass shifts considered in the search are reported below.");
+                out.newLine();
+                out.write("    NOTE THAT MONOISOTOPIC MASSES ARE USED IN THIS FILE!!!");
+                out.newLine();
+                out.write("-->");
+                out.newLine();
+                out.write("    <modificationData>");
+                out.newLine();            
+                out.write("        <modification delta=\"57.021469\">Carbamidomethyl (C)</modification>");
+                out.newLine();                    
+                out.write("        <modification delta=\"144.1020633\">iTRAQ4plex (K)</modification>");
+                out.newLine();
+                out.write("        <modification delta=\"144.102063\">iTRAQ4plex (N-term)</modification>");
+                out.newLine();
+                out.write("    </modificationData>");
+                out.newLine();
+                out.write("    <pep_score_threshold>20</pep_score_threshold>");
+                out.newLine();   
+                out.write("</param> ");                
             }
-            out.write("</SpectralIdentificationList>");
-            out.newLine();
+            if (sPlugin.equals("loadMzIdentML"))
+            {
+                out.write("<!-- ");                
+                out.newLine();
+                out.write("    This XML file specifies a list of raw data files with their corresponding identification files.");
+                out.newLine();
+                out.write("-->");
+                out.newLine();
+                out.write("<SpectralIdentificationList xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"Plugins/loadMzIdentML.xsd\">");
+                out.newLine();
+                for (int iI=0; iI<jtIdentFiles.getRowCount(); iI++)
+                {
+                    out.write("    <SpectralIdentificationPair spectra=\"" + jtRawFiles.getValueAt(iI, 1) + "\" identification=\"" + jtIdentFiles.getValueAt(iI, 1) + "\" />");
+                    out.newLine();
+                }
+                out.write("</SpectralIdentificationList>");
+                out.newLine();                
+            }
             out.close();
         }
         catch (Exception e)
         {
             System.err.println("Error: " + e.getMessage());
         }             
-    }    
+    }
     //... Write the raw files selected for quantitation ...//
-    private void writeXTrackerRaw(String sExperiment, String sPlugin) 
+    private void writeXTrackerRaw(String sPlugin) 
     {
         String sFileName = sWorkspace + "/xTracker_" + sPlugin + ".xtp";
         try{
@@ -4695,8 +4781,12 @@ public class ProteoSuiteView extends JFrame {
             out.write("    *** FILE GENERATED VIA PROTEOSUITE ***");            
             out.newLine();            
             out.write("-->");
+            out.newLine();            
+            out.write("<!-- ");                
+            out.write("    This XML file specifies a list of raw data files which will be used in the analysis.");
             out.newLine();
- 
+            out.write("-->");            
+            out.newLine();
             out.write("<param xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins/loadRawMGF.xsd\">");
             out.newLine();
             for (int iI=0; iI<jtRawFiles.getRowCount(); iI++)
@@ -4713,15 +4803,87 @@ public class ProteoSuiteView extends JFrame {
             System.err.println("Error: " + e.getMessage());
         }
     }
-    private void writeXTrackerQuant(String sExperiment, String sPlugin) 
+    private void writeXTrackerQuant(String sPlugin) 
     {       
-        String sFileName = sWorkspace + "/" + sExperiment + "_QuantParams.xtp";        
-        if (sExperiment.equals("SILAC"))
+        String sFileName = sWorkspace + "/xTracker_" + sPlugin + ".xtp";
+        if (sPlugin.equals("SILAC"))
         {            
             
         }
-        else if (sExperiment.equals("iTRAQ"))
+        else if (sPlugin.equals("iTraqQuantitation"))
         {            
+            //... Read files using XPath xml parser ...//
+            String mzRangeMin = "", mzRangeMax="", integrationMethod="";
+            List<List<String>> twoDim = new ArrayList<List<String>>();
+            try{
+                DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+                domFactory.setNamespaceAware(true); 
+                DocumentBuilder builder = domFactory.newDocumentBuilder();
+                Document doc = builder.parse("configQuant.xml");
+                XPath xpath = XPathFactory.newInstance().newXPath();
+
+                //... Reading mzRanges (min and max) ...//
+                XPathExpression expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/mzRange/minus");
+                NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+                for (int iI = 0; iI < nodes.getLength(); iI++) {
+                    mzRangeMin = nodes.item(iI).getTextContent();
+                }
+                expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/mzRange/plus");
+                nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+                for (int iI = 0; iI < nodes.getLength(); iI++) {
+                    mzRangeMax = nodes.item(iI).getTextContent();
+                }
+                expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/IntegrationMethod");
+                nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+                for (int iI = 0; iI < nodes.getLength(); iI++) {
+                    integrationMethod = nodes.item(iI).getTextContent();
+                }
+
+                //... Assay Parameters (Labels) ...//
+                expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/AssayParam");
+                nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+
+                String sAssayName = "", sMzValue="";
+                String[] sCorrFactors = new String[4];            
+                for (int iI = 0; iI < nodes.getLength(); iI++) {
+                    Node node = nodes.item(iI);
+                    if (node.getNodeType() == Node.ELEMENT_NODE)
+                    {
+                        Element element = (Element) node;
+                        NodeList nodelist = element.getElementsByTagName("AssayName");
+                        Element element1 = (Element) nodelist.item(0);
+                        NodeList fstNm = element1.getChildNodes();
+                        sAssayName = fstNm.item(0).getNodeValue();
+
+                        Element element2 = (Element) node;
+                        NodeList nodelist1 = element2.getElementsByTagName("mzValue");
+                        Element element3 = (Element) nodelist1.item(0);
+                        NodeList fstNm1 = element3.getChildNodes();
+                        sMzValue = fstNm1.item(0).getNodeValue();
+
+                        Element element4 = (Element) node;
+                        NodeList nodelist2 = element2.getElementsByTagName("factor");
+                        for (int iJ = 0; iJ < nodelist2.getLength(); iJ++)
+                        {
+                            Element element5 = (Element) nodelist2.item(iJ);
+                            NodeList fstNm2 = element5.getChildNodes();
+                            sCorrFactors[iJ] = fstNm2.item(0).getNodeValue();
+                        }
+                        twoDim.add(Arrays.asList(sAssayName, sMzValue, sCorrFactors[0], sCorrFactors[1], sCorrFactors[2], sCorrFactors[3]));
+                    }
+                }
+            }
+            catch ( ParserConfigurationException e) {
+              e.printStackTrace();
+            } catch ( SAXException e) {
+              e.printStackTrace();
+            } catch ( IOException e) {
+              e.printStackTrace();
+            } catch ( XPathExpressionException  e) {
+              e.printStackTrace();
+            }
+            
+            //... Write configuration file ...//
             try{
                 FileWriter fstream = new FileWriter(sFileName);
                 BufferedWriter out = new BufferedWriter(fstream);            
@@ -4732,91 +4894,57 @@ public class ProteoSuiteView extends JFrame {
                 out.write("    *** FILE GENERATED VIA PROTEOSUITE ***");                            
                 out.newLine();                
                 out.write("    This plugin allows the specification of the parameters used for the quantitation process in iTRAQ. Here, we");
-                out.newLine();                
+                out.newLine();
                 out.write("    specify the quantitation method and the correction factors used for the reporter ions.");
                 out.newLine();
-                out.write("-->");                
-                out.write("<iTraq xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins/iTraqNplexQuant.xsd\">");
+                out.write("-->");                                
                 out.newLine();
-                out.write("    <settings>");
+                out.write("<iTraqQuantitation xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"Plugins/iTraqQuantitation.xsd\">");
                 out.newLine();
-                out.write("    <NumcorrFactors>4</NumcorrFactors>");
+                out.write("	<AssayParamList>");
                 out.newLine();
-                out.write("    <NumReporterIons>4</NumReporterIons>");
+
+                for (int iI=0; iI<twoDim.size(); iI++)
+                {
+                    out.write("		<AssayParam>");
+                    out.newLine();                                                            
+                    List<String> lList = twoDim.get(iI);
+                    out.write("			<AssayName>" + lList.get(0).toString() + "</AssayName>");
+                    out.newLine();                    
+                    out.write("			<mzValue>" + lList.get(1).toString() + "</mzValue>");
+                    out.newLine();                    
+                    out.write("			<CorrectionFactors>");
+                    out.newLine();                     
+                    out.write("				<factor deltaMass=\"-2\">" + lList.get(2) + "</factor>");
+                    out.newLine();                    
+                    out.write("				<factor deltaMass=\"-1\">" + lList.get(3) + "</factor>");
+                    out.newLine();
+                    out.write("				<factor deltaMass=\"+1\">" + lList.get(4) + "</factor>");
+                    out.newLine();
+                    out.write("				<factor deltaMass=\"+2\">" + lList.get(5) + "</factor>");
+                    out.newLine();                                        
+                    out.write("			</CorrectionFactors>");
+                    out.newLine();                     
+                    out.write("		</AssayParam>");
+                    out.newLine();                     
+                }
+                out.write("	</AssayParamList>");
                 out.newLine();
-                out.write("    <IntegrationMethod>SumIntensities</IntegrationMethod>");
+                out.write("	<Setting>");
+                out.newLine();
+                out.write("		<mzRange>");
                 out.newLine();                
-                out.write("    </settings>");
+                out.write("    			<minus>" + mzRangeMin + "</minus>");
                 out.newLine();                
-                out.write("    <reporterIons>");
+                out.write("    			<plus>" + mzRangeMax + "</plus>");
                 out.newLine();
-                out.write("        <reporter label=\"Label 114\" mz=\"114.11123\">");
+                out.write("		</mzRange>");
                 out.newLine();
-                out.write("        <correctionFactors>");
+                out.write("		<IntegrationMethod>" + integrationMethod + "</IntegrationMethod><!--the method used to calculate the area of the peak-->");
                 out.newLine();
-                out.write("            <factor deltaMass=\"-2\">0</factor>");
+                out.write("	</Setting>");
                 out.newLine();
-                out.write("            <factor deltaMass=\"-1\">1.0</factor>");
-                out.newLine();
-                out.write("            <factor deltaMass=\"+1\">5.9</factor>");
-                out.newLine();
-                out.write("            <factor deltaMass=\"+2\">0.2</factor>");
-                out.newLine();
-                out.write("        </correctionFactors>");
-                out.newLine();
-                out.write("        </reporter>");
-                out.newLine();
-                out.write("        <reporter label=\"Label 115\" mz=\"115.10826\">");
-                out.newLine();
-                out.write("        <correctionFactors>");
-                out.newLine();
-                out.write("            <factor deltaMass=\"-2\">0</factor>");
-                out.newLine();
-                out.write("            <factor deltaMass=\"-1\">2</factor>");
-                out.newLine();
-                out.write("            <factor deltaMass=\"+1\">5.6</factor>");
-                out.newLine();
-                out.write("            <factor deltaMass=\"+2\">0.1</factor>");
-                out.newLine();
-                out.write("        </correctionFactors>");
-                out.newLine();
-                out.write("        </reporter>");
-                out.newLine();
-                out.write("        <reporter label=\"Label 116\" mz=\"116.11162\">");
-                out.newLine();
-                out.write("        <correctionFactors>");
-                out.newLine();
-                out.write("            <factor deltaMass=\"-2\">0</factor>");
-                out.newLine();
-                out.write("            <factor deltaMass=\"-1\">3</factor>");
-                out.newLine();
-                out.write("            <factor deltaMass=\"+1\">4.5</factor>");
-                out.newLine();
-                out.write("            <factor deltaMass=\"+2\">0.1</factor>");
-                out.newLine();
-                out.write("        </correctionFactors>");
-                out.newLine();
-                out.write("        </reporter>");
-                out.newLine();
-                out.write("        <reporter label=\"Label 117\" mz=\"117.11497\">");
-                out.newLine();
-                out.write("        <correctionFactors>");
-                out.newLine();
-                out.write("            <factor deltaMass=\"-2\">0.1</factor>");
-                out.newLine();
-                out.write("            <factor deltaMass=\"-1\">4</factor>");
-                out.newLine();
-                out.write("            <factor deltaMass=\"+1\">3.5</factor>");
-                out.newLine();
-                out.write("            <factor deltaMass=\"+2\">0</factor>");
-                out.newLine();
-                out.write("        </correctionFactors>");
-                out.newLine();
-                out.write("        </reporter>");
-                out.newLine();
-                out.write("    </reporterIons>");
-                out.newLine();
-                out.write("</iTraq>");
+                out.write("</iTraqQuantitation>");
                 out.newLine();
                 out.close();
             }
@@ -4826,9 +4954,9 @@ public class ProteoSuiteView extends JFrame {
             }   
         }        
     }
-    private void writeXTrackerOutput(String sExperiment, String sPlugin) 
+    private void writeXTrackerOutput(String sPlugin) 
     {
-        String sFileName = sWorkspace + "\\" + sExperiment + "_OutputParams.xtp";
+        String sFileName = sWorkspace + "/xTracker_" + sPlugin + ".xtp";
         try{
             FileWriter fstream = new FileWriter(sFileName);
             BufferedWriter out = new BufferedWriter(fstream);            
@@ -4838,16 +4966,28 @@ public class ProteoSuiteView extends JFrame {
             out.newLine();
             out.write("    *** FILE GENERATED VIA PROTEOSUITE ***");                            
             out.newLine();                 
-            out.write("    This plugin allows the specification of the output format. In this file we can set up whether a normalisation process will be applied (yes/no) ...//");
+            out.write("    This plugin allows the specification of the output format. ");
             out.newLine();
 	    out.write("-->");
-            out.newLine();       
-            out.write("<param xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins/displayTable.xsd\">");
             out.newLine();
-            out.write("    <normalisation>no</normalisation>");
-            out.newLine();
-            out.write("</param>");
-            out.newLine();
+            if (sPlugin.equals("output_CSV_param_mzML"))
+            {
+                out.write("<param xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"Plugins/outputCSV.xsd\">");
+                out.newLine();                
+                out.write("    <CSVfileName>" + sWorkspace + "/" + sProjectName + ".csv</CSVfileName>");
+                out.newLine();
+                out.write("</param>");            
+                out.newLine();                
+            }
+            if (sPlugin.equals("outputMZQ"))
+            {
+                out.write("<outputMZQ xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"Plugins/outputMZQ.xsd\">");
+                out.newLine();                
+                out.write("    <outputFilename>" + sWorkspace + "/" + sProjectName + "_output.mzq</outputFilename>");
+                out.newLine();
+                out.write("</outputMZQ>");
+                out.newLine();
+            }
             out.close();
         }
         catch (Exception e)
