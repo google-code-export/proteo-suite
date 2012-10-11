@@ -93,6 +93,8 @@ public class QuantParamsView extends javax.swing.JPanel {
         jLabel16 = new javax.swing.JLabel();
         jbAdd = new javax.swing.JButton();
         jbRemove = new javax.swing.JButton();
+        jlSearchScore = new javax.swing.JLabel();
+        jtSearchScore = new javax.swing.JTextField();
         jbSave = new javax.swing.JToggleButton();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -165,10 +167,10 @@ public class QuantParamsView extends javax.swing.JPanel {
                             .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(22, 22, 22)
                             .addComponent(jLabel9)
-                            .addContainerGap(232, Short.MAX_VALUE))
+                            .addContainerGap(308, Short.MAX_VALUE))
                         .addGroup(jpSILACLayout.createSequentialGroup()
                             .addComponent(jCheckBox1)
-                            .addContainerGap(562, Short.MAX_VALUE))
+                            .addContainerGap(638, Short.MAX_VALUE))
                         .addGroup(jpSILACLayout.createSequentialGroup()
                             .addComponent(jLabel7)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -177,7 +179,7 @@ public class QuantParamsView extends javax.swing.JPanel {
                             .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jToggleButton2)
-                            .addContainerGap(412, Short.MAX_VALUE))
+                            .addContainerGap(488, Short.MAX_VALUE))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpSILACLayout.createSequentialGroup()
                             .addGroup(jpSILACLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpSILACLayout.createSequentialGroup()
@@ -187,7 +189,7 @@ public class QuantParamsView extends javax.swing.JPanel {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(jLabel2)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE))
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE))
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpSILACLayout.createSequentialGroup()
                                     .addComponent(jLabel5)
                                     .addGap(22, 22, 22)
@@ -240,7 +242,7 @@ public class QuantParamsView extends javax.swing.JPanel {
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jToggleButton2))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -266,15 +268,15 @@ public class QuantParamsView extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Label", "Value", "-2", "-1", "+1", "+2"
+                "Study Variable", "Label ID", "Label Name", "Value", "-2", "-1", "+1", "+2"
             }
         ));
         jScrollPane2.setViewportView(jtiTRAQParams);
 
-        jLabel15.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel15.setFont(new java.awt.Font("Tahoma", 1, 12));
         jLabel15.setText("Labels");
 
-        jLabel16.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel16.setFont(new java.awt.Font("Tahoma", 1, 12));
         jLabel16.setText("Correction Factors");
 
         jbAdd.setText("Add");
@@ -291,6 +293,8 @@ public class QuantParamsView extends javax.swing.JPanel {
             }
         });
 
+        jlSearchScore.setText("Search Score:");
+
         javax.swing.GroupLayout jpiTraqLayout = new javax.swing.GroupLayout(jpiTraq);
         jpiTraq.setLayout(jpiTraqLayout);
         jpiTraqLayout.setHorizontalGroup(
@@ -298,64 +302,70 @@ public class QuantParamsView extends javax.swing.JPanel {
             .addGroup(jpiTraqLayout.createSequentialGroup()
                 .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jpiTraqLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jbDefaultValues))
+                        .addGap(19, 19, 19)
+                        .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpiTraqLayout.createSequentialGroup()
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
+                                .addGap(16, 16, 16)
+                                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jbAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jbRemove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(jpiTraqLayout.createSequentialGroup()
+                                .addComponent(jLabel15)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 327, Short.MAX_VALUE)
+                                .addComponent(jLabel16)
+                                .addGap(219, 219, 219))
+                            .addComponent(jbDefaultValues)))
                     .addGroup(jpiTraqLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jliTraqMinMz)
-                        .addGap(18, 18, 18)
-                        .addComponent(jtiTraqMinMz, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jliTraqMaxMz)
-                        .addGap(18, 18, 18)
-                        .addComponent(jtiTraqMaxMz, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jpiTraqLayout.createSequentialGroup()
+                                .addComponent(jliTraqMaxMz)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jtiTraqMaxMz, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jpiTraqLayout.createSequentialGroup()
+                                .addComponent(jliTraqMinMz)
+                                .addGap(18, 18, 18)
+                                .addComponent(jtiTraqMinMz, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(32, 32, 32)
                         .addComponent(jlIntegrationMethod)
                         .addGap(18, 18, 18)
-                        .addComponent(jcbIntegrationMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jpiTraqLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jpiTraqLayout.createSequentialGroup()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 549, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jbRemove)
-                                    .addComponent(jbAdd, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)))
-                            .addGroup(jpiTraqLayout.createSequentialGroup()
-                                .addComponent(jLabel15)
-                                .addGap(254, 254, 254)
-                                .addComponent(jLabel16)))))
+                        .addComponent(jcbIntegrationMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(jlSearchScore)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jtSearchScore, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jpiTraqLayout.setVerticalGroup(
             jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpiTraqLayout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jtiTraqMinMz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jliTraqMinMz))
-                    .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jliTraqMaxMz)
-                        .addComponent(jtiTraqMaxMz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jlIntegrationMethod)
-                        .addComponent(jcbIntegrationMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(27, 27, 27)
+                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtiTraqMinMz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jliTraqMinMz)
+                    .addComponent(jlIntegrationMethod)
+                    .addComponent(jcbIntegrationMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jlSearchScore)
+                    .addComponent(jtSearchScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jliTraqMaxMz)
+                    .addComponent(jtiTraqMaxMz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(13, 13, 13)
+                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15)
                     .addComponent(jLabel16))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpiTraqLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jbDefaultValues))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jpiTraqLayout.createSequentialGroup()
                         .addComponent(jbAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jbRemove)))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jbDefaultValues)
+                .addGap(43, 43, 43))
         );
 
         jtpTechniques.addTab("iTRAQ/TMT", jpiTraq);
@@ -375,17 +385,17 @@ public class QuantParamsView extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jtpTechniques, javax.swing.GroupLayout.PREFERRED_SIZE, 654, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jtpTechniques, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(28, 28, 28)
                                 .addComponent(jLabel14)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
                         .addComponent(jbSave, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -393,15 +403,15 @@ public class QuantParamsView extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jtpTechniques, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jtpTechniques, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jbSave)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel14)))
-                .addContainerGap())
+                        .addComponent(jLabel14))
+                    .addComponent(jbSave))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     //... Initialise default settings using the config.xml file ...//
@@ -428,7 +438,9 @@ public class QuantParamsView extends javax.swing.JPanel {
         //... Fill JTable ...//
         final DefaultTableModel model = new DefaultTableModel();
         jtiTRAQParams.setModel(model);
-        model.addColumn("Label");
+        model.addColumn("Study Variable");
+        model.addColumn("Label ID");        
+        model.addColumn("Label Name");
         model.addColumn("Value");
         model.addColumn("-2");
         model.addColumn("-1");
@@ -454,38 +466,57 @@ public class QuantParamsView extends javax.swing.JPanel {
             for (int iI = 0; iI < nodes.getLength(); iI++) {
                 jtiTraqMaxMz.setText(nodes.item(iI).getTextContent());
             }
+            expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/SearchScore");
+            nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            for (int iI = 0; iI < nodes.getLength(); iI++) {
+                jtSearchScore.setText(nodes.item(iI).getTextContent());
+            }            
             
             //... Assay Parameters (Labels) ...//
             expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/AssayParam");
             nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             
-            String sAssayName = "", sMzValue="";
+            String StudyVariable="", sAssayID="", sAssayName = "", sMzValue="";
             String[] sCorrFactors = new String[4];            
             for (int iI = 0; iI < nodes.getLength(); iI++) {
                 Node node = nodes.item(iI);
                 if (node.getNodeType() == Node.ELEMENT_NODE)
                 {
                     Element element = (Element) node;
-                    NodeList nodelist = element.getElementsByTagName("AssayName");
+                    NodeList nodelist = element.getElementsByTagName("StudyVariable");
                     Element element1 = (Element) nodelist.item(0);
                     NodeList fstNm = element1.getChildNodes();
-                    sAssayName = fstNm.item(0).getNodeValue();
+                    StudyVariable = fstNm.item(0).getNodeValue();
+                    
+                    Element element8 = (Element) node;
+                    NodeList nodelist4 = element8.getElementsByTagName("AssayID");
+                    Element element9 = (Element) nodelist4.item(0);
+                    NodeList fstNm4 = element9.getChildNodes();
+                    sAssayID = fstNm4.item(0).getNodeValue();
                     
                     Element element2 = (Element) node;
-                    NodeList nodelist1 = element2.getElementsByTagName("mzValue");
+                    NodeList nodelist1 = element2.getElementsByTagName("AssayName");
                     Element element3 = (Element) nodelist1.item(0);
                     NodeList fstNm1 = element3.getChildNodes();
-                    sMzValue = fstNm1.item(0).getNodeValue();
+                    sAssayName = fstNm1.item(0).getNodeValue();
                     
                     Element element4 = (Element) node;
-                    NodeList nodelist2 = element2.getElementsByTagName("factor");
-                    for (int iJ = 0; iJ < nodelist2.getLength(); iJ++)
+                    NodeList nodelist2 = element4.getElementsByTagName("mzValue");
+                    Element element5 = (Element) nodelist2.item(0);
+                    NodeList fstNm2 = element5.getChildNodes();
+                    sMzValue = fstNm2.item(0).getNodeValue();
+                    
+                    Element element6 = (Element) node;
+                    NodeList nodelist3 = element6.getElementsByTagName("factor");
+                    for (int iJ = 0; iJ < nodelist3.getLength(); iJ++)
                     {
-                        Element element5 = (Element) nodelist2.item(iJ);
-                        NodeList fstNm2 = element5.getChildNodes();
-                        sCorrFactors[iJ] = fstNm2.item(0).getNodeValue();
+                        Element element7 = (Element) nodelist3.item(iJ);
+                        NodeList fstNm3 = element7.getChildNodes();
+                        sCorrFactors[iJ] = fstNm3.item(0).getNodeValue();
                     }
-                    model.insertRow(model.getRowCount(), new Object[]{sAssayName, 
+                    model.insertRow(model.getRowCount(), new Object[]{StudyVariable, 
+                                                                  sAssayID,
+                                                                  sAssayName, 
                                                                   sMzValue, 
                                                                   sCorrFactors[0],
                                                                   sCorrFactors[1],
@@ -526,11 +557,13 @@ public class QuantParamsView extends javax.swing.JPanel {
             out.newLine();
             out.write("					<mzRange>");
             out.newLine();
-            out.write("                                         <minus>" + jtiTraqMinMz.getText() + "</minus>");
+            out.write("						<minus>" + jtiTraqMinMz.getText() + "</minus>");
             out.newLine();
             out.write("						<plus>" + jtiTraqMaxMz.getText() + "</plus>");
             out.newLine();
             out.write("					</mzRange>");
+            out.newLine();
+            out.write("					<SearchScore>" + jtSearchScore.getText() + "</SearchScore>");
             out.newLine();
             out.write("					<IntegrationMethod>" + jcbIntegrationMethod.getSelectedItem().toString() + "</IntegrationMethod>");
             out.newLine();
@@ -542,19 +575,23 @@ public class QuantParamsView extends javax.swing.JPanel {
             {
                 out.write("						<AssayParam>");
                 out.newLine();                
-                out.write("							<AssayName>" + jtiTRAQParams.getValueAt(iI, 0).toString() + "</AssayName>");
+                out.write("							<StudyVariable>" + jtiTRAQParams.getValueAt(iI, 0).toString() + "</StudyVariable>");                
+                out.newLine();                
+                out.write("							<AssayID>" + jtiTRAQParams.getValueAt(iI, 1).toString() + "</AssayID>");                
+                out.newLine();                
+                out.write("							<AssayName>" + jtiTRAQParams.getValueAt(iI, 2).toString() + "</AssayName>");
                 out.newLine();
-                out.write("							<mzValue>" + jtiTRAQParams.getValueAt(iI, 1).toString() + "</mzValue>");
+                out.write("							<mzValue>" + jtiTRAQParams.getValueAt(iI, 3).toString() + "</mzValue>");
                 out.newLine();
                 out.write("							<CorrectionFactors>");
                 out.newLine();        
-                out.write("								<factor deltaMass=\"-2\">" + jtiTRAQParams.getValueAt(iI, 2).toString() + "</factor>");
+                out.write("								<factor deltaMass=\"-2\">" + jtiTRAQParams.getValueAt(iI, 4).toString() + "</factor>");
                 out.newLine();
-                out.write("								<factor deltaMass=\"-1\">" + jtiTRAQParams.getValueAt(iI, 3).toString() + "</factor>");
+                out.write("								<factor deltaMass=\"-1\">" + jtiTRAQParams.getValueAt(iI, 5).toString() + "</factor>");
                 out.newLine();
-                out.write("								<factor deltaMass=\"+1\">" + jtiTRAQParams.getValueAt(iI, 4).toString() + "</factor>");
+                out.write("								<factor deltaMass=\"+1\">" + jtiTRAQParams.getValueAt(iI, 6).toString() + "</factor>");
                 out.newLine();
-                out.write("								<factor deltaMass=\"+2\">" + jtiTRAQParams.getValueAt(iI, 5).toString() + "</factor>");
+                out.write("								<factor deltaMass=\"+2\">" + jtiTRAQParams.getValueAt(iI, 7).toString() + "</factor>");
                 out.newLine();
                 out.write("							</CorrectionFactors>");
                 out.newLine();
@@ -579,11 +616,13 @@ public class QuantParamsView extends javax.swing.JPanel {
             out.newLine();
             out.write("					<mzRange>");
             out.newLine();
-            out.write("							<minus>0.05</minus>");
+            out.write("						<minus>0.05</minus>");
             out.newLine();
-            out.write("							<plus>0.05</plus>");
+            out.write("						<plus>0.05</plus>");
             out.newLine();
             out.write("					</mzRange>");
+            out.newLine();
+            out.write("					<SearchScore>20</SearchScore>");            
             out.newLine();
             out.write("					<IntegrationMethod>SumIntensities</IntegrationMethod>");
             out.newLine();
@@ -591,7 +630,11 @@ public class QuantParamsView extends javax.swing.JPanel {
             out.newLine();
             out.write("						<AssayParam>");
             out.newLine();
-            out.write("							<AssayName>iTRAQ_114</AssayName>");
+            out.write("							<StudyVariable>GroupA</StudyVariable>");
+            out.newLine();
+            out.write("							<AssayID>114</AssayID>");            
+            out.newLine();
+            out.write("							<AssayName>iTRAQ4plex-114 reporter fragment</AssayName>");
             out.newLine();
             out.write("							<mzValue>114.11123</mzValue>");
             out.newLine();
@@ -611,7 +654,11 @@ public class QuantParamsView extends javax.swing.JPanel {
             out.newLine();
             out.write("						<AssayParam>");
             out.newLine();
-            out.write("							<AssayName>iTRAQ_115</AssayName>");
+            out.write("							<StudyVariable>GroupA</StudyVariable>");            
+            out.newLine();
+            out.write("							<AssayID>115</AssayID>");                        
+            out.newLine();            
+            out.write("							<AssayName>iTRAQ4plex-115 reporter fragment</AssayName>");
             out.newLine();
             out.write("							<mzValue>115.10826</mzValue>");
             out.newLine();
@@ -631,7 +678,11 @@ public class QuantParamsView extends javax.swing.JPanel {
             out.newLine();
             out.write("						<AssayParam>");
             out.newLine();
-            out.write("							<AssayName>iTRAQ_116</AssayName>");
+            out.write("							<StudyVariable>GroupB</StudyVariable>");            
+            out.newLine();
+            out.write("							<AssayID>116</AssayID>");                        
+            out.newLine();
+            out.write("							<AssayName>iTRAQ4plex-116 reporter fragment</AssayName>");
             out.newLine();
             out.write("							<mzValue>116.11162</mzValue>");
             out.newLine();
@@ -651,7 +702,11 @@ public class QuantParamsView extends javax.swing.JPanel {
             out.newLine();
             out.write("						<AssayParam>");
             out.newLine();
-            out.write("							<AssayName>iTRAQ_117</AssayName>");
+            out.write("							<StudyVariable>GroupB</StudyVariable>");            
+            out.newLine();
+            out.write("							<AssayName>iTRAQ4plex-117, mTRAQ heavy, reporter fragment</AssayName>");
+            out.newLine();
+            out.write("							<AssayID>117</AssayID>");                        
             out.newLine();
             out.write("							<mzValue>117.11497</mzValue>");
             out.newLine();
@@ -691,10 +746,13 @@ public class QuantParamsView extends javax.swing.JPanel {
     }
     private void jbDefaultValuesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDefaultValuesActionPerformed
         //... Loading default values ...//
+        
         //... Fill JTable ...//
         final DefaultTableModel model = new DefaultTableModel();
         jtiTRAQParams.setModel(model);
-        model.addColumn("Label");
+        model.addColumn("Study Variable");
+        model.addColumn("Label ID");        
+        model.addColumn("Label Name");
         model.addColumn("Value");
         model.addColumn("-2");
         model.addColumn("-1");
@@ -720,38 +778,57 @@ public class QuantParamsView extends javax.swing.JPanel {
             for (int iI = 0; iI < nodes.getLength(); iI++) {
                 jtiTraqMaxMz.setText(nodes.item(iI).getTextContent());
             }
+            expr = xpath.compile("/ProteoSuiteApplication/configSettings/defaultParamSettings/techniques/technique[@id='iTRAQ']/SearchScore");
+            nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            for (int iI = 0; iI < nodes.getLength(); iI++) {
+                jtSearchScore.setText(nodes.item(iI).getTextContent());
+            }
             
             //... Assay Parameters (Labels) ...//
             expr = xpath.compile("/ProteoSuiteApplication/configSettings/defaultParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/AssayParam");
             nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             
-            String sAssayName = "", sMzValue="";
+            String StudyVariable="", sAssayID = "", sAssayName = "", sMzValue="";
             String[] sCorrFactors = new String[4];            
             for (int iI = 0; iI < nodes.getLength(); iI++) {
                 Node node = nodes.item(iI);
                 if (node.getNodeType() == Node.ELEMENT_NODE)
                 {
                     Element element = (Element) node;
-                    NodeList nodelist = element.getElementsByTagName("AssayName");
+                    NodeList nodelist = element.getElementsByTagName("StudyVariable");
                     Element element1 = (Element) nodelist.item(0);
                     NodeList fstNm = element1.getChildNodes();
-                    sAssayName = fstNm.item(0).getNodeValue();
+                    StudyVariable = fstNm.item(0).getNodeValue();
+                    
+                    Element element8 = (Element) node;
+                    NodeList nodelist4 = element8.getElementsByTagName("AssayID");
+                    Element element9 = (Element) nodelist4.item(0);
+                    NodeList fstNm4 = element9.getChildNodes();
+                    sAssayID = fstNm4.item(0).getNodeValue();                    
                     
                     Element element2 = (Element) node;
-                    NodeList nodelist1 = element2.getElementsByTagName("mzValue");
+                    NodeList nodelist1 = element2.getElementsByTagName("AssayName");
                     Element element3 = (Element) nodelist1.item(0);
                     NodeList fstNm1 = element3.getChildNodes();
-                    sMzValue = fstNm1.item(0).getNodeValue();
+                    sAssayName = fstNm1.item(0).getNodeValue();
                     
                     Element element4 = (Element) node;
-                    NodeList nodelist2 = element2.getElementsByTagName("factor");
-                    for (int iJ = 0; iJ < nodelist2.getLength(); iJ++)
+                    NodeList nodelist2 = element4.getElementsByTagName("mzValue");
+                    Element element5 = (Element) nodelist2.item(0);
+                    NodeList fstNm2 = element5.getChildNodes();
+                    sMzValue = fstNm2.item(0).getNodeValue();
+                    
+                    Element element6 = (Element) node;
+                    NodeList nodelist3 = element6.getElementsByTagName("factor");
+                    for (int iJ = 0; iJ < nodelist3.getLength(); iJ++)
                     {
-                        Element element5 = (Element) nodelist2.item(iJ);
-                        NodeList fstNm2 = element5.getChildNodes();
-                        sCorrFactors[iJ] = fstNm2.item(0).getNodeValue();
+                        Element element7 = (Element) nodelist3.item(iJ);
+                        NodeList fstNm3 = element7.getChildNodes();
+                        sCorrFactors[iJ] = fstNm3.item(0).getNodeValue();
                     }
-                    model.insertRow(model.getRowCount(), new Object[]{sAssayName, 
+                    model.insertRow(model.getRowCount(), new Object[]{StudyVariable, 
+                                                                  sAssayID,
+                                                                  sAssayName, 
                                                                   sMzValue, 
                                                                   sCorrFactors[0],
                                                                   sCorrFactors[1],
@@ -792,9 +869,9 @@ public class QuantParamsView extends javax.swing.JPanel {
     }//GEN-LAST:event_jbRemoveActionPerformed
 
     private void jbAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddActionPerformed
-        //... Adding new row ...//
+        //... Adding a new row ...//
         DefaultTableModel model = (DefaultTableModel) jtiTRAQParams.getModel();
-        model.insertRow(model.getRowCount(), new Object[]{"", "", "", "", "", ""});
+        model.insertRow(model.getRowCount(), new Object[]{"", "", "", "", "", "", "", ""});
         jtiTRAQParams.setModel(model);
     }//GEN-LAST:event_jbAddActionPerformed
 
@@ -834,10 +911,12 @@ public class QuantParamsView extends javax.swing.JPanel {
     private javax.swing.JToggleButton jbSave;
     private javax.swing.JComboBox jcbIntegrationMethod;
     private javax.swing.JLabel jlIntegrationMethod;
+    private javax.swing.JLabel jlSearchScore;
     private javax.swing.JLabel jliTraqMaxMz;
     private javax.swing.JLabel jliTraqMinMz;
     private javax.swing.JPanel jpSILAC;
     private javax.swing.JPanel jpiTraq;
+    private javax.swing.JTextField jtSearchScore;
     private javax.swing.JTable jtiTRAQParams;
     private javax.swing.JTextField jtiTraqMaxMz;
     private javax.swing.JTextField jtiTraqMinMz;

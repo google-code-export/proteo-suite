@@ -19,7 +19,7 @@
                 </pluginsQuantitationList>
                 <pluginsOutputList>
                     <pluginOutput id="mzq" type="Output" value="outputMZQ" desc="Plugin to display results as mzQuantML" />
-                    <pluginOutput id="csv" type="Output" value="output_CSV_param_mzML" desc="Plugin to display results as CSV" />
+                    <pluginOutput id="csv" type="Output" value="outputCSV" desc="Plugin to display results as CSV" />
                 </pluginsOutputList>
             </plugins>
         </xTrackerSettings>

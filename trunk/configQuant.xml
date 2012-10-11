@@ -5,13 +5,16 @@
 		    <techniques>
 				<technique id="iTRAQ">
 					<mzRange>
-                                         <minus>0.05</minus>
+						<minus>0.05</minus>
 						<plus>0.05</plus>
 					</mzRange>
+					<SearchScore>20</SearchScore>
 					<IntegrationMethod>SumIntensities</IntegrationMethod>
 					<AssayParamList>
 						<AssayParam>
-							<AssayName>iTRAQ_114</AssayName>
+							<StudyVariable>GroupA</StudyVariable>
+							<AssayID>114</AssayID>
+							<AssayName>iTRAQ4plex-114 reporter fragment</AssayName>
 							<mzValue>114.11123</mzValue>
 							<CorrectionFactors>
 								<factor deltaMass="-2">0</factor>
@@ -21,7 +24,9 @@
 							</CorrectionFactors>
 						</AssayParam>
 						<AssayParam>
-							<AssayName>iTRAQ_115</AssayName>
+							<StudyVariable>GroupA</StudyVariable>
+							<AssayID>115</AssayID>
+							<AssayName>iTRAQ4plex-115 reporter fragment</AssayName>
 							<mzValue>115.10826</mzValue>
 							<CorrectionFactors>
 								<factor deltaMass="-2">0</factor>
@@ -31,7 +36,9 @@
 							</CorrectionFactors>
 						</AssayParam>
 						<AssayParam>
-							<AssayName>iTRAQ_116</AssayName>
+							<StudyVariable>GroupB</StudyVariable>
+							<AssayID>116</AssayID>
+							<AssayName>iTRAQ4plex-116 reporter fragment</AssayName>
 							<mzValue>116.11162</mzValue>
 							<CorrectionFactors>
 								<factor deltaMass="-2">0</factor>
@@ -41,7 +48,9 @@
 							</CorrectionFactors>
 						</AssayParam>
 						<AssayParam>
-							<AssayName>iTRAQ_117</AssayName>
+							<StudyVariable>GroupB</StudyVariable>
+							<AssayID>117</AssayID>
+							<AssayName>iTRAQ4plex-117, mTRAQ heavy, reporter fragment</AssayName>
 							<mzValue>117.11497</mzValue>
 							<CorrectionFactors>
 								<factor deltaMass="-2">0.1</factor>
@@ -58,13 +67,16 @@
 		    <techniques>
 				<technique id="iTRAQ">
 					<mzRange>
-							<minus>0.05</minus>
-							<plus>0.05</plus>
+						<minus>0.05</minus>
+						<plus>0.05</plus>
 					</mzRange>
+					<SearchScore>20</SearchScore>
 					<IntegrationMethod>SumIntensities</IntegrationMethod>
 					<AssayParamList>
 						<AssayParam>
-							<AssayName>iTRAQ_114</AssayName>
+							<StudyVariable>GroupA</StudyVariable>
+							<AssayID>114</AssayID>
+							<AssayName>iTRAQ4plex-114 reporter fragment</AssayName>
 							<mzValue>114.11123</mzValue>
 							<CorrectionFactors>
 								<factor deltaMass="-2">0</factor>
@@ -74,7 +86,9 @@
 							</CorrectionFactors>
 						</AssayParam>
 						<AssayParam>
-							<AssayName>iTRAQ_115</AssayName>
+							<StudyVariable>GroupA</StudyVariable>
+							<AssayID>115</AssayID>
+							<AssayName>iTRAQ4plex-115 reporter fragment</AssayName>
 							<mzValue>115.10826</mzValue>
 							<CorrectionFactors>
 								<factor deltaMass="-2">0</factor>
@@ -84,7 +98,9 @@
 							</CorrectionFactors>
 						</AssayParam>
 						<AssayParam>
-							<AssayName>iTRAQ_116</AssayName>
+							<StudyVariable>GroupB</StudyVariable>
+							<AssayID>116</AssayID>
+							<AssayName>iTRAQ4plex-116 reporter fragment</AssayName>
 							<mzValue>116.11162</mzValue>
 							<CorrectionFactors>
 								<factor deltaMass="-2">0</factor>
@@ -94,7 +110,9 @@
 							</CorrectionFactors>
 						</AssayParam>
 						<AssayParam>
-							<AssayName>iTRAQ_117</AssayName>
+							<StudyVariable>GroupB</StudyVariable>
+							<AssayName>iTRAQ4plex-117, mTRAQ heavy, reporter fragment</AssayName>
+							<AssayID>117</AssayID>
 							<mzValue>117.11497</mzValue>
 							<CorrectionFactors>
 								<factor deltaMass="-2">0.1</factor>
