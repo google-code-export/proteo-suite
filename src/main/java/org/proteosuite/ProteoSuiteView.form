@@ -39,6 +39,7 @@
                   <KeyStroke key="Ctrl+O"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Open Project"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmOpenProjectActionPerformed"/>
@@ -56,6 +57,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jmCloseProject">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Close Project"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmCloseProjectActionPerformed"/>
@@ -69,6 +71,7 @@
                   <KeyStroke key="Ctrl+S"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Save Project"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmSaveProjectActionPerformed"/>
@@ -77,6 +80,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jmSaveProjectAs">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Save Project As"/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmSaveProjectAsActionPerformed"/>
@@ -455,7 +459,7 @@
           <Group type="102" alignment="0" attributes="0">
               <Component id="jpToolBar" min="-2" pref="32" max="-2" attributes="1"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jpProjectStatus" min="-2" pref="46" max="-2" attributes="0"/>
+              <Component id="jpProjectStatus" min="-2" pref="50" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
               <Component id="jpMainPanelView" max="32767" attributes="0"/>
           </Group>
@@ -620,18 +624,11 @@
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="jpMainPanelView">
-      <Properties>
-        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-          <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
-            <EtchetBorder bevelType="0"/>
-          </Border>
-        </Property>
-      </Properties>
 
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jspMainPanelView" alignment="0" pref="1100" max="32767" attributes="0"/>
+              <Component id="jspMainPanelView" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -664,7 +661,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jspLeftPanelView" alignment="0" pref="281" max="32767" attributes="0"/>
+                      <Component id="jspLeftPanelView" alignment="0" pref="283" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -676,6 +673,9 @@
               <SubComponents>
                 <Container class="javax.swing.JSplitPane" name="jspLeftPanelView">
                   <Properties>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="null"/>
+                    </Property>
                     <Property name="dividerLocation" type="int" value="20"/>
                     <Property name="dividerSize" type="int" value="1"/>
                     <Property name="orientation" type="int" value="0"/>
@@ -707,7 +707,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jlFiles" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="244" max="32767" attributes="0"/>
+                                  <EmptySpace pref="239" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -727,7 +727,7 @@
                               <Color blue="ff" green="ff" red="ff" type="rgb"/>
                             </Property>
                             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                              <Font name="Tahoma" size="11" style="1"/>
+                              <Font name="Verdana" size="14" style="1"/>
                             </Property>
                             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                               <Color blue="66" green="66" red="66" type="rgb"/>
@@ -752,12 +752,12 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspProjectDetails" alignment="0" pref="279" max="32767" attributes="0"/>
+                              <Component id="jspProjectDetails" alignment="0" pref="283" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspProjectDetails" alignment="1" pref="615" max="32767" attributes="0"/>
+                              <Component id="jspProjectDetails" alignment="1" pref="611" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
@@ -768,7 +768,7 @@
                               <Color blue="ff" green="ff" red="ff" type="rgb"/>
                             </Property>
                             <Property name="dividerLocation" type="int" value="130"/>
-                            <Property name="dividerSize" type="int" value="2"/>
+                            <Property name="dividerSize" type="int" value="1"/>
                             <Property name="orientation" type="int" value="0"/>
                           </Properties>
 
@@ -784,9 +784,9 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <EmptySpace min="0" pref="277" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="281" max="32767" attributes="0"/>
                                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                                          <Component id="jtpRawFiles" alignment="0" pref="277" max="32767" attributes="0"/>
+                                          <Component id="jtpRawFiles" alignment="0" pref="281" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
@@ -845,7 +845,6 @@
                                           </Properties>
                                           <Events>
                                             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtRawFilesMouseClicked"/>
-                                            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtRawFilesMouseEntered"/>
                                           </Events>
                                         </Component>
                                       </SubComponents>
@@ -864,23 +863,23 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jspLeftMenuBottom" alignment="0" pref="277" max="32767" attributes="0"/>
+                                      <Component id="jspLeftMenuBottom" alignment="0" pref="281" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="jspLeftMenuBottom" pref="471" max="32767" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="jspLeftMenuBottom" alignment="0" pref="479" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
                               <SubComponents>
                                 <Container class="javax.swing.JSplitPane" name="jspLeftMenuBottom">
                                   <Properties>
+                                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                      <Border info="null"/>
+                                    </Property>
                                     <Property name="dividerLocation" type="int" value="200"/>
-                                    <Property name="dividerSize" type="int" value="2"/>
+                                    <Property name="dividerSize" type="int" value="1"/>
                                     <Property name="orientation" type="int" value="0"/>
                                   </Properties>
 
@@ -896,12 +895,12 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jtpQuantFiles" alignment="0" pref="275" max="32767" attributes="0"/>
+                                              <Component id="jtpQuantFiles" alignment="0" pref="281" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jtpQuantFiles" alignment="0" pref="268" max="32767" attributes="0"/>
+                                              <Component id="jtpQuantFiles" alignment="0" pref="279" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
@@ -1042,6 +1041,9 @@
               <SubComponents>
                 <Container class="javax.swing.JSplitPane" name="jspViewerAndProperties">
                   <Properties>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="null"/>
+                    </Property>
                     <Property name="dividerLocation" type="int" value="380"/>
                     <Property name="dividerSize" type="int" value="3"/>
                   </Properties>
@@ -1063,7 +1065,7 @@
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspLeftViewer" alignment="0" pref="635" max="32767" attributes="0"/>
+                              <Component id="jspLeftViewer" alignment="0" pref="637" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
@@ -1101,7 +1103,7 @@
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jlViewer" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace pref="332" max="32767" attributes="0"/>
+                                          <EmptySpace pref="316" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
@@ -1121,7 +1123,7 @@
                                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                                     </Property>
                                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                                      <Font name="Tahoma" size="11" style="1"/>
+                                      <Font name="Verdana" size="14" style="1"/>
                                     </Property>
                                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                                       <Color blue="66" green="66" red="66" type="rgb"/>
@@ -1151,13 +1153,16 @@
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jspLeftViewerDetails" alignment="0" pref="613" max="32767" attributes="0"/>
+                                      <Component id="jspLeftViewerDetails" alignment="0" pref="609" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
                               <SubComponents>
                                 <Container class="javax.swing.JSplitPane" name="jspLeftViewerDetails">
                                   <Properties>
+                                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                      <Border info="null"/>
+                                    </Property>
                                     <Property name="dividerLocation" type="int" value="350"/>
                                     <Property name="dividerSize" type="int" value="2"/>
                                     <Property name="orientation" type="int" value="0"/>
@@ -1175,12 +1180,12 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jtpLog" alignment="0" pref="378" max="32767" attributes="0"/>
+                                              <Component id="jtpLog" alignment="0" pref="380" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jtpLog" alignment="0" pref="260" max="32767" attributes="0"/>
+                                              <Component id="jtpLog" alignment="0" pref="258" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
@@ -1226,12 +1231,12 @@
                                               <Layout>
                                                 <DimensionLayout dim="0">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jspRawDataValues" alignment="0" pref="373" max="32767" attributes="0"/>
+                                                      <Component id="jspRawDataValues" alignment="0" pref="375" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                                 <DimensionLayout dim="1">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jspRawDataValues" alignment="1" pref="232" max="32767" attributes="0"/>
+                                                      <Component id="jspRawDataValues" alignment="1" pref="230" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                               </Layout>
@@ -1276,7 +1281,7 @@
                                                                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                                                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                                   <Component id="jtMSMz" min="-2" pref="69" max="-2" attributes="0"/>
-                                                                  <EmptySpace pref="87" max="32767" attributes="0"/>
+                                                                  <EmptySpace pref="89" max="32767" attributes="0"/>
                                                               </Group>
                                                           </Group>
                                                         </DimensionLayout>
@@ -1371,7 +1376,7 @@
                                               <Layout>
                                                 <DimensionLayout dim="0">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jScrollPane1" alignment="0" pref="373" max="32767" attributes="0"/>
+                                                      <Component id="jScrollPane1" alignment="0" pref="375" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                                 <DimensionLayout dim="1">
@@ -1419,7 +1424,7 @@
                                               <Layout>
                                                 <DimensionLayout dim="0">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jScrollPane2" alignment="1" pref="373" max="32767" attributes="0"/>
+                                                      <Component id="jScrollPane2" alignment="1" pref="375" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                                 <DimensionLayout dim="1">
@@ -1467,12 +1472,12 @@
                                               <Layout>
                                                 <DimensionLayout dim="0">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jScrollPane3" alignment="0" pref="373" max="32767" attributes="0"/>
+                                                      <Component id="jScrollPane3" alignment="0" pref="375" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                                 <DimensionLayout dim="1">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jScrollPane3" alignment="0" pref="232" max="32767" attributes="0"/>
+                                                      <Component id="jScrollPane3" alignment="0" pref="230" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                               </Layout>
@@ -1543,7 +1548,7 @@
                                           <Layout>
                                             <DimensionLayout dim="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="jdpTIC" alignment="0" pref="373" max="32767" attributes="0"/>
+                                                  <Component id="jdpTIC" alignment="0" pref="375" max="32767" attributes="0"/>
                                               </Group>
                                             </DimensionLayout>
                                             <DimensionLayout dim="1">
@@ -1584,7 +1589,7 @@
                                           <Layout>
                                             <DimensionLayout dim="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <EmptySpace min="0" pref="373" max="32767" attributes="0"/>
+                                                  <EmptySpace min="0" pref="375" max="32767" attributes="0"/>
                                               </Group>
                                             </DimensionLayout>
                                             <DimensionLayout dim="1">
@@ -1611,7 +1616,7 @@
                                           <Layout>
                                             <DimensionLayout dim="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <EmptySpace min="0" pref="373" max="32767" attributes="0"/>
+                                                  <EmptySpace min="0" pref="375" max="32767" attributes="0"/>
                                               </Group>
                                             </DimensionLayout>
                                             <DimensionLayout dim="1">
@@ -1641,12 +1646,12 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspProperties" alignment="0" pref="432" max="32767" attributes="0"/>
+                              <Component id="jspProperties" alignment="0" pref="431" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspProperties" alignment="0" pref="635" max="32767" attributes="0"/>
+                              <Component id="jspProperties" alignment="0" pref="637" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
@@ -1684,7 +1689,7 @@
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jlProperties" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace pref="361" max="32767" attributes="0"/>
+                                          <EmptySpace pref="339" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
@@ -1704,7 +1709,7 @@
                                       <Color blue="ff" green="ff" red="ff" type="rgb"/>
                                     </Property>
                                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                                      <Font name="Tahoma" size="11" style="1"/>
+                                      <Font name="Verdana" size="14" style="1"/>
                                     </Property>
                                     <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                                       <Color blue="66" green="66" red="66" type="rgb"/>
@@ -1732,12 +1737,12 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jtpProperties" alignment="0" pref="430" max="32767" attributes="0"/>
+                                      <Component id="jtpProperties" alignment="0" pref="429" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jtpProperties" alignment="0" pref="613" max="32767" attributes="0"/>
+                                      <Component id="jtpProperties" alignment="0" pref="609" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
@@ -1763,12 +1768,12 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzML" alignment="0" pref="425" max="32767" attributes="0"/>
+                                              <Component id="jspMzML" alignment="0" pref="424" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzML" alignment="0" pref="585" max="32767" attributes="0"/>
+                                              <Component id="jspMzML" alignment="0" pref="581" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
@@ -1778,8 +1783,11 @@
                                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                                               <Color blue="ff" green="ff" red="ff" type="rgb"/>
                                             </Property>
+                                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                              <Border info="null"/>
+                                            </Property>
                                             <Property name="dividerLocation" type="int" value="80"/>
-                                            <Property name="dividerSize" type="int" value="2"/>
+                                            <Property name="dividerSize" type="int" value="1"/>
                                             <Property name="orientation" type="int" value="0"/>
                                           </Properties>
 
@@ -1807,8 +1815,11 @@
                                             </Container>
                                             <Container class="javax.swing.JSplitPane" name="jspMzMLDetail">
                                               <Properties>
-                                                <Property name="dividerLocation" type="int" value="80"/>
-                                                <Property name="dividerSize" type="int" value="2"/>
+                                                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                                  <Border info="null"/>
+                                                </Property>
+                                                <Property name="dividerLocation" type="int" value="40"/>
+                                                <Property name="dividerSize" type="int" value="1"/>
                                                 <Property name="orientation" type="int" value="0"/>
                                               </Properties>
                                               <Constraints>
@@ -1874,28 +1885,16 @@
                                                       <Group type="103" groupAlignment="0" attributes="0">
                                                           <Group type="102" alignment="0" attributes="0">
                                                               <EmptySpace max="-2" attributes="0"/>
-                                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                                  <Component id="jlVisualisationOptions" min="-2" max="-2" attributes="0"/>
-                                                                  <Component id="jlSearchMzML" alignment="0" min="-2" max="-2" attributes="0"/>
-                                                              </Group>
+                                                              <Component id="jlSearchMzML" min="-2" max="-2" attributes="0"/>
                                                               <EmptySpace type="separate" max="-2" attributes="0"/>
-                                                              <Group type="103" groupAlignment="0" attributes="0">
-                                                                  <Group type="102" alignment="0" attributes="0">
-                                                                      <Component id="jlScan" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                                      <Component id="jtScan" min="-2" pref="62" max="-2" attributes="0"/>
-                                                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                                                                      <Component id="jlRT" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                                      <Component id="jtRT" min="-2" pref="62" max="-2" attributes="0"/>
-                                                                  </Group>
-                                                                  <Group type="102" alignment="0" attributes="0">
-                                                                      <Component id="jbShowChromatogram" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                                                                      <Component id="jbShow2D" min="-2" max="-2" attributes="0"/>
-                                                                  </Group>
-                                                              </Group>
-                                                              <EmptySpace pref="83" max="32767" attributes="0"/>
+                                                              <Component id="jlScan" min="-2" max="-2" attributes="0"/>
+                                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                              <Component id="jtScan" min="-2" pref="62" max="-2" attributes="0"/>
+                                                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                                              <Component id="jlRT" min="-2" max="-2" attributes="0"/>
+                                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                              <Component id="jtRT" min="-2" pref="62" max="-2" attributes="0"/>
+                                                              <EmptySpace pref="86" max="32767" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                     </DimensionLayout>
@@ -1903,12 +1902,6 @@
                                                       <Group type="103" groupAlignment="0" attributes="0">
                                                           <Group type="102" alignment="0" attributes="0">
                                                               <EmptySpace max="-2" attributes="0"/>
-                                                              <Group type="103" groupAlignment="2" attributes="0">
-                                                                  <Component id="jlVisualisationOptions" alignment="2" min="-2" max="-2" attributes="0"/>
-                                                                  <Component id="jbShowChromatogram" alignment="2" min="-2" max="-2" attributes="0"/>
-                                                                  <Component id="jbShow2D" alignment="2" min="-2" max="-2" attributes="0"/>
-                                                              </Group>
-                                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                               <Group type="103" groupAlignment="2" attributes="0">
                                                                   <Component id="jlSearchMzML" alignment="2" min="-2" max="-2" attributes="0"/>
                                                                   <Component id="jlScan" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -1922,49 +1915,6 @@
                                                     </DimensionLayout>
                                                   </Layout>
                                                   <SubComponents>
-                                                    <Component class="javax.swing.JLabel" name="jlVisualisationOptions">
-                                                      <Properties>
-                                                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                                                          <Font name="Tahoma" size="11" style="1"/>
-                                                        </Property>
-                                                        <Property name="text" type="java.lang.String" value="View:"/>
-                                                      </Properties>
-                                                    </Component>
-                                                    <Component class="javax.swing.JButton" name="jbShowChromatogram">
-                                                      <Properties>
-                                                        <Property name="toolTipText" type="java.lang.String" value="Show Chromatogram"/>
-                                                        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                          <Dimension value="[24, 24]"/>
-                                                        </Property>
-                                                        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                          <Dimension value="[24, 24]"/>
-                                                        </Property>
-                                                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                          <Dimension value="[24, 24]"/>
-                                                        </Property>
-                                                      </Properties>
-                                                      <Events>
-                                                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jbShowChromatogramMouseClicked"/>
-                                                      </Events>
-                                                    </Component>
-                                                    <Component class="javax.swing.JButton" name="jbShow2D">
-                                                      <Properties>
-                                                        <Property name="toolTipText" type="java.lang.String" value="Show 2D Plot"/>
-                                                        <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                          <Dimension value="[24, 24]"/>
-                                                        </Property>
-                                                        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                          <Dimension value="[24, 24]"/>
-                                                        </Property>
-                                                        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                                                          <Dimension value="[24, 24]"/>
-                                                        </Property>
-                                                      </Properties>
-                                                      <Events>
-                                                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jbShow2DMouseClicked"/>
-                                                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbShow2DActionPerformed"/>
-                                                      </Events>
-                                                    </Component>
                                                     <Component class="javax.swing.JLabel" name="jlScan">
                                                       <Properties>
                                                         <Property name="text" type="java.lang.String" value="Scan Index:"/>
@@ -2013,19 +1963,23 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMGF" alignment="0" pref="425" max="32767" attributes="0"/>
+                                              <Component id="jspMGF" alignment="0" pref="424" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMGF" alignment="0" pref="585" max="32767" attributes="0"/>
+                                              <Component id="jspMGF" alignment="0" pref="581" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
                                       <SubComponents>
                                         <Container class="javax.swing.JSplitPane" name="jspMGF">
                                           <Properties>
+                                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                              <Border info="null"/>
+                                            </Property>
                                             <Property name="dividerLocation" type="int" value="80"/>
+                                            <Property name="dividerSize" type="int" value="1"/>
                                             <Property name="orientation" type="int" value="0"/>
                                           </Properties>
 
@@ -2056,7 +2010,11 @@
                                             </Container>
                                             <Container class="javax.swing.JSplitPane" name="jspMGFDetail">
                                               <Properties>
+                                                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                                  <Border info="null"/>
+                                                </Property>
                                                 <Property name="dividerLocation" type="int" value="50"/>
+                                                <Property name="dividerSize" type="int" value="1"/>
                                                 <Property name="orientation" type="int" value="0"/>
                                               </Properties>
                                               <Constraints>
@@ -2084,7 +2042,7 @@
                                                               <Component id="jlScanTitle" min="-2" max="-2" attributes="0"/>
                                                               <EmptySpace type="separate" max="-2" attributes="0"/>
                                                               <Component id="jtScanTitle" min="-2" pref="218" max="-2" attributes="0"/>
-                                                              <EmptySpace pref="67" max="32767" attributes="0"/>
+                                                              <EmptySpace pref="70" max="32767" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                     </DimensionLayout>
@@ -2171,19 +2129,23 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzId" alignment="0" pref="425" max="32767" attributes="0"/>
+                                              <Component id="jspMzId" alignment="0" pref="424" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzId" alignment="1" pref="585" max="32767" attributes="0"/>
+                                              <Component id="jspMzId" alignment="1" pref="581" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
                                       <SubComponents>
                                         <Container class="javax.swing.JSplitPane" name="jspMzId">
                                           <Properties>
+                                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                              <Border info="null"/>
+                                            </Property>
                                             <Property name="dividerLocation" type="int" value="80"/>
+                                            <Property name="dividerSize" type="int" value="1"/>
                                             <Property name="orientation" type="int" value="0"/>
                                           </Properties>
 
@@ -2191,7 +2153,11 @@
                                           <SubComponents>
                                             <Container class="javax.swing.JSplitPane" name="jspMzIdDetail">
                                               <Properties>
+                                                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                                  <Border info="null"/>
+                                                </Property>
                                                 <Property name="dividerLocation" type="int" value="50"/>
+                                                <Property name="dividerSize" type="int" value="1"/>
                                                 <Property name="orientation" type="int" value="0"/>
                                               </Properties>
                                               <Constraints>
@@ -2223,7 +2189,7 @@
                                                               <Component id="jlPeptideMzId" min="-2" max="-2" attributes="0"/>
                                                               <EmptySpace max="-2" attributes="0"/>
                                                               <Component id="jtPeptideMzId" min="-2" pref="158" max="-2" attributes="0"/>
-                                                              <EmptySpace pref="20" max="32767" attributes="0"/>
+                                                              <EmptySpace pref="23" max="32767" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                     </DimensionLayout>
@@ -2343,19 +2309,23 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMascotXML" alignment="0" pref="425" max="32767" attributes="0"/>
+                                              <Component id="jspMascotXML" alignment="0" pref="424" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMascotXML" alignment="0" pref="585" max="32767" attributes="0"/>
+                                              <Component id="jspMascotXML" alignment="0" pref="581" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
                                       <SubComponents>
                                         <Container class="javax.swing.JSplitPane" name="jspMascotXML">
                                           <Properties>
+                                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                              <Border info="null"/>
+                                            </Property>
                                             <Property name="dividerLocation" type="int" value="80"/>
+                                            <Property name="dividerSize" type="int" value="1"/>
                                             <Property name="orientation" type="int" value="0"/>
                                           </Properties>
 
@@ -2386,7 +2356,11 @@
                                             </Container>
                                             <Container class="javax.swing.JSplitPane" name="jspMascotXMLSubDetail">
                                               <Properties>
+                                                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                                  <Border info="null"/>
+                                                </Property>
                                                 <Property name="dividerLocation" type="int" value="80"/>
+                                                <Property name="dividerSize" type="int" value="1"/>
                                                 <Property name="orientation" type="int" value="0"/>
                                               </Properties>
                                               <Constraints>
@@ -2452,7 +2426,7 @@
                                                                       <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                                                                       <Component id="jlPeptide" min="-2" max="-2" attributes="0"/>
                                                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                                      <Component id="jtPeptide" pref="171" max="32767" attributes="0"/>
+                                                                      <Component id="jtPeptide" pref="174" max="32767" attributes="0"/>
                                                                   </Group>
                                                                   <Component id="jbShowIsotopeDistrib" alignment="0" min="-2" max="-2" attributes="0"/>
                                                               </Group>
@@ -2535,18 +2509,23 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzQuantML" alignment="0" pref="425" max="32767" attributes="0"/>
+                                              <Component id="jspMzQuantML" alignment="0" pref="424" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzQuantML" alignment="0" pref="585" max="32767" attributes="0"/>
+                                              <Component id="jspMzQuantML" alignment="0" pref="581" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
                                       <SubComponents>
                                         <Container class="javax.swing.JSplitPane" name="jspMzQuantML">
                                           <Properties>
+                                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                              <Border info="null"/>
+                                            </Property>
+                                            <Property name="dividerLocation" type="int" value="40"/>
+                                            <Property name="dividerSize" type="int" value="1"/>
                                             <Property name="orientation" type="int" value="0"/>
                                           </Properties>
 
@@ -2596,19 +2575,23 @@
                                                   <Layout>
                                                     <DimensionLayout dim="0">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jspPeptideQuant" alignment="0" pref="418" max="32767" attributes="0"/>
+                                                          <Component id="jspPeptideQuant" alignment="0" pref="419" max="32767" attributes="0"/>
                                                       </Group>
                                                     </DimensionLayout>
                                                     <DimensionLayout dim="1">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jspPeptideQuant" alignment="0" pref="474" max="32767" attributes="0"/>
+                                                          <Component id="jspPeptideQuant" alignment="0" pref="513" max="32767" attributes="0"/>
                                                       </Group>
                                                     </DimensionLayout>
                                                   </Layout>
                                                   <SubComponents>
                                                     <Container class="javax.swing.JSplitPane" name="jspPeptideQuant">
                                                       <Properties>
+                                                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                                          <Border info="null"/>
+                                                        </Property>
                                                         <Property name="dividerLocation" type="int" value="40"/>
+                                                        <Property name="dividerSize" type="int" value="1"/>
                                                         <Property name="orientation" type="int" value="0"/>
                                                       </Properties>
 
@@ -2624,7 +2607,7 @@
                                                           <Layout>
                                                             <DimensionLayout dim="0">
                                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                                  <EmptySpace min="0" pref="416" max="32767" attributes="0"/>
+                                                                  <EmptySpace min="0" pref="419" max="32767" attributes="0"/>
                                                               </Group>
                                                             </DimensionLayout>
                                                             <DimensionLayout dim="1">
@@ -2677,19 +2660,23 @@
                                                   <Layout>
                                                     <DimensionLayout dim="0">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jspProteinQuant" alignment="0" pref="418" max="32767" attributes="0"/>
+                                                          <Component id="jspProteinQuant" alignment="0" pref="419" max="32767" attributes="0"/>
                                                       </Group>
                                                     </DimensionLayout>
                                                     <DimensionLayout dim="1">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jspProteinQuant" alignment="0" pref="474" max="32767" attributes="0"/>
+                                                          <Component id="jspProteinQuant" alignment="0" pref="513" max="32767" attributes="0"/>
                                                       </Group>
                                                     </DimensionLayout>
                                                   </Layout>
                                                   <SubComponents>
                                                     <Container class="javax.swing.JSplitPane" name="jspProteinQuant">
                                                       <Properties>
+                                                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                                          <Border info="null"/>
+                                                        </Property>
                                                         <Property name="dividerLocation" type="int" value="40"/>
+                                                        <Property name="dividerSize" type="int" value="1"/>
                                                         <Property name="orientation" type="int" value="0"/>
                                                       </Properties>
 
@@ -2705,7 +2692,7 @@
                                                           <Layout>
                                                             <DimensionLayout dim="0">
                                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                                  <EmptySpace min="0" pref="416" max="32767" attributes="0"/>
+                                                                  <EmptySpace min="0" pref="419" max="32767" attributes="0"/>
                                                               </Group>
                                                             </DimensionLayout>
                                                             <DimensionLayout dim="1">
@@ -2758,19 +2745,23 @@
                                                   <Layout>
                                                     <DimensionLayout dim="0">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jspFeatureQuant" alignment="1" pref="418" max="32767" attributes="0"/>
+                                                          <Component id="jspFeatureQuant" alignment="1" pref="419" max="32767" attributes="0"/>
                                                       </Group>
                                                     </DimensionLayout>
                                                     <DimensionLayout dim="1">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jspFeatureQuant" alignment="0" pref="474" max="32767" attributes="0"/>
+                                                          <Component id="jspFeatureQuant" alignment="0" pref="513" max="32767" attributes="0"/>
                                                       </Group>
                                                     </DimensionLayout>
                                                   </Layout>
                                                   <SubComponents>
                                                     <Container class="javax.swing.JSplitPane" name="jspFeatureQuant">
                                                       <Properties>
+                                                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                                                          <Border info="null"/>
+                                                        </Property>
                                                         <Property name="dividerLocation" type="int" value="40"/>
+                                                        <Property name="dividerSize" type="int" value="1"/>
                                                         <Property name="orientation" type="int" value="0"/>
                                                       </Properties>
 
@@ -2786,7 +2777,7 @@
                                                           <Layout>
                                                             <DimensionLayout dim="0">
                                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                                  <EmptySpace min="0" pref="416" max="32767" attributes="0"/>
+                                                                  <EmptySpace min="0" pref="419" max="32767" attributes="0"/>
                                                               </Group>
                                                             </DimensionLayout>
                                                             <DimensionLayout dim="1">
@@ -2866,7 +2857,7 @@
           <Color blue="99" green="99" red="99" type="rgb"/>
         </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[102, 26]"/>
+          <Dimension value="[102, 30]"/>
         </Property>
       </Properties>
 
