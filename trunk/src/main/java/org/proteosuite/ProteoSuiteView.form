@@ -39,7 +39,6 @@
                   <KeyStroke key="Ctrl+O"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Open Project"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmOpenProjectActionPerformed"/>
@@ -447,8 +446,8 @@
           <Component id="jpMainPanelView" alignment="0" max="32767" attributes="0"/>
           <Group type="102" alignment="1" attributes="0">
               <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jpProjectStatus" alignment="0" pref="1094" max="32767" attributes="0"/>
-                  <Component id="jpToolBar" alignment="1" pref="1094" max="32767" attributes="0"/>
+                  <Component id="jpProjectStatus" alignment="0" pref="1096" max="32767" attributes="0"/>
+                  <Component id="jpToolBar" alignment="1" pref="1096" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -488,7 +487,7 @@
                   <Component id="jToolBar2" min="-2" pref="132" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jToolBar3" min="-2" pref="121" max="-2" attributes="0"/>
-                  <EmptySpace pref="688" max="32767" attributes="0"/>
+                  <EmptySpace pref="690" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -555,6 +554,7 @@
             <Component class="javax.swing.JButton" name="jbSaveProject">
               <Properties>
                 <Property name="toolTipText" type="java.lang.String" value="Save Project (Ctrl + S)"/>
+                <Property name="enabled" type="boolean" value="false"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
@@ -628,7 +628,7 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="jspMainPanelView" alignment="0" max="32767" attributes="0"/>
+              <Component id="jspMainPanelView" alignment="0" pref="1106" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -661,7 +661,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jspLeftPanelView" alignment="0" pref="283" max="32767" attributes="0"/>
+                      <Component id="jspLeftPanelView" alignment="0" pref="281" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -673,9 +673,6 @@
               <SubComponents>
                 <Container class="javax.swing.JSplitPane" name="jspLeftPanelView">
                   <Properties>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="null"/>
-                    </Property>
                     <Property name="dividerLocation" type="int" value="20"/>
                     <Property name="dividerSize" type="int" value="1"/>
                     <Property name="orientation" type="int" value="0"/>
@@ -707,7 +704,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jlFiles" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace pref="239" max="32767" attributes="0"/>
+                                  <EmptySpace pref="235" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
@@ -752,12 +749,12 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspProjectDetails" alignment="0" pref="283" max="32767" attributes="0"/>
+                              <Component id="jspProjectDetails" alignment="0" pref="279" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspProjectDetails" alignment="1" pref="611" max="32767" attributes="0"/>
+                              <Component id="jspProjectDetails" alignment="1" pref="615" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
@@ -784,9 +781,9 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <EmptySpace min="0" pref="281" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="277" max="32767" attributes="0"/>
                                       <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                                          <Component id="jtpRawFiles" alignment="0" pref="281" max="32767" attributes="0"/>
+                                          <Component id="jtpRawFiles" alignment="0" pref="277" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
@@ -830,14 +827,8 @@
                                       <SubComponents>
                                         <Component class="javax.swing.JTable" name="jtRawFiles">
                                           <Properties>
-                                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                              <Table columnCount="5" rowCount="0">
-                                                <Column editable="true" title="Name" type="java.lang.Object"/>
-                                                <Column editable="true" title="Path" type="java.lang.Object"/>
-                                                <Column editable="true" title="Type" type="java.lang.Object"/>
-                                                <Column editable="true" title="Version" type="java.lang.Object"/>
-                                                <Column editable="true" title="Scans" type="java.lang.Object"/>
-                                              </Table>
+                                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                                              <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;Name&quot;, &quot;Path&quot;, &quot;Type&quot;, &quot;Version&quot;&#xa;    }&#xa;)" type="code"/>
                                             </Property>
                                             <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
                                               <JTableSelectionModel selectionMode="0"/>
@@ -846,6 +837,9 @@
                                           <Events>
                                             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtRawFilesMouseClicked"/>
                                           </Events>
+                                          <AuxValues>
+                                            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        if (colIndex &lt; 4) {&#xa;            return false;&#xa;        } else {&#xa;            return true;&#xa;        }&#xa;    }}"/>
+                                          </AuxValues>
                                         </Component>
                                       </SubComponents>
                                     </Container>
@@ -863,21 +857,18 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jspLeftMenuBottom" alignment="0" pref="281" max="32767" attributes="0"/>
+                                      <Component id="jspLeftMenuBottom" alignment="0" pref="277" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jspLeftMenuBottom" alignment="0" pref="479" max="32767" attributes="0"/>
+                                      <Component id="jspLeftMenuBottom" alignment="0" pref="483" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
                               <SubComponents>
                                 <Container class="javax.swing.JSplitPane" name="jspLeftMenuBottom">
                                   <Properties>
-                                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                      <Border info="null"/>
-                                    </Property>
                                     <Property name="dividerLocation" type="int" value="200"/>
                                     <Property name="dividerSize" type="int" value="1"/>
                                     <Property name="orientation" type="int" value="0"/>
@@ -895,12 +886,12 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jtpQuantFiles" alignment="0" pref="281" max="32767" attributes="0"/>
+                                              <Component id="jtpQuantFiles" alignment="0" pref="275" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jtpQuantFiles" alignment="0" pref="279" max="32767" attributes="0"/>
+                                              <Component id="jtpQuantFiles" alignment="0" pref="281" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
@@ -930,13 +921,8 @@
                                               <SubComponents>
                                                 <Component class="javax.swing.JTable" name="jtQuantFiles">
                                                   <Properties>
-                                                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                      <Table columnCount="4" rowCount="0">
-                                                        <Column editable="true" title="Name" type="java.lang.Object"/>
-                                                        <Column editable="true" title="Path" type="java.lang.Object"/>
-                                                        <Column editable="true" title="Type" type="java.lang.Object"/>
-                                                        <Column editable="true" title="Version" type="java.lang.Object"/>
-                                                      </Table>
+                                                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                                                      <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;Name&quot;, &quot;Path&quot;, &quot;Type&quot;, &quot;Version&quot;&#xa;    }&#xa;)" type="code"/>
                                                     </Property>
                                                     <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
                                                       <JTableSelectionModel selectionMode="0"/>
@@ -945,6 +931,9 @@
                                                   <Events>
                                                     <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtQuantFilesMouseClicked"/>
                                                   </Events>
+                                                  <AuxValues>
+                                                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        return false;  &#xa;    }}"/>
+                                                  </AuxValues>
                                                 </Component>
                                               </SubComponents>
                                             </Container>
@@ -982,13 +971,8 @@
                                           <SubComponents>
                                             <Component class="javax.swing.JTable" name="jtIdentFiles">
                                               <Properties>
-                                                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                  <Table columnCount="4" rowCount="0">
-                                                    <Column editable="true" title="Name" type="java.lang.Object"/>
-                                                    <Column editable="true" title="Path" type="java.lang.Object"/>
-                                                    <Column editable="true" title="Type" type="java.lang.Object"/>
-                                                    <Column editable="true" title="Version" type="java.lang.Object"/>
-                                                  </Table>
+                                                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                                                  <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;Name&quot;, &quot;Path&quot;, &quot;Type&quot;, &quot;Version&quot;, &quot;Raw File&quot;&#xa;    }&#xa;)" type="code"/>
                                                 </Property>
                                                 <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
                                                   <JTableSelectionModel selectionMode="0"/>
@@ -997,6 +981,9 @@
                                               <Events>
                                                 <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtIdentFilesMouseClicked"/>
                                               </Events>
+                                              <AuxValues>
+                                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        if (colIndex &lt; 4) {&#xa;            return false;&#xa;        } else {&#xa;            return true;&#xa;        }&#xa;    }&#xa;}"/>
+                                              </AuxValues>
                                             </Component>
                                           </SubComponents>
                                         </Container>
@@ -1029,7 +1016,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jspViewerAndProperties" alignment="0" pref="816" max="32767" attributes="0"/>
+                      <Component id="jspViewerAndProperties" alignment="0" pref="822" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -1041,9 +1028,6 @@
               <SubComponents>
                 <Container class="javax.swing.JSplitPane" name="jspViewerAndProperties">
                   <Properties>
-                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                      <Border info="null"/>
-                    </Property>
                     <Property name="dividerLocation" type="int" value="380"/>
                     <Property name="dividerSize" type="int" value="3"/>
                   </Properties>
@@ -1060,12 +1044,12 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspLeftViewer" alignment="0" pref="382" max="32767" attributes="0"/>
+                              <Component id="jspLeftViewer" alignment="0" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspLeftViewer" alignment="0" pref="637" max="32767" attributes="0"/>
+                              <Component id="jspLeftViewer" alignment="0" pref="635" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
@@ -1103,7 +1087,7 @@
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jlViewer" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace pref="316" max="32767" attributes="0"/>
+                                          <EmptySpace pref="326" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
@@ -1148,21 +1132,18 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jspLeftViewerDetails" alignment="0" pref="380" max="32767" attributes="0"/>
+                                      <Component id="jspLeftViewerDetails" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jspLeftViewerDetails" alignment="0" pref="609" max="32767" attributes="0"/>
+                                      <Component id="jspLeftViewerDetails" alignment="0" pref="613" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
                               <SubComponents>
                                 <Container class="javax.swing.JSplitPane" name="jspLeftViewerDetails">
                                   <Properties>
-                                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                      <Border info="null"/>
-                                    </Property>
                                     <Property name="dividerLocation" type="int" value="350"/>
                                     <Property name="dividerSize" type="int" value="2"/>
                                     <Property name="orientation" type="int" value="0"/>
@@ -1180,12 +1161,12 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jtpLog" alignment="0" pref="380" max="32767" attributes="0"/>
+                                              <Component id="jtpLog" alignment="0" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jtpLog" alignment="0" pref="258" max="32767" attributes="0"/>
+                                              <Component id="jtpLog" alignment="0" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
@@ -1231,12 +1212,12 @@
                                               <Layout>
                                                 <DimensionLayout dim="0">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jspRawDataValues" alignment="0" pref="375" max="32767" attributes="0"/>
+                                                      <Component id="jspRawDataValues" alignment="0" pref="383" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                                 <DimensionLayout dim="1">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jspRawDataValues" alignment="1" pref="230" max="32767" attributes="0"/>
+                                                      <Component id="jspRawDataValues" alignment="1" pref="251" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                               </Layout>
@@ -1281,7 +1262,7 @@
                                                                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                                                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                                   <Component id="jtMSMz" min="-2" pref="69" max="-2" attributes="0"/>
-                                                                  <EmptySpace pref="89" max="32767" attributes="0"/>
+                                                                  <EmptySpace pref="97" max="32767" attributes="0"/>
                                                               </Group>
                                                           </Group>
                                                         </DimensionLayout>
@@ -1311,6 +1292,9 @@
                                                           </Properties>
                                                         </Component>
                                                         <Component class="javax.swing.JTextField" name="jtMSIndex">
+                                                          <Properties>
+                                                            <Property name="toolTipText" type="java.lang.String" value="Enter the index"/>
+                                                          </Properties>
                                                           <Events>
                                                             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtMSIndexKeyPressed"/>
                                                           </Events>
@@ -1326,6 +1310,9 @@
                                                           </Properties>
                                                         </Component>
                                                         <Component class="javax.swing.JTextField" name="jtMSMz">
+                                                          <Properties>
+                                                            <Property name="toolTipText" type="java.lang.String" value="Enter the m/z value "/>
+                                                          </Properties>
                                                           <Events>
                                                             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtMSMzKeyPressed"/>
                                                           </Events>
@@ -1346,17 +1333,16 @@
                                                       <SubComponents>
                                                         <Component class="javax.swing.JTable" name="jtRawData">
                                                           <Properties>
-                                                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                              <Table columnCount="3" rowCount="0">
-                                                                <Column editable="true" title="Index" type="java.lang.Object"/>
-                                                                <Column editable="true" title="m/z" type="java.lang.Object"/>
-                                                                <Column editable="true" title="Intensity" type="java.lang.Object"/>
-                                                              </Table>
+                                                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                                                              <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;Index&quot;, &quot;m/z&quot;, &quot;Intensity&quot;&#xa;    }&#xa;)" type="code"/>
                                                             </Property>
                                                             <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
                                                               <JTableSelectionModel selectionMode="2"/>
                                                             </Property>
                                                           </Properties>
+                                                          <AuxValues>
+                                                            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        return false; &#xa;    }}"/>
+                                                          </AuxValues>
                                                         </Component>
                                                       </SubComponents>
                                                     </Container>
@@ -1376,14 +1362,16 @@
                                               <Layout>
                                                 <DimensionLayout dim="0">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jScrollPane1" alignment="0" pref="375" max="32767" attributes="0"/>
+                                                      <Component id="jPanel5" alignment="0" max="32767" attributes="0"/>
+                                                      <Component id="jScrollPane1" alignment="0" pref="383" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                                 <DimensionLayout dim="1">
                                                   <Group type="103" groupAlignment="0" attributes="0">
                                                       <Group type="102" alignment="0" attributes="0">
-                                                          <EmptySpace min="-2" pref="128" max="-2" attributes="0"/>
-                                                          <Component id="jScrollPane1" pref="104" max="32767" attributes="0"/>
+                                                          <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
+                                                          <EmptySpace max="-2" attributes="0"/>
+                                                          <Component id="jScrollPane1" pref="194" max="32767" attributes="0"/>
                                                       </Group>
                                                   </Group>
                                                 </DimensionLayout>
@@ -1398,17 +1386,30 @@
                                                   <SubComponents>
                                                     <Component class="javax.swing.JTable" name="jtTemplate1">
                                                       <Properties>
-                                                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                          <Table columnCount="4" rowCount="0">
-                                                            <Column editable="true" title="m/z Index" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Scan Index" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Quant" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Template2 Index" type="java.lang.Object"/>
-                                                          </Table>
+                                                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                                                          <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;m/z Index&quot;, &quot;Scan Index&quot;, &quot;Quant&quot;, &quot;Template2 Index&quot;&#xa;    }&#xa;)" type="code"/>
                                                         </Property>
                                                       </Properties>
+                                                      <AuxValues>
+                                                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        return false;  &#xa;    }}"/>
+                                                      </AuxValues>
                                                     </Component>
                                                   </SubComponents>
+                                                </Container>
+                                                <Container class="javax.swing.JPanel" name="jPanel5">
+
+                                                  <Layout>
+                                                    <DimensionLayout dim="0">
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <EmptySpace min="0" pref="383" max="32767" attributes="0"/>
+                                                      </Group>
+                                                    </DimensionLayout>
+                                                    <DimensionLayout dim="1">
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <EmptySpace min="0" pref="51" max="32767" attributes="0"/>
+                                                      </Group>
+                                                    </DimensionLayout>
+                                                  </Layout>
                                                 </Container>
                                               </SubComponents>
                                             </Container>
@@ -1424,14 +1425,19 @@
                                               <Layout>
                                                 <DimensionLayout dim="0">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jScrollPane2" alignment="1" pref="375" max="32767" attributes="0"/>
+                                                      <Group type="102" alignment="1" attributes="0">
+                                                          <EmptySpace max="-2" attributes="0"/>
+                                                          <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
+                                                      </Group>
+                                                      <Component id="jScrollPane2" alignment="1" pref="383" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                                 <DimensionLayout dim="1">
                                                   <Group type="103" groupAlignment="0" attributes="0">
                                                       <Group type="102" alignment="0" attributes="0">
-                                                          <EmptySpace min="-2" pref="136" max="-2" attributes="0"/>
-                                                          <Component id="jScrollPane2" pref="96" max="32767" attributes="0"/>
+                                                          <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
+                                                          <EmptySpace max="32767" attributes="0"/>
+                                                          <Component id="jScrollPane2" min="-2" pref="193" max="-2" attributes="0"/>
                                                       </Group>
                                                   </Group>
                                                 </DimensionLayout>
@@ -1446,17 +1452,30 @@
                                                   <SubComponents>
                                                     <Component class="javax.swing.JTable" name="jtTemplate2">
                                                       <Properties>
-                                                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                          <Table columnCount="4" rowCount="0">
-                                                            <Column editable="true" title="Template Index" type="java.lang.Object"/>
-                                                            <Column editable="true" title="x" type="java.lang.Object"/>
-                                                            <Column editable="true" title="y" type="java.lang.Object"/>
-                                                            <Column editable="true" title="i" type="java.lang.Object"/>
-                                                          </Table>
+                                                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                                                          <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;Template Index&quot;, &quot;x&quot;, &quot;y&quot;, &quot;i&quot;&#xa;    }&#xa;)" type="code"/>
                                                         </Property>
                                                       </Properties>
+                                                      <AuxValues>
+                                                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        return false;  &#xa;    }}"/>
+                                                      </AuxValues>
                                                     </Component>
                                                   </SubComponents>
+                                                </Container>
+                                                <Container class="javax.swing.JPanel" name="jPanel6">
+
+                                                  <Layout>
+                                                    <DimensionLayout dim="0">
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <EmptySpace min="0" pref="373" max="32767" attributes="0"/>
+                                                      </Group>
+                                                    </DimensionLayout>
+                                                    <DimensionLayout dim="1">
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <EmptySpace min="0" pref="52" max="32767" attributes="0"/>
+                                                      </Group>
+                                                    </DimensionLayout>
+                                                  </Layout>
                                                 </Container>
                                               </SubComponents>
                                             </Container>
@@ -1472,12 +1491,12 @@
                                               <Layout>
                                                 <DimensionLayout dim="0">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jScrollPane3" alignment="0" pref="375" max="32767" attributes="0"/>
+                                                      <Component id="jScrollPane3" alignment="0" pref="383" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                                 <DimensionLayout dim="1">
                                                   <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="jScrollPane3" alignment="0" pref="230" max="32767" attributes="0"/>
+                                                      <Component id="jScrollPane3" alignment="0" pref="251" max="32767" attributes="0"/>
                                                   </Group>
                                                 </DimensionLayout>
                                               </Layout>
@@ -1548,7 +1567,7 @@
                                           <Layout>
                                             <DimensionLayout dim="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <Component id="jdpTIC" alignment="0" pref="375" max="32767" attributes="0"/>
+                                                  <Component id="jdpTIC" alignment="0" pref="383" max="32767" attributes="0"/>
                                               </Group>
                                             </DimensionLayout>
                                             <DimensionLayout dim="1">
@@ -1589,7 +1608,7 @@
                                           <Layout>
                                             <DimensionLayout dim="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <EmptySpace min="0" pref="375" max="32767" attributes="0"/>
+                                                  <EmptySpace min="0" pref="383" max="32767" attributes="0"/>
                                               </Group>
                                             </DimensionLayout>
                                             <DimensionLayout dim="1">
@@ -1616,7 +1635,7 @@
                                           <Layout>
                                             <DimensionLayout dim="0">
                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                  <EmptySpace min="0" pref="375" max="32767" attributes="0"/>
+                                                  <EmptySpace min="0" pref="383" max="32767" attributes="0"/>
                                               </Group>
                                             </DimensionLayout>
                                             <DimensionLayout dim="1">
@@ -1646,12 +1665,12 @@
                       <Layout>
                         <DimensionLayout dim="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspProperties" alignment="0" pref="431" max="32767" attributes="0"/>
+                              <Component id="jspProperties" alignment="0" pref="438" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                         <DimensionLayout dim="1">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jspProperties" alignment="0" pref="637" max="32767" attributes="0"/>
+                              <Component id="jspProperties" alignment="0" pref="635" max="32767" attributes="0"/>
                           </Group>
                         </DimensionLayout>
                       </Layout>
@@ -1689,7 +1708,7 @@
                                       <Group type="102" alignment="0" attributes="0">
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jlProperties" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace pref="339" max="32767" attributes="0"/>
+                                          <EmptySpace pref="346" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                                 </DimensionLayout>
@@ -1737,12 +1756,12 @@
                               <Layout>
                                 <DimensionLayout dim="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jtpProperties" alignment="0" pref="429" max="32767" attributes="0"/>
+                                      <Component id="jtpProperties" alignment="0" pref="436" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                                 <DimensionLayout dim="1">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="jtpProperties" alignment="0" pref="609" max="32767" attributes="0"/>
+                                      <Component id="jtpProperties" alignment="0" pref="613" max="32767" attributes="0"/>
                                   </Group>
                                 </DimensionLayout>
                               </Layout>
@@ -1768,12 +1787,12 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzML" alignment="0" pref="424" max="32767" attributes="0"/>
+                                              <Component id="jspMzML" alignment="0" pref="431" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzML" alignment="0" pref="581" max="32767" attributes="0"/>
+                                              <Component id="jspMzML" alignment="0" pref="585" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
@@ -1783,10 +1802,7 @@
                                             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                                               <Color blue="ff" green="ff" red="ff" type="rgb"/>
                                             </Property>
-                                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                              <Border info="null"/>
-                                            </Property>
-                                            <Property name="dividerLocation" type="int" value="80"/>
+                                            <Property name="dividerLocation" type="int" value="100"/>
                                             <Property name="dividerSize" type="int" value="1"/>
                                             <Property name="orientation" type="int" value="0"/>
                                           </Properties>
@@ -1802,23 +1818,76 @@
 
                                               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                                               <SubComponents>
-                                                <Component class="javax.swing.JTextArea" name="jtaMzML">
-                                                  <Properties>
-                                                    <Property name="columns" type="int" value="20"/>
-                                                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                                                      <Font name="Tahoma" size="11" style="0"/>
-                                                    </Property>
-                                                    <Property name="rows" type="int" value="5"/>
-                                                  </Properties>
-                                                </Component>
+                                                <Container class="javax.swing.JPanel" name="jpMzMLViewHeader">
+
+                                                  <Layout>
+                                                    <DimensionLayout dim="0">
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <Group type="102" alignment="0" attributes="0">
+                                                              <EmptySpace max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                                  <Component id="jScrollPane4" alignment="0" pref="390" max="32767" attributes="0"/>
+                                                                  <Group type="102" alignment="0" attributes="0">
+                                                                      <Component id="jlFileNameMzML" min="-2" max="-2" attributes="0"/>
+                                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                                      <Component id="jlFileNameMzMLText" min="-2" pref="283" max="-2" attributes="0"/>
+                                                                  </Group>
+                                                              </Group>
+                                                              <EmptySpace max="-2" attributes="0"/>
+                                                          </Group>
+                                                      </Group>
+                                                    </DimensionLayout>
+                                                    <DimensionLayout dim="1">
+                                                      <Group type="103" groupAlignment="0" attributes="0">
+                                                          <Group type="102" alignment="0" attributes="0">
+                                                              <EmptySpace max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="3" attributes="0">
+                                                                  <Component id="jlFileNameMzML" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jlFileNameMzMLText" alignment="3" min="-2" pref="14" max="-2" attributes="0"/>
+                                                              </Group>
+                                                              <EmptySpace max="-2" attributes="0"/>
+                                                              <Component id="jScrollPane4" pref="58" max="32767" attributes="0"/>
+                                                              <EmptySpace max="-2" attributes="0"/>
+                                                          </Group>
+                                                      </Group>
+                                                    </DimensionLayout>
+                                                  </Layout>
+                                                  <SubComponents>
+                                                    <Component class="javax.swing.JLabel" name="jlFileNameMzML">
+                                                      <Properties>
+                                                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                                                          <Font name="Tahoma" size="11" style="1"/>
+                                                        </Property>
+                                                        <Property name="text" type="java.lang.String" value="File:"/>
+                                                      </Properties>
+                                                    </Component>
+                                                    <Component class="javax.swing.JLabel" name="jlFileNameMzMLText">
+                                                    </Component>
+                                                    <Container class="javax.swing.JScrollPane" name="jScrollPane4">
+                                                      <AuxValues>
+                                                        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                                                      </AuxValues>
+
+                                                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                                                      <SubComponents>
+                                                        <Component class="javax.swing.JTextArea" name="jtaMzMLView">
+                                                          <Properties>
+                                                            <Property name="columns" type="int" value="20"/>
+                                                            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                                                              <Font name="Monospaced" size="11" style="0"/>
+                                                            </Property>
+                                                            <Property name="rows" type="int" value="5"/>
+                                                          </Properties>
+                                                        </Component>
+                                                      </SubComponents>
+                                                    </Container>
+                                                  </SubComponents>
+                                                </Container>
                                               </SubComponents>
                                             </Container>
                                             <Container class="javax.swing.JSplitPane" name="jspMzMLDetail">
                                               <Properties>
-                                                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                                  <Border info="null"/>
-                                                </Property>
-                                                <Property name="dividerLocation" type="int" value="40"/>
+                                                <Property name="dividerLocation" type="int" value="50"/>
                                                 <Property name="dividerSize" type="int" value="1"/>
                                                 <Property name="orientation" type="int" value="0"/>
                                               </Properties>
@@ -1844,17 +1913,8 @@
                                                   <SubComponents>
                                                     <Component class="javax.swing.JTable" name="jtMzML">
                                                       <Properties>
-                                                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                          <Table columnCount="8" rowCount="0">
-                                                            <Column editable="true" title="" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Index" type="java.lang.Object"/>
-                                                            <Column editable="true" title="ID" type="java.lang.Object"/>
-                                                            <Column editable="true" title="MS" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Base peak m/z" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Base peak int" type="java.lang.Object"/>
-                                                            <Column editable="true" title="RT (sec)" type="java.lang.Object"/>
-                                                            <Column editable="true" title="RT (min)" type="java.lang.Object"/>
-                                                          </Table>
+                                                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                                                          <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;&quot;, &quot;Index&quot;, &quot;ID&quot;, &quot;MS&quot;, &quot;Base peak m/z&quot;, &quot;Base peak int&quot;, &quot;RT (sec)&quot;, &quot;RT (min)&quot;&#xa;    }&#xa;)" type="code"/>
                                                         </Property>
                                                         <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
                                                           <JTableSelectionModel selectionMode="0"/>
@@ -1863,6 +1923,9 @@
                                                       <Events>
                                                         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtMzMLMouseClicked"/>
                                                       </Events>
+                                                      <AuxValues>
+                                                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        return false;  &#xa;    }}"/>
+                                                      </AuxValues>
                                                     </Component>
                                                   </SubComponents>
                                                 </Container>
@@ -1883,18 +1946,18 @@
                                                   <Layout>
                                                     <DimensionLayout dim="0">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Group type="102" alignment="0" attributes="0">
+                                                          <Group type="102" attributes="0">
                                                               <EmptySpace max="-2" attributes="0"/>
                                                               <Component id="jlSearchMzML" min="-2" max="-2" attributes="0"/>
                                                               <EmptySpace type="separate" max="-2" attributes="0"/>
                                                               <Component id="jlScan" min="-2" max="-2" attributes="0"/>
-                                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                              <EmptySpace type="separate" max="-2" attributes="0"/>
                                                               <Component id="jtScan" min="-2" pref="62" max="-2" attributes="0"/>
-                                                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                                              <EmptySpace type="separate" max="-2" attributes="0"/>
                                                               <Component id="jlRT" min="-2" max="-2" attributes="0"/>
                                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                               <Component id="jtRT" min="-2" pref="62" max="-2" attributes="0"/>
-                                                              <EmptySpace pref="86" max="32767" attributes="0"/>
+                                                              <EmptySpace pref="81" max="32767" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                     </DimensionLayout>
@@ -1902,14 +1965,14 @@
                                                       <Group type="103" groupAlignment="0" attributes="0">
                                                           <Group type="102" alignment="0" attributes="0">
                                                               <EmptySpace max="-2" attributes="0"/>
-                                                              <Group type="103" groupAlignment="2" attributes="0">
-                                                                  <Component id="jlSearchMzML" alignment="2" min="-2" max="-2" attributes="0"/>
-                                                                  <Component id="jlScan" alignment="2" min="-2" max="-2" attributes="0"/>
-                                                                  <Component id="jtScan" alignment="2" min="-2" max="-2" attributes="0"/>
-                                                                  <Component id="jlRT" alignment="2" min="-2" max="-2" attributes="0"/>
-                                                                  <Component id="jtRT" alignment="2" min="-2" max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="3" attributes="0">
+                                                                  <Component id="jlSearchMzML" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jlScan" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jtScan" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jlRT" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jtRT" alignment="3" min="-2" max="-2" attributes="0"/>
                                                               </Group>
-                                                              <EmptySpace max="32767" attributes="0"/>
+                                                              <EmptySpace pref="14" max="32767" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                     </DimensionLayout>
@@ -1921,6 +1984,9 @@
                                                       </Properties>
                                                     </Component>
                                                     <Component class="javax.swing.JTextField" name="jtScan">
+                                                      <Properties>
+                                                        <Property name="toolTipText" type="java.lang.String" value="Enter the scan index"/>
+                                                      </Properties>
                                                       <Events>
                                                         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtScanKeyPressed"/>
                                                       </Events>
@@ -1931,6 +1997,9 @@
                                                       </Properties>
                                                     </Component>
                                                     <Component class="javax.swing.JTextField" name="jtRT">
+                                                      <Properties>
+                                                        <Property name="toolTipText" type="java.lang.String" value="Enter a retention time value (in seconds)"/>
+                                                      </Properties>
                                                       <Events>
                                                         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtRTKeyPressed"/>
                                                       </Events>
@@ -1963,21 +2032,18 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMGF" alignment="0" pref="424" max="32767" attributes="0"/>
+                                              <Component id="jspMGF" alignment="0" pref="431" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMGF" alignment="0" pref="581" max="32767" attributes="0"/>
+                                              <Component id="jspMGF" alignment="0" pref="585" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
                                       <SubComponents>
                                         <Container class="javax.swing.JSplitPane" name="jspMGF">
                                           <Properties>
-                                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                              <Border info="null"/>
-                                            </Property>
                                             <Property name="dividerLocation" type="int" value="80"/>
                                             <Property name="dividerSize" type="int" value="1"/>
                                             <Property name="orientation" type="int" value="0"/>
@@ -2010,9 +2076,6 @@
                                             </Container>
                                             <Container class="javax.swing.JSplitPane" name="jspMGFDetail">
                                               <Properties>
-                                                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                                  <Border info="null"/>
-                                                </Property>
                                                 <Property name="dividerLocation" type="int" value="50"/>
                                                 <Property name="dividerSize" type="int" value="1"/>
                                                 <Property name="orientation" type="int" value="0"/>
@@ -2042,7 +2105,7 @@
                                                               <Component id="jlScanTitle" min="-2" max="-2" attributes="0"/>
                                                               <EmptySpace type="separate" max="-2" attributes="0"/>
                                                               <Component id="jtScanTitle" min="-2" pref="218" max="-2" attributes="0"/>
-                                                              <EmptySpace pref="70" max="32767" attributes="0"/>
+                                                              <EmptySpace pref="73" max="32767" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                     </DimensionLayout>
@@ -2075,6 +2138,9 @@
                                                       </Properties>
                                                     </Component>
                                                     <Component class="javax.swing.JTextField" name="jtScanTitle">
+                                                      <Properties>
+                                                        <Property name="toolTipText" type="java.lang.String" value="Enter the scan title"/>
+                                                      </Properties>
                                                       <Events>
                                                         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtScanTitleKeyPressed"/>
                                                       </Events>
@@ -2095,19 +2161,16 @@
                                                   <SubComponents>
                                                     <Component class="javax.swing.JTable" name="jtMGF">
                                                       <Properties>
-                                                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                          <Table columnCount="5" rowCount="0">
-                                                            <Column editable="true" title="Index" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Scan Title" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Peptide Mass" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Charge" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Reference Line" type="java.lang.Object"/>
-                                                          </Table>
+                                                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                                                          <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;Index&quot;, &quot;Scan Title&quot;, &quot;Peptide Mass&quot;, &quot;Charge&quot;, &quot;Reference Line&quot;&#xa;    }&#xa;)" type="code"/>
                                                         </Property>
                                                       </Properties>
                                                       <Events>
                                                         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jtMGFMouseClicked"/>
                                                       </Events>
+                                                      <AuxValues>
+                                                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        return false;  &#xa;    }}"/>
+                                                      </AuxValues>
                                                     </Component>
                                                   </SubComponents>
                                                 </Container>
@@ -2129,22 +2192,19 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzId" alignment="0" pref="424" max="32767" attributes="0"/>
+                                              <Component id="jspMzId" alignment="0" pref="431" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzId" alignment="1" pref="581" max="32767" attributes="0"/>
+                                              <Component id="jspMzId" alignment="1" pref="585" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
                                       <SubComponents>
                                         <Container class="javax.swing.JSplitPane" name="jspMzId">
                                           <Properties>
-                                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                              <Border info="null"/>
-                                            </Property>
-                                            <Property name="dividerLocation" type="int" value="80"/>
+                                            <Property name="dividerLocation" type="int" value="100"/>
                                             <Property name="dividerSize" type="int" value="1"/>
                                             <Property name="orientation" type="int" value="0"/>
                                           </Properties>
@@ -2153,9 +2213,6 @@
                                           <SubComponents>
                                             <Container class="javax.swing.JSplitPane" name="jspMzIdDetail">
                                               <Properties>
-                                                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                                  <Border info="null"/>
-                                                </Property>
                                                 <Property name="dividerLocation" type="int" value="50"/>
                                                 <Property name="dividerSize" type="int" value="1"/>
                                                 <Property name="orientation" type="int" value="0"/>
@@ -2189,7 +2246,7 @@
                                                               <Component id="jlPeptideMzId" min="-2" max="-2" attributes="0"/>
                                                               <EmptySpace max="-2" attributes="0"/>
                                                               <Component id="jtPeptideMzId" min="-2" pref="158" max="-2" attributes="0"/>
-                                                              <EmptySpace pref="23" max="32767" attributes="0"/>
+                                                              <EmptySpace pref="26" max="32767" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                     </DimensionLayout>
@@ -2224,6 +2281,9 @@
                                                       </Properties>
                                                     </Component>
                                                     <Component class="javax.swing.JTextField" name="jtProteinMzId">
+                                                      <Properties>
+                                                        <Property name="toolTipText" type="java.lang.String" value="Enter protein"/>
+                                                      </Properties>
                                                       <Events>
                                                         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtProteinMzIdKeyPressed"/>
                                                       </Events>
@@ -2234,6 +2294,9 @@
                                                       </Properties>
                                                     </Component>
                                                     <Component class="javax.swing.JTextField" name="jtPeptideMzId">
+                                                      <Properties>
+                                                        <Property name="toolTipText" type="java.lang.String" value="Enter peptide sequence"/>
+                                                      </Properties>
                                                       <Events>
                                                         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="jtPeptideMzIdKeyPressed"/>
                                                       </Events>
@@ -2254,43 +2317,86 @@
                                                   <SubComponents>
                                                     <Component class="javax.swing.JTable" name="jtMzId">
                                                       <Properties>
-                                                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                          <Table columnCount="6" rowCount="0">
-                                                            <Column editable="true" title="Index" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Protein" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Peptide" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Rank" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Score" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Spectrum ID" type="java.lang.Object"/>
-                                                          </Table>
+                                                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                                                          <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new Object [] {&#xa;        &quot;Index&quot;, &quot;Protein&quot;, &quot;Peptide&quot;, &quot;Rank&quot;, &quot;Score&quot;, &quot;Spectrum ID&quot;&#xa;    }&#xa;)" type="code"/>
                                                         </Property>
                                                       </Properties>
+                                                      <AuxValues>
+                                                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        return false;&#xa;    }}"/>
+                                                      </AuxValues>
                                                     </Component>
                                                   </SubComponents>
                                                 </Container>
                                               </SubComponents>
                                             </Container>
-                                            <Container class="javax.swing.JScrollPane" name="jspMzIdHeader">
-                                              <AuxValues>
-                                                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                                              </AuxValues>
+                                            <Container class="javax.swing.JPanel" name="jpMzIdentMLViewHeader">
                                               <Constraints>
                                                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
                                                   <JSplitPaneConstraints position="left"/>
                                                 </Constraint>
                                               </Constraints>
 
-                                              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                                              <Layout>
+                                                <DimensionLayout dim="0">
+                                                  <Group type="103" groupAlignment="0" attributes="0">
+                                                      <Group type="102" alignment="0" attributes="0">
+                                                          <EmptySpace max="-2" attributes="0"/>
+                                                          <Group type="103" groupAlignment="0" attributes="0">
+                                                              <Component id="jScrollPane5" alignment="0" pref="409" max="32767" attributes="0"/>
+                                                              <Group type="102" alignment="0" attributes="0">
+                                                                  <Component id="jlFileNameMzID" min="-2" max="-2" attributes="0"/>
+                                                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                                  <Component id="jlFileNameMzIDText" min="-2" pref="308" max="-2" attributes="0"/>
+                                                              </Group>
+                                                          </Group>
+                                                          <EmptySpace max="-2" attributes="0"/>
+                                                      </Group>
+                                                  </Group>
+                                                </DimensionLayout>
+                                                <DimensionLayout dim="1">
+                                                  <Group type="103" groupAlignment="0" attributes="0">
+                                                      <Group type="102" alignment="0" attributes="0">
+                                                          <EmptySpace max="-2" attributes="0"/>
+                                                          <Group type="103" groupAlignment="3" attributes="0">
+                                                              <Component id="jlFileNameMzID" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                              <Component id="jlFileNameMzIDText" alignment="3" min="-2" pref="14" max="-2" attributes="0"/>
+                                                          </Group>
+                                                          <EmptySpace max="-2" attributes="0"/>
+                                                          <Component id="jScrollPane5" min="-2" pref="61" max="-2" attributes="0"/>
+                                                          <EmptySpace max="32767" attributes="0"/>
+                                                      </Group>
+                                                  </Group>
+                                                </DimensionLayout>
+                                              </Layout>
                                               <SubComponents>
-                                                <Component class="javax.swing.JTextArea" name="jtaMzIdView">
+                                                <Component class="javax.swing.JLabel" name="jlFileNameMzID">
                                                   <Properties>
-                                                    <Property name="columns" type="int" value="20"/>
                                                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                                                      <Font name="Tahoma" size="11" style="0"/>
+                                                      <Font name="Tahoma" size="11" style="1"/>
                                                     </Property>
-                                                    <Property name="rows" type="int" value="5"/>
+                                                    <Property name="text" type="java.lang.String" value="File:"/>
                                                   </Properties>
                                                 </Component>
+                                                <Component class="javax.swing.JLabel" name="jlFileNameMzIDText">
+                                                </Component>
+                                                <Container class="javax.swing.JScrollPane" name="jScrollPane5">
+                                                  <AuxValues>
+                                                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                                                  </AuxValues>
+
+                                                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                                                  <SubComponents>
+                                                    <Component class="javax.swing.JTextArea" name="jtaMzIDView">
+                                                      <Properties>
+                                                        <Property name="columns" type="int" value="20"/>
+                                                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                                                          <Font name="Monospaced" size="11" style="0"/>
+                                                        </Property>
+                                                        <Property name="rows" type="int" value="5"/>
+                                                      </Properties>
+                                                    </Component>
+                                                  </SubComponents>
+                                                </Container>
                                               </SubComponents>
                                             </Container>
                                           </SubComponents>
@@ -2309,21 +2415,18 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMascotXML" alignment="0" pref="424" max="32767" attributes="0"/>
+                                              <Component id="jspMascotXML" alignment="0" pref="431" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMascotXML" alignment="0" pref="581" max="32767" attributes="0"/>
+                                              <Component id="jspMascotXML" alignment="0" pref="585" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
                                       <SubComponents>
                                         <Container class="javax.swing.JSplitPane" name="jspMascotXML">
                                           <Properties>
-                                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                              <Border info="null"/>
-                                            </Property>
                                             <Property name="dividerLocation" type="int" value="80"/>
                                             <Property name="dividerSize" type="int" value="1"/>
                                             <Property name="orientation" type="int" value="0"/>
@@ -2356,9 +2459,6 @@
                                             </Container>
                                             <Container class="javax.swing.JSplitPane" name="jspMascotXMLSubDetail">
                                               <Properties>
-                                                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                                  <Border info="null"/>
-                                                </Property>
                                                 <Property name="dividerLocation" type="int" value="80"/>
                                                 <Property name="dividerSize" type="int" value="1"/>
                                                 <Property name="orientation" type="int" value="0"/>
@@ -2385,22 +2485,13 @@
                                                   <SubComponents>
                                                     <Component class="javax.swing.JTable" name="jtMascotXMLView">
                                                       <Properties>
-                                                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                          <Table columnCount="11" rowCount="0">
-                                                            <Column editable="true" title="Index" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Protein" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Peptide" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Composition" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Exp Mz" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Exp Mr" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Charge" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Score" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Scan" type="java.lang.Object"/>
-                                                            <Column editable="true" title="Scan ID" type="java.lang.Object"/>
-                                                            <Column editable="true" title="RT (sec)" type="java.lang.Object"/>
-                                                          </Table>
+                                                        <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                                                          <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;Index&quot;, &quot;Protein&quot;, &quot;Peptide&quot;, &quot;Composition&quot;, &quot;Exp Mz&quot;, &quot;Exp Mr&quot;, &quot;Charge&quot;, &quot;Score&quot;, &quot;Scan&quot;, &quot;Scan ID&quot;, &quot;RT (sec)&quot;&#xa;    }&#xa;)" type="code"/>
                                                         </Property>
                                                       </Properties>
+                                                      <AuxValues>
+                                                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        return false;  &#xa;    }}"/>
+                                                      </AuxValues>
                                                     </Component>
                                                   </SubComponents>
                                                 </Container>
@@ -2426,7 +2517,7 @@
                                                                       <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                                                                       <Component id="jlPeptide" min="-2" max="-2" attributes="0"/>
                                                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                                                      <Component id="jtPeptide" pref="174" max="32767" attributes="0"/>
+                                                                      <Component id="jtPeptide" pref="177" max="32767" attributes="0"/>
                                                                   </Group>
                                                                   <Component id="jbShowIsotopeDistrib" alignment="0" min="-2" max="-2" attributes="0"/>
                                                               </Group>
@@ -2509,51 +2600,25 @@
                                       <Layout>
                                         <DimensionLayout dim="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzQuantML" alignment="0" pref="424" max="32767" attributes="0"/>
+                                              <Component id="jspMzQuantML" alignment="0" pref="431" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                         <DimensionLayout dim="1">
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="jspMzQuantML" alignment="0" pref="581" max="32767" attributes="0"/>
+                                              <Component id="jspMzQuantML" alignment="0" pref="585" max="32767" attributes="0"/>
                                           </Group>
                                         </DimensionLayout>
                                       </Layout>
                                       <SubComponents>
                                         <Container class="javax.swing.JSplitPane" name="jspMzQuantML">
                                           <Properties>
-                                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                              <Border info="null"/>
-                                            </Property>
-                                            <Property name="dividerLocation" type="int" value="40"/>
+                                            <Property name="dividerLocation" type="int" value="100"/>
                                             <Property name="dividerSize" type="int" value="1"/>
                                             <Property name="orientation" type="int" value="0"/>
                                           </Properties>
 
                                           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout"/>
                                           <SubComponents>
-                                            <Container class="javax.swing.JScrollPane" name="jspMzQuantMLHeader">
-                                              <AuxValues>
-                                                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-                                              </AuxValues>
-                                              <Constraints>
-                                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
-                                                  <JSplitPaneConstraints position="top"/>
-                                                </Constraint>
-                                              </Constraints>
-
-                                              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-                                              <SubComponents>
-                                                <Component class="javax.swing.JTextArea" name="jtaMzQuantML">
-                                                  <Properties>
-                                                    <Property name="columns" type="int" value="20"/>
-                                                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                                                      <Font name="Tahoma" size="11" style="0"/>
-                                                    </Property>
-                                                    <Property name="rows" type="int" value="5"/>
-                                                  </Properties>
-                                                </Component>
-                                              </SubComponents>
-                                            </Container>
                                             <Container class="javax.swing.JTabbedPane" name="jtpMzQuantMLDetail">
                                               <Constraints>
                                                 <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
@@ -2575,21 +2640,18 @@
                                                   <Layout>
                                                     <DimensionLayout dim="0">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jspPeptideQuant" alignment="0" pref="419" max="32767" attributes="0"/>
+                                                          <Component id="jspPeptideQuant" alignment="0" pref="424" max="32767" attributes="0"/>
                                                       </Group>
                                                     </DimensionLayout>
                                                     <DimensionLayout dim="1">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jspPeptideQuant" alignment="0" pref="513" max="32767" attributes="0"/>
+                                                          <Component id="jspPeptideQuant" alignment="0" pref="455" max="32767" attributes="0"/>
                                                       </Group>
                                                     </DimensionLayout>
                                                   </Layout>
                                                   <SubComponents>
                                                     <Container class="javax.swing.JSplitPane" name="jspPeptideQuant">
                                                       <Properties>
-                                                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                                          <Border info="null"/>
-                                                        </Property>
                                                         <Property name="dividerLocation" type="int" value="40"/>
                                                         <Property name="dividerSize" type="int" value="1"/>
                                                         <Property name="orientation" type="int" value="0"/>
@@ -2607,7 +2669,7 @@
                                                           <Layout>
                                                             <DimensionLayout dim="0">
                                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                                  <EmptySpace min="0" pref="419" max="32767" attributes="0"/>
+                                                                  <EmptySpace min="0" pref="422" max="32767" attributes="0"/>
                                                               </Group>
                                                             </DimensionLayout>
                                                             <DimensionLayout dim="1">
@@ -2631,16 +2693,13 @@
                                                           <SubComponents>
                                                             <Component class="javax.swing.JTable" name="jtPeptideQuant">
                                                               <Properties>
-                                                                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                                  <Table columnCount="5" rowCount="0">
-                                                                    <Column editable="true" title="Peptide" type="java.lang.Object"/>
-                                                                    <Column editable="true" title="Label 1" type="java.lang.Object"/>
-                                                                    <Column editable="true" title="Label 2" type="java.lang.Object"/>
-                                                                    <Column editable="true" title="Label 3" type="java.lang.Object"/>
-                                                                    <Column editable="true" title="Label 4" type="java.lang.Object"/>
-                                                                  </Table>
+                                                                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                                                                  <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;Peptide&quot;, &quot;Label 1&quot;, &quot;Label 2&quot;, &quot;Label 3&quot;, &quot;Label 4&quot;&#xa;    }&#xa;)" type="code"/>
                                                                 </Property>
                                                               </Properties>
+                                                              <AuxValues>
+                                                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        return false;  &#xa;    }}"/>
+                                                              </AuxValues>
                                                             </Component>
                                                           </SubComponents>
                                                         </Container>
@@ -2660,21 +2719,18 @@
                                                   <Layout>
                                                     <DimensionLayout dim="0">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jspProteinQuant" alignment="0" pref="419" max="32767" attributes="0"/>
+                                                          <Component id="jspProteinQuant" alignment="0" pref="424" max="32767" attributes="0"/>
                                                       </Group>
                                                     </DimensionLayout>
                                                     <DimensionLayout dim="1">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jspProteinQuant" alignment="0" pref="513" max="32767" attributes="0"/>
+                                                          <Component id="jspProteinQuant" alignment="0" pref="455" max="32767" attributes="0"/>
                                                       </Group>
                                                     </DimensionLayout>
                                                   </Layout>
                                                   <SubComponents>
                                                     <Container class="javax.swing.JSplitPane" name="jspProteinQuant">
                                                       <Properties>
-                                                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                                          <Border info="null"/>
-                                                        </Property>
                                                         <Property name="dividerLocation" type="int" value="40"/>
                                                         <Property name="dividerSize" type="int" value="1"/>
                                                         <Property name="orientation" type="int" value="0"/>
@@ -2692,7 +2748,7 @@
                                                           <Layout>
                                                             <DimensionLayout dim="0">
                                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                                  <EmptySpace min="0" pref="419" max="32767" attributes="0"/>
+                                                                  <EmptySpace min="0" pref="422" max="32767" attributes="0"/>
                                                               </Group>
                                                             </DimensionLayout>
                                                             <DimensionLayout dim="1">
@@ -2716,16 +2772,13 @@
                                                           <SubComponents>
                                                             <Component class="javax.swing.JTable" name="jtProteinQuant">
                                                               <Properties>
-                                                                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                                  <Table columnCount="5" rowCount="0">
-                                                                    <Column editable="true" title="Protein" type="java.lang.Object"/>
-                                                                    <Column editable="true" title="Label 1" type="java.lang.Object"/>
-                                                                    <Column editable="true" title="Label 2" type="java.lang.Object"/>
-                                                                    <Column editable="true" title="Label 3" type="java.lang.Object"/>
-                                                                    <Column editable="true" title="Label 4" type="java.lang.Object"/>
-                                                                  </Table>
+                                                                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                                                                  <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;Protein&quot;, &quot;Label 1&quot;, &quot;Label 2&quot;, &quot;Label 3&quot;, &quot;Label 4&quot;&#xa;    }&#xa;)" type="code"/>
                                                                 </Property>
                                                               </Properties>
+                                                              <AuxValues>
+                                                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        return false;  &#xa;    }}"/>
+                                                              </AuxValues>
                                                             </Component>
                                                           </SubComponents>
                                                         </Container>
@@ -2745,21 +2798,18 @@
                                                   <Layout>
                                                     <DimensionLayout dim="0">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jspFeatureQuant" alignment="1" pref="419" max="32767" attributes="0"/>
+                                                          <Component id="jspFeatureQuant" alignment="1" pref="424" max="32767" attributes="0"/>
                                                       </Group>
                                                     </DimensionLayout>
                                                     <DimensionLayout dim="1">
                                                       <Group type="103" groupAlignment="0" attributes="0">
-                                                          <Component id="jspFeatureQuant" alignment="0" pref="513" max="32767" attributes="0"/>
+                                                          <Component id="jspFeatureQuant" alignment="0" pref="455" max="32767" attributes="0"/>
                                                       </Group>
                                                     </DimensionLayout>
                                                   </Layout>
                                                   <SubComponents>
                                                     <Container class="javax.swing.JSplitPane" name="jspFeatureQuant">
                                                       <Properties>
-                                                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                                                          <Border info="null"/>
-                                                        </Property>
                                                         <Property name="dividerLocation" type="int" value="40"/>
                                                         <Property name="dividerSize" type="int" value="1"/>
                                                         <Property name="orientation" type="int" value="0"/>
@@ -2777,7 +2827,7 @@
                                                           <Layout>
                                                             <DimensionLayout dim="0">
                                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                                  <EmptySpace min="0" pref="419" max="32767" attributes="0"/>
+                                                                  <EmptySpace min="0" pref="422" max="32767" attributes="0"/>
                                                               </Group>
                                                             </DimensionLayout>
                                                             <DimensionLayout dim="1">
@@ -2801,21 +2851,85 @@
                                                           <SubComponents>
                                                             <Component class="javax.swing.JTable" name="jtFeatureQuant">
                                                               <Properties>
-                                                                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                                                                  <Table columnCount="5" rowCount="0">
-                                                                    <Column editable="true" title="Feature" type="java.lang.Object"/>
-                                                                    <Column editable="true" title="Label 1" type="java.lang.Object"/>
-                                                                    <Column editable="true" title="Label 2" type="java.lang.Object"/>
-                                                                    <Column editable="true" title="Label 3" type="java.lang.Object"/>
-                                                                    <Column editable="true" title="Label 4" type="java.lang.Object"/>
-                                                                  </Table>
+                                                                <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                                                                  <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;Feature&quot;, &quot;Label 1&quot;, &quot;Label 2&quot;, &quot;Label 3&quot;, &quot;Label 4&quot;&#xa;    }&#xa;)" type="code"/>
                                                                 </Property>
                                                               </Properties>
+                                                              <AuxValues>
+                                                                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        return false;  &#xa;    }}"/>
+                                                              </AuxValues>
                                                             </Component>
                                                           </SubComponents>
                                                         </Container>
                                                       </SubComponents>
                                                     </Container>
+                                                  </SubComponents>
+                                                </Container>
+                                              </SubComponents>
+                                            </Container>
+                                            <Container class="javax.swing.JPanel" name="jpMzQuantMLHeader">
+                                              <Constraints>
+                                                <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
+                                                  <JSplitPaneConstraints position="left"/>
+                                                </Constraint>
+                                              </Constraints>
+
+                                              <Layout>
+                                                <DimensionLayout dim="0">
+                                                  <Group type="103" groupAlignment="0" attributes="0">
+                                                      <Group type="102" alignment="0" attributes="0">
+                                                          <EmptySpace max="-2" attributes="0"/>
+                                                          <Group type="103" groupAlignment="0" attributes="0">
+                                                              <Component id="jScrollPane6" alignment="0" pref="409" max="32767" attributes="0"/>
+                                                              <Group type="102" alignment="0" attributes="0">
+                                                                  <Component id="jlFileNameMzQ" min="-2" max="-2" attributes="0"/>
+                                                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                                  <Component id="jlFileNameMzQText" min="-2" pref="265" max="-2" attributes="0"/>
+                                                              </Group>
+                                                          </Group>
+                                                          <EmptySpace max="-2" attributes="0"/>
+                                                      </Group>
+                                                  </Group>
+                                                </DimensionLayout>
+                                                <DimensionLayout dim="1">
+                                                  <Group type="103" groupAlignment="0" attributes="0">
+                                                      <Group type="102" alignment="0" attributes="0">
+                                                          <EmptySpace max="-2" attributes="0"/>
+                                                          <Group type="103" groupAlignment="3" attributes="0">
+                                                              <Component id="jlFileNameMzQ" alignment="3" min="-2" max="-2" attributes="0"/>
+                                                              <Component id="jlFileNameMzQText" alignment="3" min="-2" pref="14" max="-2" attributes="0"/>
+                                                          </Group>
+                                                          <EmptySpace max="-2" attributes="0"/>
+                                                          <Component id="jScrollPane6" min="-2" pref="61" max="-2" attributes="0"/>
+                                                          <EmptySpace max="32767" attributes="0"/>
+                                                      </Group>
+                                                  </Group>
+                                                </DimensionLayout>
+                                              </Layout>
+                                              <SubComponents>
+                                                <Component class="javax.swing.JLabel" name="jlFileNameMzQ">
+                                                  <Properties>
+                                                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                                                      <Font name="Tahoma" size="11" style="1"/>
+                                                    </Property>
+                                                    <Property name="text" type="java.lang.String" value="File:"/>
+                                                  </Properties>
+                                                </Component>
+                                                <Component class="javax.swing.JLabel" name="jlFileNameMzQText">
+                                                </Component>
+                                                <Container class="javax.swing.JScrollPane" name="jScrollPane6">
+                                                  <AuxValues>
+                                                    <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+                                                  </AuxValues>
+
+                                                  <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                                                  <SubComponents>
+                                                    <Component class="javax.swing.JTextArea" name="jtaMzQView">
+                                                      <Properties>
+                                                        <Property name="columns" type="int" value="20"/>
+                                                        <Property name="rows" type="int" value="5"/>
+                                                      </Properties>
+                                                    </Component>
                                                   </SubComponents>
                                                 </Container>
                                               </SubComponents>
@@ -2883,7 +2997,7 @@
                   <Component id="jcbOutputFormat" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jlQuantFilesStatus" min="-2" pref="43" max="-2" attributes="0"/>
-                  <EmptySpace pref="353" max="32767" attributes="0"/>
+                  <EmptySpace pref="355" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -2965,12 +3079,13 @@
         <Component class="javax.swing.JComboBox" name="jcbTechnique">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="5">
+              <StringArray count="6">
                 <StringItem index="0" value="Select technique"/>
                 <StringItem index="1" value="SILAC"/>
                 <StringItem index="2" value="iTRAQ"/>
                 <StringItem index="3" value="15N"/>
                 <StringItem index="4" value="Label free"/>
+                <StringItem index="5" value="emPAI"/>
               </StringArray>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Select a technique for the analysis"/>
