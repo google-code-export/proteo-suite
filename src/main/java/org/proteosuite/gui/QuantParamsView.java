@@ -17,6 +17,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
@@ -42,10 +43,10 @@ import org.xml.sax.SAXException;
 public class QuantParamsView extends javax.swing.JPanel {
 
     //... Class constructor ...//
-    public QuantParamsView() {
+    public QuantParamsView(ArrayList alRawFiles) {
         //... Initialising components and values ...//        
         initComponents();
-        initValues();
+        initValues(alRawFiles);
         jtpTechniques.setEnabledAt(0, false);
         jtpTechniques.setSelectedIndex(1);
     }
@@ -261,14 +262,14 @@ public class QuantParamsView extends javax.swing.JPanel {
 
         jlIntegrationMethod.setText("Integration Method:");
 
-        jcbIntegrationMethod.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "SumIntensities" }));
+        jcbIntegrationMethod.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "SumIntensities", "Area", "Highest" }));
 
         jtiTRAQParams.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Study Variable", "Label ID", "Label Name", "Value", "-2", "-1", "+1", "+2"
+                "Raw File", "Study Variable", "Label ID", "Label Name", "Value", "-2", "-1", "+1", "+2"
             }
         ));
         jScrollPane2.setViewportView(jtiTRAQParams);
@@ -415,13 +416,12 @@ public class QuantParamsView extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
     //... Initialise default settings using the config.xml file ...//
-    private void initValues()
+    private void initValues(ArrayList alRawFiles)
     {
         //... Validate if config file exists ...//
         boolean exists = (new File("configQuant.xml")).exists();
-        if (exists)
-        {
-            readConfigFile();
+        if (exists){
+            readConfigFile(alRawFiles);
         }
         else
         {
@@ -433,11 +433,12 @@ public class QuantParamsView extends javax.swing.JPanel {
         }
     }
     //... Read configuration settings ...//
-    private void readConfigFile()
+    private void readConfigFile(ArrayList alRawFiles)
     {          
         //... Fill JTable ...//
         final DefaultTableModel model = new DefaultTableModel();
         jtiTRAQParams.setModel(model);
+        model.addColumn("Raw File");
         model.addColumn("Study Variable");
         model.addColumn("Label ID");        
         model.addColumn("Label Name");
@@ -454,6 +455,7 @@ public class QuantParamsView extends javax.swing.JPanel {
             DocumentBuilder builder = domFactory.newDocumentBuilder();
             Document doc = builder.parse("configQuant.xml");
             XPath xpath = XPathFactory.newInstance().newXPath();
+            System.out.println("Reading configQuant files ...");
             
             //... Reading mzRanges (min and max) ...//
             XPathExpression expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/mzRange/minus");
@@ -461,70 +463,194 @@ public class QuantParamsView extends javax.swing.JPanel {
             for (int iI = 0; iI < nodes.getLength(); iI++) {
                 jtiTraqMinMz.setText(nodes.item(iI).getTextContent());
             }
+            System.out.println("Reading mzRanges ...");
             expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/mzRange/plus");
             nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             for (int iI = 0; iI < nodes.getLength(); iI++) {
                 jtiTraqMaxMz.setText(nodes.item(iI).getTextContent());
             }
+            System.out.println("Reading SeachScore ...");
             expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/SearchScore");
             nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             for (int iI = 0; iI < nodes.getLength(); iI++) {
                 jtSearchScore.setText(nodes.item(iI).getTextContent());
-            }            
-            
-            //... Assay Parameters (Labels) ...//
-            expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/AssayParam");
-            nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-            
-            String StudyVariable="", sAssayID="", sAssayName = "", sMzValue="";
-            String[] sCorrFactors = new String[4];            
-            for (int iI = 0; iI < nodes.getLength(); iI++) {
-                Node node = nodes.item(iI);
-                if (node.getNodeType() == Node.ELEMENT_NODE)
-                {
-                    Element element = (Element) node;
-                    NodeList nodelist = element.getElementsByTagName("StudyVariable");
-                    Element element1 = (Element) nodelist.item(0);
-                    NodeList fstNm = element1.getChildNodes();
-                    StudyVariable = fstNm.item(0).getNodeValue();
-                    
-                    Element element8 = (Element) node;
-                    NodeList nodelist4 = element8.getElementsByTagName("AssayID");
-                    Element element9 = (Element) nodelist4.item(0);
-                    NodeList fstNm4 = element9.getChildNodes();
-                    sAssayID = fstNm4.item(0).getNodeValue();
-                    
-                    Element element2 = (Element) node;
-                    NodeList nodelist1 = element2.getElementsByTagName("AssayName");
-                    Element element3 = (Element) nodelist1.item(0);
-                    NodeList fstNm1 = element3.getChildNodes();
-                    sAssayName = fstNm1.item(0).getNodeValue();
-                    
-                    Element element4 = (Element) node;
-                    NodeList nodelist2 = element4.getElementsByTagName("mzValue");
-                    Element element5 = (Element) nodelist2.item(0);
-                    NodeList fstNm2 = element5.getChildNodes();
-                    sMzValue = fstNm2.item(0).getNodeValue();
-                    
-                    Element element6 = (Element) node;
-                    NodeList nodelist3 = element6.getElementsByTagName("factor");
-                    for (int iJ = 0; iJ < nodelist3.getLength(); iJ++)
-                    {
-                        Element element7 = (Element) nodelist3.item(iJ);
-                        NodeList fstNm3 = element7.getChildNodes();
-                        sCorrFactors[iJ] = fstNm3.item(0).getNodeValue();
-                    }
-                    model.insertRow(model.getRowCount(), new Object[]{StudyVariable, 
-                                                                  sAssayID,
-                                                                  sAssayName, 
-                                                                  sMzValue, 
-                                                                  sCorrFactors[0],
-                                                                  sCorrFactors[1],
-                                                                  sCorrFactors[2],
-                                                                  sCorrFactors[3]
-                    });
-                }
             }
+
+            //... Check if all raw files have been set up ...//
+            System.out.println("Reading raw files ...");
+            if (alRawFiles.size()<=0){
+                JOptionPane.showMessageDialog(null, "In order to fill the iTRAQ/TMT labels, please select a raw file in the main window.", "Information", JOptionPane.INFORMATION_MESSAGE);
+            }
+            else{
+                for(Object obj:alRawFiles){
+                    
+                    System.out.println("Checking file ... "+obj.toString());
+                    expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='" + obj.toString()  + "']");
+                    nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+                    System.out.println("Nodes..."+nodes.getLength());
+                    if (nodes.getLength()<=0){
+                        //... Insert new record based on the default iTRAQ settings ...//
+
+                        //... Assay Parameters (Labels) ...//
+                        expr = xpath.compile("/ProteoSuiteApplication/configSettings/defaultParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='default']/AssayParam");
+                        nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+                        System.out.println("Nodes in default parameters settings ..."+nodes.getLength());
+
+                        String sRawFile=obj.toString(), sStudyVariable="", sAssayID="", sAssayName = "", sMzValue="";
+                        String[] sCorrFactors = new String[4];
+
+                        for (int iI = 0; iI < nodes.getLength(); iI++) {
+                            Node node = nodes.item(iI);
+                            if (node.getNodeType() == Node.ELEMENT_NODE){
+
+                                Element element = (Element) node;
+                                NodeList nodelist = element.getElementsByTagName("StudyVariable");
+                                Element element1 = (Element) nodelist.item(0);
+                                NodeList fstNm = element1.getChildNodes();                    
+                                if (fstNm.getLength()<=0){
+                                    sStudyVariable = "";
+                                }
+                                else{
+                                    sStudyVariable = fstNm.item(0).getNodeValue();
+                                }
+
+                                Element element8 = (Element) node;
+                                NodeList nodelist4 = element8.getElementsByTagName("AssayID");
+                                Element element9 = (Element) nodelist4.item(0);
+                                NodeList fstNm4 = element9.getChildNodes();
+                                if (fstNm4.getLength()<=0){
+                                    sAssayID = "";
+                                }
+                                else{
+                                    sAssayID = fstNm4.item(0).getNodeValue();
+                                }
+
+                                Element element2 = (Element) node;
+                                NodeList nodelist1 = element2.getElementsByTagName("AssayName");
+                                Element element3 = (Element) nodelist1.item(0);
+                                NodeList fstNm1 = element3.getChildNodes();                    
+                                if (fstNm1.getLength()<=0){
+                                    sAssayName = "";
+                                }
+                                else{
+                                    sAssayName = fstNm1.item(0).getNodeValue();
+                                }
+
+                                Element element4 = (Element) node;
+                                NodeList nodelist2 = element4.getElementsByTagName("mzValue");
+                                Element element5 = (Element) nodelist2.item(0);
+                                NodeList fstNm2 = element5.getChildNodes();                    
+                                if (fstNm2.getLength()<=0){
+                                    sMzValue = "";
+                                }
+                                else{
+                                    sMzValue = fstNm2.item(0).getNodeValue();
+                                }
+
+                                Element element6 = (Element) node;
+                                NodeList nodelist3 = element6.getElementsByTagName("factor");
+                                for (int iJ = 0; iJ < nodelist3.getLength(); iJ++){
+                                    Element element7 = (Element) nodelist3.item(iJ);
+                                    NodeList fstNm3 = element7.getChildNodes();
+                                    sCorrFactors[iJ] = fstNm3.item(0).getNodeValue();
+                                }
+                                model.insertRow(model.getRowCount(), new Object[]{
+                                                                              sRawFile,
+                                                                              sStudyVariable, 
+                                                                              sAssayID,
+                                                                              sAssayName, 
+                                                                              sMzValue, 
+                                                                              sCorrFactors[0],
+                                                                              sCorrFactors[1],
+                                                                              sCorrFactors[2],
+                                                                              sCorrFactors[3]
+                                });
+                            }
+                        }                    
+                    }                
+                    else{ //... Fill from file ...//
+                        //... Insert new record based on the config iTRAQ settings ...//
+                        System.out.println("Node in config parameters settings ..."+nodes.getLength());
+                        
+                        //... Assay Parameters (Labels) ...//
+                        expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='"+obj.toString()+"']/AssayParam");
+                        nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+                        System.out.println("Assays in node ..."+nodes.getLength());                        
+
+                        String sRawFile=obj.toString(), sStudyVariable="", sAssayID="", sAssayName = "", sMzValue="";
+                        String[] sCorrFactors = new String[4];
+
+                        for (int iI = 0; iI < nodes.getLength(); iI++) {
+                            Node node = nodes.item(iI);
+                            if (node.getNodeType() == Node.ELEMENT_NODE){
+
+                                Element element = (Element) node;
+                                NodeList nodelist = element.getElementsByTagName("StudyVariable");
+                                Element element1 = (Element) nodelist.item(0);
+                                NodeList fstNm = element1.getChildNodes();                    
+                                if (fstNm.getLength()<=0){
+                                    sStudyVariable = "";
+                                }
+                                else{
+                                    sStudyVariable = fstNm.item(0).getNodeValue();
+                                }
+
+                                Element element8 = (Element) node;
+                                NodeList nodelist4 = element8.getElementsByTagName("AssayID");
+                                Element element9 = (Element) nodelist4.item(0);
+                                NodeList fstNm4 = element9.getChildNodes();
+                                if (fstNm4.getLength()<=0){
+                                    sAssayID = "";
+                                }
+                                else{
+                                    sAssayID = fstNm4.item(0).getNodeValue();
+                                }
+
+                                Element element2 = (Element) node;
+                                NodeList nodelist1 = element2.getElementsByTagName("AssayName");
+                                Element element3 = (Element) nodelist1.item(0);
+                                NodeList fstNm1 = element3.getChildNodes();                    
+                                if (fstNm1.getLength()<=0){
+                                    sAssayName = "";
+                                }
+                                else{
+                                    sAssayName = fstNm1.item(0).getNodeValue();
+                                }
+
+                                Element element4 = (Element) node;
+                                NodeList nodelist2 = element4.getElementsByTagName("mzValue");
+                                Element element5 = (Element) nodelist2.item(0);
+                                NodeList fstNm2 = element5.getChildNodes();                    
+                                if (fstNm2.getLength()<=0){
+                                    sMzValue = "";
+                                }
+                                else{
+                                    sMzValue = fstNm2.item(0).getNodeValue();
+                                }
+                                
+                                Element element6 = (Element) node;
+                                NodeList nodelist3 = element6.getElementsByTagName("factor");
+                                for (int iJ = 0; iJ < nodelist3.getLength(); iJ++){
+                                    Element element7 = (Element) nodelist3.item(iJ);
+                                    NodeList fstNm3 = element7.getChildNodes();
+                                    sCorrFactors[iJ] = fstNm3.item(0).getNodeValue();
+                                }
+                                model.insertRow(model.getRowCount(), new Object[]{
+                                                                              sRawFile,
+                                                                              sStudyVariable, 
+                                                                              sAssayID,
+                                                                              sAssayName, 
+                                                                              sMzValue, 
+                                                                              sCorrFactors[0],
+                                                                              sCorrFactors[1],
+                                                                              sCorrFactors[2],
+                                                                              sCorrFactors[3]
+                                });
+                            }
+                        }                                 
+                    }
+                }                
+            }           
         }
         catch ( ParserConfigurationException e) {
           e.printStackTrace();
@@ -535,6 +661,9 @@ public class QuantParamsView extends javax.swing.JPanel {
         } catch ( XPathExpressionException  e) {
           e.printStackTrace();
         }
+        System.out.println("Table elements"+jtiTRAQParams.getRowCount());
+        //... Once everything is fill, then we update the values on the configQuant.xml file ...//
+        saveConfigFile();
     }    
     //... Saving configuration settings ...//
     private void saveConfigFile()
@@ -571,33 +700,46 @@ public class QuantParamsView extends javax.swing.JPanel {
             out.newLine();
             
             //... Write assay params ...//
-            for (int iI=0; iI<jtiTRAQParams.getRowCount(); iI++)
-            {
-                out.write("						<AssayParam>");
+            String sChain = "";
+            for (int iI=0; iI<jtiTRAQParams.getRowCount(); iI++){
+                if(!jtiTRAQParams.getValueAt(iI, 0).toString().equals(sChain)){                   
+                    if(!sChain.equals("")){
+                        out.write("						</RawFile>");
+                        out.newLine();                                        
+                    }
+                    out.write("						<RawFile id=\""+ jtiTRAQParams.getValueAt(iI, 0).toString() +"\">");
+                    out.newLine();
+                }
+                out.write("							<AssayParam>");
                 out.newLine();                
-                out.write("							<StudyVariable>" + jtiTRAQParams.getValueAt(iI, 0).toString() + "</StudyVariable>");                
+                out.write("								<StudyVariable>" + jtiTRAQParams.getValueAt(iI, 1).toString() + "</StudyVariable>");
                 out.newLine();                
-                out.write("							<AssayID>" + jtiTRAQParams.getValueAt(iI, 1).toString() + "</AssayID>");                
+                out.write("								<AssayID>" + jtiTRAQParams.getValueAt(iI, 2).toString() + "</AssayID>");                
                 out.newLine();                
-                out.write("							<AssayName>" + jtiTRAQParams.getValueAt(iI, 2).toString() + "</AssayName>");
+                out.write("								<AssayName>" + jtiTRAQParams.getValueAt(iI, 3).toString() + "</AssayName>");
                 out.newLine();
-                out.write("							<mzValue>" + jtiTRAQParams.getValueAt(iI, 3).toString() + "</mzValue>");
+                out.write("								<mzValue>" + jtiTRAQParams.getValueAt(iI, 4).toString() + "</mzValue>");
                 out.newLine();
-                out.write("							<CorrectionFactors>");
+                out.write("								<CorrectionFactors>");
                 out.newLine();        
-                out.write("								<factor deltaMass=\"-2\">" + jtiTRAQParams.getValueAt(iI, 4).toString() + "</factor>");
+                out.write("									<factor deltaMass=\"-2\">" + jtiTRAQParams.getValueAt(iI, 5).toString() + "</factor>");
                 out.newLine();
-                out.write("								<factor deltaMass=\"-1\">" + jtiTRAQParams.getValueAt(iI, 5).toString() + "</factor>");
+                out.write("									<factor deltaMass=\"-1\">" + jtiTRAQParams.getValueAt(iI, 6).toString() + "</factor>");
                 out.newLine();
-                out.write("								<factor deltaMass=\"+1\">" + jtiTRAQParams.getValueAt(iI, 6).toString() + "</factor>");
+                out.write("									<factor deltaMass=\"+1\">" + jtiTRAQParams.getValueAt(iI, 7).toString() + "</factor>");
                 out.newLine();
-                out.write("								<factor deltaMass=\"+2\">" + jtiTRAQParams.getValueAt(iI, 7).toString() + "</factor>");
+                out.write("									<factor deltaMass=\"+2\">" + jtiTRAQParams.getValueAt(iI, 8).toString() + "</factor>");
                 out.newLine();
-                out.write("							</CorrectionFactors>");
+                out.write("								</CorrectionFactors>");
                 out.newLine();
-                out.write("						</AssayParam>");
-                out.newLine();                
-            }           
+                out.write("							</AssayParam>");
+                out.newLine();                           
+                sChain = jtiTRAQParams.getValueAt(iI, 0).toString();
+            }
+            if(jtiTRAQParams.getRowCount()>0){
+                out.write("						</RawFile>");
+                out.newLine();
+            }            
             
             out.write("					</AssayParamList>");
             out.newLine();
@@ -628,101 +770,105 @@ public class QuantParamsView extends javax.swing.JPanel {
             out.newLine();
             out.write("					<AssayParamList>");
             out.newLine();
-            out.write("						<AssayParam>");
+            out.write("						<RawFile id=\"default\">");
+            out.newLine();                        
+            out.write("							<AssayParam>");
             out.newLine();
-            out.write("							<StudyVariable>GroupA</StudyVariable>");
+            out.write("								<StudyVariable>GroupA</StudyVariable>");
             out.newLine();
-            out.write("							<AssayID>114</AssayID>");            
+            out.write("								<AssayID>114</AssayID>");
             out.newLine();
-            out.write("							<AssayName>iTRAQ4plex-114 reporter fragment</AssayName>");
+            out.write("								<AssayName>iTRAQ4plex-114 reporter fragment</AssayName>");
             out.newLine();
-            out.write("							<mzValue>114.11123</mzValue>");
+            out.write("								<mzValue>114.11123</mzValue>");
             out.newLine();
-            out.write("							<CorrectionFactors>");
+            out.write("								<CorrectionFactors>");
             out.newLine();
-            out.write("								<factor deltaMass=\"-2\">0</factor>");
+            out.write("									<factor deltaMass=\"-2\">0</factor>");
             out.newLine();
-            out.write("								<factor deltaMass=\"-1\">1.0</factor>");
+            out.write("									<factor deltaMass=\"-1\">1.0</factor>");
             out.newLine();
-            out.write("								<factor deltaMass=\"+1\">5.9</factor>");
+            out.write("									<factor deltaMass=\"+1\">5.9</factor>");
             out.newLine();
-            out.write("								<factor deltaMass=\"+2\">0.2</factor>");
+            out.write("									<factor deltaMass=\"+2\">0.2</factor>");
             out.newLine();
-            out.write("							</CorrectionFactors>");
+            out.write("								</CorrectionFactors>");
             out.newLine();
-            out.write("						</AssayParam>");
+            out.write("							</AssayParam>");
             out.newLine();
-            out.write("						<AssayParam>");
-            out.newLine();
-            out.write("							<StudyVariable>GroupA</StudyVariable>");            
-            out.newLine();
-            out.write("							<AssayID>115</AssayID>");                        
+            out.write("							<AssayParam>");       
             out.newLine();            
-            out.write("							<AssayName>iTRAQ4plex-115 reporter fragment</AssayName>");
+            out.write("								<StudyVariable>GroupA</StudyVariable>");            
             out.newLine();
-            out.write("							<mzValue>115.10826</mzValue>");
+            out.write("								<AssayID>115</AssayID>");                        
+            out.newLine();            
+            out.write("								<AssayName>iTRAQ4plex-115 reporter fragment</AssayName>");
             out.newLine();
-            out.write("							<CorrectionFactors>");
+            out.write("								<mzValue>115.10826</mzValue>");
             out.newLine();
-            out.write("								<factor deltaMass=\"-2\">0</factor>");
+            out.write("								<CorrectionFactors>");
             out.newLine();
-            out.write("								<factor deltaMass=\"-1\">2</factor>");
+            out.write("									<factor deltaMass=\"-2\">0</factor>");
             out.newLine();
-            out.write("								<factor deltaMass=\"+1\">5.6</factor>");
+            out.write("									<factor deltaMass=\"-1\">2</factor>");
             out.newLine();
-            out.write("								<factor deltaMass=\"+2\">0.1</factor>");
+            out.write("									<factor deltaMass=\"+1\">5.6</factor>");
             out.newLine();
-            out.write("							</CorrectionFactors>");
+            out.write("									<factor deltaMass=\"+2\">0.1</factor>");
             out.newLine();
-            out.write("						</AssayParam>");
+            out.write("								</CorrectionFactors>");
             out.newLine();
-            out.write("						<AssayParam>");
+            out.write("							</AssayParam>");
             out.newLine();
-            out.write("							<StudyVariable>GroupB</StudyVariable>");            
+            out.write("							<AssayParam>");
             out.newLine();
-            out.write("							<AssayID>116</AssayID>");                        
+            out.write("								<StudyVariable>GroupB</StudyVariable>");            
             out.newLine();
-            out.write("							<AssayName>iTRAQ4plex-116 reporter fragment</AssayName>");
+            out.write("								<AssayID>116</AssayID>");                        
             out.newLine();
-            out.write("							<mzValue>116.11162</mzValue>");
+            out.write("								<AssayName>iTRAQ4plex-116 reporter fragment</AssayName>");
             out.newLine();
-            out.write("							<CorrectionFactors>");
+            out.write("								<mzValue>116.11162</mzValue>");
             out.newLine();
-            out.write("								<factor deltaMass=\"-2\">0</factor>");
+            out.write("								<CorrectionFactors>");
             out.newLine();
-            out.write("								<factor deltaMass=\"-1\">3</factor>");
+            out.write("									<factor deltaMass=\"-2\">0</factor>");
             out.newLine();
-            out.write("								<factor deltaMass=\"+1\">4.5</factor>");
+            out.write("									<factor deltaMass=\"-1\">3</factor>");
             out.newLine();
-            out.write("								<factor deltaMass=\"+2\">0.1</factor>");
+            out.write("									<factor deltaMass=\"+1\">4.5</factor>");
             out.newLine();
-            out.write("							</CorrectionFactors>");
+            out.write("									<factor deltaMass=\"+2\">0.1</factor>");
             out.newLine();
-            out.write("						</AssayParam>");
+            out.write("								</CorrectionFactors>");
             out.newLine();
-            out.write("						<AssayParam>");
+            out.write("							</AssayParam>");
             out.newLine();
-            out.write("							<StudyVariable>GroupB</StudyVariable>");            
+            out.write("							<AssayParam>");
             out.newLine();
-            out.write("							<AssayName>iTRAQ4plex-117, mTRAQ heavy, reporter fragment</AssayName>");
+            out.write("								<StudyVariable>GroupB</StudyVariable>");            
             out.newLine();
-            out.write("							<AssayID>117</AssayID>");                        
+            out.write("								<AssayName>iTRAQ4plex-117, mTRAQ heavy, reporter fragment</AssayName>");
             out.newLine();
-            out.write("							<mzValue>117.11497</mzValue>");
+            out.write("								<AssayID>117</AssayID>");                        
             out.newLine();
-            out.write("							<CorrectionFactors>");
+            out.write("								<mzValue>117.11497</mzValue>");
             out.newLine();
-            out.write("								<factor deltaMass=\"-2\">0.1</factor>");
+            out.write("								<CorrectionFactors>");
             out.newLine();
-            out.write("								<factor deltaMass=\"-1\">4</factor>");
+            out.write("									<factor deltaMass=\"-2\">0.1</factor>");
             out.newLine();
-            out.write("								<factor deltaMass=\"+1\">3.5</factor>");
+            out.write("									<factor deltaMass=\"-1\">4</factor>");
             out.newLine();
-            out.write("								<factor deltaMass=\"+2\">0</factor>");
+            out.write("									<factor deltaMass=\"+1\">3.5</factor>");
             out.newLine();
-            out.write("							</CorrectionFactors>");
+            out.write("									<factor deltaMass=\"+2\">0</factor>");
             out.newLine();
-            out.write("						</AssayParam>");
+            out.write("								</CorrectionFactors>");
+            out.newLine();
+            out.write("							</AssayParam>");
+            out.newLine();
+            out.write("						</RawFile>");            
             out.newLine();
             out.write("					</AssayParamList>");
             out.newLine();
@@ -737,7 +883,6 @@ public class QuantParamsView extends javax.swing.JPanel {
             out.newLine();
             out.write("</ProteoSuiteApplication>");
             out.close();
-            JOptionPane.showMessageDialog(this, "Changes updated successfully!", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
         }
         catch (Exception e)
         {
@@ -750,6 +895,7 @@ public class QuantParamsView extends javax.swing.JPanel {
         //... Fill JTable ...//
         final DefaultTableModel model = new DefaultTableModel();
         jtiTRAQParams.setModel(model);
+        model.addColumn("Raw File");        
         model.addColumn("Study Variable");
         model.addColumn("Label ID");        
         model.addColumn("Label Name");
@@ -785,10 +931,10 @@ public class QuantParamsView extends javax.swing.JPanel {
             }
             
             //... Assay Parameters (Labels) ...//
-            expr = xpath.compile("/ProteoSuiteApplication/configSettings/defaultParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/AssayParam");
+            expr = xpath.compile("/ProteoSuiteApplication/configSettings/defaultParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='default']/AssayParam");
             nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             
-            String StudyVariable="", sAssayID = "", sAssayName = "", sMzValue="";
+            String sRawFile="", sStudyVariable="", sAssayID = "", sAssayName = "", sMzValue="";
             String[] sCorrFactors = new String[4];            
             for (int iI = 0; iI < nodes.getLength(); iI++) {
                 Node node = nodes.item(iI);
@@ -797,26 +943,46 @@ public class QuantParamsView extends javax.swing.JPanel {
                     Element element = (Element) node;
                     NodeList nodelist = element.getElementsByTagName("StudyVariable");
                     Element element1 = (Element) nodelist.item(0);
-                    NodeList fstNm = element1.getChildNodes();
-                    StudyVariable = fstNm.item(0).getNodeValue();
+                    NodeList fstNm = element1.getChildNodes();                    
+                    if (fstNm.getLength()<=0){
+                        sStudyVariable = "";
+                    }
+                    else{
+                        sStudyVariable = fstNm.item(0).getNodeValue();
+                    }                    
                     
                     Element element8 = (Element) node;
                     NodeList nodelist4 = element8.getElementsByTagName("AssayID");
                     Element element9 = (Element) nodelist4.item(0);
                     NodeList fstNm4 = element9.getChildNodes();
-                    sAssayID = fstNm4.item(0).getNodeValue();                    
+                    if (fstNm4.getLength()<=0){
+                        sAssayID = "";
+                    }
+                    else{
+                        sAssayID = fstNm4.item(0).getNodeValue();
+                    }
                     
                     Element element2 = (Element) node;
                     NodeList nodelist1 = element2.getElementsByTagName("AssayName");
                     Element element3 = (Element) nodelist1.item(0);
-                    NodeList fstNm1 = element3.getChildNodes();
-                    sAssayName = fstNm1.item(0).getNodeValue();
+                    NodeList fstNm1 = element3.getChildNodes();                    
+                    if (fstNm1.getLength()<=0){
+                        sAssayName = "";
+                    }
+                    else{
+                        sAssayName = fstNm1.item(0).getNodeValue();
+                    }
                     
                     Element element4 = (Element) node;
                     NodeList nodelist2 = element4.getElementsByTagName("mzValue");
                     Element element5 = (Element) nodelist2.item(0);
-                    NodeList fstNm2 = element5.getChildNodes();
-                    sMzValue = fstNm2.item(0).getNodeValue();
+                    NodeList fstNm2 = element5.getChildNodes();                    
+                    if (fstNm2.getLength()<=0){
+                        sMzValue = "";
+                    }
+                    else{
+                        sMzValue = fstNm2.item(0).getNodeValue();
+                    }
                     
                     Element element6 = (Element) node;
                     NodeList nodelist3 = element6.getElementsByTagName("factor");
@@ -826,7 +992,9 @@ public class QuantParamsView extends javax.swing.JPanel {
                         NodeList fstNm3 = element7.getChildNodes();
                         sCorrFactors[iJ] = fstNm3.item(0).getNodeValue();
                     }
-                    model.insertRow(model.getRowCount(), new Object[]{StudyVariable, 
+                    model.insertRow(model.getRowCount(), new Object[]{
+                                                                  "default",
+                                                                  sStudyVariable, 
                                                                   sAssayID,
                                                                   sAssayName, 
                                                                   sMzValue, 
@@ -852,6 +1020,7 @@ public class QuantParamsView extends javax.swing.JPanel {
     private void jbSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSaveActionPerformed
         //... Save changes ...//
         saveConfigFile();
+        JOptionPane.showMessageDialog(this, "Changes updated successfully!", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jbSaveActionPerformed
 
     private void jbRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRemoveActionPerformed
@@ -871,7 +1040,7 @@ public class QuantParamsView extends javax.swing.JPanel {
     private void jbAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddActionPerformed
         //... Adding a new row ...//
         DefaultTableModel model = (DefaultTableModel) jtiTRAQParams.getModel();
-        model.insertRow(model.getRowCount(), new Object[]{"", "", "", "", "", "", "", ""});
+        model.insertRow(model.getRowCount(), new Object[]{"", "", "", "", "", "", "", "", ""});
         jtiTRAQParams.setModel(model);
     }//GEN-LAST:event_jbAddActionPerformed
 

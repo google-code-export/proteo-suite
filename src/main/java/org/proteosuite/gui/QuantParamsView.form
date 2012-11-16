@@ -472,8 +472,10 @@
             <Component class="javax.swing.JComboBox" name="jcbIntegrationMethod">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="1">
+                  <StringArray count="3">
                     <StringItem index="0" value="SumIntensities"/>
+                    <StringItem index="1" value="Area"/>
+                    <StringItem index="2" value="Highest"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -488,7 +490,8 @@
                 <Component class="javax.swing.JTable" name="jtiTRAQParams">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="8" rowCount="0">
+                      <Table columnCount="9" rowCount="0">
+                        <Column editable="true" title="Raw File" type="java.lang.Object"/>
                         <Column editable="true" title="Study Variable" type="java.lang.Object"/>
                         <Column editable="true" title="Label ID" type="java.lang.Object"/>
                         <Column editable="true" title="Label Name" type="java.lang.Object"/>

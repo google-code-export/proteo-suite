@@ -27,12 +27,9 @@ import java.awt.*;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
-
 import javax.swing.JComponent;
-
 import java.awt.event.MouseMotionListener;
 import javax.swing.JTextArea;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JInternalFrame;
@@ -55,45 +52,48 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import java.awt.geom.Line2D;
 
+/**
+ * This class corresponds to 2D Visualisation of MS raw data. This is under construction ...//
+ * @author faviel
+ * @param title - Window title ...//
+ * @param mz - m/z values
+ * @param intensity - intensity values
+ * @param art - RT values 
+ */
 public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
 
     private float[][] data = new float[2][1000000];
-    private double[] mz;
-    private double[] intens;
-    private double[] art;
+    private float[] mz;
+    private float[] intens;
+    private float[] art;
 
-    //... Needs to be raw data ...//
-    public TwoDPlot(final String title, double[] mz, double[] intens, double[] art) {
-
-        //... Setting Windows defaults ...//
+    //... Generate chart from raw data ...//
+    public TwoDPlot(final String title, float[] mz, float[] intens, float[] art) {            
+        //... Windows default settings ...//
         super("2D View <" + title + "> - MS1");
         Icon icon = new ImageIcon(getClass().getResource("/images/icon.gif"));
-        
         setFrameIcon(icon);
         setResizable(true);
-        setMaximizable(true);        
+        setMaximizable(true);
         setClosable(true);
-        setIconifiable(true);        
-
+        setIconifiable(true);
         this.mz = mz;
         this.intens = intens;
         this.art = art;
-
+        
+        CheckMemory chm = new CheckMemory("Before filling arrays");
+        
         //... Filling data ...//
         populateData(mz, intens, art);
 
         //... Seeting axis ...//
-        //final DateAxis xAxis = new DateAxis("Retention Time");
-        //xAxis.setDateFormatOverride(new SimpleDateFormat("ss"));
         final NumberAxis xAxis = new NumberAxis("Retention Time (secs)");
         xAxis.setAutoRangeIncludesZero(true);
         final NumberAxis yAxis = new NumberAxis("m/z");
         yAxis.setAutoRangeIncludesZero(true);
 
         //... Graph and values ...//
-        //final FastScatterPlot plot = new FastScatterPlot(this.data, xAxis, yAxis);
         final FastScatterPlot plot = new FastScatterPlot(this.data, yAxis, xAxis);
-        //final XYPlot plot = new XYPlot(this.data1, xAxis, yAxis, null);
 
         plot.setDomainGridlinesVisible(false);
         plot.setRangeGridlinesVisible(false);
@@ -103,68 +103,32 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
         //... Container ...//
         final JFreeChart chart = new JFreeChart("", plot);
         chart.getRenderingHints().put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        // OK chart.setBackgroundPaint(Color.white);
-        // OK chart.setBorderPaint(Color.red);
-        // OK chart.setBorderVisible(true);
         
-
         final ChartPanel panel = new ChartPanel(chart, true);
         panel.setPreferredSize(new java.awt.Dimension(500, 400));
-
-        
-        
-        //Point2D p = panel.translateScreenToJava2D(MouseEvent.get());
-        //Rectangle2D plotArea = panel.getScreenDataArea();
-        //XYPlot plot2 = (XYPlot) chart.getPlot(); // your plot
-        //double chartX = plot.getxAxis().java2DToValue(p.getX(), plotArea, plot2.getxAxisEdge());
-        //double chartY = plot.getyAxis().java2DToValue(p.getY(), plotArea, plot2.getyAxisEdge());
-
-        //panel.add(zoomIn, BorderLayout.EAST);
-        //panel.add(zoomOut, BorderLayout.NORTH);
-        
-        //panel.setHorizontalZoom(true);
-        //panel.setVerticalZoom(true);
         panel.setMinimumDrawHeight(10);
         panel.setMaximumDrawHeight(2000);
         panel.setMinimumDrawWidth(20);
         panel.setMaximumDrawWidth(2000);
         panel.setBackground(Color.red);
-        //panel.setMouseZoomable(false);
-        //panel.setFillZoomRectangle(false);
-        //panel.setHorizontalAxisTrace(true);
-        //panel.setVerticalAxisTrace(true);
         panel.setZoomFillPaint(new Color(216,240,223,100));
         panel.setZoomOutlinePaint(new Color(216,240,223));
         panel.setMouseWheelEnabled(true);
         panel.setDisplayToolTips(true);
-                
-        //setLayout(new GridLayout(2,1));
-        //setContentPane(panel);
-        //JButton button1 = new JButton("Click");
-        //JButton button2 = new JButton("Here");
-        //panel.add(button1);
-        //panel.add(button2);
         add(panel);
-
-        //JPanel chartmenu = new JPanel();
-        //chartmenu.setSize(400, 100);
-        //add(chartmenu);
-        //addMouseMotionListener(this);
     }
-
-    /**
-     * 
-     */
-    private void populateData(double[] mz, double[] intens, double[] art) {
-
+    /**---------------------------------
+     * Populate array
+     * @param mz - m/z values 
+     * @param intens - intensity values 
+     * @param art - RT values 
+     ----------------------------------*/
+    private void populateData(float[] mz, float[] intens, float[] art) {
         int iCounter = 0;
         for (int iI = 0; iI < mz.length; iI++) {
-            if (intens[iI] > 100)
-            {
-                this.data[1][iCounter] = (float) art[iI];
-                this.data[0][iCounter] = (float) mz[iI];
-                iCounter++;
-            }
+            this.data[1][iCounter] = (float) art[iI];
+            this.data[0][iCounter] = (float) mz[iI];
+            iCounter++;
         }
     }
 
