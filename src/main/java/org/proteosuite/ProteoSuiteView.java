@@ -29,6 +29,8 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -188,7 +190,7 @@ import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 public class ProteoSuiteView extends JFrame {
 
     //... Project settings ...//
-    private final String sPS_Version = "0.2.2";
+    private final String sPS_Version = "0.2.3";
     private String sProjectName;
     private String sWorkspace;
     private String sPreviousLocation = "user.home";
@@ -2636,17 +2638,18 @@ public class ProteoSuiteView extends JFrame {
                             for (int iI = 0; iI < aFiles.length; iI++){
                                 //... Validate file extension (mixed files) ...// 
                                 if (aFiles[iI].getName().toLowerCase().indexOf(".mgf") > 0){
-                                    model.insertRow(model.getRowCount(), new Object[]{aFiles[iI].getName(), aFiles[iI].getPath().toString().replace("\\", "/"),
-                                                                                              "MGF",
-                                                                                              "N/A"});
+                                    model.insertRow(model.getRowCount(), new Object[]{aFiles[iI].getName(), 
+                                        aFiles[iI].getPath().toString().replace("\\", "/"),
+                                        "MGF",
+                                        "N/A"});
                                 }
-                            } //... For files ...//          
+                            } //... For files ...//
                             
                             //... Display data for the first element ...//
                             loadMGFView(aFiles[0].getName(), aFiles[0].getPath());
                             progressBarDialog.setVisible(false);
-                            progressBarDialog.dispose();                       
-                            renderIdentFiles();                    
+                            progressBarDialog.dispose();
+                            renderIdentFiles();
                             uptStatusPipeline();
                         }
                     }.start();                    
@@ -2761,8 +2764,11 @@ public class ProteoSuiteView extends JFrame {
                             for (int iI = 0; iI < aFiles.length; iI++){
                                 //... Validate file extension (mixed files) ...// 
                                 if (aFiles[iI].getName().toLowerCase().indexOf(".xml") >0){
-                                    model.insertRow(model.getRowCount(), new Object[]{aFiles[iI].getName(), aFiles[iI].getPath().toString().replace("\\", "/"), "mascot_xml", "N/A"});                                    
-                                }                               
+                                    model.insertRow(model.getRowCount(), new Object[]{aFiles[iI].getName(), 
+                                        aFiles[iI].getPath().toString().replace("\\", "/"), 
+                                        "mascot_xml", 
+                                        "N/A", ""});
+                                }
                             } //... For files ...// 
                             
                             //... Display first element ...//
@@ -3026,19 +3032,23 @@ public class ProteoSuiteView extends JFrame {
         jfWinParams.setResizable(false);
         jfWinParams.setSize(580, 370);
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
-        Action escapeAction = new AbstractAction() 
-        {
+        final Action escapeAction = new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
                 jfWinParams.dispose();
                 boolean isOK = getWorkspace();
-                if(isOK)
-                {
+                if(isOK){
                     uptTitle();
                 }
             }
         };
+        jfWinParams.addWindowListener(new WindowAdapter(){
+            @Override
+             public void windowClosing(WindowEvent e){ 
+                 escapeAction.actionPerformed(null);}
+             });
+        
         jfWinParams.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
-        jfWinParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);        
+        jfWinParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);
         
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         int x1 = dim.width / 2;
@@ -3099,12 +3109,18 @@ public class ProteoSuiteView extends JFrame {
         jfQuantParams.setResizable(false);
         jfQuantParams.setSize(638, 585);
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
-        Action escapeAction = new AbstractAction() 
+        final Action escapeAction = new AbstractAction() 
         {
             public void actionPerformed(ActionEvent e) {
                 jfQuantParams.dispose();
             }
         };        
+        jfQuantParams.addWindowListener(new WindowAdapter(){
+            @Override
+             public void windowClosing(WindowEvent e){ 
+                 escapeAction.actionPerformed(null);}
+             });        
+        
         jfQuantParams.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
         jfQuantParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);
         
@@ -3217,6 +3233,9 @@ public class ProteoSuiteView extends JFrame {
                                         progressBarDialog.setVisible(false);
                                         progressBarDialog.dispose();
                                         uptTitle();
+                                        bProjectModified = false;
+                                        uptSaveProjectStatus();
+                                        uptCloseProjectStatus();                                        
                                 }
                                 else{
                                         progressBarDialog.setVisible(false);
@@ -3500,6 +3519,8 @@ public class ProteoSuiteView extends JFrame {
     {
         //... Check if all identification files have been assigned to one raw file ...//
         for(int iI=0; iI<jtIdentFiles.getRowCount(); iI++){
+            System.out.println("ColumnCount="+jtIdentFiles.getColumnCount());
+            System.out.println("RowCount="+jtIdentFiles.getRowCount());
             if(jtIdentFiles.getValueAt(iI, 4).equals("")){
                 JOptionPane.showMessageDialog(null, "Please select a raw file for each identification file.", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
@@ -3710,7 +3731,7 @@ public class ProteoSuiteView extends JFrame {
         for(int iI=0; iI<jtMascotXMLView.getRowCount(); iI++){
             //... Range based on scan index window ...//
             if ((scanIndex1<=Integer.parseInt(jtMascotXMLView.getValueAt(iI, 8).toString()))&&(scanIndex2>=Integer.parseInt(jtMascotXMLView.getValueAt(iI, 8).toString()))){
-                ArrayList al = new ArrayList();                         
+                ArrayList al = new ArrayList();
                 al.add(Integer.toString(iI));                           //... Index in the grid ...//                
                 al.add(jtMascotXMLView.getValueAt(iI, 3).toString());   //... 2) Peptide molecular composition which was calculated previously ...//
                 al.add(jtMascotXMLView.getValueAt(iI, 8).toString());   //... Scan index ...//
@@ -3727,7 +3748,7 @@ public class ProteoSuiteView extends JFrame {
         if (iCountPeptides > 0){            
             System.out.println("Peptides in range = " + iCountPeptides);
             
-            //... Determine the lenght (resolution) of the sampling array. Here, we still do not know which will be the scan indexes nor the intensities ...//
+            //... Determine the lenght (resolution) of the resampling array. ...//
             Map<String, float[][]> hmResamplingArray = new HashMap<String, float[][]>();
             int mzWindow = 1000-300;
             float resamplingFactor = 1.0f/120.0f;
@@ -4820,7 +4841,7 @@ public class ProteoSuiteView extends JFrame {
                         //... Based on the the assay list and study variables we will include the different columns ...//                
                         for(Assay assay:assayList){
                                 model2.addColumn(assay.getName());
-                        }                
+                        }
                         //... Fill rows ...//           
 
                         //... Getting DataMatrix from AssayQuantLayer ...//
@@ -4839,7 +4860,7 @@ public class ProteoSuiteView extends JFrame {
                                 iI++;
                             }
                             model2.insertRow(model2.getRowCount(), aObj);
-                        }                                
+                        }
 
         //============================//
         //... Feature Quantitation ...//                
@@ -5997,7 +6018,7 @@ public class ProteoSuiteView extends JFrame {
         model.insertRow(model.getRowCount(), new Object[]{xmlFile.getName(),
                                                                   xmlFile.getPath().toString().replace("\\", "/"),
                                                                   ext,
-                                                                  unmarshaller.getMzMLVersion()                                                                  });
+                                                                  unmarshaller.getMzMLVersion()});
         System.out.println(xmlFile.getPath() + " was unmarshalled successfully!");
     }    
     /*----------------------------------------------------------
