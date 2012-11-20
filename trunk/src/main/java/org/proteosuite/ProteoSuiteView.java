@@ -188,7 +188,7 @@ import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 public class ProteoSuiteView extends JFrame {
 
     //... Project settings ...//
-    private final String sPS_Version = "0.2.1";
+    private final String sPS_Version = "0.2.2";
     private String sProjectName;
     private String sWorkspace;
     private String sPreviousLocation = "user.home";
@@ -2464,7 +2464,18 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jmExitActionPerformed
 
     private void jmNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmNewProjectActionPerformed
-        initProjectValues();
+        //... Check if the project needs to be saved ...//
+        if(bProjectModified){
+            int iOption = JOptionPane.showConfirmDialog(null, "You have not saved your changes. Do you want to save them now?", "Warning", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            if (iOption == JOptionPane.OK_OPTION) {            
+                jmSaveProjectActionPerformed(null);
+                initProjectValues();
+            }else if (iOption == JOptionPane.NO_OPTION){
+                initProjectValues();
+            }
+        }else{
+            initProjectValues();
+        }
     }//GEN-LAST:event_jmNewProjectActionPerformed
    
     private void jmImportFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmImportFileActionPerformed
@@ -2497,10 +2508,11 @@ public class ProteoSuiteView extends JFrame {
         //... Retrieving selection from user ...//
         int returnVal = chooser.showOpenDialog(this);
         if(returnVal == JFileChooser.APPROVE_OPTION){
-            bProjectModified = true;
             
             final File [] aFiles = chooser.getSelectedFiles();
 	    if (aFiles != null && aFiles.length > 0){
+                bProjectModified = true;                
+                uptSaveProjectStatus();
                 sPreviousLocation = aFiles[0].getParent();                
 //---------------//
 //  Read mzML    //
@@ -2590,7 +2602,7 @@ public class ProteoSuiteView extends JFrame {
                             progressBarDialog.dispose();
                             jtaLog.setText("Raw files imported successfully! " + sTimeUncompress + sTimeUnmarshalling);
                             System.out.println("Raw files imported successfully! " + sTimeUncompress + sTimeUnmarshalling);
-                            renderIdentFiles();                    
+                            renderIdentFiles();
                             uptStatusPipeline();
                         }
                     }.start();  
@@ -2838,7 +2850,11 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jmOpenRecentProjectActionPerformed
 
     private void jmSaveProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmSaveProjectActionPerformed
-        
+        //... Save data using a mzq file ...//
+        boolean isOK = saveProject();
+        if(isOK){
+            JOptionPane.showMessageDialog(null, "Your file was saved successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }
     }//GEN-LAST:event_jmSaveProjectActionPerformed
 
     private void jmSaveProjectAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmSaveProjectAsActionPerformed
@@ -2846,7 +2862,18 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jmSaveProjectAsActionPerformed
 
     private void jmCloseProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmCloseProjectActionPerformed
-
+        //... Check if the project needs to be saved ...//
+        if(bProjectModified){
+            int iOption = JOptionPane.showConfirmDialog(null, "You have not saved your changes. Do you want to save them now?", "Warning", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            if (iOption == JOptionPane.OK_OPTION) {            
+                jmSaveProjectActionPerformed(null);
+                initProjectValues();
+            }else if (iOption == JOptionPane.NO_OPTION){
+                initProjectValues();
+            }
+        }else{
+            initProjectValues();
+        }
     }//GEN-LAST:event_jmCloseProjectActionPerformed
 
     private void jbNewProjectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbNewProjectMouseClicked
@@ -2864,7 +2891,6 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jbOpenProjectMouseClicked
 
     private void jbSaveProjectMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbSaveProjectMouseClicked
-        
         jmSaveProjectActionPerformed(null);
     }//GEN-LAST:event_jbSaveProjectMouseClicked
 
@@ -3030,7 +3056,7 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jmOptionsActionPerformed
 
     private void jmSubmitPRIDEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmSubmitPRIDEActionPerformed
-        JOptionPane.showMessageDialog(null, "The module for submitting data into PRIDE is under development.", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "The module for submitting data into PRIDE is under development.", "Information", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jmSubmitPRIDEActionPerformed
 
     private void jmEditIdentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmEditIdentActionPerformed
@@ -3173,7 +3199,8 @@ public class ProteoSuiteView extends JFrame {
                                         if(isOK){
                                             //... Run xTracker ...//
                                             System.out.println("****** xTRACKER *****");
-                                            xTracker run = new xTracker(sWorkspace.replace("\\", "/") + "/" + sProjectName, sWorkspace.replace("\\", "/"));
+                                            xTracker run = null;
+                                            run = new xTracker(sWorkspace.replace("\\", "/") + "/" + sProjectName, sWorkspace.replace("\\", "/"));                                            
                                             
                                             //... Load the mzQuantML file into memory (Containing results) ...//
                                             MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(sWorkspace + "/" +  sProjectName);
@@ -3480,6 +3507,103 @@ public class ProteoSuiteView extends JFrame {
         }
         return true;
     }    
+    /*----------------------------------
+     * Update save icon
+     * @param void
+     * @return void
+     -----------------------------------*/    
+    private void uptSaveProjectStatus()            
+    {
+        jmSaveProject.setEnabled(bProjectModified);
+        jbSaveProject.setEnabled(bProjectModified);
+    }
+    /*----------------------------------
+     * Update close project icon
+     * @param void
+     * @return void
+     -----------------------------------*/    
+    private void uptCloseProjectStatus()
+    {
+        System.out.println("ProjectName="+this.sProjectName);
+        if(sProjectName.equals("New")){
+            jmCloseProject.setEnabled(false);
+        }else{
+            jmCloseProject.setEnabled(true);
+        }
+    }
+    /*----------------------------------
+     * Save a project using a mzq file
+     * @param void
+     * @return true/false
+     -----------------------------------*/    
+    private boolean saveProject()            
+    {
+        if (jtRawFiles.getRowCount()<=0){
+            JOptionPane.showMessageDialog(this, "Please select at least one raw file. (Use the import file option in the menu).", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } 
+        else if (jtIdentFiles.getRowCount()<=0){
+            JOptionPane.showMessageDialog(this, "Please select at least one identification file. (Use the import file option in the menu).", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }else if (jcbTechnique.getSelectedItem().equals("Select technique")){
+            JOptionPane.showMessageDialog(this, "Please specify the technique to save your pipeline (e.g. iTRAQ, SILAC, 15N, etc.)", "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        JFileChooser chooser = new JFileChooser(sPreviousLocation);
+        chooser.setDialogTitle("Please enter the name of your project");
+
+        //... Applying file extension filters ...//
+        FileNameExtensionFilter filter3 = new FileNameExtensionFilter("mzQuantML Files (*.mzq)", "mzq");
+        //... Filters must be in descending order ...//
+        chooser.addChoosableFileFilter(filter3);
+
+        //... Setting default directory ...//
+        if (sPreviousLocation == null || sPreviousLocation.contains("")){
+            chooser.setCurrentDirectory(new java.io.File(sWorkspace)); //... If not found it goes to Home, exception not needed ...//   
+        }
+        else{
+            chooser.setCurrentDirectory(new java.io.File(sPreviousLocation)); //... If not found it goes to Home, exception not needed ...//               
+        }
+        
+        int returnVal = chooser.showSaveDialog(this);
+        System.out.println(returnVal);
+        if(returnVal == JFileChooser.APPROVE_OPTION){
+            //... Check extension ...//
+            File file = chooser.getSelectedFile();
+            int mid= 0;
+            mid = file.getName().lastIndexOf(".mzq");
+            String fileLocation = "";
+            if(mid<=0){
+                fileLocation = file.getPath()+".mzq";
+            }else{
+                fileLocation = file.getPath();
+            }
+            System.out.println("Creating file="+fileLocation);
+            fileLocation.replace("\\", "/");
+            File file2 = new File(fileLocation);
+            
+            //... Check if file exists ...//
+            boolean exists = (new File(file2.getPath())).exists();
+            if (exists){
+                int n = JOptionPane.showConfirmDialog(null, "The file already exists in this directory, do you want to overwrite it?", "Information", JOptionPane.YES_NO_OPTION);
+                if(n==JOptionPane.NO_OPTION){
+                    return false;
+                }
+            }
+            System.out.println("Saving mzq file...");
+            boolean bOK = writeMzQuantML(jcbTechnique.getSelectedItem().toString(), file2.getName());
+            if(bOK){
+                sProjectName = file2.getName();   
+                uptTitle();
+                bProjectModified = false;
+                uptSaveProjectStatus();
+                uptCloseProjectStatus();
+            }
+        }
+        
+        return true;
+    }      
     /*----------------------------------
      * Update window title main project
      * @param void
@@ -4682,9 +4806,9 @@ public class ProteoSuiteView extends JFrame {
                             ArrayList<String> saParams = entry.getValue();
                             Iterator<String> itr = saParams.iterator();
                             int iI = 1;
-                            while (itr.hasNext())
-                            {
+                            while (itr.hasNext()){
                                 aObj[iI] = itr.next().toString(); 
+                                System.out.println("Obj="+aObj[iI]);
                                 iI++;
                             }
                             model.insertRow(model.getRowCount(), aObj);
@@ -5495,10 +5619,12 @@ public class ProteoSuiteView extends JFrame {
             String sMessage = "The config.xml file was not found, please make sure that this file exists \n";
             sMessage = sMessage + "under your installation folder. ProteoSuite will continue launching, however \n";
             sMessage = sMessage + "it is recommended that you copy the file as indicated in the readme.txt file.";
-            JOptionPane.showMessageDialog(null, sMessage, "Warning", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, sMessage, "Warning", JOptionPane.INFORMATION_MESSAGE);            
         }
         sProjectName = "New";
         bProjectModified = false;
+        uptSaveProjectStatus();
+        uptCloseProjectStatus();
         uptTitle();
     }
     /*----------------------------
@@ -5652,7 +5778,7 @@ public class ProteoSuiteView extends JFrame {
         //... Load project settings from a mzq file ...//
         //... Selecting file(s) ...//
         JFileChooser chooser = new JFileChooser(sPreviousLocation);
-        chooser.setDialogTitle("Select the file(s) to analyze");
+        chooser.setDialogTitle("Select the file(s) to analyze");        
 
         //... Applying file extension filters ...//
         FileNameExtensionFilter filter3 = new FileNameExtensionFilter("mzQuantML Files (*.mzq, *.mzq.gz)", "mzq");
@@ -5685,8 +5811,10 @@ public class ProteoSuiteView extends JFrame {
                         MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(file.toString());            
                         MzQuantML mzq = unmarshaller.unmarshall();
                         mzQuantML = mzq;
+                        aMzQML.clear();
                         loadProjectFromMZQ(file);
                         aMzQML.add(mzq);
+                        bProjectModified = false;
                         final DefaultTableModel model = new DefaultTableModel();
                         jtQuantFiles.setModel(model);
                         model.addColumn("Name");
@@ -5695,7 +5823,10 @@ public class ProteoSuiteView extends JFrame {
                         model.addColumn("Version");
                         model.insertRow(model.getRowCount(), new Object[]{file.getName(), file.getPath().replace("\\", "/"), "mzq", mzQVersion});
                         loadMzQuantMLView(0, file.getName());
+                        sProjectName = file.getName();
                         uptStatusPipeline();
+                        uptSaveProjectStatus();
+                        uptCloseProjectStatus();
                     }
                 }
             }
@@ -5706,7 +5837,7 @@ public class ProteoSuiteView extends JFrame {
      * @param sFile - File name 
      * @return void
      -----------------------------*/
-    private void loadProjectFromMZQ(File sFile){                            
+    private void loadProjectFromMZQ(File sFile){
         
         final DefaultTableModel model = new DefaultTableModel();
         final DefaultTableModel model2 = new DefaultTableModel();
@@ -5737,8 +5868,8 @@ public class ProteoSuiteView extends JFrame {
         new Thread("LoadingThread"){
             @Override
             public void run(){
-                System.out.println("Loading settings from the mzq file ...");
-                                               
+                System.out.println("Loading settings from the mzq file ...");                                                   
+                            
                 String sGroup = "";
                 InputFiles inputFiles = mzQuantML.getInputFiles();
                 
@@ -5928,9 +6059,8 @@ public class ProteoSuiteView extends JFrame {
         System.out.println("Generating files for the pipeline ...");
         if (sFile.equals("New")){
             sFile = "test.mzq";
-            String sMessage = "You have not saved this project. Proteosuite will create a test.mzq file \n";
+            String sMessage = "This project has not been saved. Proteosuite will create a test.mzq file \n";
             sMessage = sMessage + " under " + sWorkspace + " to run the pipeline. \n";
-            sMessage = sMessage + "Do not forget to save the project if you want to reuse the parameters set for this analysis.";
             JOptionPane.showMessageDialog(null, sMessage, "Information", JOptionPane.INFORMATION_MESSAGE);
             sProjectName = sFile;
         }
@@ -5982,8 +6112,8 @@ public class ProteoSuiteView extends JFrame {
         Cv cvPSI_MS = new Cv();
         cvPSI_MS.setId("PSI-MS");
         cvPSI_MS.setUri("http://psidev.cvs.sourceforge.net/viewvc/*checkout*/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo");
-        cvPSI_MS.setFullName("Proteomics Standards Initiative Mass Spectrometry Vocabularies");
-        cvPSI_MS.setVersion("3.32.0");
+        cvPSI_MS.setFullName("Proteomics Standards Initiative Mass Spectrometry Vocabulary");
+        cvPSI_MS.setVersion("3.37.0");
 
         Cv cvUO = new Cv();
         cvUO.setId("UO");
@@ -5993,7 +6123,7 @@ public class ProteoSuiteView extends JFrame {
         Cv cvPSI_MOD = new Cv();
         cvPSI_MOD.setId("PSI-MOD");
         cvPSI_MOD.setUri("http://psidev.cvs.sourceforge.net/psidev/psi/mod/data/PSI-MOD.obo");
-        cvPSI_MOD.setFullName("Proteomics Standards Initiative Protein Modifications Vocabularies");        
+        cvPSI_MOD.setFullName("Proteomics Standards Initiative Protein Modifications");        
         cvPSI_MOD.setVersion("1.2");
 
         Cv cvUNI_MOD = new Cv();
@@ -6019,11 +6149,16 @@ public class ProteoSuiteView extends JFrame {
             cvp.setCvRef(cvPSI_MS);
             cvp.setName("iTRAQ quantitation analysis");
 
+            CvParam cvp6 = new CvParam();
+            cvp6.setAccession("MS:1002023");
+            cvp6.setCvRef(cvPSI_MS);
+            cvp6.setName("MS2 tag-based analysis");        
+            
             CvParam cvp2 = new CvParam();
             cvp2.setAccession("MS:1002024");
             cvp2.setCvRef(cvPSI_MS);
             cvp2.setValue("true");
-            cvp2.setName("MS2 tag-based analysis feature level quantitation");        
+            cvp2.setName("MS2 tag-based analysis feature level quantitation");                   
 
             CvParam cvp3 = new CvParam();
             cvp3.setAccession("MS:1002025");
@@ -6043,7 +6178,8 @@ public class ProteoSuiteView extends JFrame {
             cvp5.setValue("false");
             cvp5.setName("MS2 tag-based analysis protein group level quantitation");        
 
-            cvParamList.add(cvp);
+            //cvParamList.add(cvp);
+            cvParamList.add(cvp6);            
             cvParamList.add(cvp2);
             cvParamList.add(cvp3);
             cvParamList.add(cvp4);
@@ -6154,7 +6290,12 @@ public class ProteoSuiteView extends JFrame {
         softwareList.getSoftware().add(software);
         software.setId("xTRACKER");
         software.setVersion("1");
-        qml.setSoftwareList(softwareList);
+        
+        Software software2 = new Software();
+        softwareList.getSoftware().add(software2);
+        software2.setId("ProteoSuite");
+        software2.setVersion(sPS_Version);
+        qml.setSoftwareList(softwareList);        
         
         //---------------------------------//
         //... Create DataProcessingList ...//
