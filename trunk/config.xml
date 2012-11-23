@@ -2,7 +2,7 @@
 <ProteoSuiteApplication xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="ProteoSuiteApplication.xsd" >
     <configSettings>
         <generalSettings>
-            <workspace>D:\Data\D1-iTRAQ-4plex\Jun</workspace>
+            <workspace>D:\Data\D9-CPTAC\3750Scans</workspace>
         </generalSettings>
         <xTrackerSettings>
             <plugins>
