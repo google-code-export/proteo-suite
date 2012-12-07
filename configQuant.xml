@@ -11,7 +11,7 @@
 					<SearchScore>20</SearchScore>
 					<IntegrationMethod>SumIntensities</IntegrationMethod>
 					<AssayParamList>
-						<RawFile id="mam_042408o_CPTAC_study6_6B011.mzML">
+						<RawFile id="ksl_1_10.mzML">
 							<AssayParam>
 								<StudyVariable>GroupA</StudyVariable>
 								<AssayID>114</AssayID>
