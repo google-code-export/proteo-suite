@@ -504,6 +504,11 @@ public class ProteoSuiteView extends JFrame {
                             jPanel3 = new javax.swing.JPanel();
                             jScrollPane3 = new javax.swing.JScrollPane();
                             jTable1 = new javax.swing.JTable();
+                            jPanel4 = new javax.swing.JPanel();
+                            jpPanel4 = new javax.swing.JPanel();
+                            jScrollPane7 = new javax.swing.JScrollPane();
+                            jTable2 = new javax.swing.JTable();
+                            jPanel7 = new javax.swing.JPanel();
                             jtpViewer = new javax.swing.JTabbedPane();
                             jdpMS = new javax.swing.JDesktopPane();
                             jpTIC = new javax.swing.JPanel();
@@ -787,7 +792,7 @@ public class ProteoSuiteView extends JFrame {
                                                                 .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addGap(18, 18, 18)
                                                                 .addComponent(jToolBar3, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(690, Short.MAX_VALUE))
+                                                                .addContainerGap(788, Short.MAX_VALUE))
                                                         );
                                                         jpToolBarLayout.setVerticalGroup(
                                                             jpToolBarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1200,18 +1205,71 @@ public class ProteoSuiteView extends JFrame {
                                                         ));
                                                         jScrollPane3.setViewportView(jTable1);
 
+                                                        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+                                                        jPanel4.setLayout(jPanel4Layout);
+                                                        jPanel4Layout.setHorizontalGroup(
+                                                            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addGap(0, 373, Short.MAX_VALUE)
+                                                        );
+                                                        jPanel4Layout.setVerticalGroup(
+                                                            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addGap(0, 58, Short.MAX_VALUE)
+                                                        );
+
                                                         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
                                                         jPanel3.setLayout(jPanel3Layout);
                                                         jPanel3Layout.setHorizontalGroup(
                                                             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                             .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
                                                         );
                                                         jPanel3Layout.setVerticalGroup(
                                                             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                                                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE))
                                                         );
 
-                                                        jtpLog.addTab("Synthetic Array", jPanel3);
+                                                        jtpLog.addTab("Synth Array", jPanel3);
+
+                                                        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+                                                            new Object [][] {
+
+                                                            },
+                                                            new String [] {
+                                                                "Scan Number"
+                                                            }
+                                                        ));
+                                                        jScrollPane7.setViewportView(jTable2);
+
+                                                        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+                                                        jPanel7.setLayout(jPanel7Layout);
+                                                        jPanel7Layout.setHorizontalGroup(
+                                                            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addGap(0, 373, Short.MAX_VALUE)
+                                                        );
+                                                        jPanel7Layout.setVerticalGroup(
+                                                            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addGap(0, 57, Short.MAX_VALUE)
+                                                        );
+
+                                                        javax.swing.GroupLayout jpPanel4Layout = new javax.swing.GroupLayout(jpPanel4);
+                                                        jpPanel4.setLayout(jpPanel4Layout);
+                                                        jpPanel4Layout.setHorizontalGroup(
+                                                            jpPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                            .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+                                                        );
+                                                        jpPanel4Layout.setVerticalGroup(
+                                                            jpPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addGroup(jpPanel4Layout.createSequentialGroup()
+                                                                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))
+                                                        );
+
+                                                        jtpLog.addTab("Resamp Array", jpPanel4);
 
                                                         javax.swing.GroupLayout jpLeftViewerBottomLayout = new javax.swing.GroupLayout(jpLeftViewerBottom);
                                                         jpLeftViewerBottom.setLayout(jpLeftViewerBottomLayout);
@@ -1325,7 +1383,7 @@ public class ProteoSuiteView extends JFrame {
                                                             .addGroup(jpPropertiesLayout.createSequentialGroup()
                                                                 .addContainerGap()
                                                                 .addComponent(jlProperties)
-                                                                .addContainerGap(346, Short.MAX_VALUE))
+                                                                .addContainerGap(444, Short.MAX_VALUE))
                                                         );
                                                         jpPropertiesLayout.setVerticalGroup(
                                                             jpPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1361,7 +1419,7 @@ public class ProteoSuiteView extends JFrame {
                                                             .addGroup(jpMzMLViewHeaderLayout.createSequentialGroup()
                                                                 .addContainerGap()
                                                                 .addGroup(jpMzMLViewHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 390, Short.MAX_VALUE)
+                                                                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
                                                                     .addGroup(jpMzMLViewHeaderLayout.createSequentialGroup()
                                                                         .addComponent(jlFileNameMzML)
                                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1444,7 +1502,7 @@ public class ProteoSuiteView extends JFrame {
                                                                 .addComponent(jlRT)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(jtRT, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(81, Short.MAX_VALUE))
+                                                                .addContainerGap(179, Short.MAX_VALUE))
                                                         );
                                                         jpMzMLMenuLayout.setVerticalGroup(
                                                             jpMzMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1467,7 +1525,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jpMzML.setLayout(jpMzMLLayout);
                                                         jpMzMLLayout.setHorizontalGroup(
                                                             jpMzMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jspMzML, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+                                                            .addComponent(jspMzML, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
                                                         );
                                                         jpMzMLLayout.setVerticalGroup(
                                                             jpMzMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1514,7 +1572,7 @@ public class ProteoSuiteView extends JFrame {
                                                                 .addComponent(jlScanTitle)
                                                                 .addGap(18, 18, 18)
                                                                 .addComponent(jtScanTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(73, Short.MAX_VALUE))
+                                                                .addContainerGap(171, Short.MAX_VALUE))
                                                         );
                                                         jpMGFMenuLayout.setVerticalGroup(
                                                             jpMGFMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1552,7 +1610,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jpMGF.setLayout(jpMGFLayout);
                                                         jpMGFLayout.setHorizontalGroup(
                                                             jpMGFLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jspMGF, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+                                                            .addComponent(jspMGF, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
                                                         );
                                                         jpMGFLayout.setVerticalGroup(
                                                             jpMGFLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1605,7 +1663,7 @@ public class ProteoSuiteView extends JFrame {
                                                                 .addComponent(jlPeptideMzId)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(jtPeptideMzId, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(26, Short.MAX_VALUE))
+                                                                .addContainerGap(124, Short.MAX_VALUE))
                                                         );
                                                         jpMzIdMenuLayout.setVerticalGroup(
                                                             jpMzIdMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1651,7 +1709,7 @@ public class ProteoSuiteView extends JFrame {
                                                             .addGroup(jpMzIdentMLViewHeaderLayout.createSequentialGroup()
                                                                 .addContainerGap()
                                                                 .addGroup(jpMzIdentMLViewHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
+                                                                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
                                                                     .addGroup(jpMzIdentMLViewHeaderLayout.createSequentialGroup()
                                                                         .addComponent(jlFileNameMzID)
                                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -1676,7 +1734,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jpMzId.setLayout(jpMzIdLayout);
                                                         jpMzIdLayout.setHorizontalGroup(
                                                             jpMzIdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jspMzId, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+                                                            .addComponent(jspMzId, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
                                                         );
                                                         jpMzIdLayout.setVerticalGroup(
                                                             jpMzIdLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1754,7 +1812,7 @@ public class ProteoSuiteView extends JFrame {
                                                                         .addGap(14, 14, 14)
                                                                         .addComponent(jlPeptide)
                                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                                        .addComponent(jtPeptide, javax.swing.GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE))
+                                                                        .addComponent(jtPeptide, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE))
                                                                     .addComponent(jbShowIsotopeDistrib))
                                                                 .addContainerGap())
                                                         );
@@ -1781,7 +1839,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jpMascotXML.setLayout(jpMascotXMLLayout);
                                                         jpMascotXMLLayout.setHorizontalGroup(
                                                             jpMascotXMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jspMascotXML, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+                                                            .addComponent(jspMascotXML, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
                                                         );
                                                         jpMascotXMLLayout.setVerticalGroup(
                                                             jpMascotXMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1802,7 +1860,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jpPeptideQuantHeader.setLayout(jpPeptideQuantHeaderLayout);
                                                         jpPeptideQuantHeaderLayout.setHorizontalGroup(
                                                             jpPeptideQuantHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addGap(0, 422, Short.MAX_VALUE)
+                                                            .addGap(0, 520, Short.MAX_VALUE)
                                                         );
                                                         jpPeptideQuantHeaderLayout.setVerticalGroup(
                                                             jpPeptideQuantHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1827,7 +1885,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jpPeptideQuant.setLayout(jpPeptideQuantLayout);
                                                         jpPeptideQuantLayout.setHorizontalGroup(
                                                             jpPeptideQuantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jspPeptideQuant, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                                                            .addComponent(jspPeptideQuant, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
                                                         );
                                                         jpPeptideQuantLayout.setVerticalGroup(
                                                             jpPeptideQuantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1844,7 +1902,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jpProteinQuantHeader.setLayout(jpProteinQuantHeaderLayout);
                                                         jpProteinQuantHeaderLayout.setHorizontalGroup(
                                                             jpProteinQuantHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addGap(0, 422, Short.MAX_VALUE)
+                                                            .addGap(0, 520, Short.MAX_VALUE)
                                                         );
                                                         jpProteinQuantHeaderLayout.setVerticalGroup(
                                                             jpProteinQuantHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1869,7 +1927,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jpProteinQuant.setLayout(jpProteinQuantLayout);
                                                         jpProteinQuantLayout.setHorizontalGroup(
                                                             jpProteinQuantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jspProteinQuant, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                                                            .addComponent(jspProteinQuant, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
                                                         );
                                                         jpProteinQuantLayout.setVerticalGroup(
                                                             jpProteinQuantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1886,7 +1944,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jpFeatureQuantHeader.setLayout(jpFeatureQuantHeaderLayout);
                                                         jpFeatureQuantHeaderLayout.setHorizontalGroup(
                                                             jpFeatureQuantHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addGap(0, 422, Short.MAX_VALUE)
+                                                            .addGap(0, 520, Short.MAX_VALUE)
                                                         );
                                                         jpFeatureQuantHeaderLayout.setVerticalGroup(
                                                             jpFeatureQuantHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1911,7 +1969,7 @@ public class ProteoSuiteView extends JFrame {
                                                         FeatureQuant.setLayout(FeatureQuantLayout);
                                                         FeatureQuantLayout.setHorizontalGroup(
                                                             FeatureQuantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jspFeatureQuant, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                                                            .addComponent(jspFeatureQuant, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
                                                         );
                                                         FeatureQuantLayout.setVerticalGroup(
                                                             FeatureQuantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1936,7 +1994,7 @@ public class ProteoSuiteView extends JFrame {
                                                             .addGroup(jpMzQuantMLHeaderLayout.createSequentialGroup()
                                                                 .addContainerGap()
                                                                 .addGroup(jpMzQuantMLHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
+                                                                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
                                                                     .addGroup(jpMzQuantMLHeaderLayout.createSequentialGroup()
                                                                         .addComponent(jlFileNameMzQ)
                                                                         .addGap(18, 18, 18)
@@ -1961,7 +2019,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jpMzQuantML.setLayout(jpMzQuantMLLayout);
                                                         jpMzQuantMLLayout.setHorizontalGroup(
                                                             jpMzQuantMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jspMzQuantML, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
+                                                            .addComponent(jspMzQuantML, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
                                                         );
                                                         jpMzQuantMLLayout.setVerticalGroup(
                                                             jpMzQuantMLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1974,7 +2032,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jpPropetiesTab.setLayout(jpPropetiesTabLayout);
                                                         jpPropetiesTabLayout.setHorizontalGroup(
                                                             jpPropetiesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jtpProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 436, Short.MAX_VALUE)
+                                                            .addComponent(jtpProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
                                                         );
                                                         jpPropetiesTabLayout.setVerticalGroup(
                                                             jpPropetiesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1987,7 +2045,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jpPropertiesBox.setLayout(jpPropertiesBoxLayout);
                                                         jpPropertiesBoxLayout.setHorizontalGroup(
                                                             jpPropertiesBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jspProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)
+                                                            .addComponent(jspProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 536, Short.MAX_VALUE)
                                                         );
                                                         jpPropertiesBoxLayout.setVerticalGroup(
                                                             jpPropertiesBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2000,7 +2058,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jpViewerAndProperties.setLayout(jpViewerAndPropertiesLayout);
                                                         jpViewerAndPropertiesLayout.setHorizontalGroup(
                                                             jpViewerAndPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jspViewerAndProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 822, Short.MAX_VALUE)
+                                                            .addComponent(jspViewerAndProperties, javax.swing.GroupLayout.DEFAULT_SIZE, 920, Short.MAX_VALUE)
                                                         );
                                                         jpViewerAndPropertiesLayout.setVerticalGroup(
                                                             jpViewerAndPropertiesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2013,7 +2071,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jpMainPanelView.setLayout(jpMainPanelViewLayout);
                                                         jpMainPanelViewLayout.setHorizontalGroup(
                                                             jpMainPanelViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(jspMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 1106, Short.MAX_VALUE)
+                                                            .addComponent(jspMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 1204, Short.MAX_VALUE)
                                                         );
                                                         jpMainPanelViewLayout.setVerticalGroup(
                                                             jpMainPanelViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2071,7 +2129,7 @@ public class ProteoSuiteView extends JFrame {
                                                                 .addComponent(jcbOutputFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(jlQuantFilesStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(355, Short.MAX_VALUE))
+                                                                .addContainerGap(453, Short.MAX_VALUE))
                                                         );
                                                         jpProjectStatusLayout.setVerticalGroup(
                                                             jpProjectStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2437,8 +2495,8 @@ public class ProteoSuiteView extends JFrame {
                                                             .addComponent(jpMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                                    .addComponent(jpProjectStatus, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1096, Short.MAX_VALUE)
-                                                                    .addComponent(jpToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 1096, Short.MAX_VALUE))
+                                                                    .addComponent(jpProjectStatus, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 1194, Short.MAX_VALUE)
+                                                                    .addComponent(jpToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 1194, Short.MAX_VALUE))
                                                                 .addContainerGap())
                                                         );
                                                         layout.setVerticalGroup(
@@ -3953,6 +4011,7 @@ public class ProteoSuiteView extends JFrame {
             String scanID = "";
             String[] triplets = new String[]{"", "", ""};
             
+            System.out.println("Generate resampling array ...");
             for(int iI=0; iI<quantTemplate.length; iI++){
                 scanID = quantTemplate[iI].getScanID();                
                 blnExists = hmSyntheticArray.containsKey(quantTemplate[iI].getScanID());                                      
@@ -3991,7 +4050,7 @@ public class ProteoSuiteView extends JFrame {
                             blnExists = hmResamplingArray.containsKey(triplets[iTrip]);
                             if (blnExists == false){
                                 System.out.println("Performing resampling in scan = "+triplets[iTrip]);
-                                hmResamplingArray.put(triplets[iTrip], binArray(resamplingArray, mzNumbers, intenNumbers, mzWindow));
+                                hmResamplingArray.put(triplets[iTrip], binArray(resamplingArray, mzNumbers, intenNumbers, mzWindow, true));
                                 hmSyntheticArray.put(triplets[iTrip], resamplingArray); //... Initalising synthetic array ...//
                             }
                         }
@@ -3999,70 +4058,189 @@ public class ProteoSuiteView extends JFrame {
                             System.out.println(ume.getMessage());
                         }
                     }
-                }                                       
-            }            
-            //... Update synthetic array and quant templates ...//
-            System.out.println("Updating synthetic array and quant templates...");
-            int iTemp1Index = 0, iMzIndexResamplArray = 0;
-            int[] aCenterPoints = new int[6]; //... Center points to the 6 isotopes ...//
-            float quantValue = 0.0f;
-            int iX=0, iY=0;
-            float fI=0.0f;
-            for(int iI=0; iI<quantTemplate.length; iI++){
-                scanID = quantTemplate[iI].getScanID();    
-                blnExists = hmSyntheticArray.containsKey(quantTemplate[iI].getScanID());                
-                if (blnExists){
-                    System.out.println("Updating scanID="+scanID);
-                    //... Get previous and next scans (-1, 0 and +1 positions in rt) ...//
-                    sPrev = getPrevScan(array, scanID);
-                    sNext = getNextScan(array, scanID);
-                    
-                    triplets[0] = sPrev;
-                    triplets[1] = scanID;
-                    triplets[2] = sNext;
-                    
-                    iTemp1Index = quantTemplate[iI].getTemplate2Index();
-                    iMzIndexResamplArray = quantTemplate[iI].getMzIndex(); //... This will be used to calculate -1, 0, +1 in m/z ...//
-                    quantValue = quantTemplate[iI].getQuantIntensities();
-                    
-                    for(int iZ=0; iZ<templates[iTemp1Index].getCoords().length; iZ++){ //... 54 positions (9 points x 6 isotopes) ...//
-                        //... Update values using template A ...//                                               
-                        iX = templates[iI].getCoord(iZ).getX();
-                        iY = templates[iI].getCoord(iZ).getY();
-                        fI = templates[iI].getCoord(iZ).getRelIntensity();
-                        
-                        //... Get synthetic array for each scan ...//
-                        float[][] temp = hmSyntheticArray.get(triplets[iY+1]);
-                        temp[1][iTemp1Index+iX] = temp[1][iTemp1Index+iX] + (quantValue * fI);
-                        hmSyntheticArray.put(triplets[iY+1], temp);
+                }
+            }
+            
+            System.out.println("Creating mapping for scan indexes...");
+            
+            //... Map keys for Scan IDs ...//
+            String[] scanMap = new String[hmResamplingArray.size()];
+            int iMapIndex = 0;
+            for (Map.Entry<String, float[][]> entry : hmResamplingArray.entrySet()){
+                scanMap[iMapIndex] = entry.getKey();
+                iMapIndex++;
+            }
+            Arrays.sort(scanMap);
+            
+            //... Populate Arrays ...//
+            DefaultTableModel model3 = new DefaultTableModel();
+            DefaultTableModel model4 = new DefaultTableModel();
+            jTable1.setModel(model3);
+            jTable2.setModel(model4);
+            model3.addColumn("m/z Index");
+            model3.addColumn("m/z Value");
+            model4.addColumn("m/z Index");
+            model4.addColumn("m/z Value");
+            
+            //... Adding headers ...//
+            for (int iI=0; iI < scanMap.length; iI++){
+                model3.addColumn(scanMap[iI]);
+                model4.addColumn(scanMap[iI]);
+            }
+            
+            System.out.println("Populating arrays  (inseting rows) ...");
+            if(scanMap.length>=0){
+                blnExists = hmResamplingArray.containsKey(scanMap[0]);
+                if (blnExists == true){
+                    float[][] temp = hmResamplingArray.get(scanMap[0]);
+                    for(int iI=0; iI<temp[0].length; iI++){
+                        model3.insertRow(model3.getRowCount(), new Object[]{
+                            iI,
+                            temp[0][iI],
+                            temp[1][iI]
+                        });
+                        model4.insertRow(model4.getRowCount(), new Object[]{
+                            iI,
+                            temp[0][iI],
+                            temp[1][iI]
+                        });
                     }
                 }
-            }            
+            }
+            System.out.println("Populating arrays  (updating rows from hmSyntheticArray) ...");
+            //... Now it's time to load the rest of the columns ...//
+            for (int iJ=1; iJ < scanMap.length; iJ++){
+                blnExists = hmSyntheticArray.containsKey(scanMap[iJ]);
+                if (blnExists == true){
+                    float[][] temp = hmSyntheticArray.get(scanMap[iJ]);
+                    for(int iI=0; iI<temp[0].length; iI++){
+                        model3.setValueAt(temp[1][iI], iI, iJ+2);
+                    }
+                }
+            }
+            System.out.println("Populating arrays  (updating rows from hmResamplingArray) ...");
+            //... Now it's time to load the rest of the columns ...//
+            for (int iJ=1; iJ < scanMap.length; iJ++){
+                blnExists = hmResamplingArray.containsKey(scanMap[iJ]);
+                if (blnExists == true){
+                    float[][] temp = hmResamplingArray.get(scanMap[iJ]);
+                    for(int iI=0; iI<temp[0].length; iI++){
+                        model4.setValueAt(temp[1][iI], iI, iJ+2);
+                    }
+                }
+            }
+//            //... Update synthetic array and quant templates ...//
+//            System.out.println("Updating synthetic array and quant templates...");
+//            int iTemp1Index = 0, iMzIndexResamplArray = 0;
+//            float quantValue = 0.0f;
+//            int iX=0, iY=0;
+//            float fI=0.0f;
+//            for(int iI=0; iI<quantTemplate.length; iI++){
+//                scanID = quantTemplate[iI].getScanID();    
+//                blnExists = hmSyntheticArray.containsKey(quantTemplate[iI].getScanID());                
+//                if (blnExists){
+//                    System.out.println("Updating scanID="+scanID);
+//                    //... Get previous and next scans (-1, 0 and +1 positions in rt) ...//
+//                    sPrev = getPrevScan(array, scanID);
+//                    sNext = getNextScan(array, scanID);
+//                    
+//                    triplets[0] = sPrev;
+//                    triplets[1] = scanID;
+//                    triplets[2] = sNext;
+//                    
+//                    iTemp1Index = quantTemplate[iI].getTemplate2Index();
+//                    iMzIndexResamplArray = quantTemplate[iI].getMzIndex(); //... This will be used to calculate -1, 0, +1 in m/z ...//
+//                    quantValue = quantTemplate[iI].getQuantIntensities();
+//                    
+//                    for(int iZ=0; iZ<templates[iTemp1Index].getCoords().length; iZ++){ //... 54 positions (9 points x 6 isotopes) ...//
+//                        //... Update values using template A ...//                                               
+//                        iX = templates[iI].getCoord(iZ).getX();
+//                        iY = templates[iI].getCoord(iZ).getY();
+//                        fI = templates[iI].getCoord(iZ).getRelIntensity();
+//                        
+//                        //... Get synthetic array for each scan ...//
+//                        float[][] temp = hmSyntheticArray.get(triplets[iY+1]);
+//                        temp[1][iTemp1Index+iX] = temp[1][iTemp1Index+iX] + (quantValue * fI);
+//                        hmSyntheticArray.put(triplets[iY+1], temp);
+//                    }
+//                }
+//            }            
             
         } //... From if countPeptides ...//        
     }    
     /*----------------------------------------------------------------------
-     * Assign mz values in a resampled array
+     * Assign mz values in a resampled array using linear interpolation
      * @param array - bidimensional array that contains m/z and int values
      * @param mzArray - m/z values
-     * @return intArrray2 - intensity values
+     * @param intArrray2 - intensity values
+     * @param mzWindow - m/z window
+     * @param debug - true/false
+     * @return array with values assigned
      -----------------------------------------------------------------------*/
-    private float[][] binArray(float[][] array, Number[] mzArray, Number[] intArray, int mzWindow)
-    {
-        //... TO DO, implement kernel density estimation for binning data ...//
+    private float[][] binArray(float[][] array, Number[] mzArray, Number[] intArray, int mzWindow, boolean debug)
+    {       
+        //... The dimension of the array has to be same length as the one privided in the resampling array ...//
+        float[][] arrayret = null;
+        arrayret = new float[array.length][array[0].length]; 
         
-        float[][] arrayret = new float[array.length][array[0].length]; 
+        //... Convert bidimensional array into one dimension (m/z values for binary search) ...//
         Number[] onedimension = new Number[array[0].length];
         for (int iI=0; iI<array[0].length; iI++){
             onedimension[iI] = array[0][iI];
         }
         arrayret = array; //... Contains initalised locations (with 0 values) ...//
-        for (int iI=0; iI<intArray.length; iI++){
-            int iLocation = 0;
+        int iLocation = 0; //... Location in the array ...//
+        float fMzRef = 0.0f, fX1=0.0f, fX2=0.0f, fDx1=0.0f, fDx2=0.0f, fDx1x2=0.0f, fValX1=0.0f, fValX2=0.0f;
+        for (int iI=0; iI<intArray.length; iI++){            
             //... Perform binary search to find the location of the m/z value in the resampling array ..//
             if(intArray[iI].floatValue()>0&&mzArray[iI].floatValue()<mzWindow){ //... Only data with intensities higher than 0 and within the m/z window ...//
                 iLocation = binarySearch(onedimension, 0, onedimension.length, mzArray[iI].floatValue(), false);
-                arrayret[1][iLocation] = arrayret[0][iLocation] + intArray[iI].floatValue();                        
+                //... Validate indexes (first and last position) ...//
+                if(iLocation>0&&iLocation<onedimension.length){
+                    //... Perform linear interpolation ...//                    
+                    
+                    //... Get m/z value ...//
+                    fMzRef = mzArray[iI].floatValue();
+                    System.out.println("Look for m/z="+fMzRef + "\tInt=" + intArray[iI].floatValue());
+                    if(fMzRef<onedimension[iLocation].floatValue()){
+                        fX1 = onedimension[iLocation-1].floatValue();                         
+                        fX2 = onedimension[iLocation].floatValue();
+                        System.out.println("iLocation-1="+fX1);
+                        System.out.println("iLocation="+iLocation+"\tMz="+fX2);
+                    }else{
+                        fX1 = onedimension[iLocation].floatValue(); 
+                        fX2 = onedimension[iLocation+1].floatValue();
+                        System.out.println("iLocation="+iLocation+"\tMz="+fX1);
+                        System.out.println("iLocation+1="+fX2);
+                    }
+                    fDx1 = Math.abs(fX1-fMzRef);
+                    System.out.println("fDx1="+fDx1);
+                    fDx2 = Math.abs(fX2-fMzRef);
+                    System.out.println("fDx2="+fDx2);
+                    fDx1x2 = Math.abs(fX1-fX2); //... 100 % ...//
+                    System.out.println("fDx1x2="+fDx1x2);
+                    fValX1 = Math.abs(1-fDx1/fDx1x2);
+                    System.out.println("fValX1="+fValX1);
+                    fValX2 = Math.abs(1-fDx2/fDx1x2);   
+                    System.out.println("fValX2="+fValX2);
+                    if(fMzRef<onedimension[iLocation].floatValue()){
+                        arrayret[1][iLocation-1] = arrayret[1][iLocation-1] + intArray[iI].floatValue()*fValX1;
+                        arrayret[1][iLocation] = arrayret[1][iLocation] + intArray[iI].floatValue()*fValX2;
+                        System.out.println(arrayret[1][iLocation-1]+" goes to index = "+(iLocation-1));
+                        System.out.println(+arrayret[1][iLocation]+" goes to index = "+(iLocation));
+                    }else{
+                        arrayret[1][iLocation] = arrayret[1][iLocation] + intArray[iI].floatValue()*fValX1;
+                        arrayret[1][iLocation+1] = arrayret[1][iLocation+1] + intArray[iI].floatValue()*fValX2;
+                        System.out.println(arrayret[1][iLocation]+" goes to index = "+(iLocation));
+                        System.out.println(arrayret[1][iLocation+1]+" goes to index = "+(iLocation+1));
+                    }
+                }
+            }
+        }
+        if(debug){
+            System.out.println("Print binned array...");
+            for(int iD=0; iD<arrayret[0].length; iD++){
+                System.out.println("mz="+arrayret[0][iD]+"\tint="+arrayret[1][iD]);
             }
         }
         return arrayret;
@@ -4087,8 +4265,7 @@ public class ProteoSuiteView extends JFrame {
                     mslevel = lCVParam.getValue().trim();
                 }
             }            
-            if (mslevel.equals("1"))
-            {
+            if (mslevel.equals("1")){
                 array.add(new String[] {spectrum.getIndex().toString(), spectrum.getId()});
             }
         }
@@ -7166,14 +7343,17 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -7184,6 +7364,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JPopupMenu.Separator jSeparator8;
     private javax.swing.JPopupMenu.Separator jSeparator9;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JToolBar jToolBar3;
@@ -7297,6 +7478,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JPanel jpMzMLViewHeader;
     private javax.swing.JPanel jpMzQuantML;
     private javax.swing.JPanel jpMzQuantMLHeader;
+    private javax.swing.JPanel jpPanel4;
     private javax.swing.JPanel jpPeptideQuant;
     private javax.swing.JPanel jpPeptideQuantHeader;
     private javax.swing.JPanel jpProjectDetails;
