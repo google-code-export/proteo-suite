@@ -4050,7 +4050,9 @@ public class ProteoSuiteView extends JFrame {
                             blnExists = hmResamplingArray.containsKey(triplets[iTrip]);
                             if (blnExists == false){
                                 System.out.println("Performing resampling in scan = "+triplets[iTrip]);
-                                hmResamplingArray.put(triplets[iTrip], binArray(resamplingArray, mzNumbers, intenNumbers, mzWindow, true));
+                                float[][] resArray = binArray(resamplingArray, mzNumbers, intenNumbers, mzWindow, true);
+                                System.out.println("In_Memory=");
+                                hmResamplingArray.put(triplets[iTrip], resArray);
                                 hmSyntheticArray.put(triplets[iTrip], resamplingArray); //... Initalising synthetic array ...//
                             }
                         }
@@ -4070,6 +4072,7 @@ public class ProteoSuiteView extends JFrame {
                 scanMap[iMapIndex] = entry.getKey();
                 iMapIndex++;
             }
+            //... Sort array ...//s
             Arrays.sort(scanMap);
             
             //... Populate Arrays ...//
@@ -4082,7 +4085,7 @@ public class ProteoSuiteView extends JFrame {
             model4.addColumn("m/z Index");
             model4.addColumn("m/z Value");
             
-            //... Adding headers ...//
+            //... Adding column headers ...//
             for (int iI=0; iI < scanMap.length; iI++){
                 model3.addColumn(scanMap[iI]);
                 model4.addColumn(scanMap[iI]);
@@ -4112,20 +4115,21 @@ public class ProteoSuiteView extends JFrame {
             for (int iJ=1; iJ < scanMap.length; iJ++){
                 blnExists = hmSyntheticArray.containsKey(scanMap[iJ]);
                 if (blnExists == true){
-                    float[][] temp = hmSyntheticArray.get(scanMap[iJ]);
-                    for(int iI=0; iI<temp[0].length; iI++){
-                        model3.setValueAt(temp[1][iI], iI, iJ+2);
+                    float[][] temp2 = hmSyntheticArray.get(scanMap[iJ]);
+                    for(int iI=0; iI<temp2[0].length; iI++){
+                        model3.setValueAt(temp2[1][iI], iI, iJ+2);
                     }
                 }
             }
             System.out.println("Populating arrays  (updating rows from hmResamplingArray) ...");
             //... Now it's time to load the rest of the columns ...//
             for (int iJ=1; iJ < scanMap.length; iJ++){
+                System.out.println("updating rows for hmsResamplingArray " + scanMap[iJ]);
                 blnExists = hmResamplingArray.containsKey(scanMap[iJ]);
                 if (blnExists == true){
-                    float[][] temp = hmResamplingArray.get(scanMap[iJ]);
-                    for(int iI=0; iI<temp[0].length; iI++){
-                        model4.setValueAt(temp[1][iI], iI, iJ+2);
+                    float[][] temp3 = hmResamplingArray.get(scanMap[iJ]);
+                    for(int iI=0; iI<temp3[0].length; iI++){
+                        model4.setValueAt(temp3[1][iI], iI, iJ+2);
                     }
                 }
             }
@@ -4189,6 +4193,11 @@ public class ProteoSuiteView extends JFrame {
             onedimension[iI] = array[0][iI];
         }
         arrayret = array; //... Contains initalised locations (with 0 values) ...//
+        //... Clean intensity values ...//
+        for(int iI=0; iI<arrayret[0].length; iI++){
+            arrayret[1][iI] = 0.0f;
+        }
+        
         int iLocation = 0; //... Location in the array ...//
         float fMzRef = 0.0f, fX1=0.0f, fX2=0.0f, fDx1=0.0f, fDx2=0.0f, fDx1x2=0.0f, fValX1=0.0f, fValX2=0.0f;
         for (int iI=0; iI<intArray.length; iI++){            
