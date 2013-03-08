@@ -110,9 +110,9 @@ import org.proteosuite.external.IPC;
 import org.proteosuite.external.IPC.Options;
 import org.proteosuite.external.IPC.Results;
 import org.proteosuite.external.ViewChartGUI;
-import org.proteosuite.utils.CheckMemory;
 import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.ProgressBarDialog;
+import org.proteosuite.utils.SystemUtils;
 import org.proteosuite.utils.TwoDPlot;
 import org.proteosuite.utils.XIC;
 import org.w3c.dom.Document;
@@ -146,7 +146,10 @@ import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationList;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
+import uk.ac.ebi.jmzml.model.mzml.MzML;
 import uk.ac.ebi.jmzml.model.mzml.ReferenceableParamGroupList;
+import uk.ac.ebi.jmzml.xml.io.MzMLMarshaller;
+import uk.ac.liv.jmzqml.MzQuantMLElement;
 import uk.ac.liv.jmzqml.model.mzqml.AbstractParam;
 import uk.ac.liv.jmzqml.model.mzqml.Assay;
 import uk.ac.liv.jmzqml.model.mzqml.AssayList;
@@ -159,6 +162,7 @@ import uk.ac.liv.jmzqml.model.mzqml.DataMatrix;
 import uk.ac.liv.jmzqml.model.mzqml.DataProcessing;
 import uk.ac.liv.jmzqml.model.mzqml.DataProcessingList;
 import uk.ac.liv.jmzqml.model.mzqml.Feature;
+import uk.ac.liv.jmzqml.model.mzqml.FeatureList;
 import uk.ac.liv.jmzqml.model.mzqml.IdentificationFile;
 import uk.ac.liv.jmzqml.model.mzqml.IdentificationFiles;
 import uk.ac.liv.jmzqml.model.mzqml.InputFiles;
@@ -171,6 +175,7 @@ import uk.ac.liv.jmzqml.model.mzqml.PeptideConsensus;
 import uk.ac.liv.jmzqml.model.mzqml.PeptideConsensusList;
 import uk.ac.liv.jmzqml.model.mzqml.ProcessingMethod;
 import uk.ac.liv.jmzqml.model.mzqml.Protein;
+import uk.ac.liv.jmzqml.model.mzqml.ProteinList;
 import uk.ac.liv.jmzqml.model.mzqml.RawFile;
 import uk.ac.liv.jmzqml.model.mzqml.RawFilesGroup;
 import uk.ac.liv.jmzqml.model.mzqml.Row;
@@ -181,6 +186,7 @@ import uk.ac.liv.jmzqml.model.mzqml.StudyVariable;
 import uk.ac.liv.jmzqml.model.mzqml.StudyVariableList;
 import uk.ac.liv.jmzqml.model.mzqml.UserParam;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLMarshaller;
+import uk.ac.liv.jmzqml.xml.io.MzQuantMLObjectIterator;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
         
 /**
@@ -199,10 +205,12 @@ public class ProteoSuiteView extends JFrame {
     private final String mzMLVersion = "1.1";    
     private final String mzIDVersion = "1.1";
     private final String mzQVersion = "1.0";
+    private SystemUtils sysutils = new SystemUtils();
 
     //... List of unmarshaller objects ...//
     private ArrayList<MzMLUnmarshaller> aMzMLUnmarshaller = new ArrayList<MzMLUnmarshaller>();
     private ArrayList<MzIdentMLUnmarshaller> aMzIDUnmarshaller = new ArrayList<MzIdentMLUnmarshaller>();
+    private ArrayList<MzQuantMLUnmarshaller> aMzQUnmarshaller = new ArrayList<MzQuantMLUnmarshaller>();
     private ArrayList<MzQuantML> aMzQML = new ArrayList<MzQuantML>();
     private MzQuantML mzQuantML = null; //... Project class ...//
     private MzQuantML mzQuantMLTemp = null; //... Temporal class for displaying mzQuantML files ...//
@@ -232,6 +240,15 @@ public class ProteoSuiteView extends JFrame {
         //... Setting project icons ...//        
         Image iconApp = new ImageIcon(getClass().getClassLoader().getResource("images/icon.gif")).getImage();
         setIconImage(iconApp);
+        
+        //.. Check Java version and architecture ...//
+        System.out.println("****************************************");
+        System.out.println("*****    P R O T E O S U I T E    ******");
+        System.out.println("****************************************");       
+        sysutils.CheckMemory("starting up");
+        System.out.println("Java version: "+System.getProperty("java.version"));
+        System.out.println("Architecture: "+System.getProperty("sun.arch.data.model")+"-bit");
+        System.out.println("****************************************");
         
         //... Main Menu icons ...//        
         //... File ...//
@@ -665,6 +682,9 @@ public class ProteoSuiteView extends JFrame {
                                                         jmTools = new javax.swing.JMenu();
                                                         jmConverters = new javax.swing.JMenu();
                                                         jmMzML2MGF = new javax.swing.JMenuItem();
+                                                        jmMaxQ2MZQ = new javax.swing.JMenuItem();
+                                                        jmProgenesis2MZQ = new javax.swing.JMenuItem();
+                                                        jMzMLCompressed = new javax.swing.JMenuItem();
                                                         jmCustomize = new javax.swing.JMenuItem();
                                                         jmOptions = new javax.swing.JMenuItem();
                                                         jmDatabases = new javax.swing.JMenu();
@@ -2100,7 +2120,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jlQuantFilesStatus.setFont(new java.awt.Font("Tahoma", 1, 11));
                                                         jlQuantFilesStatus.setForeground(new java.awt.Color(51, 102, 0));
 
-                                                        jcbTechnique.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select technique", "SILAC", "iTRAQ", "15N", "Label free", "emPAI" }));
+                                                        jcbTechnique.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select technique", "SILAC", "iTRAQ", "TMT", "15N", "Label free", "emPAI" }));
                                                         jcbTechnique.setToolTipText("Select a technique for the analysis");
                                                         jcbTechnique.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -2329,7 +2349,31 @@ public class ProteoSuiteView extends JFrame {
                                                         });
                                                         jmConverters.add(jmMzML2MGF);
 
+                                                        jmMaxQ2MZQ.setText("MaxQuant to mzQuantML");
+                                                        jmMaxQ2MZQ.addActionListener(new java.awt.event.ActionListener() {
+                                                            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                                                jmMaxQ2MZQActionPerformed(evt);
+                                                            }
+                                                        });
+                                                        jmConverters.add(jmMaxQ2MZQ);
+
+                                                        jmProgenesis2MZQ.setText("Progenesis to mzQuantML");
+                                                        jmProgenesis2MZQ.addActionListener(new java.awt.event.ActionListener() {
+                                                            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                                                jmProgenesis2MZQActionPerformed(evt);
+                                                            }
+                                                        });
+                                                        jmConverters.add(jmProgenesis2MZQ);
+
                                                         jmTools.add(jmConverters);
+
+                                                        jMzMLCompressed.setText("Compress MzML file");
+                                                        jMzMLCompressed.addActionListener(new java.awt.event.ActionListener() {
+                                                            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                                                                jMzMLCompressedActionPerformed(evt);
+                                                            }
+                                                        });
+                                                        jmTools.add(jMzMLCompressed);
 
                                                         jmCustomize.setText("Customize");
                                                         jmCustomize.setEnabled(false);
@@ -2515,8 +2559,7 @@ public class ProteoSuiteView extends JFrame {
     private void jmExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmExitActionPerformed
         //... Exiting from proteosuite ...//
         int iExit = JOptionPane.showConfirmDialog(null, "Do you want to exit?", "Exiting from ProteoSuite", JOptionPane.YES_NO_OPTION);
-        if (iExit == JOptionPane.YES_OPTION) 
-        {
+        if (iExit == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }//GEN-LAST:event_jmExitActionPerformed
@@ -2585,26 +2628,29 @@ public class ProteoSuiteView extends JFrame {
                     model.addColumn("Type");
                     model.addColumn("Version");
                     
-                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "ReadingMzML");
                     final Thread thread = new Thread(new Runnable(){
                         @Override
                         public void run(){
                             //... Progress Bar ...//
-                            progressBarDialog.setTitle("Reading files");
+                            progressBarDialog.setTitle("Reading mzML files");
                             progressBarDialog.setVisible(true);
                         }
                     }, "ProgressBarDialog");
                     thread.start();
-                    new Thread("LoadingThread"){
+                    new Thread("ReadingMzML"){
                         @Override
                         public void run(){                            
-                            long lTime = System.currentTimeMillis();
-                            String sTimeUncompress = "";
-                            String sTimeUnmarshalling = "";                            
+                            String sOutput = "";
+                            String sMessage = "";
+                            jtaLog.setText(sOutput);
                             
                             //... Release unmarshallers ...//
-                            if (aFiles.length>0){                                
-                                System.out.println("Reading mzML files (Size="+aFiles.length+")");
+                            if (aFiles.length>0){                     
+                                sMessage = sysutils.getTime()+" - Reading mzML files (Total="+aFiles.length+")";
+                                System.out.println(sMessage);
+                                sOutput = sOutput + sMessage+"\n";
+                                jtaLog.setText(sOutput);
                                 aMzMLUnmarshaller.clear();
                             }
                             //... Reading selected files ...//
@@ -2612,11 +2658,20 @@ public class ProteoSuiteView extends JFrame {
                                 //... Validate file extension (mixed files) ...// 
                                 if ((aFiles[iI].getName().toLowerCase().indexOf(".mzml") > 0)||(aFiles[iI].getName().toLowerCase().indexOf(".mzml.gz") > 0)){
                                     File xmlFile = new File(aFiles[iI].getPath());
+                                    
+                                    progressBarDialog.setTitle("Reading mzml files ("+(iI+1)+"/"+aFiles.length+") - " + xmlFile.getName());
+                                    progressBarDialog.setVisible(true);
+                                    
                                     //... Uncompress mzML.gz files ...//
                                     if (aFiles[iI].getName().toLowerCase().indexOf(".mzml.gz") > 0){
                                         try{                                                                            
+                                            sMessage = sysutils.getTime()+" - Uncompressing " + xmlFile.getName();
                                             progressBarDialog.setTitle("Uncompressing " + xmlFile.getName());
                                             progressBarDialog.setVisible(true);
+                                            
+                                            System.out.println(sMessage);
+                                            sOutput = sOutput + sMessage+"\n";  
+                                            jtaLog.setText(sOutput);
 
                                             File outFile = null;
                                             FileOutputStream fos = null;
@@ -2631,35 +2686,50 @@ public class ProteoSuiteView extends JFrame {
                                             }
                                             fos.close();      
                                             xmlFile = outFile;
-                                            lTime = System.currentTimeMillis()-lTime;
-                                            sTimeUncompress = "Uncompressing ends after " + (lTime/1000) + " secs, ";            
-                                            lTime = System.currentTimeMillis();
+                                            sMessage = sysutils.getTime()+" - Uncompressing ends ";
+                                            System.out.println(sMessage);
+                                            sOutput = sOutput + sMessage+"\n";                                            
                                         }
                                         catch(IOException ioe){
                                               System.out.println("Exception has been thrown" + ioe);
                                         }
                                     }
-                                    progressBarDialog.setTitle("Reading " + xmlFile.getName());
-                                    progressBarDialog.setVisible(true);
                                     //... Unmarshall data using jzmzML API ...//
+                                    sMessage = sysutils.getTime()+" - Unmarshalling " + xmlFile.getName() + " starts ";
+                                    System.out.println(sMessage);
+                                    sOutput = sOutput + sMessage+"\n"; 
+                                    jtaLog.setText(sOutput);
                                     unmarshalMzMLFile(model, xmlFile, "");
+                                    sMessage = sysutils.getTime()+" - Unmarshalling ends ";
+                                    System.out.println(sMessage);
+                                    sOutput = sOutput + sMessage+"\n";
+                                    jtaLog.setText(sOutput);
                                 }
                             } //... For files ...//
-                            lTime = System.currentTimeMillis()-lTime;
-                            sTimeUnmarshalling = "mzML unmarshalling ends after " + (lTime/1000) + " secs";
                             
                             //... We then display the first mzML element, the corresponding chromatogram and the 2D plot ...//        
-                            System.out.println("Loading mzML view ...");
+                            sMessage = sysutils.getTime()+" - Loading mzML view ";
+                            System.out.println(sMessage);
+                            sOutput = sOutput + sMessage+"\n";
+                            jtaLog.setText(sOutput);
                             loadMzMLView(0);
-                            System.out.println("Showing chromatogram ...");
+                            sMessage = sysutils.getTime()+" - Displaying chromatogram ";
+                            System.out.println(sMessage);
+                            sOutput = sOutput + sMessage+"\n";
+                            jtaLog.setText(sOutput);
                             showChromatogram(0, aFiles[0].getPath());
-                            System.out.println("Showing 2D plot ...");
+                            sMessage = sysutils.getTime()+" - Displaying 2D Plot";
+                            System.out.println(sMessage);
+                            sOutput = sOutput + sMessage+"\n";
+                            jtaLog.setText(sOutput);
                             show2DPlot(0, aFiles[0].getPath());
             
                             progressBarDialog.setVisible(false);
                             progressBarDialog.dispose();
-                            jtaLog.setText("Raw files imported successfully! " + sTimeUncompress + sTimeUnmarshalling);
-                            System.out.println("Raw files imported successfully! " + sTimeUncompress + sTimeUnmarshalling);
+                            sMessage = sysutils.getTime()+" - Raw files imported successfully!";
+                            System.out.println(sMessage);
+                            sOutput = sOutput + sMessage+"\n";
+                            jtaLog.setText(sOutput);
                             renderIdentFiles();
                             uptStatusPipeline();
                         }
@@ -2677,7 +2747,7 @@ public class ProteoSuiteView extends JFrame {
                     model.addColumn("Type");
                     model.addColumn("Version");
     
-                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "ReadingMGF");
                     final Thread thread = new Thread(new Runnable(){
                         @Override
                         public void run(){
@@ -2687,11 +2757,23 @@ public class ProteoSuiteView extends JFrame {
                         }
                     }, "ProgressBarDialog");
                     thread.start();
-                    new Thread("LoadingThread"){
+                    new Thread("ReadingMGF"){
                         @Override
                         public void run(){
+                            String sMessage = "";
+                            String sOutput = "";
+                            jtaLog.setText(sOutput);
+                            if (aFiles.length>0){                     
+                                sMessage = sysutils.getTime()+" - Reading MGF files (Total="+aFiles.length+")";
+                                System.out.println(sMessage);
+                                sOutput = sOutput + sMessage+"\n";
+                                jtaLog.setText(sOutput);
+                            }
+                            
                             //... Reading selected files ...//
                             for (int iI = 0; iI < aFiles.length; iI++){
+                                progressBarDialog.setTitle("Reading MGF files ("+(iI+1)+"/"+aFiles.length+") - " + aFiles[iI].getName());
+                                progressBarDialog.setVisible(true);                                
                                 //... Validate file extension (mixed files) ...// 
                                 if (aFiles[iI].getName().toLowerCase().indexOf(".mgf") > 0){
                                     model.insertRow(model.getRowCount(), new Object[]{aFiles[iI].getName(), 
@@ -2702,14 +2784,22 @@ public class ProteoSuiteView extends JFrame {
                             } //... For files ...//
                             
                             //... Display data for the first element ...//
+                            sMessage = sysutils.getTime()+" - Loading MGF view ";
+                            System.out.println(sMessage);
+                            sOutput = sOutput + sMessage+"\n";
+                            jtaLog.setText(sOutput);
                             loadMGFView(aFiles[0].getName(), aFiles[0].getPath());
+            
                             progressBarDialog.setVisible(false);
                             progressBarDialog.dispose();
+                            sMessage = sysutils.getTime()+" - Raw files imported successfully!";
+                            System.out.println(sMessage);
+                            sOutput = sOutput + sMessage+"\n";
+                            jtaLog.setText(sOutput);
                             renderIdentFiles();
                             uptStatusPipeline();
                         }
                     }.start();                    
-                    jtaLog.setText("Raw files imported successfully!");
                 } //... From reading MGF files ...//         
 //-------------------//
 //  Read mzIdentML   //
@@ -2724,7 +2814,7 @@ public class ProteoSuiteView extends JFrame {
                     model.addColumn("Version");
                     model.addColumn("Raw File");
 
-                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "ReadingMzID");
                     final Thread thread = new Thread(new Runnable(){
                         @Override
                         public void run(){
@@ -2734,12 +2824,19 @@ public class ProteoSuiteView extends JFrame {
                         }
                     }, "ProgressBarDialog");
                     thread.start();
-                    new Thread("LoadingThread"){
+                    new Thread("ReadingMzID"){
                         @Override
-                        public void run(){                                 
+                        public void run(){          
+                            String sOutput = "";
+                            String sMessage = "";
+                            jtaLog.setText(sOutput);
+                            
                             //... Release unmarshallers ...//
                             if (aFiles.length>0){           
-                                System.out.println("Reading mzID files (Size="+aFiles.length+")");
+                                sMessage = sysutils.getTime()+" - Reading mzML files (Total="+aFiles.length+")";
+                                System.out.println(sMessage);
+                                sOutput = sOutput + sMessage+"\n";
+                                jtaLog.setText(sOutput);
                                 aMzIDUnmarshaller.clear();
                             }                            
                             //... Reading selected files ...//
@@ -2747,9 +2844,14 @@ public class ProteoSuiteView extends JFrame {
                                 //... Validate file extension (mixed files) ...// 
                                 if ((aFiles[iI].getName().toLowerCase().indexOf(".mzid") > 0)||(aFiles[iI].getName().toLowerCase().indexOf(".mzid.gz") > 0)){                                
                                     File xmlFile = new File(aFiles[iI].getPath());
+                                    
+                                    progressBarDialog.setTitle("Reading mzid Files ("+(iI+1)+"/"+aFiles.length+") - " + xmlFile.getName());
+                                    progressBarDialog.setVisible(true);
+                                    
                                     //... Uncompress .gz files ...//
                                     if (aFiles[iI].getName().toLowerCase().indexOf(".mzid.gz") > 0){
                                         try{                                                                            
+                                            sMessage = sysutils.getTime()+" - Uncompressing " + xmlFile.getName();
                                             progressBarDialog.setTitle("Uncompressing " + xmlFile.getName());
                                             progressBarDialog.setVisible(true);
 
@@ -2766,29 +2868,46 @@ public class ProteoSuiteView extends JFrame {
                                             }
                                             fos.close();      
                                             xmlFile = outFile;
+                                            sMessage = sysutils.getTime()+" - Uncompressing ends ";
+                                            System.out.println(sMessage);
+                                            sOutput = sOutput + sMessage+"\n";
+                                            jtaLog.setText(sOutput);
                                         }
                                         catch(IOException ioe){
                                               System.out.println("Exception has been thrown" + ioe);
                                         }
                                     }
-                                    progressBarDialog.setTitle("Reading " + xmlFile.getName());
-                                    progressBarDialog.setVisible(true);
                                     //... Unmarshall data using jmzIdentML API ...//
+                                    sMessage = sysutils.getTime()+" - Unmarshalling " + xmlFile.getName() + " starts ";
+                                    System.out.println(sMessage);
+                                    sOutput = sOutput + sMessage+"\n";  
+                                    jtaLog.setText(sOutput);
                                     unmarshalMzIDFile(model, xmlFile, "");
+                                    sMessage = sysutils.getTime()+" - Unmarshalling ends ";
+                                    System.out.println(sMessage);
+                                    sOutput = sOutput + sMessage+"\n";
+                                    jtaLog.setText(sOutput);
                                 }
                             } //... For files ...//                                 
                             
-                            System.out.println("Loading mzIdentML view ...");
                             //... Display first element ...//
+                            sMessage = sysutils.getTime()+" - Loading mzIdentML view ";
+                            System.out.println(sMessage);
+                            sOutput = sOutput + sMessage+"\n";
+                            jtaLog.setText(sOutput);
                             loadMzIdentMLView(0, aFiles[0].getName());
                             
                             progressBarDialog.setVisible(false);
                             progressBarDialog.dispose();
+                            
+                            sMessage = sysutils.getTime()+" - Identification files imported successfully!";
+                            System.out.println(sMessage);
+                            sOutput = sOutput + sMessage+"\n";                            
+                            jtaLog.setText(sOutput);                            
                             renderIdentFiles();
                             uptStatusPipeline();
                         }
                     }.start();
-                    jtaLog.setText("Identification files imported successfully!");
                 }
 //-------------------//
 //  Read Mascot XML  //
@@ -2803,7 +2922,7 @@ public class ProteoSuiteView extends JFrame {
                     model.addColumn("Version");
                     model.addColumn("Raw File");
 
-                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "ReadingMascot");
                     final Thread thread = new Thread(new Runnable(){
                         @Override
                         public void run(){
@@ -2813,11 +2932,24 @@ public class ProteoSuiteView extends JFrame {
                         }
                     }, "ProgressBarDialog");
                     thread.start();
-                    new Thread("LoadingThread"){
+                    new Thread("ReadingMascot"){
                         @Override
                         public void run(){
+                            String sMessage = "";
+                            String sOutput = "";
+                            jtaLog.setText(sOutput);
+                            if (aFiles.length>0){                     
+                                sMessage = sysutils.getTime()+" - Reading Mascot XML files (Total="+aFiles.length+")";
+                                System.out.println(sMessage);
+                                sOutput = sOutput + sMessage+"\n";
+                                jtaLog.setText(sOutput);
+                            }
+                            
                             //... Reading selected files ...//                            
                             for (int iI = 0; iI < aFiles.length; iI++){
+                                progressBarDialog.setTitle("Reading Mascot XML files ("+(iI+1)+"/"+aFiles.length+") - " + aFiles[iI].getName());
+                                progressBarDialog.setVisible(true);
+                                
                                 //... Validate file extension (mixed files) ...// 
                                 if (aFiles[iI].getName().toLowerCase().indexOf(".xml") >0){
                                     model.insertRow(model.getRowCount(), new Object[]{aFiles[iI].getName(), 
@@ -2827,16 +2959,24 @@ public class ProteoSuiteView extends JFrame {
                                 }
                             } //... For files ...// 
                             
-                            //... Display first element ...//
-                            loadMascotView(aFiles[0].getName(), aFiles[0].getPath().toString().replace("\\", "/"));                            
-                            
+                            //... Display data for the first element ...//
+                            sMessage = sysutils.getTime()+" - Loading Mascot XML view ";
+                            System.out.println(sMessage);
+                            sOutput = sOutput + sMessage+"\n";
+                            jtaLog.setText(sOutput);
+                            loadMascotView(aFiles[0].getName(), aFiles[0].getPath().toString().replace("\\", "/"));
+            
                             progressBarDialog.setVisible(false);
                             progressBarDialog.dispose();
+                            sMessage = sysutils.getTime()+" - Identifiation files imported successfully!";
+                            System.out.println(sMessage);
+                            sOutput = sOutput + sMessage+"\n";
+                            jtaLog.setText(sOutput);
                             renderIdentFiles();
                             uptStatusPipeline();
+                            
                         }
                     }.start();
-                    jtaLog.setText("Identification files imported successfully!");
                 }
 //-------------------//
 //  Read mzQuantML   //
@@ -2850,7 +2990,7 @@ public class ProteoSuiteView extends JFrame {
                     model.addColumn("Type");
                     model.addColumn("Version");
 
-                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "ReadingMZQ");
                     final Thread thread = new Thread(new Runnable(){
                         @Override
                         public void run(){
@@ -2860,38 +3000,58 @@ public class ProteoSuiteView extends JFrame {
                         }
                     }, "ProgressBarDialog");
                     thread.start();
-                    new Thread("LoadingThread"){
+                    new Thread("ReadingMZQ"){
                         @Override
                         public void run(){  
+                            String sOutput = "";
+                            String sMessage = "";
+                            jtaLog.setText(sOutput);
+                            
                             //... Release unmarshallers ...//
-                            System.out.println("Cleaning mzq file buffer...");
-                            if (aFiles.length>0){                                
-                                System.out.println("Reading mzQuantML files (Size="+aFiles.length+")");
-                                aMzQML.clear();
-                            } 
+                            if (aFiles.length>0){           
+                                sMessage = sysutils.getTime()+" - Reading mzQuantML files (Total="+aFiles.length+")";
+                                System.out.println(sMessage);
+                                sOutput = sOutput + sMessage+"\n";
+                                jtaLog.setText(sOutput);
+                                aMzQUnmarshaller.clear();
+                            }  
                             
                             //... Reading selected files ...//
-                            System.out.println("Reading files ...");
                             boolean isOK = true;
-                            for (int iI = 0; iI < aFiles.length; iI++){
+                            for (int iI = 0; iI < aFiles.length; iI++){                                   
                                 //... Validate file extension (mixed files) ...// 
                                 if (aFiles[iI].getName().toLowerCase().indexOf(".mzq") >0){
                                     File xmlFile = new File(aFiles[iI].getPath());
-                                    progressBarDialog.setTitle("Reading " + xmlFile.getName());                                
+                                    progressBarDialog.setTitle("Reading mzq Files ("+(iI+1)+"/"+aFiles.length+") - " + xmlFile.getName());
                                     progressBarDialog.setVisible(true);
-                                    System.out.println("Reading " + xmlFile.getPath());
 
-                                    //... Unmarshall data using mzQuantML API ...//
+                                    //... Unmarshall data using jmzIdentML API ...//
+                                    sMessage = sysutils.getTime()+" - Unmarshalling " + xmlFile.getName() + " starts ";
+                                    System.out.println(sMessage);
+                                    sOutput = sOutput + sMessage+"\n";  
+                                    jtaLog.setText(sOutput);
                                     isOK = unmarshalMzQMLFile(model, xmlFile);
                                     if (!isOK){ //... Invalid mzq file ...//
                                         break;
                                     }
+                                    sMessage = sysutils.getTime()+" - Unmarshalling ends ";
+                                    System.out.println(sMessage);
+                                    sOutput = sOutput + sMessage+"\n";
+                                    jtaLog.setText(sOutput);
                                 }
                             } //... For files ...//                                                       
                             if (isOK){
-                                //... Display first element (Results if already generated) ...//
+                                //... Display first element ...//
+                                sMessage = sysutils.getTime()+" - Loading mzQuantML view ";
+                                System.out.println(sMessage);
+                                sOutput = sOutput + sMessage+"\n";
+                                jtaLog.setText(sOutput);
                                 loadMzQuantMLView(0, aFiles[0].getName());
-                                jtaLog.setText("Quantitation files imported successfully!");
+
+                                sMessage = sysutils.getTime()+" - Quantification files imported successfully!";
+                                System.out.println(sMessage);
+                                sOutput = sOutput + sMessage+"\n";                            
+                                jtaLog.setText(sOutput);                               
                             }
                             progressBarDialog.setVisible(false);
                             progressBarDialog.dispose();
@@ -3219,7 +3379,7 @@ public class ProteoSuiteView extends JFrame {
                 JOptionPane.showMessageDialog(this, "Please select at least one identification file. (Use the import file option in the menu).", "Error", JOptionPane.ERROR_MESSAGE);
             }
             else if (jcbTechnique.getSelectedItem().equals("Select technique")){
-                JOptionPane.showMessageDialog(this, "Please specify the technique used in your pipeline (e.g. iTRAQ, SILAC, 15N, etc.)", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please specify the technique used in your pipeline (e.g. iTRAQ, TMT, SILAC, 15N, etc.)", "Error", JOptionPane.ERROR_MESSAGE);
             }
             else if (jcbOutputFormat.getSelectedItem().equals("Select format")){
                 JOptionPane.showMessageDialog(this, "Please specify the output format (e.g. .mzq, .csv, etc.)", "Error", JOptionPane.ERROR_MESSAGE);
@@ -3228,19 +3388,19 @@ public class ProteoSuiteView extends JFrame {
                 isOK = checkMapping();
                 if(isOK){
                     //... In this thread, we call xTracker module (parameter files are generated using proteosuite) ...//
-                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "RunPipeline");
                     final Thread thread = new Thread(new Runnable(){
                         @Override
                         public void run(){
                             //... Progress Bar ...//
-                            if (jcbTechnique.getSelectedItem().toString().equals("iTRAQ")){
+                            if ((jcbTechnique.getSelectedItem().toString().equals("iTRAQ"))||(jcbTechnique.getSelectedItem().toString().equals("TMT"))){
                                 progressBarDialog.setTitle("Running Quantitation Analysis via xTracker");
-                                progressBarDialog.setVisible(true);                            
+                                progressBarDialog.setVisible(true);
                             }
                         }
                     }, "ProgressBarDialog");
                     thread.start();
-                    new Thread("LoadingThread"){
+                    new Thread("RunPipeline"){
                         @Override
                         public void run(){
                             boolean isOK = false;
@@ -3282,7 +3442,8 @@ public class ProteoSuiteView extends JFrame {
                                 }
                             }
                             else{
-                                if (jcbTechnique.getSelectedItem().toString().equals("iTRAQ")){ //... Label free will be performed in proteosuite ...//                                
+                                if ((jcbTechnique.getSelectedItem().toString().equals("iTRAQ"))||(jcbTechnique.getSelectedItem().toString().equals("TMT"))){ 
+                                        //... Label free will be performed in proteosuite ...//                                
                                         //... Generate config files for xTracker ...//                                    
                                         isOK = generateFiles();
                                         if(isOK){
@@ -3564,6 +3725,83 @@ public class ProteoSuiteView extends JFrame {
             loadMzIdentMLView(jtIdentFiles.getSelectedRow(), jtIdentFiles.getValueAt(jtIdentFiles.getSelectedRow(), 0).toString());         
         }
     }//GEN-LAST:event_jtIdentFilesMouseClicked
+
+    private void jMzMLCompressedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMzMLCompressedActionPerformed
+        File xmlFile = new File("D:\\Data\\D9-CPTAC\\200Scans\\zlib\\mam_042408o_CPTAC_study6_6B011.mzML");
+        System.out.println("Reading mzML file: " + xmlFile.getName()+"...");
+        MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
+        System.out.println("Version: "+unmarshaller.getMzMLVersion());       
+                
+        MzML mzml = new MzML();
+        mzml.setVersion("2.0");
+        System.out.println("Version: "+mzml.getVersion());       
+        MzMLMarshaller marshaller = new MzMLMarshaller();
+        marshaller.marshall(mzml);
+        System.out.println("Done!");       
+        
+    }//GEN-LAST:event_jMzMLCompressedActionPerformed
+
+    private void jmMaxQ2MZQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmMaxQ2MZQActionPerformed
+        //... Load MaxQuant2MZQ GUI ...//
+        final JFrame jfWinParams = new JFrame("Convert MaxQuant result files to mzQuantML");        
+        MaxQ2MZQView winParams = new MaxQ2MZQView(jfWinParams, sWorkspace);
+        jfWinParams.setResizable(false);
+        jfWinParams.setSize(500, 450);
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
+        Action escapeAction = new AbstractAction() 
+        {
+            public void actionPerformed(ActionEvent e) {
+                jfWinParams.dispose();
+            }
+        };        
+        jfWinParams.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
+        jfWinParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);
+        
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        int x1 = dim.width / 2;
+        int y1 = dim.height / 2;
+        int x2 = jfWinParams.getSize().width / 2;
+        int y2 = jfWinParams.getSize().height / 2;        
+        jfWinParams.setLocation(x1-x2, y1-y2);
+        Image iconApp = new ImageIcon(getClass().getClassLoader().getResource("images/icon.gif")).getImage();
+        jfWinParams.setIconImage(iconApp);
+        jfWinParams.setAlwaysOnTop(true);
+        
+        jfWinParams.add(winParams);
+        jfWinParams.pack();
+        jfWinParams.setVisible(true);
+    }//GEN-LAST:event_jmMaxQ2MZQActionPerformed
+
+    private void jmProgenesis2MZQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmProgenesis2MZQActionPerformed
+        //... Load Progenesis2MZQ GUI ...//
+        final JFrame jfWinParams = new JFrame("Convert Progenesis result files to mzQuantML");        
+        Prog2MZQView winParams = new Prog2MZQView(jfWinParams, sWorkspace);
+        jfWinParams.setResizable(false);
+        jfWinParams.setSize(500, 450);
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
+        Action escapeAction = new AbstractAction() 
+        {
+            public void actionPerformed(ActionEvent e) {
+                jfWinParams.dispose();
+            }
+        };
+        jfWinParams.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
+        jfWinParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);
+        
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        int x1 = dim.width / 2;
+        int y1 = dim.height / 2;
+        int x2 = jfWinParams.getSize().width / 2;
+        int y2 = jfWinParams.getSize().height / 2;        
+        jfWinParams.setLocation(x1-x2, y1-y2);
+        Image iconApp = new ImageIcon(getClass().getClassLoader().getResource("images/icon.gif")).getImage();
+        jfWinParams.setIconImage(iconApp);
+        jfWinParams.setAlwaysOnTop(true);
+        
+        jfWinParams.add(winParams);
+        jfWinParams.pack();
+        jfWinParams.setVisible(true);
+    }//GEN-LAST:event_jmProgenesis2MZQActionPerformed
     /*--------------------------------------------------------------
      * Mapping identification files with the corresponding raw file 
      * @param void
@@ -3618,7 +3856,6 @@ public class ProteoSuiteView extends JFrame {
      -----------------------------------*/    
     private void uptCloseProjectStatus()
     {
-        System.out.println("ProjectName="+this.sProjectName);
         if(sProjectName.equals("New")){
             jmCloseProject.setEnabled(false);
         }else{
@@ -4051,7 +4288,6 @@ public class ProteoSuiteView extends JFrame {
                             if (blnExists == false){
                                 System.out.println("Performing resampling in scan = "+triplets[iTrip]);
                                 float[][] resArray = binArray(resamplingArray, mzNumbers, intenNumbers, mzWindow, true);
-                                System.out.println("In_Memory=");
                                 hmResamplingArray.put(triplets[iTrip], resArray);
                                 hmSyntheticArray.put(triplets[iTrip], resamplingArray); //... Initalising synthetic array ...//
                             }
@@ -4072,7 +4308,7 @@ public class ProteoSuiteView extends JFrame {
                 scanMap[iMapIndex] = entry.getKey();
                 iMapIndex++;
             }
-            //... Sort array ...//s
+            //... Sort array ...//
             Arrays.sort(scanMap);
             
             //... Populate Arrays ...//
@@ -4128,6 +4364,7 @@ public class ProteoSuiteView extends JFrame {
                 blnExists = hmResamplingArray.containsKey(scanMap[iJ]);
                 if (blnExists == true){
                     float[][] temp3 = hmResamplingArray.get(scanMap[iJ]);
+                    System.out.println("In_memory2="+temp3[0][16]+"\tmz="+temp3[1][16]);
                     for(int iI=0; iI<temp3[0].length; iI++){
                         model4.setValueAt(temp3[1][iI], iI, iJ+2);
                     }
@@ -4735,7 +4972,7 @@ public class ProteoSuiteView extends JFrame {
                     jdpTIC.repaint();
                }
                else{
-                   System.out.println("This mzML file doesn't contain MS2 raw data.");
+                   System.out.println(sysutils.getTime()+" - This mzML file doesn't contain MS2 raw data.");
                }
             }
             catch (MzMLUnmarshallerException ume){
@@ -4749,12 +4986,12 @@ public class ProteoSuiteView extends JFrame {
      -----------------------------------------------------------*/
     private void show2DPlot(int iIndex, String sTitle) {                                             
         
-        CheckMemory chm = new CheckMemory("Before allocating memory for 2D plot");
+        //CheckMemory chm = new CheckMemory("Before allocating memory for 2D plot");
         //... Display about 27 x 3 = 51 MB maximum for now ...//
         float[] mz = new float[200000];
         float[] intensities = new float[200000];
         float[] art = new float[200000];
-        CheckMemory chm2 = new CheckMemory("After allocating memory for 2D plot");
+        //CheckMemory chm2 = new CheckMemory("After allocating memory for 2D plot");
 
         float rt = 0;
         int iCounter = 0;        
@@ -4832,14 +5069,14 @@ public class ProteoSuiteView extends JFrame {
                     iK++;
                 }                            
             }
-            System.out.println("2D view holding " + iCounter + " elements.");            
+            System.out.println(sysutils.getTime()+" - 2D view holding " + iCounter + " elements.");            
             TwoDPlot jifView2D = new TwoDPlot(sTitle, mz, intensities, art);
             jp2D.add(jifView2D);
             jifView2D.pack();
             jifView2D.setVisible(true);
         }      
         else{
-            System.out.println("This mzML file doesn't contain MS2 raw data.");
+            System.out.println(sysutils.getTime()+" - This mzML file doesn't contain MS2 raw data.");
         }
     }         
     /*--------------------------
@@ -4904,17 +5141,18 @@ public class ProteoSuiteView extends JFrame {
         if (!jtIdentFiles.getValueAt(iIndex, 0).toString().equals(jlFileNameMzIDText.getText())){
             final int iIndexRef = iIndex;
             final String filename = sFileName;
-            final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+            final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "LoadMzIDView");
             final Thread thread = new Thread(new Runnable(){
                 @Override
                 public void run(){
                     //... Progress Bar ...//
-                    progressBarDialog.setTitle("Loading values");
+                    progressBarDialog.setTitle("Loading MzIdentML data");
+                    progressBarDialog.setTaskName("Please wait while loading the data ...");
                     progressBarDialog.setVisible(true);
                 }
             }, "ProgressBarDialog");
             thread.start();
-            new Thread("LoadingThread"){
+            new Thread("LoadMzIDView"){
                 @Override
                 public void run(){                    
                     DefaultTableModel model = new DefaultTableModel(){
@@ -4931,15 +5169,13 @@ public class ProteoSuiteView extends JFrame {
                     model.addColumn("Rank");
                     model.addColumn("Score");        
                     model.addColumn("Spectrum ID");  
-                    System.out.println("column="+model.getColumnClass(0));                    
                     String sOutput="";
 
                     MzIdentMLUnmarshaller unmarshaller = aMzIDUnmarshaller.get(iIndexRef);
 
                     //... File Name and Version ...//
                     jlFileNameMzIDText.setText(filename);
-                    System.out.println("Displaying file " + filename);
-                    sOutput = "mzML Version:\t" + unmarshaller.getMzIdentMLVersion() + "\n";
+                    sOutput = "mzIdentML Version:\t" + unmarshaller.getMzIdentMLVersion() + "\n";
 
                     //... File Content ...//
                     sOutput = sOutput + "Analysis Software:\n";
@@ -4951,6 +5187,7 @@ public class ProteoSuiteView extends JFrame {
                         }
                     }
                     int iCount=0;
+                    String sAccesion = "";
                     //... Populating protein and peptide identifications ...//
                     AnalysisData analysisData = unmarshaller.unmarshal(MzIdentMLElement.AnalysisData);
                     List<SpectrumIdentificationList> silList = analysisData.getSpectrumIdentificationList();
@@ -4960,25 +5197,30 @@ public class ProteoSuiteView extends JFrame {
                             SpectrumIdentificationItem selected = null;
                             List<SpectrumIdentificationItem> siiList = sir.getSpectrumIdentificationItem();
                             for (SpectrumIdentificationItem sii : siiList) {
-                                    selected = sii;
-                                    iCount++;
-                                    Peptide peptide = selected.getPeptide();
-                                    if (peptide != null) {
-                                        List<PeptideEvidenceRef> pepRefList = selected.getPeptideEvidenceRef();
+                                selected = sii;
+                                iCount++;
+                                Peptide peptide = selected.getPeptide();
+                                if (peptide != null) {
+                                    List<PeptideEvidenceRef> pepRefList = selected.getPeptideEvidenceRef();
+                                    if (pepRefList.size() > 0){
                                         PeptideEvidence pe = pepRefList.get(0).getPeptideEvidence();
-                                        DBSequence dbs = pe.getDBSequence();                                    
-                                        model.insertRow(model.getRowCount(), new Object[]{
-                                            iCount,
-                                            dbs.getAccession().replace("|", "-"),
-                                            peptide.getPeptideSequence(), 
-                                            sii.getRank(),
-                                            sii.getCvParam().get(0).getValue(),
-                                            sir.getSpectrumID()
-                                            });
+                                        DBSequence dbs = pe.getDBSequence();
+                                        sAccesion = dbs.getAccession().replace("|", "-");
+                                    }else{
+                                        sAccesion = "N/A";
                                     }
+                                    model.insertRow(model.getRowCount(), new Object[]{
+                                        iCount,
+                                        sAccesion,
+                                        peptide.getPeptideSequence(), 
+                                        sii.getRank(),
+                                        sii.getCvParam().get(0).getValue(),
+                                        sir.getSpectrumID()
+                                        });
+                                }
                             }
                         }
-                    }             
+                    }
                     jtMzId.setAutoCreateRowSorter(true);
                     jtaMzIDView.setText(sOutput);
                     jtpProperties.setSelectedIndex(2);
@@ -4997,24 +5239,20 @@ public class ProteoSuiteView extends JFrame {
      ------------------------------------------------*/
     private void loadMzQuantMLView(int iIndex, String sFile) 
     {
-        System.out.println("Displying loadMzQuantMLView...");
-        System.out.println(jtQuantFiles.getValueAt(iIndex, 0).toString());
-        System.out.println(jlFileNameMzQText.getText());
         if (!jtQuantFiles.getValueAt(iIndex, 0).toString().equals(jlFileNameMzQText.getText())){        
-            System.out.println("Starting new process..");
             final String sFileRef = sFile;
             final int iIndexRef = iIndex;
-            final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+            final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "LoadMZQView");
             final Thread thread = new Thread(new Runnable(){
                 @Override
                 public void run(){
                     //... Progress Bar ...//
-                    progressBarDialog.setTitle("Loading values");
+                    progressBarDialog.setTitle("Loading MZQ data");
                     progressBarDialog.setVisible(true);
                 }
             }, "ProgressBarDialog");
             thread.start();
-            new Thread("LoadingThread"){
+            new Thread("LoadMZQView"){
                 @Override
                 public void run(){                    
                     jtpProperties.setSelectedIndex(4);
@@ -5027,61 +5265,93 @@ public class ProteoSuiteView extends JFrame {
                     model.addColumn("Protein");
                     model2.addColumn("Peptide");
                     model3.addColumn("Feature");
-
-                    mzQuantMLTemp = aMzQML.get(iIndexRef);
+                    
+                    MzQuantMLUnmarshaller unmarshaller = aMzQUnmarshaller.get(iIndexRef);                               
+                    System.out.println(sysutils.getTime()+" - MZQ elements="+aMzQUnmarshaller.size());
+                    System.out.println(sysutils.getTime()+" - Unmarshalling element="+iIndexRef);
+                    
+                    //... File Name and Version ...//
+                    jlFileNameMzQText.setText(sFileRef);
+                    System.out.println(sysutils.getTime()+" - Loading "+sFileRef);
+                    String sOutput="";
+                    sOutput = "mzML Version:\t" + unmarshaller.getMzQuantMLVersion() + "\n";
+                    System.out.println(sysutils.getTime()+" - mzML Version: " + unmarshaller.getMzQuantMLVersion());                    
 
     //============================//
     //... Protein Quantitation ...//                
     //============================//
-                    //... Based on the the assay list and study variables we will include the different columns ...//                
-                    List<Assay> assayList = mzQuantMLTemp.getAssayList().getAssay();
-                    int iLabels = 0;
-                    for(Assay assay:assayList){
-                            model.addColumn(assay.getName());
-                            iLabels++;
+                    //... Based on the the assay list and study variables we will include the different columns ...//
+                    AssayList assayList = unmarshaller.unmarshal(MzQuantMLElement.AssayList);
+                    System.out.println(assayList.getId());
+                    
+                    List<Assay> listAssay = assayList.getAssay();
+                    System.out.println("JKAHSJ");
+                    int iAssays = 0;
+                    for (Assay assay : listAssay) {
+                        model.addColumn(assay.getName());
+                        System.out.println("Name="+assay.getName());
+                        iAssays++;                        
                     }
-                    List<StudyVariable> studyList = mzQuantMLTemp.getStudyVariableList().getStudyVariable();
+                    System.out.println("Assays: "+iAssays);
+                    
+                    StudyVariableList studyList = unmarshaller.unmarshal(MzQuantMLElement.StudyVariableList);
                     int iStudyVars = 0;
-                    for(StudyVariable study:studyList){
+                    if(studyList!=null){
+                        for(StudyVariable study : studyList.getStudyVariable()){
                             model.addColumn(study.getId());
-                            iStudyVars++;
+                            iAssays++;
+                        }
                     }
+                    System.out.println("Study Variables: "+iStudyVars);
                     //... Fill rows ...//           
                     Map<String, ArrayList<String>> hmProtein = new HashMap<String, ArrayList<String>>();
 
                     //... Check if mzq file contains protein list ...//
-                    if (mzQuantMLTemp.getProteinList()!=null){
+                    ProteinList proteinList = unmarshaller.unmarshal(MzQuantMLElement.ProteinList);
+                    if (proteinList!=null){                        
                         //... Getting DataMatrix from AssayQuantLayer ...//
-                        List<Row> dataMatrix = mzQuantMLTemp.getProteinList().getAssayQuantLayer().get(0).getDataMatrix().getRow();
-                        for(Row row:dataMatrix){
-                            Protein prot = (Protein) row.getObjectRef();
-                            List<String> values = row.getValue();       
-                            ArrayList al = (ArrayList) values;
-                            hmProtein.put(prot.getId(), al);
+                        if (proteinList.getAssayQuantLayer().size()>0){
+                            List<Row> dataMatrix = proteinList.getAssayQuantLayer().get(0).getDataMatrix().getRow();
+                            for(Row row:dataMatrix){
+                                Protein prot = (Protein) row.getObjectRef();
+                                List<String> values = row.getValue();       
+                                ArrayList al = (ArrayList) values;
+                                hmProtein.put(prot.getId(), al);                                
+                            }
                         }
                         //... Getting DataMatrix from StudyVariableQuantLayer ...//
-                        List<Row> dataMatrix2 = mzQuantMLTemp.getProteinList().getStudyVariableQuantLayer().get(0).getDataMatrix().getRow();
-                        for(Row row:dataMatrix2){
-                            Protein prot = (Protein) row.getObjectRef();
-                            List<String> values = row.getValue();       
-                            ArrayList al = (ArrayList) values;
-                            ArrayList al2 = hmProtein.get(prot.getId());
-                            for(Object obj:al){
-                                al2.add(obj);
-                            }
-                            hmProtein.put(prot.getId(), al2);
+                        if (proteinList.getStudyVariableQuantLayer().size()>0){
+                            List<Row> dataMatrix2 = proteinList.getStudyVariableQuantLayer().get(0).getDataMatrix().getRow();
+                            for(Row row:dataMatrix2){
+                                Protein prot = (Protein) row.getObjectRef();
+                                List<String> values = row.getValue();       
+                                ArrayList al = (ArrayList) values;
+                                ArrayList al2 = hmProtein.get(prot.getId());
+                                for(Object obj:al){
+                                    al2.add(obj);
+                                }
+                                hmProtein.put(prot.getId(), al2);
+                            }                            
                         }
                         for (Map.Entry<String, ArrayList<String>> entry : hmProtein.entrySet()){                    
-                            Object[] aObj = new Object[iLabels+iStudyVars+1];                    
+                            Object[] aObj = new Object[iAssays+iStudyVars+1];                    
                             aObj[0] = entry.getKey();
 
                             ArrayList<String> saParams = entry.getValue();
                             Iterator<String> itr = saParams.iterator();
                             int iI = 1;
                             while (itr.hasNext()){
-                                aObj[iI] = itr.next().toString(); 
-                                System.out.println("Obj="+aObj[iI]);
-                                iI++;
+                                if (iI>=iAssays+iStudyVars+1){
+                                    JOptionPane.showMessageDialog(null, 
+                                            "Invalid file. The mzq file contains duplications in the DataMatrix on "+
+                                            "the AssayQuantLayer or StudyVariableQuantLayer",
+                                            "Information", JOptionPane.INFORMATION_MESSAGE);
+                                    break;
+                                }
+                                else{
+                                    aObj[iI] = itr.next().toString(); 
+                                    iI++;                                    
+                                }                                   
                             }
                             model.insertRow(model.getRowCount(), aObj);
                         }
@@ -5090,64 +5360,63 @@ public class ProteoSuiteView extends JFrame {
         //... Peptide Quantitation ...//                
         //============================//
                         //... Based on the the assay list and study variables we will include the different columns ...//                
-                        for(Assay assay:assayList){
-                                model2.addColumn(assay.getName());
+                        for(Assay assay : assayList.getAssay()){
+                            model2.addColumn(assay.getName());
                         }
+                        
                         //... Fill rows ...//           
 
                         //... Getting DataMatrix from AssayQuantLayer ...//
-                        List<Row> dataMatrix3 = mzQuantMLTemp.getPeptideConsensusList().get(0).getAssayQuantLayer().get(0).getDataMatrix().getRow();
-                        for(Row row:dataMatrix3){
-                            Object[] aObj = new Object[iLabels+1];                                                            
-                            PeptideConsensus pepConsensus = (PeptideConsensus) row.getObjectRef();
+                        PeptideConsensusList pepConsList = unmarshaller.unmarshal(MzQuantMLElement.PeptideConsensusList);
+                        if (pepConsList.getAssayQuantLayer().size()>0){
+                            List<Row> dataMatrix3 = pepConsList.getAssayQuantLayer().get(0).getDataMatrix().getRow();
+                            for(Row row:dataMatrix3){
+                                Object[] aObj = new Object[iAssays+1];                                                            
+                                PeptideConsensus pepConsensus = (PeptideConsensus) row.getObjectRef();
 
-                            aObj[0] = pepConsensus.getId();                    
-                            List<String> values = row.getValue();       
-                            ArrayList al = (ArrayList) values;
-                            Iterator<String> itr = al.iterator();
-                            int iI = 1;
-                            while (itr.hasNext()) {
-                                aObj[iI] = itr.next().toString(); 
-                                iI++;
+                                aObj[0] = pepConsensus.getId();                    
+                                List<String> values = row.getValue();       
+                                ArrayList al = (ArrayList) values;
+                                Iterator<String> itr = al.iterator();
+                                int iI = 1;
+                                while (itr.hasNext()) {
+                                    aObj[iI] = itr.next().toString(); 
+                                    iI++;
+                                }
+                                model2.insertRow(model2.getRowCount(), aObj);
                             }
-                            model2.insertRow(model2.getRowCount(), aObj);
                         }
 
         //============================//
         //... Feature Quantitation ...//                
         //============================//
                         //... Based on the the assay list and study variables we will include the different columns ...//
-                        for(Assay assay:assayList){
-                                model3.addColumn(assay.getName());
+                        for(Assay assay : assayList.getAssay()){
+                            model2.addColumn(assay.getName());
                         }
                         //... Fill rows ...//
 
                         //... Getting DataMatrix from AssayQuantLayer ...//
-                        List<Row> dataMatrix4 = mzQuantMLTemp.getFeatureList().get(0).getMS2AssayQuantLayer().get(0).getDataMatrix().getRow();
-                        for(Row row:dataMatrix4){
-                            Object[] aObj = new Object[iLabels+1];
-                            Feature feature = (Feature) row.getObjectRef();
+                        FeatureList featureList = unmarshaller.unmarshal(MzQuantMLElement.FeatureList);
+                        if (featureList.getMS2AssayQuantLayer().size()>0){
+                            List<Row> dataMatrix4 = featureList.getMS2AssayQuantLayer().get(0).getDataMatrix().getRow();
+                            for(Row row:dataMatrix4){
+                                Object[] aObj = new Object[iAssays+1];
+                                Feature feature = (Feature) row.getObjectRef();
 
-                            aObj[0] = feature.getId();
-                            List<String> values = row.getValue();
-                            ArrayList al = (ArrayList) values;
-                            Iterator<String> itr = al.iterator();
-                            int iI = 1;
-                            while (itr.hasNext()) 
-                            {
-                                aObj[iI] = itr.next().toString(); 
-                                iI++;
-                            }
-                            model3.insertRow(model3.getRowCount(), aObj);
-                        }
+                                aObj[0] = feature.getId();
+                                List<String> values = row.getValue();
+                                ArrayList al = (ArrayList) values;
+                                Iterator<String> itr = al.iterator();
+                                int iI = 1;
+                                while (itr.hasNext()) {
+                                    aObj[iI] = itr.next().toString(); 
+                                    iI++;
+                                }
+                                model3.insertRow(model3.getRowCount(), aObj);
+                            }   
+                        }                        
                     }
-                    String sOutput="";
-
-                    //... File Name and Version ...//
-                    jlFileNameMzQText.setText(sFileRef);
-                    System.out.println(sFileRef);
-                    sOutput = "mzML Version:\t" + mzQuantMLTemp.getVersion() + "\n";
-                    System.out.println("mzML Version:\t" + mzQuantMLTemp.getVersion());
 
                     jtaMzIDView.setText(sOutput);
                     jtpProperties.setSelectedIndex(4);
@@ -5168,17 +5437,18 @@ public class ProteoSuiteView extends JFrame {
         //... Check if not previously loaded ...//
         if (!jtRawFiles.getValueAt(iIndex, 0).toString().equals(jlFileNameMzMLText.getText())){
             final int iIndexRef = iIndex;
-            final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+            final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "LoadMZMLView");
             final Thread thread = new Thread(new Runnable(){
                 @Override
                 public void run(){
                     //... Progress Bar ...//
-                    progressBarDialog.setTitle("Loading mzML values");
+                    progressBarDialog.setTitle("Loading mzML data");
+                    progressBarDialog.setTaskName("Please wait while loading the data ...");
                     progressBarDialog.setVisible(true);
                 }
             }, "ProgressBarDialog");
             thread.start();
-            new Thread("LoadingThread"){
+            new Thread("LoadMZMLView"){
                 @Override
                 public void run(){
                     //... Loading table ...//
@@ -5308,17 +5578,17 @@ public class ProteoSuiteView extends JFrame {
     {  
         final String sFileNameRef = sFileName;
         final String sFilePathRef = sFilePath;
-        final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);        
+        final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "LoadMGF");        
         final Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
                 //... Progress Bar ...//
-                progressBarDialog.setTitle("Loading values");
+                progressBarDialog.setTitle("Loading MGF data");
                 progressBarDialog.setVisible(true);
             }
         }, "ProgressBarDialog");
         thread.start();
-        new Thread("LoadingThread"){
+        new Thread("LoadMGF"){
             @Override
             public void run(){                
                 DefaultTableModel model = new DefaultTableModel(){
@@ -5344,7 +5614,7 @@ public class ProteoSuiteView extends JFrame {
                 //... Reading file ...//
                 try{
                     BufferedReader in = new BufferedReader(new FileReader(sFilePathRef));
-                    String title = "", charge="";            
+                    String title = "", charge="", sPepmass="";            
                     double pepmass=0.0;
                     long refLine=0;
                     String string = null;
@@ -5357,30 +5627,34 @@ public class ProteoSuiteView extends JFrame {
                         if (string.startsWith("BEGIN IONS")) {
                             break;
                         }
-                    }                     
+                    }                    
                     while ((string = in.readLine()) != null) {
                         lineNum++;
                         string = string.trim();
                         if (string.equals("")) {
                             continue;
-                        }
-                        if (string.startsWith("PEPMASS")) {
-                            pepmass = Double.parseDouble(string.substring(8));
+                        }else if (string.startsWith("BEGIN IONS")) {
                             continue;
-                        }
-                        if (string.startsWith("TITLE")) {
+                        }else if (string.startsWith("TITLE")) {
                             title = string.substring(6);
                             continue;
-                        }
-                        if (string.startsWith("CHARGE")) {
+                        }else if (string.startsWith("RTINSECONDS")) {
+                            continue;
+                        }else if (string.startsWith("PEPMASS")) {             
+                            //... Check for double values ...//
+                            sPepmass = string.substring(8);
+                            if (sPepmass.contains(" ")){
+                                sPepmass = sPepmass.substring(0, sPepmass.indexOf(" "));
+                            }
+                            pepmass = Double.parseDouble(sPepmass);                            
+                            continue;
+                        }else if (string.startsWith("CHARGE")) {
                             charge = string.substring(7);
                             refLine = lineNum;
                             continue;
-                        }                
-                        if (string.startsWith("BEGIN IONS")) {
+                        }else if (string.charAt(0) >= '1' && string.charAt(0) <= '9') {
                             continue;
-                        }
-                        if (string.contains("END IONS")) {
+                        }else if (string.contains("END IONS")) {
                             iCount++;
                             //... Insert rows ...//
                             model.insertRow(model.getRowCount(), new Object[]{
@@ -5390,8 +5664,7 @@ public class ProteoSuiteView extends JFrame {
                             charge,
                             refLine});
                             continue;
-                        }                
-                        if (string.charAt(0) >= '1' && string.charAt(0) <= '9') {
+                        }else{
                             continue;
                         }
                     }
@@ -5412,7 +5685,6 @@ public class ProteoSuiteView extends JFrame {
      -----------------------------------*/
     private void loadMascotView(String sFileName, String sFilePath) 
     {  
-        System.out.println("Displaying ... " + sFileName + "," + sFilePath);
         DefaultTableModel model = new DefaultTableModel(){
             Class[] types = new Class[]{Integer.class, String.class, String.class, String.class, Float.class, Float.class, Integer.class,
                                         Float.class, Integer.class, String.class, Float.class};
@@ -5852,15 +6124,13 @@ public class ProteoSuiteView extends JFrame {
     {
         //... Validate if config file exists ...//
         boolean exists = (new File("config.xml")).exists();
-        if (exists)
-        {
+        if (exists){
             //... Read files using SAX (get workspace) ...//
             try {
                 SAXParserFactory factory = SAXParserFactory.newInstance();
                 SAXParser saxParser = factory.newSAXParser();
 
-                DefaultHandler handler = new DefaultHandler() 
-                {                   
+                DefaultHandler handler = new DefaultHandler(){                   
                     boolean bWorkspace = false;
                     
                     @Override
@@ -5889,7 +6159,7 @@ public class ProteoSuiteView extends JFrame {
         {            
             sWorkspace = "";            
             String sMessage = "The config.xml file was not found, please make sure that this file exists \n";
-            sMessage = sMessage + "under your installation folder. ProteoSuite will continue launching, however \n";
+            sMessage = sMessage + "under your installation directory. ProteoSuite will continue launching, however \n";
             sMessage = sMessage + "it is recommended that you copy the file as indicated in the readme.txt file.";
             JOptionPane.showMessageDialog(null, sMessage, "Warning", JOptionPane.INFORMATION_MESSAGE);            
         }
@@ -5899,11 +6169,11 @@ public class ProteoSuiteView extends JFrame {
         uptCloseProjectStatus();
         uptTitle();
     }
-    /*----------------------------
-     * Initialise project status 
+    /*---------------------------------
+     * Initialise project status icons
      * @param void
      * @return void
-     -----------------------------*/
+     ----------------------------------*/
     private void initProjectStatusIcons()
     {    
         //... Project status pipeline ...//
@@ -6127,7 +6397,7 @@ public class ProteoSuiteView extends JFrame {
         model2.addColumn("Raw File");
                 
         final File sFileRef = sFile;
-        final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true);
+        final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "LoadProjectFromMZQ");
         final Thread thread = new Thread(new Runnable(){
             @Override
             public void run(){
@@ -6137,7 +6407,7 @@ public class ProteoSuiteView extends JFrame {
             }
         }, "ProgressBarDialog");
         thread.start();
-        new Thread("LoadingThread"){
+        new Thread("LoadProjectFromMZQ"){
             @Override
             public void run(){
                 System.out.println("Loading settings from the mzq file ...");                                                   
@@ -6270,7 +6540,7 @@ public class ProteoSuiteView extends JFrame {
                                                                   xmlFile.getPath().toString().replace("\\", "/"),
                                                                   ext,
                                                                   unmarshaller.getMzMLVersion()});
-        System.out.println(xmlFile.getPath() + " was unmarshalled successfully!");
+        System.out.println(sysutils.getTime()+" - "+xmlFile.getName() + " was unmarshalled successfully!");
     }    
     /*----------------------------------------------------------
      * Unmarshall mzIdentML files
@@ -6286,35 +6556,26 @@ public class ProteoSuiteView extends JFrame {
         MzIdentMLUnmarshaller unmarshaller = new MzIdentMLUnmarshaller(xmlFile);
         aMzIDUnmarshaller.add(unmarshaller);        
         model.insertRow(model.getRowCount(), new Object[]{xmlFile.getName(), 
-               xmlFile.getPath().replace("\\", "/"), 
+               xmlFile.getPath().replace("\\", "/"),
                "mzid", 
                unmarshaller.getMzIdentMLVersion().toString(), 
                sGroup});
-        System.out.println(xmlFile.getPath() + " was unmarshalled successfully!");
+        System.out.println(sysutils.getTime()+" - "+xmlFile.getName() + " was unmarshalled successfully!");
     }
     /*-------------------------------------
      * Unmarshall mzQML files
      * @param model - Table model
      * @param xmlFile - File to unmarshall
-     * @return void
+     * @return boolean - Flag
      --------------------------------------*/
     private boolean unmarshalMzQMLFile(DefaultTableModel model, File xmlFile)
     {
         //... Unmarshall mzquantml file ...//
-        System.out.println("Validating " + xmlFile.getPath());
-        Validator validator = XMLparser.getValidator(MZQ_XSD);
-        boolean validFlag = XMLparser.validate(validator, xmlFile.getPath());
-        if(!validFlag){
-            JOptionPane.showMessageDialog(null, "The file " +xmlFile + " is not valid. \n Please make sure that the file is a valid mzq file (Release 1.0.0-rc3)", "Error", JOptionPane.INFORMATION_MESSAGE);
-            return false;
-        }
-        else{
-            MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(xmlFile.toString());            
-            MzQuantML mzq = unmarshaller.unmarshall();
-            aMzQML.add(mzq);
-            model.insertRow(model.getRowCount(), new Object[]{xmlFile.getName(), xmlFile.getPath().replace("\\", "/"), "mzq", mzQVersion});            
-            System.out.println("Unmarshall successfully!");
-        }
+        MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(xmlFile);                        
+        aMzQUnmarshaller.add(unmarshaller);
+            
+        model.insertRow(model.getRowCount(), new Object[]{xmlFile.getName(), xmlFile.getPath().replace("\\", "/"), "mzq", mzQVersion});            
+        System.out.println(sysutils.getTime()+" - "+xmlFile.getName() + " was unmarshalled successfully!");
         return true;
     }    
     /*------------------------------------------------
@@ -6417,6 +6678,51 @@ public class ProteoSuiteView extends JFrame {
             ParamList pl = new ParamList();
             List<AbstractParam> cvParamList = pl.getParamGroup();
             CvParam cvp = new CvParam();
+            cvp.setAccession("MS:1002010");
+            cvp.setCvRef(cvPSI_MS);
+            cvp.setName("TMT quantitation analysis");
+
+            CvParam cvp6 = new CvParam();
+            cvp6.setAccession("MS:1002023");
+            cvp6.setCvRef(cvPSI_MS);
+            cvp6.setName("MS2 tag-based analysis");        
+            
+            CvParam cvp2 = new CvParam();
+            cvp2.setAccession("MS:1002024");
+            cvp2.setCvRef(cvPSI_MS);
+            cvp2.setValue("true");
+            cvp2.setName("MS2 tag-based analysis feature level quantitation");                   
+
+            CvParam cvp3 = new CvParam();
+            cvp3.setAccession("MS:1002025");
+            cvp3.setCvRef(cvPSI_MS);
+            cvp3.setValue("true");
+            cvp3.setName("MS2 tag-based analysis group features by peptide quantitation");
+
+            CvParam cvp4 = new CvParam();
+            cvp4.setAccession("MS:1002026");
+            cvp4.setCvRef(cvPSI_MS);
+            cvp4.setValue("true");
+            cvp4.setName("MS2 tag-based analysis protein level quantitation");
+
+            CvParam cvp5 = new CvParam();
+            cvp5.setAccession("MS:1002027");
+            cvp5.setCvRef(cvPSI_MS);
+            cvp5.setValue("false");
+            cvp5.setName("MS2 tag-based analysis protein group level quantitation");        
+
+            cvParamList.add(cvp6);            
+            cvParamList.add(cvp2);
+            cvParamList.add(cvp3);
+            cvParamList.add(cvp4);
+            cvParamList.add(cvp5);
+
+            qml.setAnalysisSummary(pl);
+        }
+        if (sExperiment.contains("TMT")){                    
+            ParamList pl = new ParamList();
+            List<AbstractParam> cvParamList = pl.getParamGroup();
+            CvParam cvp = new CvParam();
             cvp.setAccession("MS:1001837");
             cvp.setCvRef(cvPSI_MS);
             cvp.setName("iTRAQ quantitation analysis");
@@ -6450,7 +6756,6 @@ public class ProteoSuiteView extends JFrame {
             cvp5.setValue("false");
             cvp5.setName("MS2 tag-based analysis protein group level quantitation");        
 
-            //cvParamList.add(cvp);
             cvParamList.add(cvp6);            
             cvParamList.add(cvp2);
             cvParamList.add(cvp3);
@@ -6519,7 +6824,7 @@ public class ProteoSuiteView extends JFrame {
                 rawFile.setLocation(slFiles[1]);            
                 rawFilesList.add(rawFile); 
                 iCounter++;
-            }            
+            }
             rawFilesGroup.setId(rgId);
             rawFilesGroupList.add(rawFilesGroup);            
         }
@@ -6703,8 +7008,7 @@ public class ProteoSuiteView extends JFrame {
                 boolean blnExists = false;
                 for (int iI = 0; iI < nodes.getLength(); iI++) {
                     Node node = nodes.item(iI);
-                    if (node.getNodeType() == Node.ELEMENT_NODE)
-                    {
+                    if (node.getNodeType() == Node.ELEMENT_NODE){
                         Element element = (Element) node;
                         NodeList nodelist = element.getElementsByTagName("AssayID");
                         Element element2 = (Element) nodelist.item(0);
@@ -6720,7 +7024,7 @@ public class ProteoSuiteView extends JFrame {
                         Element element5 = (Element) node;
                         NodeList nodelist3 = element5.getElementsByTagName("mzValue");
                         Element element6 = (Element) nodelist3.item(0);
-                        NodeList fstNm3 = element6.getChildNodes();       
+                        NodeList fstNm3 = element6.getChildNodes();
                         String sMzValue = fstNm3.item(0).getNodeValue().toString();
 
                         Element element7 = (Element) node;
@@ -7349,6 +7653,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMzMLCompressed;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -7440,6 +7745,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JMenuItem jmMGFView;
     private javax.swing.JMenuBar jmMain;
     private javax.swing.JMenuItem jmMascotXMLView;
+    private javax.swing.JMenuItem jmMaxQ2MZQ;
     private javax.swing.JMenuItem jmMzIdentMLView;
     private javax.swing.JMenuItem jmMzML2MGF;
     private javax.swing.JMenuItem jmMzMLView;
@@ -7450,6 +7756,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JMenuItem jmOptions;
     private javax.swing.JMenuItem jmPaste;
     private javax.swing.JMenuItem jmPrint;
+    private javax.swing.JMenuItem jmProgenesis2MZQ;
     private javax.swing.JMenu jmProject;
     private javax.swing.JMenuItem jmRawData;
     private javax.swing.JMenuItem jmRunQuantAnalysis;

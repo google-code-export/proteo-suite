@@ -111,10 +111,10 @@ public class MzML2MGFView extends javax.swing.JPanel {
 
         jlInstructions1.setText("Select your mzML files to be converted into Mascot Generic Format (MGF). Output files will include");
 
-        jlInstructions2.setText("different parameters in the the scan title (scan number, scan id and retention time).");
+        jlInstructions2.setText("different parameters in the scan title (e.g. scan number, scan id and retention time).");
 
         jlInstructions3.setForeground(new java.awt.Color(102, 102, 102));
-        jlInstructions3.setText("E.g. Scan:960, (rt:1407.5947), (id:controllerType=0 controllerNumber=1 scan=961)");
+        jlInstructions3.setText("Example: Scan:960, (rt:1407.5947), (id:controllerType=0 controllerNumber=1 scan=961)");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -183,8 +183,7 @@ public class MzML2MGFView extends javax.swing.JPanel {
         chooser.setAcceptAllFileFilterUsed(false);
         
         //... Retrieving selection from user ...//
-        if(chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-        {
+        if(chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
             File selected = chooser.getSelectedFile();
             this.jtWorkspace.setText(selected.getAbsolutePath());
         }
@@ -202,13 +201,11 @@ public class MzML2MGFView extends javax.swing.JPanel {
         //... Disable multiple file selection ...//
         chooser.setMultiSelectionEnabled(true);        
         
-        if(chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-        {
+        if(chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
             //... A common experiment may have around 4-20 mzML files ....//
             File [] aFiles = chooser.getSelectedFiles();
 
-	    if (aFiles != null && aFiles.length > 0)
-            {
+	    if (aFiles != null && aFiles.length > 0){
                 //... Fill JTable ...//
                 DefaultTableModel model = new DefaultTableModel();
                 jtMzMLFiles.setModel(model);
@@ -221,13 +218,11 @@ public class MzML2MGFView extends javax.swing.JPanel {
                 model.addColumn("Status");     
                 float fValue = 0f;
                     
-                if (aFiles[0].getName().indexOf(".mzML") > 0) 
-                {
+                if (aFiles[0].getName().indexOf(".mzML") > 0) {
                     jbRemove.setEnabled(true);
                     jbConvert.setEnabled(true);
                 
-                    for (int iI = 0; iI < aFiles.length; iI++)
-                    {
+                    for (int iI = 0; iI < aFiles.length; iI++){
                         fValue = (float) aFiles[iI].length()/(1024*1024);
                         model.insertRow(model.getRowCount(), new Object[]{aFiles[iI].getName(), String.format("%.2f", fValue), ""}); 
                     }
@@ -238,33 +233,32 @@ public class MzML2MGFView extends javax.swing.JPanel {
 
     private void jbConvertMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbConvertMouseClicked
         //... Validate selection ...//        
-        if (jtMzMLFiles.getRowCount()<0)
-        {
+        if (jtMzMLFiles.getRowCount()<0){
             JOptionPane.showMessageDialog(this, "Please select at least one mzML file", "Error", JOptionPane.ERROR_MESSAGE);
         }   
         else    //... Convert selected mzML files into MGF format ...//
         {
-            final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this.jfFrame, true);
+            final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this.jfFrame, true, "MzML2MGF");
             final Thread thread = new Thread(new Runnable(){
                 @Override
                 public void run(){
                     progressBarDialog.setTitle("Converting mzML file(s) into MGF");
-                    progressBarDialog.setVisible(true);
+                    progressBarDialog.setVisible(true);                    
                 }
             }, "ProgressBarDialog");
             thread.start();
 
             //... Splitting job in threads ...//
-            new Thread("LoadingThread"){
+            new Thread("MzML2MGF"){
                 @Override
                 public void run(){
                     //... Convert each file ...//
                     String sPath = "";
-                    for (int iI = 0; iI <jtMzMLFiles.getRowCount(); iI++)
-                    {
+                    for (int iI = 0; iI <jtMzMLFiles.getRowCount(); iI++){
                         sPath = sWorkspaceInput+jtMzMLFiles.getValueAt(iI, 0).toString();                    
                         File xmlFile = new File(sPath);
-                        progressBarDialog.setTitle("Converting " + xmlFile.getName() + " into MGF");
+                        progressBarDialog.setTitle("Converting file ("+(iI+1)+"/"+jtMzMLFiles.getRowCount()+") - " + xmlFile.getName());
+                        progressBarDialog.setTaskName("This task may take up to several minutes (e.g. ~2mins for a 1.5GB file)");
                         progressBarDialog.repaint();
                         MzML2MGF convert = new MzML2MGF(xmlFile, jtWorkspace.getText());
                         jtMzMLFiles.setValueAt("Done", iI, 2);
@@ -277,12 +271,10 @@ public class MzML2MGFView extends javax.swing.JPanel {
     }//GEN-LAST:event_jbConvertMouseClicked
 
     private void jbRemoveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbRemoveMouseClicked
-        if (jtMzMLFiles.getSelectedRow()<0)
-        {
+        if (jtMzMLFiles.getSelectedRow()<0){
             JOptionPane.showMessageDialog(this, "Please select the file to remove", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        else
-        {
+        else{
             DefaultTableModel model = (DefaultTableModel) jtMzMLFiles.getModel();
             model.removeRow(jtMzMLFiles.getSelectedRow());
             jtMzMLFiles.setModel(model);

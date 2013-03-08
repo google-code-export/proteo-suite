@@ -187,7 +187,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jlInstructions2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="different parameters in the the scan title (scan number, scan id and retention time)."/>
+        <Property name="text" type="java.lang.String" value="different parameters in the scan title (e.g. scan number, scan id and retention time)."/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jlInstructions3">
@@ -195,7 +195,7 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="66" green="66" red="66" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="E.g. Scan:960, (rt:1407.5947), (id:controllerType=0 controllerNumber=1 scan=961)"/>
+        <Property name="text" type="java.lang.String" value="Example: Scan:960, (rt:1407.5947), (id:controllerType=0 controllerNumber=1 scan=961)"/>
       </Properties>
     </Component>
   </SubComponents>

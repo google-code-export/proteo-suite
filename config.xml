@@ -2,7 +2,7 @@
 <ProteoSuiteApplication xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="ProteoSuiteApplication.xsd" >
     <configSettings>
         <generalSettings>
-            <workspace>D:\Data\D9-CPTAC\3750Scans</workspace>
+            <workspace>C:\Data\LTQ-OrbitrapO@65\Analysis</workspace>
         </generalSettings>
         <xTrackerSettings>
             <plugins>
@@ -16,6 +16,7 @@
                 </pluginsLoadRawFilesList>
                 <pluginsQuantitationList>
                     <pluginQuantitation id="iTRAQ" type="Technique" value="iTraqQuantitation" desc="Plugin for iTRAQ pipeline" />
+                    <pluginQuantitation id="TMT" type="Technique" value="iTraqQuantitation" desc="Plugin for TMT pipeline" />
                     <pluginQuantitation id="emPAI" type="Technique" value="emPAIquantitation" desc="Plugin for emPAI pipeline" />
                 </pluginsQuantitationList>
                 <pluginsOutputList>
