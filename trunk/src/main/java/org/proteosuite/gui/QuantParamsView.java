@@ -96,6 +96,7 @@ public class QuantParamsView extends javax.swing.JPanel {
         jbRemove = new javax.swing.JButton();
         jlSearchScore = new javax.swing.JLabel();
         jtSearchScore = new javax.swing.JTextField();
+        jpemPAI = new javax.swing.JPanel();
         jbSave = new javax.swing.JToggleButton();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -370,6 +371,19 @@ public class QuantParamsView extends javax.swing.JPanel {
         );
 
         jtpTechniques.addTab("iTRAQ/TMT", jpiTraq);
+
+        javax.swing.GroupLayout jpemPAILayout = new javax.swing.GroupLayout(jpemPAI);
+        jpemPAI.setLayout(jpemPAILayout);
+        jpemPAILayout.setHorizontalGroup(
+            jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 725, Short.MAX_VALUE)
+        );
+        jpemPAILayout.setVerticalGroup(
+            jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 420, Short.MAX_VALUE)
+        );
+
+        jtpTechniques.addTab("emPAI", jpemPAI);
 
         jbSave.setText("Save");
         jbSave.addActionListener(new java.awt.event.ActionListener() {
@@ -1084,6 +1098,7 @@ public class QuantParamsView extends javax.swing.JPanel {
     private javax.swing.JLabel jliTraqMaxMz;
     private javax.swing.JLabel jliTraqMinMz;
     private javax.swing.JPanel jpSILAC;
+    private javax.swing.JPanel jpemPAI;
     private javax.swing.JPanel jpiTraq;
     private javax.swing.JTextField jtSearchScore;
     private javax.swing.JTable jtiTRAQParams;

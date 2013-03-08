@@ -239,8 +239,32 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmMzML2MGFActionPerformed"/>
                   </Events>
                 </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="jmMaxQ2MZQ">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="MaxQuant to mzQuantML"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmMaxQ2MZQActionPerformed"/>
+                  </Events>
+                </MenuItem>
+                <MenuItem class="javax.swing.JMenuItem" name="jmProgenesis2MZQ">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Progenesis to mzQuantML"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmProgenesis2MZQActionPerformed"/>
+                  </Events>
+                </MenuItem>
               </SubComponents>
             </Menu>
+            <MenuItem class="javax.swing.JMenuItem" name="jMzMLCompressed">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Compress MzML file"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMzMLCompressedActionPerformed"/>
+              </Events>
+            </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="jmCustomize">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Customize"/>
@@ -3158,13 +3182,14 @@
         <Component class="javax.swing.JComboBox" name="jcbTechnique">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="6">
+              <StringArray count="7">
                 <StringItem index="0" value="Select technique"/>
                 <StringItem index="1" value="SILAC"/>
                 <StringItem index="2" value="iTRAQ"/>
-                <StringItem index="3" value="15N"/>
-                <StringItem index="4" value="Label free"/>
-                <StringItem index="5" value="emPAI"/>
+                <StringItem index="3" value="TMT"/>
+                <StringItem index="4" value="15N"/>
+                <StringItem index="5" value="Label free"/>
+                <StringItem index="6" value="emPAI"/>
               </StringArray>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Select a technique for the analysis"/>

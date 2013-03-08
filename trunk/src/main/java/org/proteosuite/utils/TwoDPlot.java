@@ -81,7 +81,7 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
         this.intens = intens;
         this.art = art;
         
-        CheckMemory chm = new CheckMemory("Before filling arrays");
+        //CheckMemory chm = new CheckMemory("Before filling arrays");
         
         //... Filling data ...//
         populateData(mz, intens, art);
