@@ -198,7 +198,7 @@ public class MzML2MGFView extends javax.swing.JPanel {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("mzML Files (*.mzML)", "mzML");
         chooser.setFileFilter(filter);
         
-        //... Disable multiple file selection ...//
+        //... Enable multiple file selection ...//
         chooser.setMultiSelectionEnabled(true);        
         
         if(chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){

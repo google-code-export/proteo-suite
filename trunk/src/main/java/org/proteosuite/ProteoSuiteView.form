@@ -210,7 +210,7 @@
             <MenuItem class="javax.swing.JMenuItem" name="jmRunIdentAnalysis">
               <Properties>
                 <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
-                  <KeyStroke key="F8"/>
+                  <KeyStroke key="F7"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Run Identification Analysis"/>
               </Properties>
@@ -270,7 +270,6 @@
             <MenuItem class="javax.swing.JMenuItem" name="jMzMLCompressed">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Compress MzML file"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMzMLCompressedActionPerformed"/>
@@ -417,6 +416,7 @@
                   <KeyStroke key="F1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="ProteoSuite Help"/>
+                <Property name="toolTipText" type="java.lang.String" value="Find how to use ProteoSuite"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmHelpContentActionPerformed"/>
@@ -427,16 +427,19 @@
             <MenuItem class="javax.swing.JMenuItem" name="jmContactUs">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Contact us"/>
+                <Property name="toolTipText" type="java.lang.String" value="Click here for contacting our group and collaborators"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmContactUsActionPerformed"/>
               </Events>
             </MenuItem>
-            <MenuItem class="javax.swing.JMenuItem" name="jMenuItem2">
+            <MenuItem class="javax.swing.JMenuItem" name="jmCheckUpdates">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Check for updates"/>
-                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jmCheckUpdatesActionPerformed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JPopupMenu$Separator" name="jSeparator7">
             </MenuItem>
@@ -645,7 +648,7 @@
           <SubComponents>
             <Component class="javax.swing.JButton" name="jbRunIdentAnalysis">
               <Properties>
-                <Property name="toolTipText" type="java.lang.String" value="Run Identification Pipeline (F8)"/>
+                <Property name="toolTipText" type="java.lang.String" value="Run Identification Pipeline (F7)"/>
                 <Property name="focusable" type="boolean" value="false"/>
                 <Property name="horizontalTextPosition" type="int" value="0"/>
                 <Property name="verticalTextPosition" type="int" value="3"/>
@@ -3097,7 +3100,6 @@
                                                           <Layout>
                                                             <DimensionLayout dim="0">
                                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                                  <EmptySpace min="0" pref="525" max="32767" attributes="0"/>
                                                                   <Group type="102" alignment="0" attributes="0">
                                                                       <EmptySpace max="-2" attributes="0"/>
                                                                       <Component id="jlSearchMzQProt" min="-2" max="-2" attributes="0"/>
@@ -3113,8 +3115,6 @@
                                                             </DimensionLayout>
                                                             <DimensionLayout dim="1">
                                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                                  <EmptySpace min="0" pref="39" max="32767" attributes="0"/>
-                                                                  <EmptySpace min="0" pref="39" max="32767" attributes="0"/>
                                                                   <Group type="102" alignment="0" attributes="0">
                                                                       <EmptySpace max="-2" attributes="0"/>
                                                                       <Group type="103" groupAlignment="0" attributes="0">
@@ -3264,9 +3264,6 @@
                                                             <DimensionLayout dim="0">
                                                               <Group type="103" groupAlignment="0" attributes="0">
                                                                   <EmptySpace min="0" pref="525" max="32767" attributes="0"/>
-                                                                  <EmptySpace min="0" pref="525" max="32767" attributes="0"/>
-                                                                  <EmptySpace min="0" pref="525" max="32767" attributes="0"/>
-                                                                  <EmptySpace min="0" pref="525" max="32767" attributes="0"/>
                                                                   <Group type="102" alignment="0" attributes="0">
                                                                       <EmptySpace max="-2" attributes="0"/>
                                                                       <Component id="jlSearchMzQFeat" min="-2" max="-2" attributes="0"/>
@@ -3282,9 +3279,6 @@
                                                             </DimensionLayout>
                                                             <DimensionLayout dim="1">
                                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                                  <EmptySpace min="0" pref="39" max="32767" attributes="0"/>
-                                                                  <EmptySpace min="0" pref="39" max="32767" attributes="0"/>
-                                                                  <EmptySpace min="0" pref="39" max="32767" attributes="0"/>
                                                                   <EmptySpace min="0" pref="39" max="32767" attributes="0"/>
                                                                   <EmptySpace min="0" pref="39" max="32767" attributes="0"/>
                                                                   <Group type="102" alignment="0" attributes="0">
