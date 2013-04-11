@@ -12,6 +12,8 @@
  */
 package org.proteosuite.utils;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,4 +37,16 @@ public class SystemUtils {
         System.out.println("Total Memory:" + (runtime.totalMemory() / mb) + " MB");
         System.out.println("Max Memory:" + (runtime.maxMemory() / mb) + " MB");
     }    
+    public boolean CheckURL(String URLName){
+        try {
+            HttpURLConnection.setFollowRedirects(false);
+            HttpURLConnection con = (HttpURLConnection) new URL(URLName).openConnection();
+            con.setRequestMethod("HEAD");
+            return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }  
 }

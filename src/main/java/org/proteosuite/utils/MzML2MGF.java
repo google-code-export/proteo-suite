@@ -126,7 +126,7 @@ public class MzML2MGF {
                                     if(cvp.getAccession().equals("MS:1000514")){
                                         if (bda.getEncodedLength()>0){
                                             mzNumbers = bda.getBinaryDataAsNumberArray();
-                                        }                                        
+                                        }
                                     }
                                     if(cvp.getAccession().equals("MS:1000515")){
                                         if (bda.getEncodedLength()>0){
@@ -134,7 +134,7 @@ public class MzML2MGF {
                                         }                                        
                                     }
                                 }
-                            }                                                            
+                            }
                             if (mzNumbers!=null){
                                 int iJ=0;
                                 float mzVal;
