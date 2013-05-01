@@ -2,8 +2,8 @@
  * ----------------------------------------------------------------------------
  * IdentParamsView.java
  * ----------------------------------------------------------------------------
- * Description:       Parameter settings for the peptide/protein identification
- * Developer:         Faviel Gonzalez
+ * Description:       Parameter settings for peptide/protein identification
+ * Developer:         FG
  * Created:           03 April 2013
  * Notes:             GUI generated using NetBeans IDE 7.0.1
  * Read our documentation under our Google SVN repository
@@ -13,33 +13,52 @@
  */
 package org.proteosuite.gui;
 
+import java.awt.Window;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.apache.commons.lang.ArrayUtils;
 import org.proteosuite.utils.Unimod2MSGPlus;
 
 /**
- *
- * @author faviel
+ * This forms allows to specify different parameters for the search
+ * @param sWorskpace location 
+ * @param sMode type of entry (edit|execute)
+ * @author FG
  */
 public class IdentParamsView extends javax.swing.JPanel {
 
     private String sWorkspace = "";    
+    private String sMode = "";
+    private HashMap<String, String> hmParams = new HashMap();
+    private HashMap<String, String> hmUniModsFixed = new HashMap();
+    private HashMap<String, String> hmUniModsVar = new HashMap();
+    private boolean bRun = false;
     
-    public IdentParamsView(String sWorkspace) {
+    public IdentParamsView(String sWorkspace, String sMode) {
+        
         this.sWorkspace = sWorkspace;
+        this.sMode = sMode;
         initComponents();
         initMods();
         initValues();
     }
+    //... Initialise modifications from Unimod ...//
     public void initMods(){
         Unimod2MSGPlus getMods = new Unimod2MSGPlus();
         List<ArrayList> modList = new ArrayList();
@@ -48,9 +67,13 @@ public class IdentParamsView extends javax.swing.JPanel {
         modList = getMods.getAllMods();
         for (ArrayList al : modList) {
             listModel.addElement(al.get(0));
+            //... 0=Key, 1=Mass(E.g. 15.994915), 2=site(E.g. M), 3=position(E.g. N-term), 4=psiMod(E.g. Oxidation) ...//
+            hmUniModsFixed.put(al.get(0).toString(), al.get(1).toString()+","+al.get(2).toString()+",fix,"+al.get(3).toString()+","+al.get(4).toString());
+            hmUniModsVar.put(al.get(0).toString(), al.get(1).toString()+","+al.get(2).toString()+",opt,"+al.get(3).toString()+","+al.get(4).toString());            
         }
         jlstUnimods.setModel(listModel);
     }
+    //... Initialise values ...//
     public void initValues(){
         //... Getting total available processors for multithreading ...//
         int processors = Runtime.getRuntime().availableProcessors();
@@ -61,6 +84,17 @@ public class IdentParamsView extends javax.swing.JPanel {
         }                        
         jcThreads.setSelectedIndex(processors);
         jcEnzyme.setSelectedIndex(1);
+        jcMaxMissedCleavage.setSelectedIndex(2);
+        if (sMode.equals("execute")){
+            jbSetDefaults.setVisible(false);
+            jbSave.setVisible(false);
+            jbRun.setVisible(true);    
+        }
+        else{
+            jbSetDefaults.setVisible(true);
+            jbSave.setVisible(true);
+            jbRun.setVisible(false);            
+        }
     }    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -97,7 +131,7 @@ public class IdentParamsView extends javax.swing.JPanel {
         jtMinCharge = new javax.swing.JTextField();
         jtMaxCharge = new javax.swing.JTextField();
         jlMatches = new javax.swing.JLabel();
-        jtMatches = new javax.swing.JTextField();
+        jtSpectraMatches = new javax.swing.JTextField();
         jlOutput = new javax.swing.JLabel();
         jcOutput = new javax.swing.JComboBox();
         jlThreads = new javax.swing.JLabel();
@@ -116,13 +150,15 @@ public class IdentParamsView extends javax.swing.JPanel {
         jbAddFixedMods = new javax.swing.JButton();
         jbDelMods = new javax.swing.JButton();
         jlUniMod = new javax.swing.JLabel();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        jbSave = new javax.swing.JButton();
+        jbSetDefaults = new javax.swing.JButton();
+        jbRun = new javax.swing.JButton();
+        jlCancel = new javax.swing.JLabel();
 
         jLabel13.setText("jLabel13");
 
-        setMaximumSize(new java.awt.Dimension(638, 585));
-        setMinimumSize(new java.awt.Dimension(638, 585));
+        setMaximumSize(new java.awt.Dimension(792, 648));
+        setMinimumSize(new java.awt.Dimension(792, 648));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters:"));
         jPanel1.setMaximumSize(new java.awt.Dimension(700, 234));
@@ -196,7 +232,8 @@ public class IdentParamsView extends javax.swing.JPanel {
 
         jlMatches.setText("Matches per spectra:");
 
-        jtMatches.setToolTipText("Number of matches per spectrum to be reported");
+        jtSpectraMatches.setText("1");
+        jtSpectraMatches.setToolTipText("Number of matches per spectrum to be reported");
 
         jlOutput.setText("Output:");
 
@@ -272,7 +309,7 @@ public class IdentParamsView extends javax.swing.JPanel {
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jlMatches)
                                         .addGap(13, 13, 13)
-                                        .addComponent(jtMatches, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))
+                                        .addComponent(jtSpectraMatches, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jlOutput)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -334,7 +371,7 @@ public class IdentParamsView extends javax.swing.JPanel {
                             .addComponent(jlMinCharge)
                             .addComponent(jtMinCharge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jlMatches)
-                            .addComponent(jtMatches, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jtSpectraMatches, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(6, 6, 6)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jlMaxPepLen)
@@ -464,9 +501,28 @@ public class IdentParamsView extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jButton6.setText("Save");
+        jbSave.setText("Save");
+        jbSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbSaveActionPerformed(evt);
+            }
+        });
 
-        jButton7.setText("Restore to default");
+        jbSetDefaults.setText("Default settings");
+        jbSetDefaults.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbSetDefaultsActionPerformed(evt);
+            }
+        });
+
+        jbRun.setText("Run");
+        jbRun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbRunActionPerformed(evt);
+            }
+        });
+
+        jlCancel.setText("Press escape (ESC) to cancel");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -477,10 +533,14 @@ public class IdentParamsView extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 541, Short.MAX_VALUE)
-                        .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jbSetDefaults)
+                        .addGap(18, 18, 18)
+                        .addComponent(jbSave, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 295, Short.MAX_VALUE)
+                        .addComponent(jlCancel)
+                        .addGap(18, 18, 18)
+                        .addComponent(jbRun, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -492,8 +552,10 @@ public class IdentParamsView extends javax.swing.JPanel {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
-                    .addComponent(jButton7))
+                    .addComponent(jbSetDefaults)
+                    .addComponent(jbRun)
+                    .addComponent(jbSave)
+                    .addComponent(jlCancel))
                 .addGap(20, 20, 20))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -653,10 +715,96 @@ public class IdentParamsView extends javax.swing.JPanel {
         jlstVarMods.setModel(newVarModsModel);        
     }//GEN-LAST:event_jbDelVarModsActionPerformed
 
+    private void jbSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSaveActionPerformed
+        
+    }//GEN-LAST:event_jbSaveActionPerformed
+
+    private void jbRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRunActionPerformed
+        //... Validate entries ...//
+        if((jtDatabaseFile.getText().isEmpty())||(!jtDatabaseFile.getText().endsWith(".fasta"))){
+            JOptionPane.showMessageDialog(this, "Please select a valid fasta file (*.fasta)", "Error", JOptionPane.ERROR_MESSAGE);
+        }else{
+            //... Save current values ...//
+            bRun = true;
+            hmParams.clear();
+                                                                                            //...     Spectrum File                 ...//
+            hmParams.put("-d", jtDatabaseFile.getText());                                   //... 0 - Database File                 ...//
+                                                                                            //...     Output File                   ...//
+            hmParams.put("-t", jtMSMSTol.getText()+jcMSMSTol.getSelectedItem().toString()); //... 1 - Precursor Mass Tolerance      ...//
+            hmParams.put("-ti", jtErrorRange.getText());                                    //... 2 - Isotope Error Range           ...//
+            hmParams.put("-thread", jcThreads.getSelectedItem().toString());                //... 3 - Threads                       ...//
+            if (jchbSearchDecoy.isSelected()){                                              //... 4 - TDA                           ...//
+                hmParams.put("-tda", "1");
+            }else{
+                hmParams.put("-tda", "0");
+            }
+            hmParams.put("-m", Integer.toString(jcFragMethod.getSelectedIndex()));          //... 5 - Fragment Method               ...//
+            hmParams.put("-inst", Integer.toString(jcInstrument.getSelectedIndex()));       //... 6 - Instrument ID                 ...//
+            hmParams.put("-e", Integer.toString(jcEnzyme.getSelectedIndex()));              //... 7 - Enzyme                        ...//
+            hmParams.put("-protocol", Integer.toString(jcProtocol.getSelectedIndex()));     //... 8 - Protocol ID                   ...//
+            hmParams.put("-ntt", Integer.toString(jcMaxMissedCleavage.getSelectedIndex())); //... 9 - Number of tolerable termini   ...//
+            
+            //... 10 - Modification file name ...//            
+            ListModel fixedModsModel = jlstFixedMods.getModel();
+            ListModel varModsModel = jlstVarMods.getModel();
+            int iSizeFixed = fixedModsModel.getSize();
+            int iSizeVar = varModsModel.getSize();
+            if(iSizeFixed>0||iSizeVar>0){
+                //... Write file ...//
+                FileWriter fstream;
+                try {
+                    fstream = new FileWriter("Mods.txt");
+                    BufferedWriter out = new BufferedWriter(fstream);            
+                    out.write("NumMods="+(iSizeFixed+iSizeVar));
+                    out.newLine();
+                    for (int iI = 0; iI < iSizeFixed; iI++) {
+                        out.write(getValueUniModFixed(fixedModsModel.getElementAt(iI).toString()));
+                        out.newLine();                        
+                    }
+                    for (int iI = 0; iI < iSizeVar; iI++) {
+                        out.write(getValueUniModVar(varModsModel.getElementAt(iI).toString()));
+                        out.newLine();
+                    }                 
+                    out.close();
+                    hmParams.put("-mod", "Mods.txt");                                       //... 10 - Modifications                ...//
+                } catch (IOException ex) {
+                    Logger.getLogger(IdentParamsView.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            hmParams.put("-minLength", jtMinPepLen.getText());                              //... 11 - Min peptide length           ...//
+            hmParams.put("-maxLength", jtMaxPepLen.getText());                              //... 12 - Max peptide length           ...//
+            hmParams.put("-minCharge", jtMinCharge.getText());                              //... 13 - Min charge                   ...//
+            hmParams.put("-maxCharge", jtMaxCharge.getText());                              //... 14 - Max charge                   ...//
+            hmParams.put("-n", jtSpectraMatches.getText());                                 //... 15 - Num matches per spectrum     ...//
+            hmParams.put("-addFeatures", Integer.toString(jcOutput.getSelectedIndex()));    //... 16 - Additional features          ...//
+            Window win = SwingUtilities.getWindowAncestor(this);
+            if (win != null) {
+                win.dispose();
+            }
+        }        
+    }//GEN-LAST:event_jbRunActionPerformed
+
+    private void jbSetDefaultsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSetDefaultsActionPerformed
+        
+    }//GEN-LAST:event_jbSetDefaultsActionPerformed
+    public HashMap getParams() {
+        return hmParams;
+    }
+    public boolean getRun() {
+        return bRun;
+    }
+    public void setRun(boolean bRun) {
+        this.bRun = bRun;
+    }    
+    public String getValueUniModFixed(String sValue){        
+        return hmUniModsFixed.get(sValue);
+    }
+    public String getValueUniModVar(String sValue){        
+        return hmUniModsVar.get(sValue);
+    }    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgMonoAver;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -668,6 +816,9 @@ public class IdentParamsView extends javax.swing.JPanel {
     private javax.swing.JButton jbAddVarMods;
     private javax.swing.JButton jbDelMods;
     private javax.swing.JButton jbDelVarMods;
+    private javax.swing.JButton jbRun;
+    private javax.swing.JButton jbSave;
+    private javax.swing.JButton jbSetDefaults;
     private javax.swing.JComboBox jcEnzyme;
     private javax.swing.JComboBox jcFragMethod;
     private javax.swing.JComboBox jcInstrument;
@@ -677,6 +828,7 @@ public class IdentParamsView extends javax.swing.JPanel {
     private javax.swing.JComboBox jcProtocol;
     private javax.swing.JComboBox jcThreads;
     private javax.swing.JCheckBox jchbSearchDecoy;
+    private javax.swing.JLabel jlCancel;
     private javax.swing.JLabel jlDatabaseFile;
     private javax.swing.JLabel jlEnzyme;
     private javax.swing.JLabel jlErrorRange;
@@ -701,10 +853,10 @@ public class IdentParamsView extends javax.swing.JPanel {
     private javax.swing.JTextField jtDatabaseFile;
     private javax.swing.JTextField jtErrorRange;
     private javax.swing.JTextField jtMSMSTol;
-    private javax.swing.JTextField jtMatches;
     private javax.swing.JTextField jtMaxCharge;
     private javax.swing.JTextField jtMaxPepLen;
     private javax.swing.JTextField jtMinCharge;
     private javax.swing.JTextField jtMinPepLen;
+    private javax.swing.JTextField jtSpectraMatches;
     // End of variables declaration//GEN-END:variables
 }

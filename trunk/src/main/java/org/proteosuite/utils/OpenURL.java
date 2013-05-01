@@ -3,7 +3,7 @@
  * OpenURL.java
  * --------------------------------------------------------------------------
  * Description:       Class for opening an URL on the browser
- * Developer:         Faviel Gonzalez
+ * Developer:         FG
  * Created:           08 February 2011
  * Notes:             GUI generated using NetBeans IDE 7.0.1
  * Read our documentation under our Google SVN repository
@@ -15,7 +15,7 @@ package org.proteosuite.utils;
 
 /**
  * This class allows to open a URL on any browser.
- * @author faviel
+ * @author FG
  * @param url URL
  */
 public class OpenURL {

@@ -12,10 +12,10 @@
   </NonVisualComponents>
   <Properties>
     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[638, 585]"/>
+      <Dimension value="[792, 648]"/>
     </Property>
     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[638, 585]"/>
+      <Dimension value="[792, 648]"/>
     </Property>
   </Properties>
   <AuxValues>
@@ -38,10 +38,14 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jPanel2" alignment="0" max="32767" attributes="1"/>
                   <Component id="jPanel1" alignment="0" pref="772" max="32767" attributes="1"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="jButton7" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="541" max="32767" attributes="0"/>
-                      <Component id="jButton6" min="-2" pref="110" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jbSetDefaults" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jbSave" min="-2" pref="100" max="-2" attributes="0"/>
+                      <EmptySpace pref="295" max="32767" attributes="0"/>
+                      <Component id="jlCancel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jbRun" min="-2" pref="93" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -57,8 +61,10 @@
               <Component id="jPanel2" min="-2" max="-2" attributes="1"/>
               <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButton6" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jButton7" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jbSetDefaults" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jbRun" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jbSave" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlCancel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
           </Group>
@@ -162,7 +168,7 @@
                                       <Group type="102" attributes="0">
                                           <Component id="jlMatches" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-                                          <Component id="jtMatches" pref="43" max="32767" attributes="0"/>
+                                          <Component id="jtSpectraMatches" pref="43" max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" attributes="0">
                                           <Component id="jlOutput" min="-2" max="-2" attributes="0"/>
@@ -244,7 +250,7 @@
                               <Component id="jlMinCharge" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jtMinCharge" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jlMatches" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jtMatches" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jtSpectraMatches" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -461,8 +467,9 @@
             <Property name="text" type="java.lang.String" value="Matches per spectra:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="jtMatches">
+        <Component class="javax.swing.JTextField" name="jtSpectraMatches">
           <Properties>
+            <Property name="text" type="java.lang.String" value="1"/>
             <Property name="toolTipText" type="java.lang.String" value="Number of matches per spectrum to be reported"/>
           </Properties>
         </Component>
@@ -698,14 +705,33 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="jButton6">
+    <Component class="javax.swing.JButton" name="jbSave">
       <Properties>
         <Property name="text" type="java.lang.String" value="Save"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbSaveActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton7">
+    <Component class="javax.swing.JButton" name="jbSetDefaults">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Restore to default"/>
+        <Property name="text" type="java.lang.String" value="Default settings"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbSetDefaultsActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jbRun">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Run"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbRunActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlCancel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Press escape (ESC) to cancel"/>
       </Properties>
     </Component>
   </SubComponents>

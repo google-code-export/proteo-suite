@@ -3,7 +3,7 @@
  * psTemplateQuant.java
  * --------------------------------------------------------------------------
  * Description:       Template for Label Free Quantitation
- * Developer:         Faviel Gonzalez
+ * Developer:         FG
  * Created:           10 July 2012
  * Read our documentation file under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/

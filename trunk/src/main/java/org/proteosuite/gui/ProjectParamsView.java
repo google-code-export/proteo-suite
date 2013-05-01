@@ -3,7 +3,7 @@
  * ProjectParamsView.java
  * --------------------------------------------------------------------------
  * Description:       Capture of Configuration Parameters
- * Developer:         Faviel Gonzalez
+ * Developer:         FG
  * Created:           07 March 2012
  * Read our documentation file under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 /**
  * This form corresponds to the main settings of the project. Users can customised their settings by changing the 
  * default values stored in the "config.xml" file located under the installation folder.
- * @author faviel
+ * @author FG
  * @param void
  */
 public class ProjectParamsView extends javax.swing.JPanel {

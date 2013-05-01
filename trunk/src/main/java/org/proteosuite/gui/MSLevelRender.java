@@ -3,7 +3,7 @@
  * MSLevelRender.java
  * --------------------------------------------------------------------------
  * Description:       Render for the type of MS data (MS1 or MS2)
- * Developer:         Faviel Gonzalez
+ * Developer:         FG
  * Created:           11 March 2013
  * Notes:             GUI generated using NetBeans IDE 7.0.1
  * Read our documentation file under our Google SVN repository
@@ -21,7 +21,13 @@ import javax.swing.border.Border;
 import javax.swing.table.TableCellRenderer;
 import java.awt.Color;
 import java.awt.Component;
- 
+
+/**
+ * This class allows to render the table for MS1 or MS2 data 
+ * @author FG
+ * @param void
+ * @return void
+ */
 public class MSLevelRender extends JLabel implements TableCellRenderer {
     Border unselectedBorder = null;
     Border selectedBorder = null;

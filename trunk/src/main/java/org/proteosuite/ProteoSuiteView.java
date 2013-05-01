@@ -3,7 +3,7 @@
  * ProteoSuiteView.java
  * --------------------------------------------------------------------------
  * Description:       ProteoSuite Graphical Unit Interface
- * Developer:         Faviel Gonzalez
+ * Developer:         FG
  * Created:           08 February 2011
  * Notes:             GUI generated using NetBeans IDE 7.0.1
  * Read our documentation file under our Google SVN repository
@@ -18,10 +18,12 @@ import com.compomics.util.gui.spectrum.SpectrumPanel;
 import edu.ucsd.msjava.mzml.MzMLAdapter;
 import edu.ucsd.msjava.params.ParamManager;
 import edu.ucsd.msjava.ui.MSGFPlus;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.ComponentOrientation;
 import java.awt.Cursor;
+import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
@@ -33,10 +35,12 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyVetoException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -63,6 +67,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -79,6 +84,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
@@ -90,6 +96,7 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.RowSorter;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -125,6 +132,7 @@ import org.proteosuite.external.IPC.Options;
 import org.proteosuite.external.IPC.Results;
 import org.proteosuite.external.ViewChartGUI;
 import org.proteosuite.utils.ExcelExporter;
+import org.proteosuite.utils.MzMLCompress;
 import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.ProgressBarDialog;
 import org.proteosuite.utils.SystemUtils;
@@ -216,21 +224,26 @@ import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
         
 /**
  * This class corresponds to the main form in ProteoSuite. The form includes the visualisation of data and other associated tools.
- * @author faviel
+ * @author FG
  */
 public class ProteoSuiteView extends JFrame {
 
     //... Project settings ...//
-    private final String sPS_Version = "0.2.4";
-    private String sProjectName;
-    private String sWorkspace;
+    private final String sPS_Version = "0.3.0";
+    private String sProjectName = "";
+    private String sWorkspace = "";
     private String sPreviousLocation = "user.home";
-    private boolean bProjectModified;
-    private final String MZQ_XSD = "mzQuantML_1_0_0-rc3.xsd";    
+    private boolean bProjectModified = false;
+    private final String MZQ_XSD = "mzQuantML_1_0_0.xsd";    
     private final String mzMLVersion = "1.1";    
     private final String mzIDVersion = "1.1";
-    private final String mzQVersion = "1.0";
+    private final String mzQVersion = "1.0.0";
+    private final String PSI_MS_VERSION = "3.37.0";
+    private final String PSI_MOD_VERSION = "1.2";
     private SystemUtils sysutils = new SystemUtils();
+    
+    private IdentParamsView identParamsExecute;    
+    private JDialog dialogIdentParamsExecute;    
 
     //... List of unmarshaller objects ...//
     private ArrayList<MzMLUnmarshaller> aMzMLUnmarshaller = new ArrayList<MzMLUnmarshaller>();
@@ -258,11 +271,15 @@ public class ProteoSuiteView extends JFrame {
         //... Initializing all componentes (handled by netbeans) ...//
         initComponents();
         
-        //... Window default settings ...//
+        //... Load parameter settings ...//
+        identParamsExecute = new IdentParamsView(sWorkspace, "execute");
+        
+        //... Project default settings ...//
         initProjectValues();
+        
         setTitle("ProteoSuite " + sPS_Version + " (Beta Version) - <Project: " + sWorkspace + " - " + sProjectName +  ">         http://www.proteosuite.org");
         
-        //... Setting project icons ...//        
+        //... Setting project icons ...//
         Image iconApp = new ImageIcon(getClass().getClassLoader().getResource("images/icon.gif")).getImage();
         setIconImage(iconApp);
         
@@ -270,7 +287,7 @@ public class ProteoSuiteView extends JFrame {
         System.out.println("****************************************");
         System.out.println("*****    P R O T E O S U I T E    ******");
         System.out.println("****************************************");       
-        sysutils.CheckMemory("starting up");
+        sysutils.checkMemory("starting up");
         System.out.println("Java version: "+System.getProperty("java.version"));
         System.out.println("Architecture: "+System.getProperty("sun.arch.data.model")+"-bit");
         System.out.println("****************************************");
@@ -574,6 +591,7 @@ public class ProteoSuiteView extends JFrame {
                             jTable2 = new javax.swing.JTable();
                             jPanel7 = new javax.swing.JPanel();
                             jtpViewer = new javax.swing.JTabbedPane();
+                            jpSpectrum = new javax.swing.JPanel();
                             jdpMS = new javax.swing.JDesktopPane();
                             jpTIC = new javax.swing.JPanel();
                             jdpTIC = new javax.swing.JDesktopPane();
@@ -607,6 +625,7 @@ public class ProteoSuiteView extends JFrame {
                                 jlSearchMzML = new javax.swing.JLabel();
                                 jtbMzMLOptions = new javax.swing.JToolBar();
                                 jbExportMzMLExcel = new javax.swing.JButton();
+                                jlExportMzMLXLS = new javax.swing.JLabel();
                                 jpMGF = new javax.swing.JPanel();
                                 jspMGF = new javax.swing.JSplitPane();
                                 jspMGFHeader = new javax.swing.JScrollPane();
@@ -618,6 +637,7 @@ public class ProteoSuiteView extends JFrame {
                                 jtScanTitle = new javax.swing.JTextField();
                                 jtbMGFOptions = new javax.swing.JToolBar();
                                 jbExportMGFExcel = new javax.swing.JButton();
+                                jlExportMGFXLS = new javax.swing.JLabel();
                                 jspMGFSubDetail = new javax.swing.JScrollPane();
                                 jtMGF = new javax.swing.JTable(){
                                     public boolean isCellEditable(int rowIndex, int colIndex) {
@@ -634,11 +654,14 @@ public class ProteoSuiteView extends JFrame {
                                     jtPeptideMzId = new javax.swing.JTextField();
                                     jtbMzIdentMLOptions = new javax.swing.JToolBar();
                                     jbExportMzIdentMLExcel = new javax.swing.JButton();
-                                    jpMzIdSubDetail = new javax.swing.JScrollPane();
+                                    jlExportMzIDXLS = new javax.swing.JLabel();
+                                    jspMzIdProtGroup = new javax.swing.JScrollPane();
                                     jtMzId = new javax.swing.JTable(){
                                         public boolean isCellEditable(int rowIndex, int colIndex) {
                                             return false;
                                         }};
+                                        jScrollPane8 = new javax.swing.JScrollPane();
+                                        jtMzIDProtGroup = new javax.swing.JTable();
                                         jpMzIdentMLViewHeader = new javax.swing.JPanel();
                                         jlFileNameMzID = new javax.swing.JLabel();
                                         jlFileNameMzIDText = new javax.swing.JLabel();
@@ -1385,7 +1408,23 @@ public class ProteoSuiteView extends JFrame {
                                                         jspLeftViewerDetails.setRightComponent(jpLeftViewerBottom);
 
                                                         jdpMS.setBackground(new java.awt.Color(255, 255, 255));
-                                                        jtpViewer.addTab("Spectrum", jdpMS);
+
+                                                        javax.swing.GroupLayout jpSpectrumLayout = new javax.swing.GroupLayout(jpSpectrum);
+                                                        jpSpectrum.setLayout(jpSpectrumLayout);
+                                                        jpSpectrumLayout.setHorizontalGroup(
+                                                            jpSpectrumLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addGap(0, 373, Short.MAX_VALUE)
+                                                            .addGroup(jpSpectrumLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                .addComponent(jdpMS, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE))
+                                                        );
+                                                        jpSpectrumLayout.setVerticalGroup(
+                                                            jpSpectrumLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addGap(0, 321, Short.MAX_VALUE)
+                                                            .addGroup(jpSpectrumLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                .addComponent(jdpMS, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE))
+                                                        );
+
+                                                        jtpViewer.addTab("Spectrum View", jpSpectrum);
 
                                                         jpTIC.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1403,7 +1442,7 @@ public class ProteoSuiteView extends JFrame {
                                                             .addComponent(jdpTIC, javax.swing.GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE)
                                                         );
 
-                                                        jtpViewer.addTab("TIC", jpTIC);
+                                                        jtpViewer.addTab("TIC View", jpTIC);
 
                                                         jp2D.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -1603,17 +1642,21 @@ public class ProteoSuiteView extends JFrame {
                                                         });
                                                         jtbMzMLOptions.add(jbExportMzMLExcel);
 
+                                                        jlExportMzMLXLS.setText("Export to:");
+
                                                         javax.swing.GroupLayout jpMzMLMenuLayout = new javax.swing.GroupLayout(jpMzMLMenu);
                                                         jpMzMLMenu.setLayout(jpMzMLMenuLayout);
                                                         jpMzMLMenuLayout.setHorizontalGroup(
                                                             jpMzMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                             .addGroup(jpMzMLMenuLayout.createSequentialGroup()
                                                                 .addContainerGap()
-                                                                .addGroup(jpMzMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                                    .addComponent(jtbMzMLOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGroup(jpMzMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                    .addComponent(jlSearchMzML)
+                                                                    .addComponent(jlExportMzMLXLS))
+                                                                .addGap(18, 18, 18)
+                                                                .addGroup(jpMzMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                    .addComponent(jtbMzMLOptions, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                                     .addGroup(jpMzMLMenuLayout.createSequentialGroup()
-                                                                        .addComponent(jlSearchMzML)
-                                                                        .addGap(18, 18, 18)
                                                                         .addComponent(jlScan)
                                                                         .addGap(18, 18, 18)
                                                                         .addComponent(jtScan, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1621,7 +1664,7 @@ public class ProteoSuiteView extends JFrame {
                                                                         .addComponent(jlRT)
                                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                                         .addComponent(jtRT, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                                .addContainerGap(184, Short.MAX_VALUE))
+                                                                .addContainerGap(177, Short.MAX_VALUE))
                                                         );
                                                         jpMzMLMenuLayout.setVerticalGroup(
                                                             jpMzMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1634,9 +1677,14 @@ public class ProteoSuiteView extends JFrame {
                                                                         .addComponent(jlSearchMzML)
                                                                         .addComponent(jlScan)
                                                                         .addComponent(jlRT)))
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jtbMzMLOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addGap(23, 23, 23))
+                                                                .addGroup(jpMzMLMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                    .addGroup(jpMzMLMenuLayout.createSequentialGroup()
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(jtbMzMLOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                    .addGroup(jpMzMLMenuLayout.createSequentialGroup()
+                                                                        .addGap(17, 17, 17)
+                                                                        .addComponent(jlExportMzMLXLS)))
+                                                                .addGap(13, 13, 13))
                                                         );
 
                                                         jspMzMLDetail.setLeftComponent(jpMzMLMenu);
@@ -1699,21 +1747,25 @@ public class ProteoSuiteView extends JFrame {
                                                         });
                                                         jtbMGFOptions.add(jbExportMGFExcel);
 
+                                                        jlExportMGFXLS.setText("Export to:");
+
                                                         javax.swing.GroupLayout jpMGFMenuLayout = new javax.swing.GroupLayout(jpMGFMenu);
                                                         jpMGFMenu.setLayout(jpMGFMenuLayout);
                                                         jpMGFMenuLayout.setHorizontalGroup(
                                                             jpMGFMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                             .addGroup(jpMGFMenuLayout.createSequentialGroup()
                                                                 .addContainerGap()
-                                                                .addGroup(jpMGFMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                                    .addComponent(jtbMGFOptions, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpMGFMenuLayout.createSequentialGroup()
-                                                                        .addComponent(jlSearchMGF)
-                                                                        .addGap(18, 18, 18)
+                                                                .addGroup(jpMGFMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                    .addComponent(jlSearchMGF)
+                                                                    .addComponent(jlExportMGFXLS))
+                                                                .addGap(18, 18, 18)
+                                                                .addGroup(jpMGFMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                    .addComponent(jtbMGFOptions, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                    .addGroup(jpMGFMenuLayout.createSequentialGroup()
                                                                         .addComponent(jlScanTitle)
                                                                         .addGap(18, 18, 18)
                                                                         .addComponent(jtScanTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                                .addContainerGap(171, Short.MAX_VALUE))
+                                                                .addContainerGap(164, Short.MAX_VALUE))
                                                         );
                                                         jpMGFMenuLayout.setVerticalGroup(
                                                             jpMGFMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1723,8 +1775,13 @@ public class ProteoSuiteView extends JFrame {
                                                                     .addComponent(jlSearchMGF)
                                                                     .addComponent(jlScanTitle)
                                                                     .addComponent(jtScanTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jtbMGFOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGroup(jpMGFMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                    .addGroup(jpMGFMenuLayout.createSequentialGroup()
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(jtbMGFOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                    .addGroup(jpMGFMenuLayout.createSequentialGroup()
+                                                                        .addGap(18, 18, 18)
+                                                                        .addComponent(jlExportMGFXLS)))
                                                                 .addContainerGap(17, Short.MAX_VALUE))
                                                         );
 
@@ -1766,7 +1823,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jspMzId.setDividerSize(1);
                                                         jspMzId.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-                                                        jspMzIdDetail.setDividerLocation(90);
+                                                        jspMzIdDetail.setDividerLocation(250);
                                                         jspMzIdDetail.setDividerSize(1);
                                                         jspMzIdDetail.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
@@ -1807,17 +1864,31 @@ public class ProteoSuiteView extends JFrame {
                                                         });
                                                         jtbMzIdentMLOptions.add(jbExportMzIdentMLExcel);
 
+                                                        jlExportMzIDXLS.setText("Export to:");
+
+                                                        jtMzId.setModel(new javax.swing.table.DefaultTableModel(
+                                                            new Object [][] {
+
+                                                            },
+                                                            new Object [] {
+                                                                "Index", "Protein", "Peptide", "Rank", "Score", "Spectrum ID"
+                                                            }
+                                                        ));
+                                                        jspMzIdProtGroup.setViewportView(jtMzId);
+
                                                         javax.swing.GroupLayout jpMzIdMenuLayout = new javax.swing.GroupLayout(jpMzIdMenu);
                                                         jpMzIdMenu.setLayout(jpMzIdMenuLayout);
                                                         jpMzIdMenuLayout.setHorizontalGroup(
                                                             jpMzIdMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                             .addGroup(jpMzIdMenuLayout.createSequentialGroup()
                                                                 .addContainerGap()
-                                                                .addGroup(jpMzIdMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                                    .addComponent(jtbMzIdentMLOptions, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpMzIdMenuLayout.createSequentialGroup()
-                                                                        .addComponent(jlSearchMzId)
-                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addGroup(jpMzIdMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                    .addComponent(jlSearchMzId)
+                                                                    .addComponent(jlExportMzIDXLS))
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addGroup(jpMzIdMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                                    .addComponent(jtbMzIdentMLOptions, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                    .addGroup(jpMzIdMenuLayout.createSequentialGroup()
                                                                         .addComponent(jlProteinMzId)
                                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                                         .addComponent(jtProteinMzId, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1825,7 +1896,8 @@ public class ProteoSuiteView extends JFrame {
                                                                         .addComponent(jlPeptideMzId)
                                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                         .addComponent(jtPeptideMzId, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                                .addContainerGap(96, Short.MAX_VALUE))
+                                                                .addContainerGap(89, Short.MAX_VALUE))
+                                                            .addComponent(jspMzIdProtGroup, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 530, Short.MAX_VALUE)
                                                         );
                                                         jpMzIdMenuLayout.setVerticalGroup(
                                                             jpMzIdMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1837,24 +1909,30 @@ public class ProteoSuiteView extends JFrame {
                                                                     .addComponent(jtProteinMzId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                     .addComponent(jlPeptideMzId)
                                                                     .addComponent(jtPeptideMzId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                .addGroup(jpMzIdMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                                    .addGroup(jpMzIdMenuLayout.createSequentialGroup()
+                                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                        .addComponent(jtbMzIdentMLOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                                    .addGroup(jpMzIdMenuLayout.createSequentialGroup()
+                                                                        .addGap(16, 16, 16)
+                                                                        .addComponent(jlExportMzIDXLS)))
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jtbMzIdentMLOptions, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(17, Short.MAX_VALUE))
+                                                                .addComponent(jspMzIdProtGroup, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE))
                                                         );
 
                                                         jspMzIdDetail.setTopComponent(jpMzIdMenu);
 
-                                                        jtMzId.setModel(new javax.swing.table.DefaultTableModel(
+                                                        jtMzIDProtGroup.setModel(new javax.swing.table.DefaultTableModel(
                                                             new Object [][] {
 
                                                             },
                                                             new Object [] {
-                                                                "Index", "Protein", "Peptide", "Rank", "Score", "Spectrum ID"
+                                                                "ID", "Name", "Protein", "Representation", "Scores", "P-values", "Number of peptides", "Is Decoy", "pass Threshold"
                                                             }
                                                         ));
-                                                        jpMzIdSubDetail.setViewportView(jtMzId);
+                                                        jScrollPane8.setViewportView(jtMzIDProtGroup);
 
-                                                        jspMzIdDetail.setRightComponent(jpMzIdSubDetail);
+                                                        jspMzIdDetail.setRightComponent(jScrollPane8);
 
                                                         jspMzId.setRightComponent(jspMzIdDetail);
 
@@ -2229,8 +2307,6 @@ public class ProteoSuiteView extends JFrame {
                                                         jpFeatureQuantHeader.setLayout(jpFeatureQuantHeaderLayout);
                                                         jpFeatureQuantHeaderLayout.setHorizontalGroup(
                                                             jpFeatureQuantHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addGap(0, 525, Short.MAX_VALUE)
-                                                            .addGap(0, 525, Short.MAX_VALUE)
                                                             .addGroup(jpFeatureQuantHeaderLayout.createSequentialGroup()
                                                                 .addContainerGap()
                                                                 .addComponent(jlSearchMzQFeat)
@@ -2244,9 +2320,6 @@ public class ProteoSuiteView extends JFrame {
                                                         );
                                                         jpFeatureQuantHeaderLayout.setVerticalGroup(
                                                             jpFeatureQuantHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addGap(0, 39, Short.MAX_VALUE)
-                                                            .addGap(0, 39, Short.MAX_VALUE)
-                                                            .addGap(0, 39, Short.MAX_VALUE)
                                                             .addGroup(jpFeatureQuantHeaderLayout.createSequentialGroup()
                                                                 .addContainerGap()
                                                                 .addGroup(jpFeatureQuantHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2861,7 +2934,7 @@ public class ProteoSuiteView extends JFrame {
 
     private void jmExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmExitActionPerformed
         //... Exiting from proteosuite ...//
-        int iExit = JOptionPane.showConfirmDialog(null, "Do you want to exit?", "Exiting from ProteoSuite", JOptionPane.YES_NO_OPTION);
+        int iExit = JOptionPane.showConfirmDialog(this, "Do you want to exit?", "Exiting from ProteoSuite", JOptionPane.YES_NO_OPTION);
         if (iExit == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
@@ -2870,7 +2943,7 @@ public class ProteoSuiteView extends JFrame {
     private void jmNewProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmNewProjectActionPerformed
         //... Check if the project needs to be saved ...//
         if(bProjectModified){
-            int iOption = JOptionPane.showConfirmDialog(null, "You have not saved your changes. Do you want to save them now?", "Warning", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int iOption = JOptionPane.showConfirmDialog(this, "You have not saved your changes. Do you want to save them now?", "Warning", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
             if (iOption == JOptionPane.OK_OPTION) {            
                 jmSaveProjectActionPerformed(null);
                 initProjectValues();
@@ -3384,7 +3457,7 @@ public class ProteoSuiteView extends JFrame {
         //... Save data using a mzq file ...//
         boolean isOK = saveProject();
         if(isOK){
-            JOptionPane.showMessageDialog(null, "Your file was saved successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Your file was saved successfully!", "Information", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_jmSaveProjectActionPerformed
 
@@ -3395,7 +3468,7 @@ public class ProteoSuiteView extends JFrame {
     private void jmCloseProjectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmCloseProjectActionPerformed
         //... Check if the project needs to be saved ...//
         if(bProjectModified){
-            int iOption = JOptionPane.showConfirmDialog(null, "You have not saved your changes. Do you want to save them now?", "Warning", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+            int iOption = JOptionPane.showConfirmDialog(this, "You have not saved your changes. Do you want to save them now?", "Warning", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
             if (iOption == JOptionPane.OK_OPTION) {            
                 jmSaveProjectActionPerformed(null);
                 initProjectValues();
@@ -3591,43 +3664,43 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jmOptionsActionPerformed
 
     private void jmSubmitPRIDEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmSubmitPRIDEActionPerformed
-        JOptionPane.showMessageDialog(null, "The module for submitting data into PRIDE is under development.", "Information", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(this, "The module for submitting data into PRIDE is under development.", "Information", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jmSubmitPRIDEActionPerformed
 
     private void jmEditIdentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmEditIdentActionPerformed
-        IdentParamsView identParams = new IdentParamsView(sWorkspace);
-        final JFrame jfIdentParams = new JFrame("Edit Identification Parameters");
-        jfIdentParams.setResizable(false);
-        jfIdentParams.setSize(638, 585);
-        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
-        final Action escapeAction = new AbstractAction() 
-        {
-            public void actionPerformed(ActionEvent e) {
-                jfIdentParams.dispose();
-            }
-        };        
-        jfIdentParams.addWindowListener(new WindowAdapter(){
-            @Override
-             public void windowClosing(WindowEvent e){ 
-                 escapeAction.actionPerformed(null);}
-             });        
-        
-        jfIdentParams.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
-        jfIdentParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);
-        
-        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        int x1 = dim.width / 2;
-        int y1 = dim.height / 2;
-        int x2 = jfIdentParams.getSize().width / 2;
-        int y2 = jfIdentParams.getSize().height / 2;        
-        jfIdentParams.setLocation(x1-x2, y1-y2);
-        Image iconApp = new ImageIcon(getClass().getClassLoader().getResource("images/icon.gif")).getImage();
-        jfIdentParams.setIconImage(iconApp);
-        jfIdentParams.setAlwaysOnTop(true);
-       
-        jfIdentParams.add(identParams);
-        jfIdentParams.pack();
-        jfIdentParams.setVisible(true); 
+//        IdentParamsView identParams = new IdentParamsView(sWorkspace, "edit");
+//        final JFrame jfIdentParams = new JFrame("Edit Identification Parameters");
+//        jfIdentParams.setResizable(false);
+//        jfIdentParams.setSize(638, 585);
+//        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
+//        final Action escapeAction = new AbstractAction() 
+//        {
+//            public void actionPerformed(ActionEvent e) {
+//                jfIdentParams.dispose();
+//            }
+//        };        
+//        jfIdentParams.addWindowListener(new WindowAdapter(){
+//            @Override
+//             public void windowClosing(WindowEvent e){ 
+//                 escapeAction.actionPerformed(null);}
+//             });        
+//        
+//        jfIdentParams.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
+//        jfIdentParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);
+//        
+//        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+//        int x1 = dim.width / 2;
+//        int y1 = dim.height / 2;
+//        int x2 = jfIdentParams.getSize().width / 2;
+//        int y2 = jfIdentParams.getSize().height / 2;        
+//        jfIdentParams.setLocation(x1-x2, y1-y2);
+//        Image iconApp = new ImageIcon(getClass().getClassLoader().getResource("images/icon.gif")).getImage();
+//        jfIdentParams.setIconImage(iconApp);
+//        jfIdentParams.setAlwaysOnTop(true);
+//       
+//        jfIdentParams.add(identParams);
+//        jfIdentParams.pack();
+//        jfIdentParams.setVisible(true); 
     }//GEN-LAST:event_jmEditIdentActionPerformed
 
     private void jmEditQuantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmEditQuantActionPerformed
@@ -3709,7 +3782,7 @@ public class ProteoSuiteView extends JFrame {
                         public void run(){
                             //... Progress Bar ...//
                             if ((jcbTechnique.getSelectedItem().toString().equals("iTRAQ"))||(jcbTechnique.getSelectedItem().toString().equals("TMT"))){
-                                progressBarDialog.setTitle("Running Quantitation Analysis via xTracker");
+                                progressBarDialog.setTitle("Running Quantitation Analysis via x-Tracker");
                                 progressBarDialog.setVisible(true);
                             }
                         }
@@ -3763,21 +3836,34 @@ public class ProteoSuiteView extends JFrame {
                                         isOK = generateFiles();
                                         if(isOK){
                                             //... Run xTracker ...//
-                                            System.out.println("****** xTRACKER *****");
+                                            System.out.println("*****    x - T R A C K E R     ******");
+                                            jtaLog.append("\n"+sysutils.getTime()+" - Starting analysis via x-Tracker ...");
                                             xTracker run = null;
-                                            run = new xTracker(sWorkspace.replace("\\", "/") + "/" + sProjectName, sWorkspace.replace("\\", "/"));                                            
+                                            run = new xTracker(sWorkspace.replace("\\", "/") + "/" + sProjectName, sWorkspace.replace("\\", "/"));
                                             
                                             //... Load the mzQuantML file into memory (Containing results) ...//
-                                            MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(sWorkspace + "/" +  sProjectName);
+                                            File xmlFile = new File(sWorkspace + "/" +  sProjectName);
+                                            MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(xmlFile);
                                             mzQuantML = unmarshaller.unmarshall();
                                             aMzQML.clear();
                                             aMzQML.add(mzQuantML);
+                                            aMzQUnmarshaller.clear();
+                                            final DefaultTableModel model = new DefaultTableModel();
+                                            jtQuantFiles.setModel(model);
+                                            model.addColumn("Name");
+                                            model.addColumn("Path");
+                                            model.addColumn("Type");
+                                            model.addColumn("Version");
+                                            unmarshalMzQMLFile(model, xmlFile);
                 
-                                            System.out.println("Displaying mzquantml results...");
-                                            jlFileNameMzQText.setText(""); //... Restart the label to allow the display of the results ...//
+                                            System.out.println(sysutils.getTime()+" - Displaying mzquantml results...");
+                                            jtaLog.append("\n"+sysutils.getTime()+" - Displaying mzquantml results...");
+                                            jlFileNameMzQText.setText(sProjectName); //... Display of the results ...//
                                             loadMzQuantMLView(0, sProjectName);
+                                            System.out.println(sysutils.getTime()+" - Execution finished...");
+                                            jtaLog.append("\n"+sysutils.getTime()+" - Execution finished...");                                            
                                             
-                                            JOptionPane.showMessageDialog(null, "Process finished. Quantitation results can be viewed in the mzQuantML View.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                                            JOptionPane.showMessageDialog(ProteoSuiteView.this, "Process finished. Quantitation results can be viewed in the mzQuantML View.", "Information", JOptionPane.INFORMATION_MESSAGE);
                                         }
                                         progressBarDialog.setVisible(false);
                                         progressBarDialog.dispose();
@@ -3789,7 +3875,7 @@ public class ProteoSuiteView extends JFrame {
                                 else{
                                         progressBarDialog.setVisible(false);
                                         progressBarDialog.dispose();
-                                        JOptionPane.showMessageDialog(null, "SILAC, empPAI and 15N are under development. Please stay tuned for new releases.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                                        JOptionPane.showMessageDialog(ProteoSuiteView.this, "SILAC, empPAI and 15N are under development. Please stay tuned for new releases.", "Information", JOptionPane.INFORMATION_MESSAGE);
                                 }
                             }
                         }
@@ -4042,224 +4128,34 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jtIdentFilesMouseClicked
 
     private void jMzMLCompressedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMzMLCompressedActionPerformed
-        final File xmlFile = new File("D:\\Data\\D9-CPTAC\\200Scans\\zlib\\mam_042408o_CPTAC_study6_6B011.mzML");
-        System.out.println(sysutils.getTime()+" - Reading mzML file: " + xmlFile.getName()+"...");        
-        
-        final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "MzMLZeroRemoval");
-        final Thread thread = new Thread(new Runnable(){
-            @Override
-            public void run(){
-                progressBarDialog.setTitle("Compressing "+xmlFile.getName());
-                progressBarDialog.setVisible(true);
-                progressBarDialog.setTaskName("Please wait as this process may take some minutes...");
+        //... Load MzML2MGF GUI ...//
+        final JFrame jfWinParams = new JFrame("Compress mzML files");        
+        MzMLCompressView winParams = new MzMLCompressView(jfWinParams, sWorkspace);
+        jfWinParams.setResizable(false);
+        jfWinParams.setSize(500, 450);
+        KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
+        Action escapeAction = new AbstractAction() 
+        {
+            public void actionPerformed(ActionEvent e) {
+                jfWinParams.dispose();
             }
-        }, "ProgressBarDialog");
-        thread.start();
-
-        //... Splitting job in threads ...//
-        new Thread("MzMLZeroRemoval"){
-            @Override
-            public void run(){            
-                MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
-                //... CV list ...//                
-                System.out.println("- Reading /cvList");
-                CVList cvl = unmarshaller.unmarshalFromXpath("/cvList", CVList.class);
-
-                //... File Description ...//
-                System.out.println("- Reading /fileDescription");
-                FileDescription fdList = unmarshaller.unmarshalFromXpath("/fileDescription", FileDescription.class);
-
-                //... Referenceable Param Group ...//
-                System.out.println("- Reading /referenceableParamGroupList");
-                ReferenceableParamGroupList refList = unmarshaller.unmarshalFromXpath("/referenceableParamGroupList", ReferenceableParamGroupList.class);
-
-                //... Software List ...//
-                System.out.println("- Reading /softwareList");
-                uk.ac.ebi.jmzml.model.mzml.SoftwareList softList = unmarshaller.unmarshalFromXpath("/softwareList", uk.ac.ebi.jmzml.model.mzml.SoftwareList.class); 
-
-                //... InstrumentConfiguration ...//
-                System.out.println("- Reading /instrumentConfigurationList");
-                InstrumentConfigurationList instConfList = unmarshaller.unmarshalFromXpath("/instrumentConfigurationList", InstrumentConfigurationList.class);
-
-                //... Data Processing List ...//
-                System.out.println("- Reading /dataProcessingList");
-                uk.ac.ebi.jmzml.model.mzml.DataProcessingList dataProcList = unmarshaller.unmarshalFromXpath("/dataProcessingList", uk.ac.ebi.jmzml.model.mzml.DataProcessingList.class);
-
-                //... Runs ...//
-                Run runFileW = new Run();
-                Calendar date = Calendar.getInstance();
-                runFileW.setStartTimeStamp(date);
-                runFileW.setDefaultSourceFileRef("RAW1");
-                runFileW.setDefaultInstrumentConfigurationRef("IC1");
-                runFileW.setId(xmlFile.getName());
-
-                SpectrumList specListW = new SpectrumList();
-                specListW.setDefaultDataProcessingRef("pwiz_Reader_conversion");        
-
-                //... Spectra ...//
-                MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
-                int iSpectrum = 0;
-                while (spectrumIterator.hasNext()){
-                    Spectrum spectrum = spectrumIterator.next();
-
-                    //System.out.println(spectrum.getId());
-                    //... Write spectrum ...//
-
-                    //... Attributes ...//
-                    Spectrum spectrumW = new Spectrum();
-                    spectrumW.setDefaultArrayLength(spectrum.getDefaultArrayLength());
-                    spectrumW.setIndex(spectrum.getIndex());
-                    spectrumW.setId(spectrum.getId());            
-
-                    //... cvParams ...//
-                    List<CVParam> specParam = spectrum.getCvParam();
-                    for (Iterator lCVParamIterator = specParam.iterator(); lCVParamIterator.hasNext();){
-                        CVParam lCVParam = (CVParam) lCVParamIterator.next();
-                        spectrumW.getCvParam().add(lCVParam);
-                    }
-
-                    //... Scan List ...//
-                    spectrumW.setScanList(spectrum.getScanList());
-
-                    //... Precursor List ...//
-                    spectrumW.setPrecursorList(spectrum.getPrecursorList());
-
-                    //... Binary Data Array ...//
-
-                    //... Reading m/z and intensity values ...//
-                    Number[] mzNumbers = null;
-                    double[] mz = null;
-                    double[] nonzerosMz = null;            
-                    int mzCount = 0;
-
-                    Number[] intenNumbers = null;
-                    double[] intensities = null;
-                    double[] nonzerosIntens = null;            
-
-                    List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList().getBinaryDataArray();
-                    for (BinaryDataArray bda:bdal){
-                        List<CVParam> cvpList = bda.getCvParam();
-                        for (CVParam cvp:cvpList){
-                            if(cvp.getAccession().equals("MS:1000514")){
-                                if (bda.getEncodedLength()>0){
-                                    mzNumbers = bda.getBinaryDataAsNumberArray();
-                                }
-                            }
-                            if(cvp.getAccession().equals("MS:1000515")){
-                                if (bda.getEncodedLength()>0){
-                                    intenNumbers = bda.getBinaryDataAsNumberArray();
-                                }
-                            }
-                        }
-                    }
-
-                    //... Storing delta values ...//
-                    if (mzNumbers!=null){
-                        mz = new double[mzNumbers.length];
-                        intensities = new double[intenNumbers.length];
-                        mzCount = mzNumbers.length;
-
-                        //... Copy Numbers into doubles ...//
-                        for (int iI = 0; iI < mzNumbers.length; iI++){
-                            mz[iI] = mzNumbers[iI].doubleValue(); 
-                            intensities[iI] = intenNumbers[iI].doubleValue();
-                        }
-                        //... Removing zero values ...//
-                        ArrayList<Double> zeroMz = new ArrayList<Double>();
-                        ArrayList<Double> zeroIntens = new ArrayList<Double>();
-                        double last=0.0d;
-                        for (int iI = 0; iI < mzNumbers.length; iI++){
-                            if (intensities[iI]>0){
-                                zeroMz.add(mz[iI]-last);    //... Storing Deltas ...//
-                                zeroIntens.add(intensities[iI]);
-                                last=mz[iI];
-                            }
-                        }
-                        nonzerosMz = new double[zeroMz.size()];
-                        nonzerosIntens = new double[zeroIntens.size()];
-                        int iI=0;
-                        for(Double d:zeroMz){
-                            nonzerosMz[iI++] = d.doubleValue();
-                        }
-                        iI=0;
-                        for(Double d:zeroIntens){
-                            nonzerosIntens[iI++] = d.doubleValue();
-                        }
-                    }
-
-                    //... Transforming data into Binary ...//
-                    BinaryDataArray bdaW = new BinaryDataArray();
-                    BinaryDataArray bda2W = new BinaryDataArray();
-
-                    if (mzCount>0){
-                        CV cv = new CV();
-                        cv.setFullName("PSI-MS");
-                        cv.setId("MS");
-                        bdaW.set64BitFloatArrayAsBinaryData(nonzerosMz, true, cv);
-                        CVParam cvParam = new BinaryDataArrayCVParam();
-                        cvParam.setUnitCvRef("MS");
-                        cvParam.setUnitName("m/z");
-                        cvParam.setAccession("MS:1000040");
-                        cvParam.setName("m/z array");
-                        cvParam.setAccession("MS:1000514");
-                        cvParam.setCvRef("MS");
-                        bdaW.getCvParam().add(cvParam);
-                        bdaW.setEncodedLength(bdaW.getArrayLength());
-
-                        bda2W.set64BitFloatArrayAsBinaryData(nonzerosIntens, true, cv);
-                        CVParam cvParam2 = new BinaryDataArrayCVParam();
-                        cvParam2.setUnitCvRef("MS");
-                        cvParam2.setUnitName("number of counts");
-                        cvParam2.setAccession("MS:1000131");
-                        cvParam2.setName("intensity array");
-                        cvParam2.setAccession("MS:1000515");
-                        cvParam2.setCvRef("MS");
-                        bda2W.getCvParam().add(cvParam2);
-                        bda2W.setEncodedLength(bda2W.getArrayLength());
-                    }
-                    BinaryDataArrayList bdalstW = new BinaryDataArrayList();
-                    bdalstW.getBinaryDataArray().add(bdaW);
-                    bdalstW.getBinaryDataArray().add(bda2W);
-                    bdalstW.setCount(2);
-                    spectrumW.setBinaryDataArrayList(bdalstW);
-                    specListW.getSpectrum().add(spectrumW);
-
-                    iSpectrum++;
-                }
-                specListW.setCount(iSpectrum);
-
-                System.out.println("- Writing spectrumList");
-                runFileW.setSpectrumList(specListW);
-
-                System.out.println("- Writing /run/chromatogramList");
-                ChromatogramList chromat = unmarshaller.unmarshalFromXpath("/run/chromatogramList", ChromatogramList.class);
-                runFileW.setChromatogramList(chromat);
-
-                MzML mzml = new MzML();
-                mzml.setVersion("1.1.0");
-                mzml.setId("test_xml");  
-                mzml.setCvList(cvl);
-                mzml.setFileDescription(fdList);
-                mzml.setReferenceableParamGroupList(refList);
-                mzml.setSoftwareList(softList);
-                mzml.setInstrumentConfigurationList(instConfList);
-                mzml.setDataProcessingList(dataProcList);
-                mzml.setRun(runFileW);
-
-                System.out.println(sysutils.getTime()+" - Writing to disk");        
-                MzMLMarshaller marshaller = new MzMLMarshaller();
-
-                try {
-                    Writer writer = new FileWriter("C:\\test_xml.mzML");
-                    marshaller.marshall(mzml, writer);
-                } catch (IOException ex) {
-                    Logger.getLogger(ProteoSuiteView.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                System.out.println(sysutils.getTime()+" - Done!");
-                progressBarDialog.setVisible(false);
-                progressBarDialog.dispose();
-            }   
-        }.start();                
+        };        
+        jfWinParams.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
+        jfWinParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);
+        
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        int x1 = dim.width / 2;
+        int y1 = dim.height / 2;
+        int x2 = jfWinParams.getSize().width / 2;
+        int y2 = jfWinParams.getSize().height / 2;        
+        jfWinParams.setLocation(x1-x2, y1-y2);
+        Image iconApp = new ImageIcon(getClass().getClassLoader().getResource("images/icon.gif")).getImage();
+        jfWinParams.setIconImage(iconApp);
+        jfWinParams.setAlwaysOnTop(true);
+       
+        jfWinParams.add(winParams);
+        jfWinParams.pack();
+        jfWinParams.setVisible(true);                
     }//GEN-LAST:event_jMzMLCompressedActionPerformed
 
     private void jmMaxQ2MZQActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmMaxQ2MZQActionPerformed
@@ -4267,7 +4163,7 @@ public class ProteoSuiteView extends JFrame {
         final JFrame jfWinParams = new JFrame("Convert MaxQuant result files to mzQuantML");        
         MaxQ2MZQView winParams = new MaxQ2MZQView(jfWinParams, sWorkspace);
         jfWinParams.setResizable(false);
-        jfWinParams.setSize(500, 450);
+        jfWinParams.setSize(500, 150);
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
         Action escapeAction = new AbstractAction() 
         {
@@ -4298,7 +4194,7 @@ public class ProteoSuiteView extends JFrame {
         final JFrame jfWinParams = new JFrame("Convert Progenesis result files to mzQuantML");        
         Prog2MZQView winParams = new Prog2MZQView(jfWinParams, sWorkspace);
         jfWinParams.setResizable(false);
-        jfWinParams.setSize(500, 450);
+        jfWinParams.setSize(500, 180);
         KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
         Action escapeAction = new AbstractAction() 
         {
@@ -4368,7 +4264,7 @@ public class ProteoSuiteView extends JFrame {
                 if (write){
                     ExcelExporter exp = new ExcelExporter();
                     exp.fillData(jtMzML, new File(fileLocation), false, 0);
-                    JOptionPane.showMessageDialog(null, "Data saved at "+fileLocation, "Information", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Data saved at "+fileLocation, "Information", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         } catch (Exception ex) {
@@ -4376,7 +4272,7 @@ public class ProteoSuiteView extends JFrame {
         } 
        }
        else{
-           JOptionPane.showMessageDialog(null, "No data to export", "Error", JOptionPane.INFORMATION_MESSAGE);
+           JOptionPane.showMessageDialog(this, "No data to export", "Error", JOptionPane.INFORMATION_MESSAGE);
        }
     }//GEN-LAST:event_jbExportMzMLExcelMouseClicked
 
@@ -4450,7 +4346,7 @@ public class ProteoSuiteView extends JFrame {
                 if (write){
                     ExcelExporter exp = new ExcelExporter();
                     exp.fillData(jtMGF, new File(fileLocation), true, 0);
-                    JOptionPane.showMessageDialog(null, "Data saved at "+fileLocation, "Information", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Data saved at "+fileLocation, "Information", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         } catch (Exception ex) {
@@ -4458,7 +4354,7 @@ public class ProteoSuiteView extends JFrame {
         } 
        }
        else{
-           JOptionPane.showMessageDialog(null, "No data to export", "Error", JOptionPane.INFORMATION_MESSAGE);
+           JOptionPane.showMessageDialog(this, "No data to export", "Error", JOptionPane.INFORMATION_MESSAGE);
        }        
     }//GEN-LAST:event_jbExportMGFExcelMouseClicked
 
@@ -4506,7 +4402,7 @@ public class ProteoSuiteView extends JFrame {
                 if (write){
                     ExcelExporter exp = new ExcelExporter();
                     exp.fillData(jtMzId, new File(fileLocation), true, 0);
-                    JOptionPane.showMessageDialog(null, "Data saved at "+fileLocation, "Information", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Data saved at "+fileLocation, "Information", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         } catch (Exception ex) {
@@ -4514,80 +4410,148 @@ public class ProteoSuiteView extends JFrame {
         } 
        }
        else{
-           JOptionPane.showMessageDialog(null, "No data to export", "Error", JOptionPane.INFORMATION_MESSAGE);
+           JOptionPane.showMessageDialog(this, "No data to export", "Error", JOptionPane.INFORMATION_MESSAGE);
        }
     }//GEN-LAST:event_jbExportMzIdentMLExcelMouseClicked
 
     private void jmRunIdentAnalysisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmRunIdentAnalysisActionPerformed
-        //... Check if there is a valid workspace ...//
-        boolean isOK = getWorkspace();
+        //... Check if there is a valid workspace ...//        
+        boolean bRun = false;
+        boolean isOK = getWorkspace();        
         if (isOK){        
             //... Validate if we got raw and identification files ...//        
             if (jtRawFiles.getRowCount()<=0){
                 JOptionPane.showMessageDialog(this, "Please select at least one raw file. (Use the import file option in the menu).", "Error", JOptionPane.ERROR_MESSAGE);
             } 
-            else{
-                //... In this thread, we call xTracker module (parameter files are generated using proteosuite) ...//
-                final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "RunIdentification");
-                final Thread thread = new Thread(new Runnable(){
-                    @Override
-                    public void run(){
-                        //... Progress Bar ...//
-                        progressBarDialog.setTitle("Running Identification Analysis via MSGF+");
-                        progressBarDialog.setVisible(true);
-                    }
-                }, "ProgressBarDialog");
-                thread.start();
-                new Thread("RunIdentification"){
-                    @Override
-                    public void run(){
-                        System.out.println(sysutils.getTime()+" - ****** Running MSGF+ *****");
-                        String sSpectrumFile = "C:\\Data\\LTQ-OrbitrapO@65\\Analysis\\mam_042408o_CPTAC_study6_6B011.MGF";
-                        String sDatabaseFile = "C:\\Data\\LTQ-OrbitrapO@65\\Analysis\\orf_trans_plus_UPS_REV.fasta";
+            else{      
+                if (dialogIdentParamsExecute == null) {
+                    dialogIdentParamsExecute = new JDialog(this, "Set Identification Parameters", ModalityType.APPLICATION_MODAL);
+                    KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,0, false);
+                    final Action escapeAction = new AbstractAction() {
+                        public void actionPerformed(ActionEvent e) {
+                            identParamsExecute.setRun(false);
+                            dialogIdentParamsExecute.dispose();
+                        }
+                    };
+                    dialogIdentParamsExecute.addWindowListener(new WindowAdapter(){
+                        @Override
+                         public void windowClosing(WindowEvent e){ 
+                             escapeAction.actionPerformed(null);}
+                         });        
 
-                        ParamManager paramManager = new ParamManager("MS-GF+", MSGFPlus.VERSION, MSGFPlus.RELEASE_DATE, "java -Xmx3500M -jar MSGFPlus.jar");
-                        String argv[] = {"-s", sSpectrumFile, "-d", sDatabaseFile};
-                        paramManager.addMSGFPlusParams();
+                    dialogIdentParamsExecute.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
+                    dialogIdentParamsExecute.getRootPane().getActionMap().put("ESCAPE", escapeAction);                    
+                    dialogIdentParamsExecute.getContentPane().add(identParamsExecute);
+                    dialogIdentParamsExecute.pack();
+                    dialogIdentParamsExecute.setLocationRelativeTo(null);
+                }
+                dialogIdentParamsExecute.setVisible(true);
+                                                
+                //... Get values from form ...//
+                bRun = identParamsExecute.getRun();
+                if (bRun){                    
+                    //... Start process ...//
+                    
+                    //... In this thread, we call MSGF module (parameter files are generated using proteosuite) ...//
+                    final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "RunIdentification");
+                    final Thread thread = new Thread(new Runnable(){
+                        @Override
+                        public void run(){
+                            //... Progress Bar ...//
+                            progressBarDialog.setTitle("Running Identification Analysis via MSGF+");
+                            progressBarDialog.setTaskName("This task may take up to several minutes. Please wait...");
+                            progressBarDialog.setVisible(true);
+                        }
+                    }, "ProgressBarDialog");                
+                    thread.start();
 
-                        if(argv.length == 0){
-                            paramManager.printUsageInfo();
-                            return;
-                        }
-                        MzMLAdapter.turnOffLogs();
+                    new Thread("RunIdentification"){
+                        @Override
+                        public void run(){
+                            System.out.println(sysutils.getTime()+" - ****** Running MSGF+ (Ver "+MSGFPlus.VERSION+") *****");
 
-                        //... Parse parameters ...//
-                        String errMessage = paramManager.parseParams(argv); 
-                        if(errMessage != null){
-                            System.err.println("[MSFG+ Error] " + errMessage);
-                            System.out.println();
-                            paramManager.printUsageInfo();
-                            return;
-                        }
+                            ParamManager paramManager = new ParamManager("MS-GF+", MSGFPlus.VERSION, MSGFPlus.RELEASE_DATE, "java -Xmx"+sysutils.getMaxMemory()+"M -jar MSGFPlus.jar");
+                            paramManager.addMSGFPlusParams();
 
-                        //... Running MS-GF+ ...//
-                        paramManager.printToolInfo();
-                        MSGFPlus run = new MSGFPlus();
-                        String errorMessage = null;
-                        try {
-                            errorMessage = run.runMSGFPlus(paramManager);
-                        }
-                        catch(Exception e){
-                            e.printStackTrace();
-                            System.exit(-1);
-                        }
-                        if(errorMessage != null){
-                            System.err.println("[Error] " + errorMessage);
-                            System.out.println();
-                        }
-                        else{
-                            System.out.format("MS-GF+ completed");
-                        }
-                        JOptionPane.showMessageDialog(null, "Process finished. Identification results can be viewed in the mzIdentML View.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                            Map<String, String> map = new HashMap();
+                            map = identParamsExecute.getParams();   
+                            String sFirstFile = "";
+                            
+                            for(int iFile=0; iFile<jtRawFiles.getRowCount(); iFile++){
+                                progressBarDialog.setTitle("Running MSGF+ (Ver "+MSGFPlus.VERSION+") "+"("+(iFile+1)+"/"+jtRawFiles.getRowCount()+") - "+jtRawFiles.getValueAt(iFile, 0).toString());
+                                map.put("-s", jtRawFiles.getValueAt(iFile, 1).toString());
+                                File file = new File(jtRawFiles.getValueAt(iFile, 1).toString());
+                                String fileName = file.getName();
+                                fileName = fileName.replace("\\", "/");
+                                String fileExtension = "";
+                                int iIndex = fileName.lastIndexOf('.');
+                                if (iIndex > 0) {
+                                    fileExtension = fileName.substring(iIndex+1);
+                                }
+                                fileName = fileName.replace(fileExtension, "mzid");
+                                map.put("-o", file.getParent().replace("\\", "/") +"/"+fileName);
+                                System.out.println(file.getParent().replace("\\", "/")+"/"+fileName);
+                                if (iFile==0){
+                                    sFirstFile = file.getParent().replace("\\", "/")+"/"+fileName;
+                                }
+                                String[] argv = new String[map.size()*2];
+                                int iI=0;
+                                for (Map.Entry<String, String> entry : map.entrySet()) {
+                                    argv[iI] = entry.getKey();
+                                    argv[iI+1] = entry.getValue();
+                                    iI = iI+2;
+                                }
 
-                        progressBarDialog.setVisible(false);
-                        progressBarDialog.dispose();                                
+                                if(argv.length == 0){
+                                    paramManager.printUsageInfo();
+                                    return;
+                                }
+                                MzMLAdapter.turnOffLogs();
+
+                                //... Parse parameters ...//
+                                String errMessage = paramManager.parseParams(argv); 
+                                if(errMessage != null){
+                                    System.err.println(sysutils.getTime()+" - [Error] " + errMessage);
+                                    System.out.println();
+                                    paramManager.printUsageInfo();
+                                    return;
+                                }
+
+                                //... Running MS-GF+ ...//
+                                paramManager.printToolInfo();
+                                MSGFPlus run = new MSGFPlus();
+                                String errorMessage = null;
+                                try {
+                                    errorMessage = run.runMSGFPlus(paramManager);
+                                }
+                                catch(Exception e){
+                                    e.printStackTrace();
+                                    System.exit(-1);
+                                }
+                                if(errorMessage != null){
+                                    System.err.println(sysutils.getTime()+" - [Error] " + errorMessage);
+                                }
+                                else{
+                                    System.out.println(sysutils.getTime()+" - MS-GF+ completed");                                    
+                                }
+                            }                            
+                            if (!sFirstFile.equals("")){
+                                final DefaultTableModel model = new DefaultTableModel();
+                                jtIdentFiles.setModel(model);
+                                model.addColumn("Name");
+                                model.addColumn("Path");
+                                model.addColumn("Type");
+                                model.addColumn("Version");
+                                model.addColumn("Raw File");
+                                File xmlFile = new File(sFirstFile);
+                                unmarshalMzIDFile(model, xmlFile, "");                                                
+                                loadMzIdentMLView(0, xmlFile.getName());
+                            }
+                            progressBarDialog.setVisible(false);
+                            progressBarDialog.dispose();
                         }
-                }.start();
+                    }.start();
+                }                
             }
         }
     }//GEN-LAST:event_jmRunIdentAnalysisActionPerformed
@@ -4598,7 +4562,7 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jbRunIdentAnalysisMouseClicked
 
     private void jmCheckUpdatesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmCheckUpdatesActionPerformed
-        String sURL = "http://www.proteosuite.org/datasets/D0-PublicFiles/updates.xml";
+        String sURL = "http://www.proteosuite.org/datasets/D-000-PublicFiles/updates.xml";
         boolean bURL = sysutils.CheckURL(sURL);
         if (bURL){
             //... Read files using XPath xml parser ...//
@@ -4630,10 +4594,10 @@ public class ProteoSuiteView extends JFrame {
                     }
                 }
                 if (sPS_Version.equals(ver)){
-                    JOptionPane.showMessageDialog(null, "Your ProteoSuite version is up to date!!!", "Information", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Your ProteoSuite version is up to date!!!", "Information", JOptionPane.INFORMATION_MESSAGE);
                 }
                 else{
-                    JOptionPane.showMessageDialog(null, 
+                    JOptionPane.showMessageDialog(this, 
                             "There is a new version of ProteoSuite available at http://code.google.com/p/proteo-suite/\n Update this manually. We will have an automatic download soon.", 
                             "Information", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -4649,7 +4613,7 @@ public class ProteoSuiteView extends JFrame {
             }           
         }
         else{
-            JOptionPane.showMessageDialog(null, "Unable to connect. Check that you have internet connection or \nupdate your version manually (http://code.google.com/p/proteo-suite/)", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Unable to connect. Check that you have internet connection or \nupdate your version manually (http://code.google.com/p/proteo-suite/)", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jmCheckUpdatesActionPerformed
     /*--------------------------------------------------------------
@@ -4679,11 +4643,12 @@ public class ProteoSuiteView extends JFrame {
     private boolean checkMapping()
     {
         //... Check if all identification files have been assigned to one raw file ...//
-        for(int iI=0; iI<jtIdentFiles.getRowCount(); iI++){
-            System.out.println("ColumnCount="+jtIdentFiles.getColumnCount());
-            System.out.println("RowCount="+jtIdentFiles.getRowCount());
+        System.out.println(sysutils.getTime()+" - Checking identification-spectra mapping");
+        jtaLog.append(sysutils.getTime()+" - Checking identification-spectra mapping");
+        jtpLog.setSelectedIndex(0);
+        for(int iI=0; iI<jtIdentFiles.getRowCount(); iI++){            
             if(jtIdentFiles.getValueAt(iI, 4).equals("")){
-                JOptionPane.showMessageDialog(null, "Please select a raw file for each identification file.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please select a raw file for each identification file.", "Error", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         }
@@ -4851,7 +4816,7 @@ public class ProteoSuiteView extends JFrame {
             //... Check if default workspace is valid ...//
             exists = (new File(sWorkspace)).exists();
             if (!exists){
-                JOptionPane.showMessageDialog(null, "The default \"workspace\" does not exist. Please set up your directory in \"Tools\"->\"Options\" ", "Error", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "The default \"workspace\" does not exist. Please set up your directory in \"Tools\"->\"Options\" ", "Error", JOptionPane.INFORMATION_MESSAGE);
                 return false;
             }
         }
@@ -5659,19 +5624,35 @@ public class ProteoSuiteView extends JFrame {
             
             Number[] mzNumbers = null;
             Number[] intenNumbers = null;
-            //... Reading mz and intensity values ...//
+
+            boolean bCompressed = false;
+            //... Reading mz Values ...//
             List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList().getBinaryDataArray();
             for (BinaryDataArray bda:bdal){
                 List<CVParam> cvpList = bda.getCvParam();
                 for (CVParam cvp:cvpList){                            
+                    if(cvp.getAccession().equals("MS:1000000")){
+                        bCompressed = true;
+                    }
+                }
+            } 
+            
+            //... Reading mz and intensity values ...//
+            for (BinaryDataArray bda:bdal){
+                List<CVParam> cvpList = bda.getCvParam();
+                for (CVParam cvp:cvpList){                            
                     if(cvp.getAccession().equals("MS:1000514")){
-                        mzNumbers = bda.getBinaryDataAsNumberArray();                                
+                        mzNumbers = bda.getBinaryDataAsNumberArray();      
+                        if(bCompressed){
+                            mzNumbers = decodeMzDeltas(mzNumbers); 
+                        }                        
                     }
                     if(cvp.getAccession().equals("MS:1000515")){
                         intenNumbers = bda.getBinaryDataAsNumberArray();                                
                     }
                 }
             }           
+            
             double[] mz = new double[mzNumbers.length];
             for (int iI = 0; iI < mzNumbers.length; iI++){
                 mz[iI] = mzNumbers[iI].doubleValue();
@@ -5693,8 +5674,9 @@ public class ProteoSuiteView extends JFrame {
             jifViewSpectrum.setTitle("MS spectrum <ScanID: " + sID + ">");
             specpanel.setSize(new java.awt.Dimension(600, 400));
             specpanel.setPreferredSize(new java.awt.Dimension(600, 400));
-            jifViewSpectrum.add(specpanel);
-            jdpMS.add(jifViewSpectrum);
+            jifViewSpectrum.add(specpanel, BorderLayout.CENTER);            
+            jifViewSpectrum.setSize(jdpMS.getSize());
+            jdpMS.add(jifViewSpectrum, BorderLayout.CENTER);
             jdpMS.revalidate();
             jdpMS.repaint();
         }
@@ -5782,13 +5764,28 @@ public class ProteoSuiteView extends JFrame {
             Spectrum spectrum = unmarshaller.getSpectrumById(sID);
             Number[] mzNumbers = null;
             Number[] intenNumbers = null;
-            //... Reading mz and intensity values ...//
+            
+            boolean bCompressed = false;
+            //... Reading mz Values ...//
             List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList().getBinaryDataArray();
             for (BinaryDataArray bda:bdal){
                 List<CVParam> cvpList = bda.getCvParam();
                 for (CVParam cvp:cvpList){                            
-                    if(cvp.getAccession().equals("MS:1000514")){
-                        mzNumbers = bda.getBinaryDataAsNumberArray();                                
+                    if(cvp.getAccession().equals("MS:1000000")){
+                        bCompressed = true;
+                    }
+                }
+            } 
+                    
+            //... Reading mz and intensity values ...//            
+            for (BinaryDataArray bda:bdal){
+                List<CVParam> cvpList = bda.getCvParam();
+                for (CVParam cvp:cvpList){                            
+                    if(cvp.getAccession().equals("MS:1000514")){                        
+                        mzNumbers = bda.getBinaryDataAsNumberArray();                          
+                        if(bCompressed){
+                            mzNumbers = decodeMzDeltas(mzNumbers); 
+                        }                        
                     }
                     if(cvp.getAccession().equals("MS:1000515")){
                         intenNumbers = bda.getBinaryDataAsNumberArray();                                
@@ -5817,6 +5814,18 @@ public class ProteoSuiteView extends JFrame {
             System.out.println(ume.getMessage());
         }
     }         
+    public Number[] decodeMzDeltas(Number[] mzNumbers){           
+                
+        //... Storing normal values ...//
+        if (mzNumbers!=null){
+            double previous=0.0d;
+            for (int iI = 0; iI < mzNumbers.length; iI++){
+                previous=mzNumbers[iI].doubleValue()+previous;
+                mzNumbers[iI] = previous;           
+            }            
+        }               
+        return mzNumbers;
+    }
     /*---------------------------------------
      * Get internal frame dimensions
      * @param void 
@@ -6185,7 +6194,7 @@ public class ProteoSuiteView extends JFrame {
      ------------------------------------------------*/
     private void loadMzQuantMLView(int iIndex, String sFile) 
     {
-        if (!jtQuantFiles.getValueAt(iIndex, 0).toString().equals(jlFileNameMzQText.getText())){        
+        if ((!jtQuantFiles.getValueAt(iIndex, 0).toString().equals(jlFileNameMzQText.getText()))||(jtPeptideQuant.getRowCount()<=0)){        
             final String sFileRef = sFile;
             final int iIndexRef = iIndex;
             final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "LoadMZQView");
@@ -6323,7 +6332,7 @@ public class ProteoSuiteView extends JFrame {
                             int iI = 1;
                             while (itr.hasNext()){
                                 if (iI>=iAssays+iStudyVars+1){
-                                    JOptionPane.showMessageDialog(null, 
+                                    JOptionPane.showMessageDialog(ProteoSuiteView.this, 
                                             "Invalid file. The mzq file contains duplications in the DataMatrix on "+
                                             "the AssayQuantLayer or StudyVariableQuantLayer",
                                             "Information", JOptionPane.INFORMATION_MESSAGE);
@@ -7161,6 +7170,9 @@ public class ProteoSuiteView extends JFrame {
         initTextAreas();
         initViews();
         initButtons();
+        
+        //... Values ...//
+        Locale.setDefault(new Locale("en", "UK"));
     }     
     /*------------------------------------------------------
      * Initialise project settings (configuration XML file) 
@@ -7208,7 +7220,7 @@ public class ProteoSuiteView extends JFrame {
             String sMessage = "The config.xml file was not found, please make sure that this file exists \n";
             sMessage = sMessage + "under your installation directory. ProteoSuite will continue launching, however \n";
             sMessage = sMessage + "it is recommended that you copy the file as indicated in the readme.txt file.";
-            JOptionPane.showMessageDialog(null, sMessage, "Warning", JOptionPane.INFORMATION_MESSAGE);            
+            JOptionPane.showMessageDialog(this, sMessage, "Warning", JOptionPane.INFORMATION_MESSAGE);            
         }
         sProjectName = "New";
         bProjectModified = false;
@@ -7409,7 +7421,7 @@ public class ProteoSuiteView extends JFrame {
                     Validator validator = XMLparser.getValidator(MZQ_XSD);
                     boolean validFlag = XMLparser.validate(validator, file.getPath());
                     if(!validFlag){
-                        JOptionPane.showMessageDialog(null, "The file " + file + " is not valid. \n Please make sure that the file is a valid mzq file (Release "+MZQ_XSD+")", "Error", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "The file " + file + " is not valid. \n Please make sure that the file is a valid mzq file (Release "+MZQ_XSD+")", "Error", JOptionPane.INFORMATION_MESSAGE);
                     }
                     else{
                         MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(file.toString());            
@@ -7487,7 +7499,7 @@ public class ProteoSuiteView extends JFrame {
                         //... Validate type of file ...//
                         File file = new File(rawFile.getLocation());
                         if (!file.exists()){
-                            JOptionPane.showMessageDialog(null, "The file "+rawFile.getName()+" was not found at "+rawFile.getLocation()+".\n"+
+                            JOptionPane.showMessageDialog(ProteoSuiteView.this, "The file "+rawFile.getName()+" was not found at "+rawFile.getLocation()+".\n"+
                                     "Please make sure that the file exist, or reupload the file again.", "Warning", JOptionPane.WARNING_MESSAGE);
                         }
                         else{
@@ -7534,7 +7546,7 @@ public class ProteoSuiteView extends JFrame {
                         //... Validate type of file ...//
                         File file = new File(idFile.getLocation());
                         if (!file.exists()){
-                            JOptionPane.showMessageDialog(null, "The file "+idFile.getName()+" was not found at "+idFile.getLocation()+".\n"+
+                            JOptionPane.showMessageDialog(ProteoSuiteView.this, "The file "+idFile.getName()+" was not found at "+idFile.getLocation()+".\n"+
                                     "Please make sure that the file exist, or reupload the file again.", "Warning", JOptionPane.WARNING_MESSAGE);
                         }     
                         else{
@@ -7651,23 +7663,28 @@ public class ProteoSuiteView extends JFrame {
         
         //... Check project name ...//  
         String sFile = sProjectName;
-        System.out.println("Generating files for the pipeline ...");
+        System.out.println(sysutils.getTime()+" - Generating files for the pipeline ...");
+        jtaLog.append("\n"+sysutils.getTime()+" - Generating files for the pipeline ...");
         if (sFile.equals("New")){
             sFile = "test.mzq";
             String sMessage = "This project has not been saved. Proteosuite will create a test.mzq file \n";
             sMessage = sMessage + " under " + sWorkspace + " to run the pipeline. \n";
-            JOptionPane.showMessageDialog(null, sMessage, "Information", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, sMessage, "Information", JOptionPane.INFORMATION_MESSAGE);
             sProjectName = sFile;
         }
+        
         //... Generate mzq file ...//
-        System.out.println("Generating mzq file...");
+        System.out.println(sysutils.getTime()+" - Generating mzq file ...");
+        jtaLog.append("\n"+sysutils.getTime()+" - Generating mzq file ...");
         isOK = writeMzQuantML(jcbTechnique.getSelectedItem().toString(), sFile);
         if(isOK){
             //... Unmarshall mzquantml file ...//
             Validator validator = XMLparser.getValidator(MZQ_XSD);
-            boolean validFlag = XMLparser.validate(validator, sWorkspace + "/" +  sProjectName);
+            boolean validFlag = XMLparser.validate(validator, sWorkspace.replace("\\", "/") + "/" +  sProjectName);
+            System.out.println(sysutils.getTime()+" - Validating mzQuantML ...");
+            jtaLog.append("\n"+sysutils.getTime()+" - Validating mzQuantML ...");
             if(!validFlag){
-                JOptionPane.showMessageDialog(null, "Invalid mzQuantML file", "Error", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Invalid mzQuantML file", "Error", JOptionPane.INFORMATION_MESSAGE);                
             }
             else{
                 //... Modify the mzQuantML structure according to the experiment ...//
@@ -7697,7 +7714,7 @@ public class ProteoSuiteView extends JFrame {
         qml.setVersion(Version);
         Calendar rightNow = Calendar.getInstance();
         qml.setCreationDate(rightNow);
-        System.out.println("Version Ok, date OK!");
+        qml.setId(sFile);
         
         //----------------------//
         //... CREATE CV LIST ...//
@@ -7708,7 +7725,7 @@ public class ProteoSuiteView extends JFrame {
         cvPSI_MS.setId("PSI-MS");
         cvPSI_MS.setUri("http://psidev.cvs.sourceforge.net/viewvc/*checkout*/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo");
         cvPSI_MS.setFullName("Proteomics Standards Initiative Mass Spectrometry Vocabulary");
-        cvPSI_MS.setVersion("3.37.0");
+        cvPSI_MS.setVersion(PSI_MS_VERSION);
 
         Cv cvUO = new Cv();
         cvUO.setId("UO");
@@ -7719,7 +7736,7 @@ public class ProteoSuiteView extends JFrame {
         cvPSI_MOD.setId("PSI-MOD");
         cvPSI_MOD.setUri("http://psidev.cvs.sourceforge.net/psidev/psi/mod/data/PSI-MOD.obo");
         cvPSI_MOD.setFullName("Proteomics Standards Initiative Protein Modifications");        
-        cvPSI_MOD.setVersion("1.2");
+        cvPSI_MOD.setVersion(PSI_MOD_VERSION);
 
         Cv cvUNI_MOD = new Cv();
         cvUNI_MOD.setId("UNIMOD");
@@ -7731,11 +7748,11 @@ public class ProteoSuiteView extends JFrame {
         cvList.add(cvPSI_MOD);
         cvList.add(cvUNI_MOD);
         qml.setCvList(cvs);
-        System.out.println("CV list OK!");
         
         //-------------------------------//
         //... CREATE ANALYSIS SUMMARY ...//
         //-------------------------------//
+        
         if (sExperiment.contains("iTRAQ")){                    
             ParamList pl = new ParamList();
             List<AbstractParam> cvParamList = pl.getParamGroup();
@@ -7787,7 +7804,7 @@ public class ProteoSuiteView extends JFrame {
             CvParam cvp = new CvParam();
             cvp.setAccession("MS:1001837");
             cvp.setCvRef(cvPSI_MS);
-            cvp.setName("iTRAQ quantitation analysis");
+            cvp.setName("TMT quantitation analysis");
 
             CvParam cvp6 = new CvParam();
             cvp6.setAccession("MS:1002023");
@@ -7826,7 +7843,6 @@ public class ProteoSuiteView extends JFrame {
 
             qml.setAnalysisSummary(pl);
         }
-        System.out.println("Analysis summary OK!");
         
         //--------------------------//
         //... CREATE INPUT FILES ...//
@@ -7927,14 +7943,24 @@ public class ProteoSuiteView extends JFrame {
         SoftwareList softwareList = new SoftwareList();
         Software software = new Software();
         softwareList.getSoftware().add(software);
-        software.setId("xTRACKER");
-        software.setVersion("1");
+        software.setId("x-Tracker");
+        software.setVersion("2.0-ALPHA");
+        CvParam cvpSW = new CvParam();
+        cvpSW.setAccession("MS:1002123");
+        cvpSW.setCvRef(cvPSI_MS);
+        cvpSW.setName("x-Tracker");
+        software.getCvParam().add(cvpSW);
         
         Software software2 = new Software();
         softwareList.getSoftware().add(software2);
         software2.setId("ProteoSuite");
-        software2.setVersion(sPS_Version);
-        qml.setSoftwareList(softwareList);        
+        software2.setVersion(sPS_Version);        
+        CvParam cvpSW2 = new CvParam();
+        cvpSW2.setAccession("MS:1002124");
+        cvpSW2.setCvRef(cvPSI_MS);
+        cvpSW2.setName("ProteoSuite");    
+        software2.getCvParam().add(cvpSW2);
+        qml.setSoftwareList(softwareList);
         
         //---------------------------------//
         //... Create DataProcessingList ...//
@@ -7947,7 +7973,7 @@ public class ProteoSuiteView extends JFrame {
         
         //... Based on the technique, select the plugins that are available to perform the quantitation ...//
         String[] sPipeline;
-        sPipeline = new String[4];            
+        sPipeline = new String[4];
         sPipeline = getPlugins(sExperiment); 
         
         //... Processing methods ...//
@@ -8056,12 +8082,10 @@ public class ProteoSuiteView extends JFrame {
 
             //... Check raw files ...//
             for(int iJ=0; iJ<jtRawFiles.getRowCount();iJ++){
-                System.out.println("Checking file ... "+jtRawFiles.getValueAt(iJ, 0));
                 XPathExpression expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='" + jtRawFiles.getValueAt(iJ, 0)  + "']");
                 NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-                System.out.println("Nodes..."+nodes.getLength());
                 if (nodes.getLength()<=0){  
-                    JOptionPane.showMessageDialog(null, "Please specify the parameter settings for each raw file in Project->Set Quantitation Parameters->iTRAQ.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Please specify the parameter settings for each raw file in Project->Set Quantitation Parameters->iTRAQ.", "Error", JOptionPane.INFORMATION_MESSAGE);
                     return false;
                 }
                 //... Validating files ...//
@@ -8189,7 +8213,6 @@ public class ProteoSuiteView extends JFrame {
         //... Marshal mzQuantML object ...//
         MzQuantMLMarshaller marshaller = new MzQuantMLMarshaller(sWorkspace + "/" + sFile);
         marshaller.marshall(qml);
-        
         return ret;
     }
     /*-------------------------------------------
@@ -8506,7 +8529,6 @@ public class ProteoSuiteView extends JFrame {
                 
                 //... Check raw files (To be modified once Jun fixes the problem in xtracker ...//
                 for(int iJ=0; iJ<1;iJ++){
-                    System.out.println("Checking file ... "+jtRawFiles.getValueAt(iJ, 0));
                     expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='" + jtRawFiles.getValueAt(iJ, 0)  + "']");
                     nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
                     
@@ -8730,6 +8752,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JPopupMenu.Separator jSeparator3;
@@ -8764,6 +8787,9 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JComboBox jcbTechnique;
     private javax.swing.JDesktopPane jdpMS;
     private javax.swing.JDesktopPane jdpTIC;
+    private javax.swing.JLabel jlExportMGFXLS;
+    private javax.swing.JLabel jlExportMzIDXLS;
+    private javax.swing.JLabel jlExportMzMLXLS;
     private javax.swing.JLabel jlFeatureMZQ;
     private javax.swing.JLabel jlFileNameMzID;
     private javax.swing.JLabel jlFileNameMzIDText;
@@ -8885,6 +8911,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JPanel jpQuantFiles;
     private javax.swing.JPanel jpRawDataValues;
     private javax.swing.JPanel jpRawDataValuesMenu;
+    private javax.swing.JPanel jpSpectrum;
     private javax.swing.JPanel jpTIC;
     private javax.swing.JPanel jpToolBar;
     private javax.swing.JPanel jpViewerAndProperties;
@@ -8908,6 +8935,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JSplitPane jspMascotXMLSubDetail;
     private javax.swing.JSplitPane jspMzId;
     private javax.swing.JSplitPane jspMzIdDetail;
+    private javax.swing.JScrollPane jspMzIdProtGroup;
     private javax.swing.JSplitPane jspMzML;
     private javax.swing.JSplitPane jspMzMLDetail;
     private javax.swing.JScrollPane jspMzMLHeader;
@@ -8930,6 +8958,7 @@ public class ProteoSuiteView extends JFrame {
     private javax.swing.JTextField jtMSIndex;
     private javax.swing.JTextField jtMSMz;
     private javax.swing.JTable jtMascotXMLView;
+    private javax.swing.JTable jtMzIDProtGroup;
     private javax.swing.JTable jtMzId;
     private javax.swing.JTable jtMzML;
     private javax.swing.JTextField jtPeptide;

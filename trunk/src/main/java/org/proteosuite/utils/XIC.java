@@ -1,24 +1,34 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * --------------------------------------------------------------------------
+ * XIC.java
+ * --------------------------------------------------------------------------
+ * Description:       Plugin to generate a XIC
+ * Developer:         FG
+ * Created:           12 April 2013
+ * Read our documentation under our Google SVN repository
+ * SVN: http://code.google.com/p/proteo-suite/
+ * Project Website: http://www.proteosuite.org/
+ * --------------------------------------------------------------------------
  */
 package org.proteosuite.utils;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 /**
- *
- * @author faviel
+ * Plugin to generate a XIC basted on a rt and m/z window
+ * @param xmlFile - File Name
+ * @param rtStarts - rt start point
+ * @param rtEnds - rt end point
+ * @param mzStarts - m/z start point
+ * @param mzEnds - m/z end point
+ * @author FG
  */
 public class XIC {
     
@@ -64,16 +74,32 @@ public class XIC {
                 if (rt>=rtStarts&&rt<=rtEnds){
                     Number[] mzNumbers = null;
                     Number[] intenNumbers = null;
+                    boolean bCompressed = false;
                     //... Reading mz Values ...//
                     List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList().getBinaryDataArray();
                     for (BinaryDataArray bda:bdal){
                         List<CVParam> cvpList = bda.getCvParam();
                         for (CVParam cvp:cvpList){                            
+                            if(cvp.getAccession().equals("MS:1000000")){
+                                bCompressed = true;
+                            }
+                        }
+                    }                    
+                    for (BinaryDataArray bda:bdal){
+                        List<CVParam> cvpList = bda.getCvParam();
+                        for (CVParam cvp:cvpList){                            
                             if(cvp.getAccession().equals("MS:1000514")){
-                                mzNumbers = bda.getBinaryDataAsNumberArray();                                
+                                if (bda.getEncodedLength()>0){
+                                    mzNumbers = bda.getBinaryDataAsNumberArray(); 
+                                    if(bCompressed){
+                                        mzNumbers = decodeMzDeltas(mzNumbers); 
+                                    }                                    
+                                }
                             }
                             if(cvp.getAccession().equals("MS:1000515")){
-                                intenNumbers = bda.getBinaryDataAsNumberArray();                                
+                                if (bda.getEncodedLength()>0){
+                                    intenNumbers = bda.getBinaryDataAsNumberArray();
+                                }                                                                    
                             }
                         }
                     }                        
@@ -90,5 +116,16 @@ public class XIC {
                 }
             }
         }        
+    }
+    public Number[] decodeMzDeltas(Number[] mzNumbers){                           
+        //... Storing normal values ...//
+        if (mzNumbers!=null){
+            double previous=0.0d;
+            for (int iI = 0; iI < mzNumbers.length; iI++){
+                previous=mzNumbers[iI].doubleValue()+previous;
+                mzNumbers[iI] = previous;           
+            }            
+        }               
+        return mzNumbers;
     }
 }

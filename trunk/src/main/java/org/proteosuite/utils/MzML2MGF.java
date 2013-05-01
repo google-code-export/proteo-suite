@@ -3,7 +3,7 @@
  * MzML2MGF.java
  * --------------------------------------------------------------------------
  * Description:       Plugin to Convert mzML files to MGF
- * Developer:         Faviel Gonzalez
+ * Developer:         FG
  * Created:           09 February 2012
  * Read our documentation under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
@@ -16,10 +16,7 @@ package org.proteosuite.utils;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
@@ -33,7 +30,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
  * This plugin allows the conversion of MzML files to MGF, considering retention time in the scan title.
  * @param xmlFile a string containing the file name
  * @param sPath a string for the path where the file is located 
- * @author faviel
+ * @author FG
  */
 public class MzML2MGF {
         

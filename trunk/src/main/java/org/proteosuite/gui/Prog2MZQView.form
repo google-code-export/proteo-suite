@@ -3,13 +3,13 @@
 <Form version="1.3" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[490, 200]"/>
+      <Dimension value="[500, 180]"/>
     </Property>
     <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[490, 200]"/>
+      <Dimension value="[500, 180]"/>
     </Property>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-      <Dimension value="[490, 200]"/>
+      <Dimension value="[500, 180]"/>
     </Property>
   </Properties>
   <AuxValues>
@@ -27,60 +27,86 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" max="-2" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jlInstructions1" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="jlInstructions2" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                      <Component id="jbConvert" alignment="1" min="-2" max="-2" attributes="1"/>
-                      <Group type="102" alignment="1" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jlOutput" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jlProteinList" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jlFeatureList" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jtProteinList" max="32767" attributes="1"/>
-                              <Component id="jtWorkspace" alignment="0" pref="313" max="32767" attributes="1"/>
-                              <Component id="jtFeatureList" alignment="0" max="32767" attributes="1"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jbBrowse" min="-2" pref="71" max="-2" attributes="1"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jlInstructions1" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlInstructions2" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" max="-2" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jlProteinList" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlFeatureList" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlIdentificationFile" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jtProteinList" alignment="0" pref="287" max="32767" attributes="1"/>
+                          <Component id="jtFeatureList" alignment="0" pref="287" max="32767" attributes="1"/>
+                          <Component id="jtIdentificationFile" alignment="0" pref="287" max="32767" attributes="1"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jbBrowseProtein" alignment="0" min="-2" pref="71" max="-2" attributes="2"/>
+                          <Component id="jbBrowseFeature" alignment="0" min="-2" pref="71" max="-2" attributes="2"/>
+                          <Component id="jbBrowseIdentification" alignment="0" min="-2" pref="71" max="-2" attributes="2"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace pref="320" max="32767" attributes="0"/>
+                      <Component id="jbConvert" min="-2" max="-2" attributes="1"/>
+                      <EmptySpace min="99" pref="99" max="99" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jlInstructions1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jlInstructions2" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jlOutput" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jtWorkspace" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jbBrowse" alignment="3" min="-2" max="-2" attributes="0"/>
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="jlInstructions1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jlInstructions2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jtProteinList" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlProteinList" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jtFeatureList" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlFeatureList" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jtIdentificationFile" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jlIdentificationFile" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                      <Component id="jbConvert" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="118" pref="118" max="118" attributes="0"/>
+                      <Component id="jbBrowseIdentification" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="56" pref="56" max="56" attributes="0"/>
+                      <Component id="jbBrowseProtein" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="87" pref="87" max="87" attributes="0"/>
+                      <Component id="jbBrowseFeature" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jlProteinList" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jtProteinList" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jtFeatureList" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jlFeatureList" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace pref="25" max="32767" attributes="0"/>
-              <Component id="jbConvert" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -92,21 +118,6 @@
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jbConvertMouseClicked"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JLabel" name="jlOutput">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Output:"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JTextField" name="jtWorkspace">
-    </Component>
-    <Component class="javax.swing.JButton" name="jbBrowse">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Browse"/>
-      </Properties>
-      <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jbBrowseMouseClicked"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jlInstructions1">
@@ -121,7 +132,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jlProteinList">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Protein List:"/>
+        <Property name="text" type="java.lang.String" value="Protein List File:"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jtProteinList">
@@ -130,8 +141,39 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jlFeatureList">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Feature List:"/>
+        <Property name="text" type="java.lang.String" value="Feature List File:"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jbBrowseProtein">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Browse"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jbBrowseProteinMouseClicked"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jbBrowseFeature">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Browse"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jbBrowseFeatureMouseClicked"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlIdentificationFile">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Identification File:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtIdentificationFile">
+    </Component>
+    <Component class="javax.swing.JButton" name="jbBrowseIdentification">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Browse"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jbBrowseIdentificationMouseClicked"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

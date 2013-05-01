@@ -3,7 +3,7 @@
  * ProgressBarDialog.java
  * --------------------------------------------------------------------------
  * Description:       Progress Bar Dialog
- * Developer:         Faviel Gonzalez
+ * Developer:         FG
  * Created:           09 February 2012
  * Read our documentation under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
@@ -18,7 +18,7 @@ import javax.swing.JDialog;
 
 /**
  * Progress bar used for long procedures (tasks).
- * @author faviel
+ * @author FG
  * @param parent JFrame which will be used to plot the progress bar.
  * @param modal Access to super class.
  */

@@ -11,7 +11,7 @@
 
     <name>ProteoSuite</name>
     <url>http://www.proteosuite.org</url>
-    <version>0.2.4</version>
+    <version>0.3.0</version>
     <description>Software for analysis of quantitative proteomics data</description>    
 
     <properties>
@@ -30,15 +30,19 @@
 <!-- 
     =============================================================================
     PROJECT DEPENDENCIES 
-    =============================================================================
-    * junit - Testing framework - Automatic installation
-    * utilities - Utilities from compomics.org - Automatic installation
-    * jfreechart - Utilities from jfree.org - Requires manual installation
-    * jcommon - Utilities from jfree.org - Requires manual installation
-    * jmzml - mzML API - Automatic installation via maven
-    * jmzidentml - mzIdentML API - Automatic installation via maven
-    * jmzquantml - mzQuantML API - Automatic installation via maven
-    * xtracker - Module for quantitation analysis - Requires manual installation
+    =============================================================================   
+    * jcommon           1.0.16  Utilities from jfree.org                Manual installation
+    * jfreechart        1.0.13  Utilities from jfree.org                Manual installation
+    * jmzml             1.6.7   mzML API                                Automatic installation via maven
+    * jmzidentml        1.1.3   mzIdentML API                           Automatic installation via maven
+    * jmzquantml        1.0.0   mzQuantML API                           Manual project installation
+    * MSGFPlus          1.0     MSGFPlus from proteomics.ucsd.edu       Manual installation    
+    * xtracker          2.0     Module for quantitation analysis        Manual project installation
+    * utilities         3.0.16  Utilities for MS visualisation          Manual installation
+    
+    * mxq2mzq           0.1     Module to convert Maxquant to mzq       Manual project installation
+    * mzidentml-lib     1.1     Utilities for jmzidenml                 Manual installation
+    * prg2mzq           0.1     Module to convert Progenesis to mzq     Manual project installation
     
     * Notes: For those dependencies that require manual installation, 
              JAR files are located under resources/lib
@@ -52,11 +56,11 @@
           <version>3.8.1</version>
           <scope>test</scope>
         </dependency>
-        <dependency>
+        <!--<dependency>
           <groupId>com.compomics</groupId>
           <artifactId>utilitites</artifactId>
           <version>3.0.16</version>
-        </dependency>
+        </dependency>-->
         <dependency>
           <groupId>org.jfree</groupId>
           <artifactId>jfreechart</artifactId>
@@ -77,11 +81,6 @@
             <artifactId>jmzml</artifactId>
             <version>1.6.7</version>
         </dependency>
-        <!--<dependency>
-            <groupId>uk.ac.liv</groupId>
-            <artifactId>jmzquantml</artifactId>
-            <version>1.0.0-rc3-1.0.3</version>
-        </dependency>-->
         <dependency>
             <groupId>xtracker</groupId>
             <artifactId>xTracker</artifactId>
@@ -98,14 +97,24 @@
             <version>1.0.0-1.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>edu.ucsd.msjava.msgf</groupId>
-            <artifactId>MSGFPlus</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
             <groupId>uk.ac.liv</groupId>
             <artifactId>mzidentml-lib</artifactId>
             <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.compomics</groupId>
+            <artifactId>utilities</artifactId>
+            <version>3.0.16</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.liv</groupId>
+            <artifactId>progenesis-post-processor</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.ucsd.msjava</groupId>
+            <artifactId>MSGFPlus</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
     
@@ -140,7 +149,7 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>    
-        <repository>
+        <!--<repository>
             <id>genesis-maven2-repository</id>
             <name>Genesis maven2 repository</name>
             <url>http://genesis.ugent.be/maven2</url>
@@ -150,7 +159,7 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>            
-        </repository>        
+        </repository>    -->    
     </repositories>   
     
 <!-- 
