@@ -2,7 +2,7 @@ package org.proteosuite.data;
 
 /**
  *
- * @author faviel
+ * @author FG
  */
 public class psTemplateQuant2 {
     int mzIndex;

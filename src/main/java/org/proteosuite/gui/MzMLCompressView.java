@@ -1,10 +1,10 @@
 /*
  * --------------------------------------------------------------------------
- * MzML2MGFView.java
+ * MzMLCompressView.java
  * --------------------------------------------------------------------------
- * Description:       Plugin to Convert mzML files to MGF
+ * Description:       Plugin to compress mzML files
  * Developer:         FG
- * Created:           09 February 2012
+ * Created:           12 April 2013
  * Read our documentation file under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
  * Project Website: http://www.proteosuite.org/
@@ -13,27 +13,31 @@
 package org.proteosuite.gui;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import org.proteosuite.utils.MzML2MGF;
+import org.proteosuite.utils.MzMLCompress;
 import org.proteosuite.utils.ProgressBarDialog;
 
 /**
- * Form to capture all MzML files to be converted into MGF.
+ * Form to capture all MzML files to be compressed.
  * @author FG
  * @param jframe Parent Frame
  * @param sPath File to convert
  */
-public class MzML2MGFView extends javax.swing.JPanel {
+public class MzMLCompressView extends javax.swing.JPanel {
 
     private String sWorkspaceInput;
     private JFrame jfFrame;
             
     /** Creates a new MzML2MGF form */
-    public MzML2MGFView(JFrame jframe, String sPath) {
+    public MzMLCompressView(JFrame jframe, String sPath) {
         initComponents();
         this.jfFrame = jframe;
         this.jtWorkspace.setText(sPath);
@@ -44,7 +48,7 @@ public class MzML2MGFView extends javax.swing.JPanel {
     private void initComponents() {
 
         jbConvert = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        jlOutputFolder = new javax.swing.JLabel();
         jtWorkspace = new javax.swing.JTextField();
         jbBrowse = new javax.swing.JButton();
         jbAdd = new javax.swing.JButton();
@@ -53,9 +57,9 @@ public class MzML2MGFView extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jtMzMLFiles = new javax.swing.JTable();
         jSeparator1 = new javax.swing.JSeparator();
-        jlInstructions1 = new javax.swing.JLabel();
+        jlInstructions = new javax.swing.JLabel();
         jlInstructions2 = new javax.swing.JLabel();
-        jlInstructions3 = new javax.swing.JLabel();
+        jcbZeros = new javax.swing.JCheckBox();
 
         setMaximumSize(new java.awt.Dimension(490, 390));
         setMinimumSize(new java.awt.Dimension(490, 390));
@@ -69,7 +73,7 @@ public class MzML2MGFView extends javax.swing.JPanel {
             }
         });
 
-        jLabel1.setText("Output folder:");
+        jlOutputFolder.setText("Output folder:");
 
         jbBrowse.setText("Browse");
         jbBrowse.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -109,12 +113,12 @@ public class MzML2MGFView extends javax.swing.JPanel {
 
         jTabbedPane1.addTab("MzML Files", jScrollPane1);
 
-        jlInstructions1.setText("Select your mzML files to be converted into Mascot Generic Format (MGF). Output files will include");
+        jlInstructions.setText("Select your mzML files to be compressed. Compression is made by removing zeros on intensity");
 
-        jlInstructions2.setText("different parameters in the scan title (e.g. scan number, scan id and retention time).");
+        jlInstructions2.setText("values and storing deltas on m/z");
 
-        jlInstructions3.setForeground(new java.awt.Color(102, 102, 102));
-        jlInstructions3.setText("Example: Scan:960, (rt:1407.5947), (id:controllerType=0 controllerNumber=1 scan=961)");
+        jcbZeros.setSelected(true);
+        jcbZeros.setText("Remove zeros");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -124,53 +128,59 @@ public class MzML2MGFView extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jlInstructions1)
-                            .addComponent(jlInstructions2)
-                            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jlInstructions3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                    .addComponent(jLabel1)
+                        .addComponent(jcbZeros)
+                        .addContainerGap())
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jlInstructions)
+                                .addComponent(jlInstructions2)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(jlOutputFolder)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jtWorkspace, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jbBrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addContainerGap(11, Short.MAX_VALUE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jbAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jtWorkspace, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jbBrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addContainerGap(11, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jbAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jbRemove)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jbConvert)
-                        .addGap(253, 253, 253))))
+                                    .addComponent(jbRemove)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                                    .addComponent(jbConvert)
+                                    .addGap(123, 123, 123)))
+                            .addGap(107, 107, 107)))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jlInstructions1)
+                .addComponent(jlInstructions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jlInstructions2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jlInstructions3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jtWorkspace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1))
+                        .addComponent(jlOutputFolder))
                     .addComponent(jbBrowse))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jcbZeros)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbAdd)
                     .addComponent(jbRemove)
                     .addComponent(jbConvert))
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -192,7 +202,7 @@ public class MzML2MGFView extends javax.swing.JPanel {
     private void jbAddMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbAddMouseClicked
         //... Adding files ...//
         JFileChooser chooser = new JFileChooser(this.jtWorkspace.getText());
-        chooser.setDialogTitle("Select the file(s) to convert");
+        chooser.setDialogTitle("Select the file(s) to compress");
 
         //... Applying file extension filters ...//
         FileNameExtensionFilter filter = new FileNameExtensionFilter("mzML Files (*.mzML)", "mzML");
@@ -238,7 +248,7 @@ public class MzML2MGFView extends javax.swing.JPanel {
         }   
         else    //... Convert selected mzML files into MGF format ...//
         {
-            final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this.jfFrame, true, "MzML2MGF");
+            final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this.jfFrame, true, "MzMLCompress");
             final Thread thread = new Thread(new Runnable(){
                 @Override
                 public void run(){
@@ -249,7 +259,7 @@ public class MzML2MGFView extends javax.swing.JPanel {
             thread.start();
 
             //... Splitting job in threads ...//
-            new Thread("MzML2MGF"){
+            new Thread("mzMLCompress"){
                 @Override
                 public void run(){
                     //... Convert each file ...//
@@ -257,10 +267,14 @@ public class MzML2MGFView extends javax.swing.JPanel {
                     for (int iI = 0; iI <jtMzMLFiles.getRowCount(); iI++){
                         sPath = sWorkspaceInput+jtMzMLFiles.getValueAt(iI, 0).toString();                    
                         File xmlFile = new File(sPath);
-                        progressBarDialog.setTitle("Converting file ("+(iI+1)+"/"+jtMzMLFiles.getRowCount()+") - " + xmlFile.getName());
+                        progressBarDialog.setTitle("Compressing file ("+(iI+1)+"/"+jtMzMLFiles.getRowCount()+") - " + xmlFile.getName());
                         progressBarDialog.setTaskName("This task may take up to several minutes (e.g. ~2mins for a 1.5GB file)");
                         progressBarDialog.repaint();
-                        MzML2MGF convert = new MzML2MGF(xmlFile, jtWorkspace.getText());
+                        try {
+                            MzMLCompress compress = new MzMLCompress(xmlFile, jtWorkspace.getText(), jcbZeros.isSelected());
+                        } catch (IOException ex) {
+                            Logger.getLogger(MzMLCompressView.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         jtMzMLFiles.setValueAt("Done", iI, 2);
                     }
                     progressBarDialog.setVisible(false);
@@ -282,7 +296,6 @@ public class MzML2MGFView extends javax.swing.JPanel {
     }//GEN-LAST:event_jbRemoveMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTabbedPane jTabbedPane1;
@@ -290,9 +303,10 @@ public class MzML2MGFView extends javax.swing.JPanel {
     private javax.swing.JButton jbBrowse;
     private javax.swing.JButton jbConvert;
     private javax.swing.JButton jbRemove;
-    private javax.swing.JLabel jlInstructions1;
+    private javax.swing.JCheckBox jcbZeros;
+    private javax.swing.JLabel jlInstructions;
     private javax.swing.JLabel jlInstructions2;
-    private javax.swing.JLabel jlInstructions3;
+    private javax.swing.JLabel jlOutputFolder;
     private javax.swing.JTable jtMzMLFiles;
     private javax.swing.JTextField jtWorkspace;
     // End of variables declaration//GEN-END:variables

@@ -1662,21 +1662,44 @@
 
                                       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout"/>
                                       <SubComponents>
-                                        <Container class="javax.swing.JDesktopPane" name="jdpMS">
-                                          <Properties>
-                                            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                                              <Color blue="ff" green="ff" red="ff" type="rgb"/>
-                                            </Property>
-                                          </Properties>
+                                        <Container class="javax.swing.JPanel" name="jpSpectrum">
                                           <Constraints>
                                             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                                              <JTabbedPaneConstraints tabName="Spectrum">
-                                                <Property name="tabTitle" type="java.lang.String" value="Spectrum"/>
+                                              <JTabbedPaneConstraints tabName="Spectrum View">
+                                                <Property name="tabTitle" type="java.lang.String" value="Spectrum View"/>
                                               </JTabbedPaneConstraints>
                                             </Constraint>
                                           </Constraints>
 
-                                          <Layout class="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout"/>
+                                          <Layout>
+                                            <DimensionLayout dim="0">
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <EmptySpace min="0" pref="373" max="32767" attributes="0"/>
+                                                  <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                                                      <Component id="jdpMS" alignment="1" pref="373" max="32767" attributes="0"/>
+                                                  </Group>
+                                              </Group>
+                                            </DimensionLayout>
+                                            <DimensionLayout dim="1">
+                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                  <EmptySpace min="0" pref="321" max="32767" attributes="0"/>
+                                                  <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+                                                      <Component id="jdpMS" alignment="1" pref="321" max="32767" attributes="0"/>
+                                                  </Group>
+                                              </Group>
+                                            </DimensionLayout>
+                                          </Layout>
+                                          <SubComponents>
+                                            <Container class="javax.swing.JDesktopPane" name="jdpMS">
+                                              <Properties>
+                                                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                                                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                                                </Property>
+                                              </Properties>
+
+                                              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JLayeredPaneSupportLayout"/>
+                                            </Container>
+                                          </SubComponents>
                                         </Container>
                                         <Container class="javax.swing.JPanel" name="jpTIC">
                                           <Properties>
@@ -1686,8 +1709,8 @@
                                           </Properties>
                                           <Constraints>
                                             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                                              <JTabbedPaneConstraints tabName="TIC">
-                                                <Property name="tabTitle" type="java.lang.String" value="TIC"/>
+                                              <JTabbedPaneConstraints tabName="TIC View">
+                                                <Property name="tabTitle" type="java.lang.String" value="TIC View"/>
                                               </JTabbedPaneConstraints>
                                             </Constraint>
                                           </Constraints>
@@ -2076,11 +2099,14 @@
                                                       <Group type="103" groupAlignment="0" attributes="0">
                                                           <Group type="102" alignment="0" attributes="0">
                                                               <EmptySpace max="-2" attributes="0"/>
-                                                              <Group type="103" groupAlignment="1" attributes="0">
-                                                                  <Component id="jtbMzMLOptions" alignment="1" min="-2" pref="332" max="-2" attributes="1"/>
-                                                                  <Group type="102" alignment="1" attributes="0">
-                                                                      <Component id="jlSearchMzML" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                                  <Component id="jlSearchMzML" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jlExportMzMLXLS" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                              </Group>
+                                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                                  <Component id="jtbMzMLOptions" alignment="1" max="32767" attributes="1"/>
+                                                                  <Group type="102" alignment="0" attributes="0">
                                                                       <Component id="jlScan" min="-2" max="-2" attributes="0"/>
                                                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                                                       <Component id="jtScan" min="-2" pref="62" max="-2" attributes="0"/>
@@ -2090,7 +2116,7 @@
                                                                       <Component id="jtRT" min="-2" pref="62" max="-2" attributes="0"/>
                                                                   </Group>
                                                               </Group>
-                                                              <EmptySpace pref="184" max="32767" attributes="0"/>
+                                                              <EmptySpace pref="177" max="32767" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                     </DimensionLayout>
@@ -2107,9 +2133,17 @@
                                                                       <Component id="jlRT" alignment="3" min="-2" max="-2" attributes="0"/>
                                                                   </Group>
                                                               </Group>
-                                                              <EmptySpace max="-2" attributes="0"/>
-                                                              <Component id="jtbMzMLOptions" min="-2" pref="35" max="-2" attributes="1"/>
-                                                              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                                  <Group type="102" attributes="0">
+                                                                      <EmptySpace max="-2" attributes="0"/>
+                                                                      <Component id="jtbMzMLOptions" min="-2" pref="35" max="-2" attributes="1"/>
+                                                                  </Group>
+                                                                  <Group type="102" alignment="0" attributes="0">
+                                                                      <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
+                                                                      <Component id="jlExportMzMLXLS" min="-2" max="-2" attributes="0"/>
+                                                                  </Group>
+                                                              </Group>
+                                                              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                     </DimensionLayout>
@@ -2188,6 +2222,11 @@
                                                         </Component>
                                                       </SubComponents>
                                                     </Container>
+                                                    <Component class="javax.swing.JLabel" name="jlExportMzMLXLS">
+                                                      <Properties>
+                                                        <Property name="text" type="java.lang.String" value="Export to:"/>
+                                                      </Properties>
+                                                    </Component>
                                                   </SubComponents>
                                                 </Container>
                                               </SubComponents>
@@ -2276,17 +2315,20 @@
                                                       <Group type="103" groupAlignment="0" attributes="0">
                                                           <Group type="102" alignment="0" attributes="0">
                                                               <EmptySpace max="-2" attributes="0"/>
-                                                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                                                  <Component id="jtbMGFOptions" alignment="0" max="32767" attributes="1"/>
+                                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                                  <Component id="jlSearchMGF" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jlExportMGFXLS" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                              </Group>
+                                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                                  <Component id="jtbMGFOptions" alignment="1" max="32767" attributes="1"/>
                                                                   <Group type="102" alignment="0" attributes="0">
-                                                                      <Component id="jlSearchMGF" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace type="separate" max="-2" attributes="0"/>
                                                                       <Component id="jlScanTitle" min="-2" max="-2" attributes="0"/>
                                                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                                                       <Component id="jtScanTitle" min="-2" pref="223" max="-2" attributes="0"/>
                                                                   </Group>
                                                               </Group>
-                                                              <EmptySpace pref="171" max="32767" attributes="0"/>
+                                                              <EmptySpace pref="164" max="32767" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                     </DimensionLayout>
@@ -2299,8 +2341,16 @@
                                                                   <Component id="jlScanTitle" alignment="3" min="-2" max="-2" attributes="0"/>
                                                                   <Component id="jtScanTitle" alignment="3" min="-2" max="-2" attributes="0"/>
                                                               </Group>
-                                                              <EmptySpace max="-2" attributes="0"/>
-                                                              <Component id="jtbMGFOptions" min="-2" pref="35" max="-2" attributes="1"/>
+                                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                                  <Group type="102" attributes="0">
+                                                                      <EmptySpace max="-2" attributes="0"/>
+                                                                      <Component id="jtbMGFOptions" min="-2" pref="35" max="-2" attributes="1"/>
+                                                                  </Group>
+                                                                  <Group type="102" alignment="0" attributes="0">
+                                                                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                                                                      <Component id="jlExportMGFXLS" min="-2" max="-2" attributes="0"/>
+                                                                  </Group>
+                                                              </Group>
                                                               <EmptySpace pref="17" max="32767" attributes="0"/>
                                                           </Group>
                                                       </Group>
@@ -2367,6 +2417,11 @@
                                                         </Component>
                                                       </SubComponents>
                                                     </Container>
+                                                    <Component class="javax.swing.JLabel" name="jlExportMGFXLS">
+                                                      <Properties>
+                                                        <Property name="text" type="java.lang.String" value="Export to:"/>
+                                                      </Properties>
+                                                    </Component>
                                                   </SubComponents>
                                                 </Container>
                                                 <Container class="javax.swing.JScrollPane" name="jspMGFSubDetail">
@@ -2435,7 +2490,7 @@
                                           <SubComponents>
                                             <Container class="javax.swing.JSplitPane" name="jspMzIdDetail">
                                               <Properties>
-                                                <Property name="dividerLocation" type="int" value="90"/>
+                                                <Property name="dividerLocation" type="int" value="250"/>
                                                 <Property name="dividerSize" type="int" value="1"/>
                                                 <Property name="orientation" type="int" value="0"/>
                                               </Properties>
@@ -2459,11 +2514,14 @@
                                                       <Group type="103" groupAlignment="0" attributes="0">
                                                           <Group type="102" alignment="0" attributes="0">
                                                               <EmptySpace max="-2" attributes="0"/>
-                                                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                                                  <Component id="jtbMzIdentMLOptions" alignment="0" max="32767" attributes="1"/>
+                                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                                  <Component id="jlSearchMzId" min="-2" max="-2" attributes="0"/>
+                                                                  <Component id="jlExportMzIDXLS" alignment="0" min="-2" max="-2" attributes="0"/>
+                                                              </Group>
+                                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                                                  <Component id="jtbMzIdentMLOptions" alignment="1" max="32767" attributes="1"/>
                                                                   <Group type="102" alignment="0" attributes="0">
-                                                                      <Component id="jlSearchMzId" min="-2" max="-2" attributes="0"/>
-                                                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                                       <Component id="jlProteinMzId" min="-2" max="-2" attributes="0"/>
                                                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                                                       <Component id="jtProteinMzId" min="-2" pref="79" max="-2" attributes="0"/>
@@ -2473,8 +2531,9 @@
                                                                       <Component id="jtPeptideMzId" min="-2" pref="191" max="-2" attributes="0"/>
                                                                   </Group>
                                                               </Group>
-                                                              <EmptySpace pref="96" max="32767" attributes="0"/>
+                                                              <EmptySpace pref="89" max="32767" attributes="0"/>
                                                           </Group>
+                                                          <Component id="jspMzIdProtGroup" alignment="1" pref="530" max="32767" attributes="0"/>
                                                       </Group>
                                                     </DimensionLayout>
                                                     <DimensionLayout dim="1">
@@ -2488,9 +2547,18 @@
                                                                   <Component id="jlPeptideMzId" alignment="3" min="-2" max="-2" attributes="0"/>
                                                                   <Component id="jtPeptideMzId" alignment="3" min="-2" max="-2" attributes="0"/>
                                                               </Group>
+                                                              <Group type="103" groupAlignment="0" attributes="0">
+                                                                  <Group type="102" attributes="0">
+                                                                      <EmptySpace max="-2" attributes="0"/>
+                                                                      <Component id="jtbMzIdentMLOptions" min="-2" pref="35" max="-2" attributes="1"/>
+                                                                  </Group>
+                                                                  <Group type="102" alignment="0" attributes="0">
+                                                                      <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                                                                      <Component id="jlExportMzIDXLS" min="-2" max="-2" attributes="0"/>
+                                                                  </Group>
+                                                              </Group>
                                                               <EmptySpace max="-2" attributes="0"/>
-                                                              <Component id="jtbMzIdentMLOptions" min="-2" pref="35" max="-2" attributes="1"/>
-                                                              <EmptySpace pref="17" max="32767" attributes="0"/>
+                                                              <Component id="jspMzIdProtGroup" pref="171" max="32767" attributes="0"/>
                                                           </Group>
                                                       </Group>
                                                     </DimensionLayout>
@@ -2569,9 +2637,30 @@
                                                         </Component>
                                                       </SubComponents>
                                                     </Container>
+                                                    <Component class="javax.swing.JLabel" name="jlExportMzIDXLS">
+                                                      <Properties>
+                                                        <Property name="text" type="java.lang.String" value="Export to:"/>
+                                                      </Properties>
+                                                    </Component>
+                                                    <Container class="javax.swing.JScrollPane" name="jspMzIdProtGroup">
+
+                                                      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                                                      <SubComponents>
+                                                        <Component class="javax.swing.JTable" name="jtMzId">
+                                                          <Properties>
+                                                            <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                                                              <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new Object [] {&#xa;        &quot;Index&quot;, &quot;Protein&quot;, &quot;Peptide&quot;, &quot;Rank&quot;, &quot;Score&quot;, &quot;Spectrum ID&quot;&#xa;    }&#xa;)" type="code"/>
+                                                            </Property>
+                                                          </Properties>
+                                                          <AuxValues>
+                                                            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        return false;&#xa;    }}"/>
+                                                          </AuxValues>
+                                                        </Component>
+                                                      </SubComponents>
+                                                    </Container>
                                                   </SubComponents>
                                                 </Container>
-                                                <Container class="javax.swing.JScrollPane" name="jpMzIdSubDetail">
+                                                <Container class="javax.swing.JScrollPane" name="jScrollPane8">
                                                   <AuxValues>
                                                     <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
                                                   </AuxValues>
@@ -2583,15 +2672,12 @@
 
                                                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                                                   <SubComponents>
-                                                    <Component class="javax.swing.JTable" name="jtMzId">
+                                                    <Component class="javax.swing.JTable" name="jtMzIDProtGroup">
                                                       <Properties>
                                                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                                                          <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new Object [] {&#xa;        &quot;Index&quot;, &quot;Protein&quot;, &quot;Peptide&quot;, &quot;Rank&quot;, &quot;Score&quot;, &quot;Spectrum ID&quot;&#xa;    }&#xa;)" type="code"/>
+                                                          <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new Object [] {&#xa;        &quot;ID&quot;, &quot;Name&quot;, &quot;Protein&quot;, &quot;Representation&quot;, &quot;Scores&quot;, &quot;P-values&quot;, &quot;Number of peptides&quot;, &quot;Is Decoy&quot;, &quot;pass Threshold&quot;&#xa;    }&#xa;)" type="code"/>
                                                         </Property>
                                                       </Properties>
-                                                      <AuxValues>
-                                                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable(){&#xa;    public boolean isCellEditable(int rowIndex, int colIndex) {&#xa;        return false;&#xa;    }}"/>
-                                                      </AuxValues>
                                                     </Component>
                                                   </SubComponents>
                                                 </Container>
@@ -3263,7 +3349,6 @@
                                                           <Layout>
                                                             <DimensionLayout dim="0">
                                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                                  <EmptySpace min="0" pref="525" max="32767" attributes="0"/>
                                                                   <Group type="102" alignment="0" attributes="0">
                                                                       <EmptySpace max="-2" attributes="0"/>
                                                                       <Component id="jlSearchMzQFeat" min="-2" max="-2" attributes="0"/>
@@ -3279,8 +3364,6 @@
                                                             </DimensionLayout>
                                                             <DimensionLayout dim="1">
                                                               <Group type="103" groupAlignment="0" attributes="0">
-                                                                  <EmptySpace min="0" pref="39" max="32767" attributes="0"/>
-                                                                  <EmptySpace min="0" pref="39" max="32767" attributes="0"/>
                                                                   <Group type="102" alignment="0" attributes="0">
                                                                       <EmptySpace max="-2" attributes="0"/>
                                                                       <Group type="103" groupAlignment="0" attributes="0">

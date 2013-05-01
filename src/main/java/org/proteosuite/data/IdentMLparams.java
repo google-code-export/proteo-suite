@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author faviel
+ * @author FG
  */
 public class IdentMLparams {
 

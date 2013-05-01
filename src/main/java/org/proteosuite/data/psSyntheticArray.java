@@ -6,7 +6,7 @@ package org.proteosuite.data;
 
 /**
  *
- * @author faviel
+ * @author FG
  */
 public class psSyntheticArray {
     String[] aScanIndex;
