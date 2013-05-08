@@ -1,0 +1,1 @@
+Type java -jar mzidentml-lib.jar to get a description of the tools and command line parameters for running the mzidLibrary. Please download example files from https://mzidentml-lib.googlecode.com/files/example_files.zip and place these in a directory alongside test_outputs (see run_examples.bat for location).

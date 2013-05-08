@@ -3,7 +3,7 @@
  * MaxQ2MZQView.java
  * --------------------------------------------------------------------------
  * Description:       Plugin to Convert MaxQuant files to mzQuantML
- * Developer:         FG
+ * Developer:         fgonzalez
  * Created:           27 February 2012
  * Read our documentation file under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
@@ -28,7 +28,7 @@ import uk.ac.liv.maxquantmzquantmlconvertor.MaxquantMzquantmlConvertor;
 
 /**
  * Form to capture all MzML files to be converted into MGF.
- * @author FG
+ * @author fgonzalez
  * @param jframe Parent Frame
  * @param sPath File to convert
  */

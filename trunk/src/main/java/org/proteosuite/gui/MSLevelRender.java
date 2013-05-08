@@ -3,7 +3,7 @@
  * MSLevelRender.java
  * --------------------------------------------------------------------------
  * Description:       Render for the type of MS data (MS1 or MS2)
- * Developer:         FG
+ * Developer:         fgonzalez
  * Created:           11 March 2013
  * Notes:             GUI generated using NetBeans IDE 7.0.1
  * Read our documentation file under our Google SVN repository
@@ -24,7 +24,7 @@ import java.awt.Component;
 
 /**
  * This class allows to render the table for MS1 or MS2 data 
- * @author FG
+ * @author fgonzalez
  * @param void
  * @return void
  */

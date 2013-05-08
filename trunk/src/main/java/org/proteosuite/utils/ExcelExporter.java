@@ -3,7 +3,7 @@
  * ExcelExporter.java
  * --------------------------------------------------------------------------
  * Description:       Convert a jtable to a spreadsheet
- * Developer:         FG
+ * Developer:         fgonzalez
  * Created:           11 March 2013
  * Read our documentation under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
@@ -24,7 +24,7 @@ import jxl.write.*;
  * @param file - File name in which the data will be exported
  * @param bAll - Export all columns
  * @param iExclude - Exclude column
- * @author FG
+ * @author fgonzalez
  */
 public class ExcelExporter {
 

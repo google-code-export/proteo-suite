@@ -2,8 +2,8 @@
  * --------------------------------------------------------------------------
  * About.java
  * --------------------------------------------------------------------------
- * Description:       About ProtoeSuite Form
- * Developer:         FG
+ * Description:       About ProteoSuite Form
+ * Developer:         fgonzalez
  * Created:           08 February 2011
  * Notes:             GUI generated using NetBeans IDE 7.0.1
  * Read our documentation file under our Google SVN repository
@@ -22,7 +22,7 @@ import org.proteosuite.utils.SystemUtils;
 
 /**
  * This form contains ProteoSuite license and distribution agreements. 
- * @author FG
+ * @author fgonzalez
  * @param void
  * @return void
  */
@@ -141,23 +141,20 @@ public class About extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jlURLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jlURLMouseClicked
-	//... Call proteosuite website ...//
         OpenURL url = new OpenURL("http://www.proteosuite.org");
     }//GEN-LAST:event_jlURLMouseClicked
 
     private void jbSystemInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSystemInfoActionPerformed
-        Panel panel = new Panel();
-        JTextArea systemInfo = new JTextArea();
-        systemInfo.append("Used Memory:" + Long.toString(sysutils.getUsedMemory()));
-        systemInfo.append("Free Memory:" + Long.toString(sysutils.getFreeMemory()));
-        systemInfo.append("Total Memory:" + Long.toString(sysutils.getTotalMemory()));
-        systemInfo.append("Max Memory:" + Long.toString(sysutils.getMaxMemory()));
-        panel.add(systemInfo);
-        JOptionPane.showMessageDialog(this, "", "Information", JOptionPane.INFORMATION_MESSAGE);
+        String sMessage = "";
+        sMessage = "Used Memory: \t" + Long.toString(sysutils.getUsedMemory()) + "MB\n";
+        sMessage = sMessage + "Free Memory: \t" + Long.toString(sysutils.getFreeMemory()) + "MB\n";
+        sMessage = sMessage + "Total Memory: \t" + Long.toString(sysutils.getTotalMemory()) + "MB\n";
+        sMessage = sMessage + "Max Memory: \t" + Long.toString(sysutils.getMaxMemory()) + "MB\n";
+        JOptionPane.showMessageDialog(this, sMessage, "Information", JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_jbSystemInfoActionPerformed
 
     private void jbLicenseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbLicenseActionPerformed
-        
+        OpenURL url = new OpenURL("http://www.proteosuite.org/?q=licence");
     }//GEN-LAST:event_jbLicenseActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

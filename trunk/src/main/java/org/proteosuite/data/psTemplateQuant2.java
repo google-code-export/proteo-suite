@@ -1,8 +1,20 @@
+/*
+ * --------------------------------------------------------------------------
+ * psTemplateQuant2.java
+ * --------------------------------------------------------------------------
+ * Description:       Template for Label Free Quantitation
+ * Developer:         fgonzalez
+ * Created:           10 July 2012
+ * Read our documentation file under our Google SVN repository
+ * SVN: http://code.google.com/p/proteo-suite/
+ * Project Website: http://www.proteosuite.org/
+ * --------------------------------------------------------------------------
+ */
 package org.proteosuite.data;
 
 /**
  *
- * @author FG
+ * @author fgonzalez
  */
 public class psTemplateQuant2 {
     int mzIndex;
