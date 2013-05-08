@@ -1,0 +1,4 @@
+java -Xmx3111M -jar Plugins/mzidentml-lib.jar FalseDiscoveryRate D:/Data/D-001-iTRAQ-4plex-AB/ksl_1_10.mzid D:/Data/D-001-iTRAQ-4plex-AB/ksl_1_10_fdr.mzid -decoyRegex XXX -decoyValue 1 -cvTerm "MS:1002053" -betterScoresAreLower true -compress false
+java -Xmx3111M -jar Plugins/mzidentml-lib.jar Threshold D:/Data/D-001-iTRAQ-4plex-AB/ksl_1_10_fdr.mzid D:/Data/D-001-iTRAQ-4plex-AB/ksl_1_10_fdr_thresh.mzid -isPSMThreshold true -cvAccessionForScoreThreshold "MS:1001874" -threshValue 0.01 -betterScoresAreLower true -deleteUnderThreshold false -compress false
+java -Xmx3111M -jar Plugins/mzidentml-lib.jar ProteoGrouper D:/Data/D-001-iTRAQ-4plex-AB/ksl_1_10_fdr_thresh.mzid D:/Data/D-001-iTRAQ-4plex-AB/ksl_1_10_fdr_thresh_group.mzid -requireSIIsToPassThreshold true -verboseOutput false -cvAccForSIIScore "MS:1001874" -logTransScore true -compress false
+exit

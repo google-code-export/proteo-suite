@@ -3,7 +3,7 @@
  * IdentParamsView.java
  * ----------------------------------------------------------------------------
  * Description:       Parameter settings for peptide/protein identification
- * Developer:         FG
+ * Developer:         fgonzalez
  * Created:           03 April 2013
  * Notes:             GUI generated using NetBeans IDE 7.0.1
  * Read our documentation under our Google SVN repository
@@ -39,16 +39,18 @@ import org.proteosuite.utils.Unimod2MSGPlus;
  * This forms allows to specify different parameters for the search
  * @param sWorskpace location 
  * @param sMode type of entry (edit|execute)
- * @author FG
+ * @author fgonzalez
  */
 public class IdentParamsView extends javax.swing.JPanel {
 
     private String sWorkspace = "";    
     private String sMode = "";
+    private String sRegex = "";
     private HashMap<String, String> hmParams = new HashMap();
     private HashMap<String, String> hmUniModsFixed = new HashMap();
     private HashMap<String, String> hmUniModsVar = new HashMap();
     private boolean bRun = false;
+    private boolean bProteinInference = false;
     
     public IdentParamsView(String sWorkspace, String sMode) {
         
@@ -57,6 +59,9 @@ public class IdentParamsView extends javax.swing.JPanel {
         initComponents();
         initMods();
         initValues();
+    }
+    public void setWorkspace(String sWorkspace){
+        this.sWorkspace = sWorkspace;
     }
     //... Initialise modifications from Unimod ...//
     public void initMods(){
@@ -154,6 +159,9 @@ public class IdentParamsView extends javax.swing.JPanel {
         jbSetDefaults = new javax.swing.JButton();
         jbRun = new javax.swing.JButton();
         jlCancel = new javax.swing.JLabel();
+        jcbProteinInference = new javax.swing.JCheckBox();
+        jtRegex = new javax.swing.JTextField();
+        jlRegex = new javax.swing.JLabel();
 
         jLabel13.setText("jLabel13");
 
@@ -206,7 +214,7 @@ public class IdentParamsView extends javax.swing.JPanel {
 
         jcProtocol.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Default", "Phosphorylation", "iTRAQ", "iTRAQPhospo" }));
 
-        jlMaxMissedCleavage.setText("Missed Claveages:");
+        jlMaxMissedCleavage.setText("Tryptic peptides:");
 
         jcMaxMissedCleavage.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "non-tryptic", "semi-tryptic", "fully-triptic peptides only" }));
 
@@ -257,17 +265,17 @@ public class IdentParamsView extends javax.swing.JPanel {
                         .addComponent(jtDatabaseFile, javax.swing.GroupLayout.PREFERRED_SIZE, 497, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jbAddDatabaseFile)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 104, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap(114, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jlMSMSTol, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(18, 18, 18)
                                         .addComponent(jtMSMSTol, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jcMSMSTol, 0, 83, Short.MAX_VALUE))
+                                        .addComponent(jcMSMSTol, 0, 99, Short.MAX_VALUE))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jlEnzyme, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -275,19 +283,26 @@ public class IdentParamsView extends javax.swing.JPanel {
                                         .addGap(18, 18, 18)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jtErrorRange, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jcEnzyme, 0, 157, Short.MAX_VALUE))))
+                                            .addComponent(jcEnzyme, 0, 173, Short.MAX_VALUE))))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jlProtocol)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jcProtocol, 0, 158, Short.MAX_VALUE))
+                                        .addComponent(jcProtocol, 0, 173, Short.MAX_VALUE))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jlFragMethod)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jcFragMethod, 0, 88, Short.MAX_VALUE))
+                                        .addComponent(jcFragMethod, 0, 103, Short.MAX_VALUE))
                                     .addComponent(jchbSearchDecoy, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addGap(42, 42, 42))
+                                .addGap(16, 16, 16)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jlMaxMissedCleavage)
+                                    .addComponent(jlInstrument))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jcInstrument, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jcMaxMissedCleavage, 0, 126, Short.MAX_VALUE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jlMaxPepLen)
@@ -295,15 +310,15 @@ public class IdentParamsView extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jtMaxPepLen)
-                                    .addComponent(jtMinPepLen, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE))
+                                    .addComponent(jtMinPepLen, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jlMinCharge)
                                     .addComponent(jlMaxCharge))
                                 .addGap(18, 18, 18)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jtMinCharge, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
-                                    .addComponent(jtMaxCharge, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jtMaxCharge)
+                                    .addComponent(jtMinCharge, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE))
                                 .addGap(49, 49, 49)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -314,19 +329,11 @@ public class IdentParamsView extends javax.swing.JPanel {
                                         .addComponent(jlOutput)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jcOutput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(8, 8, 8)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jlMaxMissedCleavage)
-                            .addComponent(jlInstrument))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jcInstrument, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(132, 132, 132)
                                 .addComponent(jlThreads)
                                 .addGap(18, 18, 18)
-                                .addComponent(jcThreads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jcMaxMissedCleavage, javax.swing.GroupLayout.Alignment.TRAILING, 0, 127, Short.MAX_VALUE))))
-                .addGap(74, 74, 74))
+                                .addComponent(jcThreads, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(74, 74, 74))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -336,7 +343,7 @@ public class IdentParamsView extends javax.swing.JPanel {
                     .addComponent(jtDatabaseFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jlDatabaseFile)
                     .addComponent(jbAddDatabaseFile))
-                .addGap(42, 42, 42)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jlMSMSTol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -393,7 +400,7 @@ public class IdentParamsView extends javax.swing.JPanel {
         jlVarMods.setText("Variable modifications:");
 
         jlstVarMods.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "--- none selected ---" };
+            String[] strings = { "Oxidation (M)" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
@@ -416,7 +423,7 @@ public class IdentParamsView extends javax.swing.JPanel {
         jScrollPane4.setViewportView(jlstUnimods);
 
         jlstFixedMods.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "--- none selected ---" };
+            String[] strings = { "Carbamidomethyl (C)" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
@@ -449,12 +456,10 @@ public class IdentParamsView extends javax.swing.JPanel {
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jbDelVarMods)
-                            .addComponent(jbAddVarMods))
-                        .addComponent(jbDelMods))
-                    .addComponent(jbAddFixedMods))
+                    .addComponent(jbAddVarMods)
+                    .addComponent(jbAddFixedMods)
+                    .addComponent(jbDelMods)
+                    .addComponent(jbDelVarMods))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jlFixedMods, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE)
@@ -462,43 +467,42 @@ public class IdentParamsView extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE))))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 399, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jlUniMod)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
+                        .addComponent(jScrollPane4))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jlFixedMods)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(49, 49, 49)
+                                .addGap(42, 42, 42)
                                 .addComponent(jbAddFixedMods)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jbDelMods)))
-                        .addGap(18, 18, 18)
+                        .addGap(27, 27, 27)
                         .addComponent(jlVarMods)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(20, 20, 20)
                                 .addComponent(jbAddVarMods)
-                                .addGap(18, 18, 18)
-                                .addComponent(jbDelVarMods)
-                                .addGap(32, 32, 32))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jbDelVarMods))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jScrollPane3, 0, 0, Short.MAX_VALUE)))))
-                .addContainerGap())
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(11, 11, 11))
         );
 
         jbSave.setText("Save");
@@ -524,6 +528,12 @@ public class IdentParamsView extends javax.swing.JPanel {
 
         jlCancel.setText("Press escape (ESC) to cancel");
 
+        jcbProteinInference.setText("Include Protein Inference");
+
+        jtRegex.setText("XXX");
+
+        jlRegex.setText("Regex:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -531,7 +541,12 @@ public class IdentParamsView extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jcbProteinInference)
+                        .addGap(34, 34, 34)
+                        .addComponent(jlRegex)
+                        .addGap(18, 18, 18)
+                        .addComponent(jtRegex, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 772, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jbSetDefaults)
@@ -540,17 +555,23 @@ public class IdentParamsView extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 295, Short.MAX_VALUE)
                         .addComponent(jlCancel)
                         .addGap(18, 18, 18)
-                        .addComponent(jbRun, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jbRun, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jcbProteinInference)
+                    .addComponent(jlRegex)
+                    .addComponent(jtRegex, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jbSetDefaults)
                     .addComponent(jbRun)
@@ -721,68 +742,77 @@ public class IdentParamsView extends javax.swing.JPanel {
 
     private void jbRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRunActionPerformed
         //... Validate entries ...//
-        if((jtDatabaseFile.getText().isEmpty())||(!jtDatabaseFile.getText().endsWith(".fasta"))){
+        if((jtDatabaseFile.getText().isEmpty())||(!jtDatabaseFile.getText().toLowerCase().endsWith(".fasta"))){
             JOptionPane.showMessageDialog(this, "Please select a valid fasta file (*.fasta)", "Error", JOptionPane.ERROR_MESSAGE);
         }else{
-            //... Save current values ...//
-            bRun = true;
-            hmParams.clear();
-                                                                                            //...     Spectrum File                 ...//
-            hmParams.put("-d", jtDatabaseFile.getText());                                   //... 0 - Database File                 ...//
-                                                                                            //...     Output File                   ...//
-            hmParams.put("-t", jtMSMSTol.getText()+jcMSMSTol.getSelectedItem().toString()); //... 1 - Precursor Mass Tolerance      ...//
-            hmParams.put("-ti", jtErrorRange.getText());                                    //... 2 - Isotope Error Range           ...//
-            hmParams.put("-thread", jcThreads.getSelectedItem().toString());                //... 3 - Threads                       ...//
-            if (jchbSearchDecoy.isSelected()){                                              //... 4 - TDA                           ...//
-                hmParams.put("-tda", "1");
+            if((jcbProteinInference.isSelected())&&(!jchbSearchDecoy.isSelected()&&
+                                                   (!jtDatabaseFile.getText().toLowerCase().contains("rev")))){
+                JOptionPane.showMessageDialog(this, "If you want to perform protein inference please thick 'Search decoy' \n" + 
+                                                    "from the options above OR use your own decoy database fasta file using the \n" + 
+                                                    "prefix/suffix REV in the file name and provide the Regular expression (Regex), e.g. XXX, etc.", "Error", JOptionPane.ERROR_MESSAGE);              
             }else{
-                hmParams.put("-tda", "0");
-            }
-            hmParams.put("-m", Integer.toString(jcFragMethod.getSelectedIndex()));          //... 5 - Fragment Method               ...//
-            hmParams.put("-inst", Integer.toString(jcInstrument.getSelectedIndex()));       //... 6 - Instrument ID                 ...//
-            hmParams.put("-e", Integer.toString(jcEnzyme.getSelectedIndex()));              //... 7 - Enzyme                        ...//
-            hmParams.put("-protocol", Integer.toString(jcProtocol.getSelectedIndex()));     //... 8 - Protocol ID                   ...//
-            hmParams.put("-ntt", Integer.toString(jcMaxMissedCleavage.getSelectedIndex())); //... 9 - Number of tolerable termini   ...//
-            
-            //... 10 - Modification file name ...//            
-            ListModel fixedModsModel = jlstFixedMods.getModel();
-            ListModel varModsModel = jlstVarMods.getModel();
-            int iSizeFixed = fixedModsModel.getSize();
-            int iSizeVar = varModsModel.getSize();
-            if(iSizeFixed>0||iSizeVar>0){
-                //... Write file ...//
-                FileWriter fstream;
-                try {
-                    fstream = new FileWriter("Mods.txt");
-                    BufferedWriter out = new BufferedWriter(fstream);            
-                    out.write("NumMods="+(iSizeFixed+iSizeVar));
-                    out.newLine();
-                    for (int iI = 0; iI < iSizeFixed; iI++) {
-                        out.write(getValueUniModFixed(fixedModsModel.getElementAt(iI).toString()));
-                        out.newLine();                        
-                    }
-                    for (int iI = 0; iI < iSizeVar; iI++) {
-                        out.write(getValueUniModVar(varModsModel.getElementAt(iI).toString()));
-                        out.newLine();
-                    }                 
-                    out.close();
-                    hmParams.put("-mod", "Mods.txt");                                       //... 10 - Modifications                ...//
-                } catch (IOException ex) {
-                    Logger.getLogger(IdentParamsView.class.getName()).log(Level.SEVERE, null, ex);
+                //... Save current values ...//
+                bRun = true;
+                hmParams.clear();
+                                                                                                //...     Spectrum File                 ...//
+                hmParams.put("-d", jtDatabaseFile.getText());                                   //... 0 - Database File                 ...//
+                                                                                                //...     Output File                   ...//
+                hmParams.put("-t", jtMSMSTol.getText()+jcMSMSTol.getSelectedItem().toString()); //... 1 - Precursor Mass Tolerance      ...//
+                hmParams.put("-ti", jtErrorRange.getText());                                    //... 2 - Isotope Error Range           ...//
+                hmParams.put("-thread", jcThreads.getSelectedItem().toString());                //... 3 - Threads                       ...//
+                if (jchbSearchDecoy.isSelected()){                                              //... 4 - TDA                           ...//
+                    hmParams.put("-tda", "1");
+                }else{
+                    hmParams.put("-tda", "0");
                 }
-            }
+                hmParams.put("-m", Integer.toString(jcFragMethod.getSelectedIndex()));          //... 5 - Fragment Method               ...//
+                hmParams.put("-inst", Integer.toString(jcInstrument.getSelectedIndex()));       //... 6 - Instrument ID                 ...//
+                hmParams.put("-e", Integer.toString(jcEnzyme.getSelectedIndex()));              //... 7 - Enzyme                        ...//
+                hmParams.put("-protocol", Integer.toString(jcProtocol.getSelectedIndex()));     //... 8 - Protocol ID                   ...//
+                hmParams.put("-ntt", Integer.toString(jcMaxMissedCleavage.getSelectedIndex())); //... 9 - Number of tolerable termini   ...//
 
-            hmParams.put("-minLength", jtMinPepLen.getText());                              //... 11 - Min peptide length           ...//
-            hmParams.put("-maxLength", jtMaxPepLen.getText());                              //... 12 - Max peptide length           ...//
-            hmParams.put("-minCharge", jtMinCharge.getText());                              //... 13 - Min charge                   ...//
-            hmParams.put("-maxCharge", jtMaxCharge.getText());                              //... 14 - Max charge                   ...//
-            hmParams.put("-n", jtSpectraMatches.getText());                                 //... 15 - Num matches per spectrum     ...//
-            hmParams.put("-addFeatures", Integer.toString(jcOutput.getSelectedIndex()));    //... 16 - Additional features          ...//
-            Window win = SwingUtilities.getWindowAncestor(this);
-            if (win != null) {
-                win.dispose();
-            }
-        }        
+                //... 10 - Modification file name ...//            
+                ListModel fixedModsModel = jlstFixedMods.getModel();
+                ListModel varModsModel = jlstVarMods.getModel();
+                int iSizeFixed = fixedModsModel.getSize();
+                int iSizeVar = varModsModel.getSize();
+                if(iSizeFixed>0||iSizeVar>0){
+                    //... Write file ...//
+                    FileWriter fstream;
+                    try {
+                        fstream = new FileWriter("Mods.txt");
+                        BufferedWriter out = new BufferedWriter(fstream);            
+                        out.write("NumMods="+(iSizeFixed+iSizeVar));
+                        out.newLine();
+                        for (int iI = 0; iI < iSizeFixed; iI++) {
+                            out.write(getValueUniModFixed(fixedModsModel.getElementAt(iI).toString()));
+                            out.newLine();                        
+                        }
+                        for (int iI = 0; iI < iSizeVar; iI++) {
+                            out.write(getValueUniModVar(varModsModel.getElementAt(iI).toString()));
+                            out.newLine();
+                        }                 
+                        out.close();
+                        hmParams.put("-mod", "Mods.txt");                                       //... 10 - Modifications                ...//
+                    } catch (IOException ex) {
+                        Logger.getLogger(IdentParamsView.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+
+                hmParams.put("-minLength", jtMinPepLen.getText());                              //... 11 - Min peptide length           ...//
+                hmParams.put("-maxLength", jtMaxPepLen.getText());                              //... 12 - Max peptide length           ...//
+                hmParams.put("-minCharge", jtMinCharge.getText());                              //... 13 - Min charge                   ...//
+                hmParams.put("-maxCharge", jtMaxCharge.getText());                              //... 14 - Max charge                   ...//
+                hmParams.put("-n", jtSpectraMatches.getText());                                 //... 15 - Num matches per spectrum     ...//
+                hmParams.put("-addFeatures", Integer.toString(jcOutput.getSelectedIndex()));    //... 16 - Additional features          ...//
+                bProteinInference = jcbProteinInference.isSelected();
+                sRegex = jtRegex.getText();
+                Window win = SwingUtilities.getWindowAncestor(this);
+                if (win != null) {
+                    win.dispose();
+                }
+            }       
+        }
     }//GEN-LAST:event_jbRunActionPerformed
 
     private void jbSetDefaultsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSetDefaultsActionPerformed
@@ -796,6 +826,12 @@ public class IdentParamsView extends javax.swing.JPanel {
     }
     public void setRun(boolean bRun) {
         this.bRun = bRun;
+    }    
+    public String getRegex() {
+        return sRegex;
+    }        
+    public boolean getProteinInference() {
+        return bProteinInference;
     }    
     public String getValueUniModFixed(String sValue){        
         return hmUniModsFixed.get(sValue);
@@ -827,6 +863,7 @@ public class IdentParamsView extends javax.swing.JPanel {
     private javax.swing.JComboBox jcOutput;
     private javax.swing.JComboBox jcProtocol;
     private javax.swing.JComboBox jcThreads;
+    private javax.swing.JCheckBox jcbProteinInference;
     private javax.swing.JCheckBox jchbSearchDecoy;
     private javax.swing.JLabel jlCancel;
     private javax.swing.JLabel jlDatabaseFile;
@@ -844,6 +881,7 @@ public class IdentParamsView extends javax.swing.JPanel {
     private javax.swing.JLabel jlMinPepLen;
     private javax.swing.JLabel jlOutput;
     private javax.swing.JLabel jlProtocol;
+    private javax.swing.JLabel jlRegex;
     private javax.swing.JLabel jlThreads;
     private javax.swing.JLabel jlUniMod;
     private javax.swing.JLabel jlVarMods;
@@ -857,6 +895,7 @@ public class IdentParamsView extends javax.swing.JPanel {
     private javax.swing.JTextField jtMaxPepLen;
     private javax.swing.JTextField jtMinCharge;
     private javax.swing.JTextField jtMinPepLen;
+    private javax.swing.JTextField jtRegex;
     private javax.swing.JTextField jtSpectraMatches;
     // End of variables declaration//GEN-END:variables
 }

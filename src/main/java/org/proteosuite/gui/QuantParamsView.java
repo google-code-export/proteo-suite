@@ -3,7 +3,7 @@
  * QuantParamsView.java
  * --------------------------------------------------------------------------
  * Description:       Parameter settings for the Quantitation
- * Developer:         FG
+ * Developer:         fgonzalez
  * Created:           08 February 2011
  * Notes:             GUI generated using NetBeans IDE 7.0.1
  * Read our documentation under our Google SVN repository
@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
 /**
  * This form corresponds to the quantitation parameter settings. Users can customised the settings by changing the 
  * default values for each technique, e.g. SILAC, iTRAQ, 15N, etc.
- * @author FG
+ * @author fgonzalez
  * @param void
  */
 public class QuantParamsView extends javax.swing.JPanel {

@@ -3,7 +3,7 @@
  * MzMLCompressView.java
  * --------------------------------------------------------------------------
  * Description:       Plugin to compress mzML files
- * Developer:         FG
+ * Developer:         fgonzalez
  * Created:           12 April 2013
  * Read our documentation file under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
@@ -27,7 +27,7 @@ import org.proteosuite.utils.ProgressBarDialog;
 
 /**
  * Form to capture all MzML files to be compressed.
- * @author FG
+ * @author fgonzalez
  * @param jframe Parent Frame
  * @param sPath File to convert
  */

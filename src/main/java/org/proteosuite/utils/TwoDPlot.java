@@ -3,7 +3,7 @@
  * TwoDPlot.java
  * --------------------------------------------------------------------------
  * Description:       Displays mzml raw data as 2D plot
- * Developer:         FG
+ * Developer:         fgonzalez
  * Created:           08 February 2011
  * Notes:             
  * Read our documentation under our Google SVN repository
@@ -15,7 +15,7 @@
 package org.proteosuite.utils;
 
 /**
- * @author FG
+ * @author fgonzalez
  */
 import java.awt.Color;
 import java.awt.Cursor;
@@ -54,7 +54,7 @@ import java.awt.geom.Line2D;
 
 /**
  * This class corresponds to 2D Visualisation of MS raw data. This is under construction ...//
- * @author faviel
+ * @author fgonzalez
  * @param title - Window title ...//
  * @param mz - m/z values
  * @param intensity - intensity values

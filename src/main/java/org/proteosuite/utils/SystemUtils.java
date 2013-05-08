@@ -3,7 +3,7 @@
  * SystemUtils.java
  * --------------------------------------------------------------------------
  * Description:       System Utilities
- * Developer:         FG
+ * Developer:         fgonzalez
  * Created:           27 February 2013
  * Read our documentation under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
@@ -20,7 +20,7 @@ import java.util.Date;
 
 /**
  * System utilities for ProteoSuite
- * @author FG
+ * @author fgonzalez
  */
 public class SystemUtils {
     private int mb = 1024*1024; 

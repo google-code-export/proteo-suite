@@ -3,7 +3,7 @@
  * XIC.java
  * --------------------------------------------------------------------------
  * Description:       Plugin to generate a XIC
- * Developer:         FG
+ * Developer:         fgonzalez
  * Created:           12 April 2013
  * Read our documentation under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
@@ -28,7 +28,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
  * @param rtEnds - rt end point
  * @param mzStarts - m/z start point
  * @param mzEnds - m/z end point
- * @author FG
+ * @author fgonzalez
  */
 public class XIC {
     

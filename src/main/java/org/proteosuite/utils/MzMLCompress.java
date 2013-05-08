@@ -3,7 +3,7 @@
  * MzMLCompress.java
  * --------------------------------------------------------------------------
  * Description:       Plugin to compress mzML files 
- * Developer:         FG
+ * Developer:         fgonzalez
  * Created:           12 April 2013
  * Read our documentation under our Google SVN repository
  * SVN: http://code.google.com/p/proteo-suite/
@@ -43,7 +43,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
  * m/z values and removing zeros on intensity values
  * @param xmlFile a string containing the file name
  * @param sPath a string for the path where the file is located 
- * @author FG
+ * @author fgonzalez
  */
 public class MzMLCompress {
     public MzMLCompress(File xmlFile, String sPath, boolean bZeros) throws IOException{

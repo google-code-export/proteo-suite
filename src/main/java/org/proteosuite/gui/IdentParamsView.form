@@ -36,7 +36,13 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jPanel2" alignment="0" max="32767" attributes="1"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jcbProteinInference" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+                      <Component id="jlRegex" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jtRegex" min="-2" pref="89" max="-2" attributes="0"/>
+                  </Group>
                   <Component id="jPanel1" alignment="0" pref="772" max="32767" attributes="1"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jbSetDefaults" min="-2" max="-2" attributes="0"/>
@@ -47,6 +53,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jbRun" min="-2" pref="93" max="-2" attributes="0"/>
                   </Group>
+                  <Component id="jPanel2" alignment="1" max="32767" attributes="1"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -56,10 +63,16 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel1" min="-2" pref="255" max="-2" attributes="0"/>
+              <Component id="jPanel1" min="-2" pref="237" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="jPanel2" min="-2" max="-2" attributes="1"/>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jcbProteinInference" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jlRegex" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jtRegex" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="26" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jbSetDefaults" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jbRun" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -102,18 +115,18 @@
                           <Component id="jtDatabaseFile" min="-2" pref="497" max="-2" attributes="1"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jbAddDatabaseFile" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace pref="104" max="32767" attributes="0"/>
+                          <EmptySpace pref="114" max="32767" attributes="0"/>
                       </Group>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
+                          <Group type="103" groupAlignment="1" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="1">
+                                      <Group type="102" alignment="0" attributes="1">
                                           <Component id="jlMSMSTol" min="-2" pref="66" max="-2" attributes="0"/>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Component id="jtMSMSTol" min="-2" pref="68" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jcMSMSTol" pref="83" max="32767" attributes="0"/>
+                                          <Component id="jcMSMSTol" pref="99" max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Group type="103" groupAlignment="0" attributes="0">
@@ -123,27 +136,36 @@
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="jtErrorRange" alignment="0" min="-2" pref="38" max="-2" attributes="0"/>
-                                              <Component id="jcEnzyme" alignment="0" pref="157" max="32767" attributes="0"/>
+                                              <Component id="jcEnzyme" alignment="0" pref="173" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
                                           <Component id="jlProtocol" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="jcProtocol" pref="158" max="32767" attributes="0"/>
+                                          <Component id="jcProtocol" pref="173" max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="1">
                                           <Component id="jlFragMethod" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="jcFragMethod" pref="88" max="32767" attributes="0"/>
+                                          <Component id="jcFragMethod" pref="103" max="32767" attributes="0"/>
                                       </Group>
                                       <Component id="jchbSearchDecoy" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jlMaxMissedCleavage" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jlInstrument" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Component id="jcInstrument" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jcMaxMissedCleavage" pref="126" max="32767" attributes="1"/>
+                                  </Group>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jlMaxPepLen" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="jlMinPepLen" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -151,7 +173,7 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                       <Component id="jtMaxPepLen" alignment="1" max="32767" attributes="1"/>
-                                      <Component id="jtMinPepLen" alignment="1" pref="55" max="32767" attributes="1"/>
+                                      <Component id="jtMinPepLen" alignment="1" min="-2" pref="55" max="-2" attributes="1"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -159,43 +181,32 @@
                                       <Component id="jlMaxCharge" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="jtMaxCharge" max="32767" attributes="1"/>
                                       <Component id="jtMinCharge" alignment="1" pref="43" max="32767" attributes="1"/>
-                                      <Component id="jtMaxCharge" alignment="1" max="32767" attributes="1"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
                                           <Component id="jlMatches" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                                           <Component id="jtSpectraMatches" pref="43" max="32767" attributes="0"/>
                                       </Group>
-                                      <Group type="102" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
                                           <Component id="jlOutput" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="32767" attributes="0"/>
                                           <Component id="jcOutput" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jlMaxMissedCleavage" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="jlInstrument" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jcInstrument" max="32767" attributes="0"/>
-                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="-2" pref="132" max="-2" attributes="0"/>
                                   <Component id="jlThreads" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="jcThreads" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jcMaxMissedCleavage" alignment="1" pref="127" max="32767" attributes="1"/>
                           </Group>
+                          <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -208,7 +219,7 @@
                       <Component id="jlDatabaseFile" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jbAddDatabaseFile" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="jlMSMSTol" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -243,7 +254,7 @@
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="1" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jlMinPepLen" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jtMinPepLen" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -267,7 +278,7 @@
                           <Component id="jlThreads" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -404,7 +415,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jlMaxMissedCleavage">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Missed Claveages:"/>
+            <Property name="text" type="java.lang.String" value="Tryptic peptides:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="jcMaxMissedCleavage">
@@ -532,14 +543,10 @@
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jbDelVarMods" min="-2" max="-2" attributes="0"/>
-                              <Component id="jbAddVarMods" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="jbDelMods" alignment="1" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="jbAddVarMods" min="-2" max="-2" attributes="0"/>
                       <Component id="jbAddFixedMods" min="-2" max="-2" attributes="0"/>
+                      <Component id="jbDelMods" min="-2" max="-2" attributes="0"/>
+                      <Component id="jbDelVarMods" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -548,8 +555,8 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="jScrollPane3" alignment="0" pref="399" max="32767" attributes="1"/>
                               <Component id="jScrollPane2" alignment="0" pref="399" max="32767" attributes="1"/>
+                              <Component id="jScrollPane3" alignment="0" pref="399" max="32767" attributes="1"/>
                           </Group>
                       </Group>
                   </Group>
@@ -561,44 +568,43 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="102" alignment="0" attributes="1">
                           <Component id="jlUniMod" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jScrollPane4" pref="253" max="32767" attributes="1"/>
+                          <Component id="jScrollPane4" max="32767" attributes="1"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="jlFixedMods" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jScrollPane2" min="-2" pref="105" max="-2" attributes="0"/>
+                                  <Component id="jScrollPane2" min="-2" pref="84" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
                                   <Component id="jbAddFixedMods" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jbDelMods" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                           <Component id="jlVarMods" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                                   <Component id="jbAddVarMods" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jbDelVarMods" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" attributes="1">
+                              <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="jScrollPane3" min="0" pref="0" max="32767" attributes="1"/>
+                                  <Component id="jScrollPane3" min="-2" pref="82" max="-2" attributes="1"/>
                               </Group>
                           </Group>
                       </Group>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -625,7 +631,7 @@
               <Properties>
                 <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
                   <StringArray count="1">
-                    <StringItem index="0" value="--- none selected ---"/>
+                    <StringItem index="0" value="Oxidation (M)"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -675,7 +681,7 @@
               <Properties>
                 <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
                   <StringArray count="1">
-                    <StringItem index="0" value="--- none selected ---"/>
+                    <StringItem index="0" value="Carbamidomethyl (C)"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -732,6 +738,21 @@
     <Component class="javax.swing.JLabel" name="jlCancel">
       <Properties>
         <Property name="text" type="java.lang.String" value="Press escape (ESC) to cancel"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="jcbProteinInference">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Include Protein Inference"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jtRegex">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="XXX"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jlRegex">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Regex:"/>
       </Properties>
     </Component>
   </SubComponents>
