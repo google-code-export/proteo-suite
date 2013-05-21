@@ -258,7 +258,6 @@ public class ProteoSuiteView extends JFrame {
     private ArrayList<MzQuantMLUnmarshaller> aMzQUnmarshaller = new ArrayList<MzQuantMLUnmarshaller>();
     private ArrayList<MzQuantML> aMzQML = new ArrayList<MzQuantML>();
     private MzQuantML mzQuantML = null; //... Project class ...//
-    private MzQuantML mzQuantMLTemp = null; //... Temporal class for displaying mzQuantML files ...//
     
     public ProteoSuiteView(){
         
@@ -7957,27 +7956,31 @@ public class ProteoSuiteView extends JFrame {
 	    if (file != null){
                 if (file.getName().toLowerCase().indexOf(".mzq") >0){                    
                     //... Unmarshall mzquantml file ...//
-                    System.out.println("Validating " + file.getPath());
+                    System.out.println(sysutils.getTime()+" - Validating " + file.getPath());
                     Validator validator = XMLparser.getValidator(MZQ_XSD);
                     boolean validFlag = XMLparser.validate(validator, file.getPath());
                     if(!validFlag){
                         JOptionPane.showMessageDialog(this, "The file " + file + " is not valid. \n Please make sure that the file is a valid mzq file (Release "+MZQ_XSD+")", "Error", JOptionPane.INFORMATION_MESSAGE);
                     }
-                    else{
-                        MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(file.toString());            
-                        MzQuantML mzq = unmarshaller.unmarshall();
-                        mzQuantML = mzq;
-                        aMzQML.clear();
-                        loadProjectFromMZQ(file);
-                        aMzQML.add(mzq);
-                        bProjectModified = false;
+                    else{            
+                        MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(file);
+//                        mzQuantML = new MzQuantML();
+//                        mzQuantML = unmarshaller.unmarshall();
+//                        System.out.println("version"+unmarshaller.getMzQuantMLVersion());
+//                        aMzQML.clear();
+//                        aMzQML.add(mzQuantML);
+                        aMzQUnmarshaller.clear();
                         final DefaultTableModel model = new DefaultTableModel();
                         jtQuantFiles.setModel(model);
                         model.addColumn("Name");
                         model.addColumn("Path");
                         model.addColumn("Type");
                         model.addColumn("Version");
-                        model.insertRow(model.getRowCount(), new Object[]{file.getName(), file.getPath().replace("\\", "/"), "mzq", mzQVersion});
+                        unmarshalMzQMLFile(model, file);      
+                        
+                        loadProjectFromMZQ(unmarshaller, file);                                                
+                        bProjectModified = false;
+
                         loadMzQuantMLView(0, file.getName());
                         sProjectName = file.getName();
                         uptStatusPipeline();
@@ -7988,12 +7991,13 @@ public class ProteoSuiteView extends JFrame {
             }
         }
     }    
-    /*----------------------------
+    /*----------------------------------------------
      * Load project from mzq 
+     * @param unmarshaller - mzQuantML unmarshaller 
      * @param sFile - File name 
      * @return void
-     -----------------------------*/
-    private void loadProjectFromMZQ(File sFile){
+     ----------------------------------------------*/
+    private void loadProjectFromMZQ(MzQuantMLUnmarshaller unmarshaller, File sFile){
         
         final DefaultTableModel model = new DefaultTableModel();
         final DefaultTableModel model2 = new DefaultTableModel();
@@ -8011,6 +8015,7 @@ public class ProteoSuiteView extends JFrame {
         model2.addColumn("Raw File");
                 
         final File sFileRef = sFile;
+        final MzQuantMLUnmarshaller funmarshaller = unmarshaller;
         final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "LoadProjectFromMZQ");
         final Thread thread = new Thread(new Runnable(){
             @Override
@@ -8027,7 +8032,7 @@ public class ProteoSuiteView extends JFrame {
                 System.out.println(sysutils.getTime()+" - Loading settings from the mzq file ...");                                                   
                             
                 String sGroup = "";
-                InputFiles inputFiles = mzQuantML.getInputFiles();
+                InputFiles inputFiles = funmarshaller.unmarshal(MzQuantMLElement.InputFiles);
                 
                 //... Load raw files ...//
                 List<RawFilesGroup> rawFilesGroup = inputFiles.getRawFilesGroup();
@@ -8053,7 +8058,7 @@ public class ProteoSuiteView extends JFrame {
                                 model.insertRow(model.getRowCount(), new Object[]{
                                     rawFile.getName(),
                                     rawFile.getLocation(),
-                                    "mzML",
+                                    "MGF",
                                     mzMLVersion});
                                 iMGFRaw++;
                             }
@@ -8067,7 +8072,7 @@ public class ProteoSuiteView extends JFrame {
                 if (iMGFRaw>0){
                     System.out.println(sysutils.getTime()+" - Loading MGF view ...");                    
                     if(jtRawFiles.getRowCount()>0){
-                        loadMGFView(jtRawFiles.getSelectedRow());
+                        loadMGFView(0);
                     }
                 }
                 if (iMzMLRaw>0){
@@ -8082,6 +8087,7 @@ public class ProteoSuiteView extends JFrame {
                 }
                 //... Load raw files ...//
                 List<IdentificationFile> idFilesList = inputFiles.getIdentificationFiles().getIdentificationFile();
+                System.out.println(sysutils.getTime()+" - Loading identification files");
                 int iXMLIdent=0, iMzID=0;
                 for(IdentificationFile idFile:idFilesList){
                         //... Validate type of file ...//
@@ -8093,6 +8099,7 @@ public class ProteoSuiteView extends JFrame {
                         else{
                             progressBarDialog.setTitle("Reading " + idFile.getName());
                             progressBarDialog.setVisible(true);
+                            System.out.println(sysutils.getTime()+" - Reading " + idFile.getName());
 
                             int mid= idFile.getName().lastIndexOf(".");
                             String ext="";
@@ -8101,7 +8108,7 @@ public class ProteoSuiteView extends JFrame {
                                 model2.insertRow(model2.getRowCount(), new Object[]{
                                     idFile.getName(),
                                     idFile.getLocation(),
-                                    "mzid",
+                                    "xml",
                                     mzIDVersion,
                                     sGroup});   
                                iXMLIdent++;
@@ -8114,7 +8121,7 @@ public class ProteoSuiteView extends JFrame {
                 }
                 if (iXMLIdent>0){
                     if(jtIdentFiles.getRowCount()>0){
-                        loadMascotView(jtIdentFiles.getValueAt(0, 0).toString(), jtIdentFiles.getValueAt(0, 0).toString());
+                        loadMascotView(jtIdentFiles.getValueAt(0, 0).toString(), jtIdentFiles.getValueAt(0, 1).toString());
                     }
                 }                
                 if (iMzID>0){
@@ -8125,7 +8132,7 @@ public class ProteoSuiteView extends JFrame {
                 sProjectName = sFileRef.getName();
                 sWorkspace = sFileRef.getParent();
                 sWorkspace = sWorkspace.replace("\\", "/");
-                System.out.println("Project has been set up to: " + sWorkspace + ", " + sProjectName);
+                System.out.println(sysutils.getTime()+" - Project has been set up to: " + sWorkspace + ", " + sProjectName);
                 uptTitle();
                 renderIdentFiles();
                 uptStatusPipeline();
