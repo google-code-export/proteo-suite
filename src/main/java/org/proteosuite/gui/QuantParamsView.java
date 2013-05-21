@@ -18,7 +18,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,6 +30,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import org.proteosuite.utils.SystemUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -42,13 +45,23 @@ import org.xml.sax.SAXException;
  */
 public class QuantParamsView extends javax.swing.JPanel {
 
+    private String sWorkspace = "";
+    private String sTechnique = "";
+    private SystemUtils sysutils = new SystemUtils();
+    
     //... Class constructor ...//
-    public QuantParamsView(ArrayList alRawFiles) {
-        //... Initialising components and values ...//        
+    public QuantParamsView(ArrayList alRawFiles, String sWorkspace, String sTechnique) {
+        //... Initialising components and values ...//
+        this.sWorkspace = sWorkspace;
+        this.sTechnique = sTechnique;
         initComponents();
         initValues(alRawFiles);
         jtpTechniques.setEnabledAt(0, false);
-        jtpTechniques.setSelectedIndex(1);
+        if(sTechnique.equals("iTRAQ")){
+            jtpTechniques.setSelectedIndex(1);
+        }else if (sTechnique.equals("emPAI")){
+            jtpTechniques.setSelectedIndex(2);
+        }
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -97,6 +110,21 @@ public class QuantParamsView extends javax.swing.JPanel {
         jlSearchScore = new javax.swing.JLabel();
         jtSearchScore = new javax.swing.JTextField();
         jpemPAI = new javax.swing.JPanel();
+        jlSearchScoreEmPAI = new javax.swing.JLabel();
+        jtSearchScoreEmPAI = new javax.swing.JTextField();
+        jlPepMolRange = new javax.swing.JLabel();
+        jtMinMolRange = new javax.swing.JTextField();
+        jlMaxMolRange = new javax.swing.JLabel();
+        jtMaxMolRange = new javax.swing.JTextField();
+        jlMinMolRange = new javax.swing.JLabel();
+        jspFastaFiles = new javax.swing.JScrollPane();
+        jtFastaFiles = new javax.swing.JTable();
+        jlFastaFiles = new javax.swing.JLabel();
+        jlEnzyme = new javax.swing.JLabel();
+        jbAddFasta = new javax.swing.JButton();
+        jbRemoveFasta = new javax.swing.JButton();
+        jcbEnzyme = new javax.swing.JComboBox();
+        jbDefaultValues1 = new javax.swing.JButton();
         jbSave = new javax.swing.JToggleButton();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
@@ -169,10 +197,10 @@ public class QuantParamsView extends javax.swing.JPanel {
                             .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(22, 22, 22)
                             .addComponent(jLabel9)
-                            .addContainerGap(308, Short.MAX_VALUE))
+                            .addContainerGap(314, Short.MAX_VALUE))
                         .addGroup(jpSILACLayout.createSequentialGroup()
                             .addComponent(jCheckBox1)
-                            .addContainerGap(638, Short.MAX_VALUE))
+                            .addContainerGap(644, Short.MAX_VALUE))
                         .addGroup(jpSILACLayout.createSequentialGroup()
                             .addComponent(jLabel7)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -181,7 +209,7 @@ public class QuantParamsView extends javax.swing.JPanel {
                             .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jToggleButton2)
-                            .addContainerGap(488, Short.MAX_VALUE))
+                            .addContainerGap(494, Short.MAX_VALUE))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpSILACLayout.createSequentialGroup()
                             .addGroup(jpSILACLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpSILACLayout.createSequentialGroup()
@@ -191,7 +219,7 @@ public class QuantParamsView extends javax.swing.JPanel {
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(jLabel2)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE))
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpSILACLayout.createSequentialGroup()
                                     .addComponent(jLabel5)
                                     .addGap(22, 22, 22)
@@ -307,14 +335,14 @@ public class QuantParamsView extends javax.swing.JPanel {
                         .addGap(19, 19, 19)
                         .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpiTraqLayout.createSequentialGroup()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
                                 .addGap(16, 16, 16)
                                 .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(jbAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(jbRemove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(jpiTraqLayout.createSequentialGroup()
                                 .addComponent(jLabel15)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 327, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 333, Short.MAX_VALUE)
                                 .addComponent(jLabel16)
                                 .addGap(219, 219, 219))
                             .addComponent(jbDefaultValues)))
@@ -372,15 +400,115 @@ public class QuantParamsView extends javax.swing.JPanel {
 
         jtpTechniques.addTab("iTRAQ/TMT", jpiTraq);
 
+        jlSearchScoreEmPAI.setText("Search Score:");
+
+        jlPepMolRange.setText("Peptide Molecular Range:");
+
+        jlMaxMolRange.setText("Max:");
+
+        jlMinMolRange.setText("Min:");
+
+        jtFastaFiles.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "File Name"
+            }
+        ));
+        jspFastaFiles.setViewportView(jtFastaFiles);
+
+        jlFastaFiles.setFont(new java.awt.Font("Tahoma", 1, 11));
+        jlFastaFiles.setText("Fasta Files:");
+
+        jlEnzyme.setText("Enyme:");
+
+        jbAddFasta.setText("Add");
+        jbAddFasta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbAddFastaActionPerformed(evt);
+            }
+        });
+
+        jbRemoveFasta.setText("Remove");
+        jbRemoveFasta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbRemoveFastaActionPerformed(evt);
+            }
+        });
+
+        jcbEnzyme.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Trypsin" }));
+
+        jbDefaultValues1.setText("Restore to default values");
+        jbDefaultValues1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbDefaultValues1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jpemPAILayout = new javax.swing.GroupLayout(jpemPAI);
         jpemPAI.setLayout(jpemPAILayout);
         jpemPAILayout.setHorizontalGroup(
             jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 725, Short.MAX_VALUE)
+            .addGroup(jpemPAILayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addGroup(jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jbDefaultValues1)
+                    .addGroup(jpemPAILayout.createSequentialGroup()
+                        .addComponent(jlEnzyme)
+                        .addGap(18, 18, 18)
+                        .addComponent(jcbEnzyme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jlFastaFiles)
+                    .addGroup(jpemPAILayout.createSequentialGroup()
+                        .addComponent(jspFastaFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jbAddFasta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jbRemoveFasta)))
+                    .addGroup(jpemPAILayout.createSequentialGroup()
+                        .addComponent(jlPepMolRange)
+                        .addGap(18, 18, 18)
+                        .addComponent(jlMinMolRange)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jtMinMolRange, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jlMaxMolRange)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jtMaxMolRange, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jlSearchScoreEmPAI)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jtSearchScoreEmPAI, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         jpemPAILayout.setVerticalGroup(
             jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 420, Short.MAX_VALUE)
+            .addGroup(jpemPAILayout.createSequentialGroup()
+                .addGap(28, 28, 28)
+                .addGroup(jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jlPepMolRange)
+                    .addComponent(jtSearchScoreEmPAI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jlSearchScoreEmPAI)
+                    .addComponent(jtMaxMolRange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jlMaxMolRange)
+                    .addComponent(jtMinMolRange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jlMinMolRange))
+                .addGap(15, 15, 15)
+                .addGroup(jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jlEnzyme)
+                    .addComponent(jcbEnzyme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jlFastaFiles)
+                .addGap(18, 18, 18)
+                .addGroup(jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpemPAILayout.createSequentialGroup()
+                        .addComponent(jbAddFasta)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jbRemoveFasta))
+                    .addComponent(jspFastaFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jbDefaultValues1)
+                .addContainerGap())
         );
 
         jtpTechniques.addTab("emPAI", jpemPAI);
@@ -403,14 +531,14 @@ public class QuantParamsView extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jtpTechniques, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE)
+                    .addComponent(jtpTechniques, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 736, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(28, 28, 28)
                                 .addComponent(jLabel14)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 126, Short.MAX_VALUE)
                         .addComponent(jbSave, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -435,10 +563,9 @@ public class QuantParamsView extends javax.swing.JPanel {
         //... Validate if config file exists ...//
         boolean exists = (new File("configQuant.xml")).exists();
         if (exists){
-            readConfigFile(alRawFiles);
+            readConfigFile(alRawFiles, sTechnique);
         }
-        else
-        {
+        else{
             String sMessage = "The configQuant.xml file was not found, please make sure that this file exists \n";
             sMessage = sMessage + "under your installation folder. ProteoSuite will create a new configQuant.xml file \n";
             sMessage = sMessage + "for you, however you will have to set all parameters manually. You can still close \n";
@@ -447,8 +574,13 @@ public class QuantParamsView extends javax.swing.JPanel {
         }
     }
     //... Read configuration settings ...//
-    private void readConfigFile(ArrayList alRawFiles)
+    private void readConfigFile(ArrayList alRawFiles, String sTechnique)
     {          
+
+    //=============//
+    //... iTRAQ ...//
+    //=============//
+        
         //... Fill JTable ...//
         final DefaultTableModel model = new DefaultTableModel();
         jtiTRAQParams.setModel(model);
@@ -469,7 +601,7 @@ public class QuantParamsView extends javax.swing.JPanel {
             DocumentBuilder builder = domFactory.newDocumentBuilder();
             Document doc = builder.parse("configQuant.xml");
             XPath xpath = XPathFactory.newInstance().newXPath();
-            System.out.println("Reading configQuant files ...");
+            System.out.println(sysutils.getTime()+" - Reading configQuant files (iTRAQ) ...");
             
             //... Reading mzRanges (min and max) ...//
             XPathExpression expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/mzRange/minus");
@@ -477,38 +609,37 @@ public class QuantParamsView extends javax.swing.JPanel {
             for (int iI = 0; iI < nodes.getLength(); iI++) {
                 jtiTraqMinMz.setText(nodes.item(iI).getTextContent());
             }
-            System.out.println("Reading mzRanges ...");
+            System.out.println(sysutils.getTime()+" - Reading mzRanges ...");
             expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/mzRange/plus");
             nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             for (int iI = 0; iI < nodes.getLength(); iI++) {
                 jtiTraqMaxMz.setText(nodes.item(iI).getTextContent());
             }
-            System.out.println("Reading SeachScore ...");
+            System.out.println(sysutils.getTime()+" - Reading SeachScore ...");
             expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/SearchScore");
             nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
             for (int iI = 0; iI < nodes.getLength(); iI++) {
                 jtSearchScore.setText(nodes.item(iI).getTextContent());
             }
-
             //... Check if all raw files have been set up ...//
-            System.out.println("Reading raw files ...");
+            System.out.println(sysutils.getTime()+" - Reading raw files ...");
             if (alRawFiles.size()<=0){
                 JOptionPane.showMessageDialog(null, "In order to fill the iTRAQ/TMT labels, please select a raw file in the main window.", "Information", JOptionPane.INFORMATION_MESSAGE);
             }
             else{
                 for(Object obj:alRawFiles){
                     
-                    System.out.println("Checking file ... "+obj.toString());
+                    System.out.println(sysutils.getTime()+" - Checking file ... "+obj.toString());
                     expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='" + obj.toString()  + "']");
                     nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-                    System.out.println("Nodes..."+nodes.getLength());
+                    System.out.println(sysutils.getTime()+" - Nodes..."+nodes.getLength());
                     if (nodes.getLength()<=0){
                         //... Insert new record based on the default iTRAQ settings ...//
 
                         //... Assay Parameters (Labels) ...//
                         expr = xpath.compile("/ProteoSuiteApplication/configSettings/defaultParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='default']/AssayParam");
                         nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-                        System.out.println("Nodes in default parameters settings ..."+nodes.getLength());
+                        System.out.println(sysutils.getTime()+" - Nodes in default parameters settings ..."+nodes.getLength());
 
                         String sRawFile=obj.toString(), sStudyVariable="", sAssayID="", sAssayName = "", sMzValue="";
                         String[] sCorrFactors = new String[4];
@@ -584,12 +715,12 @@ public class QuantParamsView extends javax.swing.JPanel {
                     }                
                     else{ //... Fill from file ...//
                         //... Insert new record based on the config iTRAQ settings ...//
-                        System.out.println("Node in config parameters settings ..."+nodes.getLength());
+                        System.out.println(sysutils.getTime()+" - Node in config parameters settings ..."+nodes.getLength());
                         
                         //... Assay Parameters (Labels) ...//
                         expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='"+obj.toString()+"']/AssayParam");
                         nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
-                        System.out.println("Assays in node ..."+nodes.getLength());                        
+                        System.out.println(sysutils.getTime()+" - Assays in node ..."+nodes.getLength());                        
 
                         String sRawFile=obj.toString(), sStudyVariable="", sAssayID="", sAssayName = "", sMzValue="";
                         String[] sCorrFactors = new String[4];
@@ -675,7 +806,64 @@ public class QuantParamsView extends javax.swing.JPanel {
         } catch ( XPathExpressionException  e) {
           e.printStackTrace();
         }
-        System.out.println("Table elements"+jtiTRAQParams.getRowCount());
+    //=============//
+    //... emPAI ...//
+    //=============//        
+        //... Fill JTable ...//
+        final DefaultTableModel model2 = new DefaultTableModel();
+        jtFastaFiles.setModel(model2);
+        model2.addColumn("File Name");
+        
+        //... Read files using XPath xml parser ...//
+        try{
+            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+            domFactory.setNamespaceAware(true); 
+            DocumentBuilder builder = domFactory.newDocumentBuilder();
+            Document doc = builder.parse("configQuant.xml");
+            XPath xpath = XPathFactory.newInstance().newXPath();
+            System.out.println(sysutils.getTime()+" - Reading configQuant files (emPAI) ...");
+            
+            //... Reading Peptide Molecular Ranges ...//
+            System.out.println(sysutils.getTime()+" - Reading mzRanges ...");            
+            XPathExpression expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='emPAI']/minRange");
+            NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            for (int iI = 0; iI < nodes.getLength(); iI++) {
+                jtMinMolRange.setText(nodes.item(iI).getTextContent());
+            }            
+            expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='emPAI']/maxRange");
+            nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            for (int iI = 0; iI < nodes.getLength(); iI++) {
+                jtMaxMolRange.setText(nodes.item(iI).getTextContent());
+            }            
+            System.out.println(sysutils.getTime()+" - Reading Search Score ...");            
+            expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='emPAI']/SearchScore");
+            nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            for (int iI = 0; iI < nodes.getLength(); iI++) {
+                jtSearchScoreEmPAI.setText(nodes.item(iI).getTextContent());
+            }
+            System.out.println(sysutils.getTime()+" - Reading Enzyme ...");            
+            expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='emPAI']/Enzyme");
+            nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            for (int iI = 0; iI < nodes.getLength(); iI++) {
+                jcbEnzyme.setSelectedItem(nodes.item(iI).getTextContent());
+            }
+            System.out.println(sysutils.getTime()+" - Reading Fasta Files ...");            
+            expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='emPAI']/FastaFiles/File");
+            nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            for (int iI = 0; iI < nodes.getLength(); iI++) {
+                model2.insertRow(model2.getRowCount(), new Object[]{nodes.item(iI).getTextContent()});                
+            }            
+        }
+        catch ( ParserConfigurationException e) {
+          e.printStackTrace();
+        } catch ( SAXException e) {
+          e.printStackTrace();
+        } catch ( IOException e) {
+          e.printStackTrace();
+        } catch ( XPathExpressionException  e) {
+          e.printStackTrace();
+        }        
+                
         //... Once everything is fill, then we update the values on the configQuant.xml file ...//
         saveConfigFile();
     }    
@@ -759,10 +947,30 @@ public class QuantParamsView extends javax.swing.JPanel {
             out.newLine();
             out.write("				</technique>");
             out.newLine();
+            out.write("				<technique id=\"emPAI\">");
+            out.newLine();
+            out.write("					<minRange>" + jtMinMolRange.getText() + "</minRange>");
+            out.newLine();
+            out.write("					<maxRange>" + jtMaxMolRange.getText() + "</maxRange>");            
+            out.newLine();
+            out.write("					<SearchScore>" + jtSearchScoreEmPAI.getText() + "</SearchScore>");
+            out.newLine();
+            out.write("					<Enzyme>" + jcbEnzyme.getSelectedItem() + "</Enzyme>");
+            out.newLine();
+            out.write("					<FastaFiles>");
+            out.newLine();
+            for (int iI=0; iI<jtFastaFiles.getRowCount(); iI++){
+                out.write("						<File>" + jtFastaFiles.getValueAt(iI, 0).toString().replace("\\", "/") + "</File>");
+                out.newLine();                
+            }
+            out.write("					</FastaFiles>");
+            out.newLine();
+            out.write("				</technique>");
+            out.newLine();
             out.write("			</techniques>");
             out.newLine();
             out.write("		</quantParamSettings>");
-            out.newLine();
+            out.newLine();            
             
             out.write("		<defaultParamSettings>");
             out.newLine();
@@ -885,6 +1093,22 @@ public class QuantParamsView extends javax.swing.JPanel {
             out.write("						</RawFile>");            
             out.newLine();
             out.write("					</AssayParamList>");
+            out.newLine();
+            out.write("				</technique>");            
+            out.newLine();
+            out.write("				<technique id=\"emPAI\">");
+            out.newLine();
+            out.write("					<minRange>500</minRange>");
+            out.newLine();
+            out.write("					<maxRange>3200</maxRange>");
+            out.newLine();
+            out.write("					<SearchScore>20</SearchScore>");
+            out.newLine();
+            out.write("					<Enzyme>Trypsin</Enzyme>");
+            out.newLine();
+            out.write("					<FastaFiles>");
+            out.newLine();
+            out.write("					</FastaFiles>");
             out.newLine();
             out.write("				</technique>");
             out.newLine();
@@ -1029,6 +1253,48 @@ public class QuantParamsView extends javax.swing.JPanel {
         } catch ( XPathExpressionException  e) {
           e.printStackTrace();
         }
+        
+        //... Fill JTable ...//
+        final DefaultTableModel model2 = new DefaultTableModel();
+        jtFastaFiles.setModel(model2);
+        model2.addColumn("File Name");
+        
+        //... Read files using XPath xml parser ...//
+        try{
+            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+            domFactory.setNamespaceAware(true); 
+            DocumentBuilder builder = domFactory.newDocumentBuilder();
+            Document doc = builder.parse("configQuant.xml");
+            XPath xpath = XPathFactory.newInstance().newXPath();
+            System.out.println("Reading configQuant files ...");
+            
+            //... Reading Peptide Molecular Ranges ...//
+            XPathExpression expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='emPAI']/minRange");
+            NodeList nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            for (int iI = 0; iI < nodes.getLength(); iI++) {
+                jtMinMolRange.setText(nodes.item(iI).getTextContent());
+            }
+            expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='emPAI']/maxRange");
+            nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            for (int iI = 0; iI < nodes.getLength(); iI++) {
+                jtMaxMolRange.setText(nodes.item(iI).getTextContent());
+            }
+            expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='emPAI']/SearchScore");
+            nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
+            for (int iI = 0; iI < nodes.getLength(); iI++) {
+                jtSearchScoreEmPAI.setText(nodes.item(iI).getTextContent());
+            }
+        }
+        catch ( ParserConfigurationException e) {
+          e.printStackTrace();
+        } catch ( SAXException e) {
+          e.printStackTrace();
+        } catch ( IOException e) {
+          e.printStackTrace();
+        } catch ( XPathExpressionException  e) {
+          e.printStackTrace();
+        }        
+        
     }//GEN-LAST:event_jbDefaultValuesActionPerformed
 
     private void jbSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSaveActionPerformed
@@ -1039,12 +1305,10 @@ public class QuantParamsView extends javax.swing.JPanel {
 
     private void jbRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRemoveActionPerformed
         //... Remove label ...//
-        if (jtiTRAQParams.getSelectedRow()<0)
-        {
+        if (jtiTRAQParams.getSelectedRow()<0){
             JOptionPane.showMessageDialog(this, "Please select the label to remove.", "Error", JOptionPane.ERROR_MESSAGE);
         }
-        else
-        {
+        else{
             DefaultTableModel model = (DefaultTableModel) jtiTRAQParams.getModel();
             model.removeRow(jtiTRAQParams.getSelectedRow());
             jtiTRAQParams.setModel(model);
@@ -1057,6 +1321,46 @@ public class QuantParamsView extends javax.swing.JPanel {
         model.insertRow(model.getRowCount(), new Object[]{"", "", "", "", "", "", "", "", ""});
         jtiTRAQParams.setModel(model);
     }//GEN-LAST:event_jbAddActionPerformed
+
+    private void jbAddFastaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddFastaActionPerformed
+        //... Adding files ...//
+        JFileChooser chooser = new JFileChooser(sWorkspace);
+        chooser.setDialogTitle("Select the file(s) to convert");
+
+        //... Applying file extension filters ...//
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Fasta Files (*.fasta)", "fasta");
+        chooser.setFileFilter(filter);
+        
+        //... Enable multiple file selection ...//
+        chooser.setMultiSelectionEnabled(true);
+        
+        if(chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+            File [] aFiles = chooser.getSelectedFiles();
+	    if (aFiles != null && aFiles.length > 0){
+                //... Fill JTable ...//
+                for(int iI=0; iI<aFiles.length; iI++){
+                    DefaultTableModel model = (DefaultTableModel) jtFastaFiles.getModel();
+                    model.insertRow(model.getRowCount(), new Object[]{aFiles[iI].getPath()});
+                    jtFastaFiles.setModel(model);
+                }
+            }
+        }
+    }//GEN-LAST:event_jbAddFastaActionPerformed
+
+    private void jbRemoveFastaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRemoveFastaActionPerformed
+        if (jtFastaFiles.getSelectedRow()<0){
+            JOptionPane.showMessageDialog(this, "Please select the file to remove", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        else{
+            DefaultTableModel model = (DefaultTableModel) jtFastaFiles.getModel();
+            model.removeRow(jtFastaFiles.getSelectedRow());
+            jtFastaFiles.setModel(model);
+        }
+    }//GEN-LAST:event_jbRemoveFastaActionPerformed
+
+    private void jbDefaultValues1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDefaultValues1ActionPerformed
+        jbDefaultValuesActionPerformed(null);
+    }//GEN-LAST:event_jbDefaultValues1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBox1;
@@ -1089,18 +1393,33 @@ public class QuantParamsView extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField6;
     private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JButton jbAdd;
+    private javax.swing.JButton jbAddFasta;
     private javax.swing.JButton jbDefaultValues;
+    private javax.swing.JButton jbDefaultValues1;
     private javax.swing.JButton jbRemove;
+    private javax.swing.JButton jbRemoveFasta;
     private javax.swing.JToggleButton jbSave;
+    private javax.swing.JComboBox jcbEnzyme;
     private javax.swing.JComboBox jcbIntegrationMethod;
+    private javax.swing.JLabel jlEnzyme;
+    private javax.swing.JLabel jlFastaFiles;
     private javax.swing.JLabel jlIntegrationMethod;
+    private javax.swing.JLabel jlMaxMolRange;
+    private javax.swing.JLabel jlMinMolRange;
+    private javax.swing.JLabel jlPepMolRange;
     private javax.swing.JLabel jlSearchScore;
+    private javax.swing.JLabel jlSearchScoreEmPAI;
     private javax.swing.JLabel jliTraqMaxMz;
     private javax.swing.JLabel jliTraqMinMz;
     private javax.swing.JPanel jpSILAC;
     private javax.swing.JPanel jpemPAI;
     private javax.swing.JPanel jpiTraq;
+    private javax.swing.JScrollPane jspFastaFiles;
+    private javax.swing.JTable jtFastaFiles;
+    private javax.swing.JTextField jtMaxMolRange;
+    private javax.swing.JTextField jtMinMolRange;
     private javax.swing.JTextField jtSearchScore;
+    private javax.swing.JTextField jtSearchScoreEmPAI;
     private javax.swing.JTable jtiTRAQParams;
     private javax.swing.JTextField jtiTraqMaxMz;
     private javax.swing.JTextField jtiTraqMinMz;
