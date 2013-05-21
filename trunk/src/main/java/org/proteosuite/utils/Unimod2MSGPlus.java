@@ -71,6 +71,7 @@ public class Unimod2MSGPlus {
                 String psiMs = mod.getTitle();
                 for(SpecificityT spec : mod.getSpecificity()){
                     String site = spec.getSite();
+                    String site2 = spec.getSite();
                     String position = spec.getPosition().value();
 
                     if(site.equals("N-term") || site.equals("C-term")){
@@ -95,7 +96,7 @@ public class Unimod2MSGPlus {
                         System.out.println("Position not recognized:" + position);
                     }
                     ArrayList al = new ArrayList();                                        
-                    modValue=psiMs+" ("+site+")";
+                    modValue=psiMs+" ("+site2+")";
 
                     al.add(modValue);
                     al.add(Double.toString(mass));

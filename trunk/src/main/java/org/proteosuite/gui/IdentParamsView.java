@@ -216,7 +216,7 @@ public class IdentParamsView extends javax.swing.JPanel {
 
         jlMaxMissedCleavage.setText("Tryptic peptides:");
 
-        jcMaxMissedCleavage.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "non-tryptic", "semi-tryptic", "fully-triptic peptides only" }));
+        jcMaxMissedCleavage.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "non-tryptic", "semi-tryptic", "fully-tryptic peptides only" }));
 
         jlMaxPepLen.setText("Max Peptide Length:");
 
@@ -747,7 +747,7 @@ public class IdentParamsView extends javax.swing.JPanel {
         }else{
             if((jcbProteinInference.isSelected())&&(!jchbSearchDecoy.isSelected()&&
                                                    (!jtDatabaseFile.getText().toLowerCase().contains("rev")))){
-                JOptionPane.showMessageDialog(this, "If you want to perform protein inference please thick 'Search decoy' \n" + 
+                JOptionPane.showMessageDialog(this, "If you want to perform protein inference please select 'Search decoy' \n" + 
                                                     "from the options above OR use your own decoy database fasta file using the \n" + 
                                                     "prefix/suffix REV in the file name and provide the Regular expression (Regex), e.g. XXX, etc.", "Error", JOptionPane.ERROR_MESSAGE);              
             }else{
