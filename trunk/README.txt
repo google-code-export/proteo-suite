@@ -1,7 +1,7 @@
 --------------------------------------------------------------------
 P R O T E O S U I T E   Ver 0.3.0                                                       
 --------------------------------------------------------------------
- Software for Analysis of Quantitative Proteomics Data (Ver 0.2.0)
+ Software for Analysis of Quantitative Proteomics Data (Ver 0.3.0)
 --------------------------------------------------------------------
 
 ---------------------
