@@ -37,25 +37,18 @@ import uk.ac.liv.unimod.UnimodT;
 
 public class Unimod2MSGPlus {
     
-    private static String UNIMOD_PATH =  "config/unimod.xml";
+    private static String UNIMOD_PATH =  "/resources/unimod.xml";
     private List<ModT> modList;
     private List<ArrayList> alMods = new ArrayList();
 
     //... Constructor ...//
     public Unimod2MSGPlus(){
         try{
-            String fileLocation = getClass().getClassLoader().getResource(UNIMOD_PATH).getPath();
-            boolean exists = (new File(fileLocation).exists());
-            if (exists){            
-                InputStream stream = new FileInputStream(fileLocation);
-                UnimodT unimod = unmarshal(UnimodT.class, stream);
+            InputStream stream = getClass().getResourceAsStream(UNIMOD_PATH);
+            UnimodT unimod = unmarshal(UnimodT.class, stream);
 
-                ModificationsT mods = unimod.getModifications();
-                modList = mods.getMod();                
-            }
-            else{
-                System.out.println("Invalid file location for unimod.xml");
-            }
+            ModificationsT mods = unimod.getModifications();
+            modList = mods.getMod();              
         }catch(Exception e){
             e.printStackTrace();
         }

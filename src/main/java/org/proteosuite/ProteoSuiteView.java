@@ -236,7 +236,7 @@ import uk.ac.liv.mzidlib.MzIdentMLLib;
 public class ProteoSuiteView extends JFrame {
 
     //... Project settings ...//
-    private final String sPS_Version = "0.3.0";
+    private final String sPS_Version = "0.3.1";
     private String sProjectName = "";
     private String sWorkspace = "";
     private String sPreviousLocation = "user.home";
@@ -296,6 +296,7 @@ public class ProteoSuiteView extends JFrame {
         sysutils.checkMemory("starting up");
         System.out.println("Java version: "+System.getProperty("java.version"));
         System.out.println("Architecture: "+System.getProperty("sun.arch.data.model")+"-bit");
+        System.out.println("Classpath: "+System.getProperty("java.class.path"));
         System.out.println("****************************************");        
         
         //... Main Menu icons ...//
@@ -827,7 +828,7 @@ public class ProteoSuiteView extends JFrame {
                                                             }
                                                         });
 
-                                                        jpToolBar.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+                                                        jpToolBar.setBorder(javax.swing.BorderFactory.createEtchedBorder(0));
                                                         jpToolBar.setPreferredSize(new java.awt.Dimension(933, 32));
 
                                                         jbNewProject.setToolTipText("New Project (Ctrl + N)");
@@ -1655,7 +1656,7 @@ public class ProteoSuiteView extends JFrame {
 
                                                             },
                                                             new String [] {
-                                                                "", "Index", "ID", "MS", "Base peak m/z", "Base peak int", "RT (sec)", "RT (min)"
+                                                                "", "Index", "ID", "MS", "Base peak m/z", "Base peak int", "RT (sec)", "Precurs m/z"
                                                             }
                                                         ));
                                                         jtMzML.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
@@ -1869,7 +1870,7 @@ public class ProteoSuiteView extends JFrame {
                                                         jspMzId.setDividerSize(1);
                                                         jspMzId.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
-                                                        jspMzIdDetail.setDividerLocation(400);
+                                                        jspMzIdDetail.setDividerLocation(300);
                                                         jspMzIdDetail.setDividerSize(1);
                                                         jspMzIdDetail.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
@@ -1987,8 +1988,8 @@ public class ProteoSuiteView extends JFrame {
                                                                     .addComponent(jcbPSM, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                     .addComponent(jlPeptideSpectrumMatches))
                                                                 .addGap(18, 18, 18)
-                                                                .addComponent(jspMzIdProtGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addGap(4, 4, 4))
+                                                                .addComponent(jspMzIdProtGroup, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(23, 23, 23))
                                                         );
 
                                                         jspMzIdDetail.setTopComponent(jpMzIdMenu);
@@ -2171,7 +2172,6 @@ public class ProteoSuiteView extends JFrame {
                                                         jpMascotXMLViewHeader.setLayout(jpMascotXMLViewHeaderLayout);
                                                         jpMascotXMLViewHeaderLayout.setHorizontalGroup(
                                                             jpMascotXMLViewHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addGap(0, 565, Short.MAX_VALUE)
                                                             .addGroup(jpMascotXMLViewHeaderLayout.createSequentialGroup()
                                                                 .addContainerGap()
                                                                 .addGroup(jpMascotXMLViewHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2184,7 +2184,6 @@ public class ProteoSuiteView extends JFrame {
                                                         );
                                                         jpMascotXMLViewHeaderLayout.setVerticalGroup(
                                                             jpMascotXMLViewHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addGap(0, 109, Short.MAX_VALUE)
                                                             .addGroup(jpMascotXMLViewHeaderLayout.createSequentialGroup()
                                                                 .addGap(18, 18, 18)
                                                                 .addGroup(jpMascotXMLViewHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -2230,7 +2229,7 @@ public class ProteoSuiteView extends JFrame {
                                                             }
                                                         });
 
-                                                        jtbPepMZQ.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+                                                        jtbPepMZQ.setBorder(javax.swing.BorderFactory.createEtchedBorder(0));
                                                         jtbPepMZQ.setFloatable(false);
                                                         jtbPepMZQ.setMaximumSize(new java.awt.Dimension(30, 23));
                                                         jtbPepMZQ.setMinimumSize(new java.awt.Dimension(30, 23));
@@ -2318,7 +2317,7 @@ public class ProteoSuiteView extends JFrame {
                                                             }
                                                         });
 
-                                                        jtbProtMZQ.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+                                                        jtbProtMZQ.setBorder(javax.swing.BorderFactory.createEtchedBorder(0));
                                                         jtbProtMZQ.setFloatable(false);
                                                         jtbProtMZQ.setMaximumSize(new java.awt.Dimension(30, 23));
                                                         jtbProtMZQ.setMinimumSize(new java.awt.Dimension(30, 23));
@@ -2406,7 +2405,7 @@ public class ProteoSuiteView extends JFrame {
                                                             }
                                                         });
 
-                                                        jtbFeatMZQ.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+                                                        jtbFeatMZQ.setBorder(javax.swing.BorderFactory.createEtchedBorder(0));
                                                         jtbFeatMZQ.setFloatable(false);
                                                         jtbFeatMZQ.setMaximumSize(new java.awt.Dimension(30, 23));
                                                         jtbFeatMZQ.setMinimumSize(new java.awt.Dimension(30, 23));
@@ -2578,7 +2577,7 @@ public class ProteoSuiteView extends JFrame {
                                                             .addComponent(jspMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, 639, Short.MAX_VALUE)
                                                         );
 
-                                                        jpProjectStatus.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), " Project Pipeline: ", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11), new java.awt.Color(102, 102, 102))); // NOI18N
+                                                        jpProjectStatus.setBorder(javax.swing.BorderFactory.createEtchedBorder());
                                                         jpProjectStatus.setForeground(new java.awt.Color(153, 153, 153));
                                                         jpProjectStatus.setPreferredSize(new java.awt.Dimension(102, 30));
 
@@ -2630,7 +2629,7 @@ public class ProteoSuiteView extends JFrame {
                                                                 .addComponent(jcbOutputFormat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(jlQuantFilesStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(491, Short.MAX_VALUE))
+                                                                .addContainerGap(499, Short.MAX_VALUE))
                                                         );
                                                         jpProjectStatusLayout.setVerticalGroup(
                                                             jpProjectStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3043,8 +3042,8 @@ public class ProteoSuiteView extends JFrame {
                                                             .addGroup(layout.createSequentialGroup()
                                                                 .addComponent(jpToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jpProjectStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addGap(1, 1, 1)
+                                                                .addComponent(jpProjectStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                .addGap(23, 23, 23)
                                                                 .addComponent(jpMainPanelView, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                                         );
 
@@ -3964,6 +3963,10 @@ public class ProteoSuiteView extends JFrame {
                                             System.out.println(sysutils.getTime()+" - Execution finished...");
                                             jtaLog.append("\n"+sysutils.getTime()+" - Execution finished...");
                                             
+                                            jbExportPepMZQExcel.setEnabled(true);
+                                            jbExportProtMZQExcel.setEnabled(true);
+                                            jbExportFeatMZQExcel.setEnabled(true);
+                            
                                             JOptionPane.showMessageDialog(ProteoSuiteView.this, "Process finished. Quantitation results can be viewed in the mzQuantML View.", "Information", JOptionPane.INFORMATION_MESSAGE);
                                         }
                                         progressBarDialog.setVisible(false);
@@ -4663,6 +4666,7 @@ public class ProteoSuiteView extends JFrame {
     }//GEN-LAST:event_jbExportMzIdentMLExcelMouseClicked
 
     private void jmRunIdentAnalysisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jmRunIdentAnalysisActionPerformed
+                                    
         //... Check if there is a valid workspace ...//        
         boolean bRun = false;
         boolean isOK = getWorkspace();      
@@ -4802,10 +4806,7 @@ public class ProteoSuiteView extends JFrame {
                                         mzlib.init(args);
                                         System.out.println(sysutils.getTime()+" - Setting Threshold");
                                         jtaLog.append("\n"+sysutils.getTime()+" - Setting Threshold");
-                                        String[] args2 = {"Threshold", Path.replace(".mzid", "_fdr.mzid"), Path.replace(".mzid", "_fdr_thresh.mzid"), "-isPSMThreshold", "true", "-cvAccessionForScoreThreshold", "\"MS:1001874\"", "-threshValue", "0.01", "-betterScoresAreLower", "true", "-deleteUnderThreshold", "false", "-compress", "false"};
-                                        for (int iJ=0; iJ<args2.length; iJ++){
-                                            System.out.println("args="+args2[iJ].toString());
-                                        }
+                                        String[] args2 = {"Threshold", Path.replace(".mzid", "_fdr.mzid"), Path.replace(".mzid", "_fdr_thresh.mzid"), "-isPSMThreshold", "true", "-cvAccessionForScoreThreshold", "MS:1001874", "-threshValue", "0.01", "-betterScoresAreLower", "true", "-deleteUnderThreshold", "false", "-compress", "false"};
                                         mzlib.init(args2);
                                         System.out.println(sysutils.getTime()+" - Grouping proteins");
                                         jtaLog.append("\n"+sysutils.getTime()+" - Grouping proteins");
@@ -6378,12 +6379,14 @@ public class ProteoSuiteView extends JFrame {
                             }
                         }
                         int iI=0;
-                        while (iI < mzNumbers.length){
-                            if (intenNumbers[iI].doubleValue() > 0){ //... Removing zero values ...//                        
-                                mz[iCounter] = mzNumbers[iI].floatValue();                                              
-                                intensities[iCounter] = intenNumbers[iI].floatValue();
-                                art[iCounter] = rt;
-                                iCounter++;                      
+                        while (iI<mzNumbers.length){
+                            if (intenNumbers[iI].doubleValue() > 0){ //... Removing zero values ...//                                                        
+                                if(iCounter<200000){
+                                    mz[iCounter] = mzNumbers[iI].floatValue();                                              
+                                    intensities[iCounter] = intenNumbers[iI].floatValue();
+                                    art[iCounter] = rt;
+                                    iCounter++;
+                                }    
                             }
                             iI = iI + 10;                              
                         }
@@ -6580,14 +6583,25 @@ public class ProteoSuiteView extends JFrame {
                             selected = sii;
                             iCount++;
                             Peptide peptide = selected.getPeptide();
+                            //System.out.println("Peptide="+peptide.getPeptideSequence());
                             if (peptide != null) {
                                 List<PeptideEvidenceRef> pepRefList = selected.getPeptideEvidenceRef();
                                 sAccesion = "";
+                                //System.out.println("Peptide evidence Refs="+pepRefList.size());    
                                 if (pepRefList.size() > 0){
-                                    for(PeptideEvidenceRef per : pepRefList){
-                                        PeptideEvidence pe = per.getPeptideEvidence();
-                                        DBSequence dbs = pe.getDBSequence();
-                                        sAccesion = sAccesion + dbs.getAccession().replace("|", "-") + ";";
+                                    for(PeptideEvidenceRef per : pepRefList){                                        
+                                        //System.out.println("Here is the problem");                                            
+                                        //System.out.println("per="+per.getPeptideEvidenceRef());
+                                        PeptideEvidence pe;
+                                        try {
+                                            pe = unmarshaller.unmarshal(PeptideEvidence.class, per.getPeptideEvidenceRef());
+                                            //System.out.println("pe="+pe.getDBSequenceRef());
+                                            DBSequence dbs = unmarshaller.unmarshal(DBSequence.class, pe.getDBSequenceRef());
+                                            //System.out.println("dbs="+dbs.getAccession());
+                                            sAccesion = sAccesion + dbs.getAccession().replace("|", "-") + ";";                                            
+                                        } catch (JAXBException ex) {
+                                            Logger.getLogger(ProteoSuiteView.class.getName()).log(Level.SEVERE, null, ex);
+                                        }                                       
                                     }
                                 }else{
                                     sAccesion = "N/A";
@@ -7023,7 +7037,7 @@ public class ProteoSuiteView extends JFrame {
                 public void run(){
                     //... Loading table ...//
                     DefaultTableModel model = new DefaultTableModel(){
-                        Class[] types = new Class[]{Integer.class, String.class, String.class, Float.class, Float.class, Float.class, Float.class};
+                        Class[] types = new Class[]{Integer.class, String.class, String.class, Float.class, Float.class, Float.class, String.class};
                         @Override  
                         public Class getColumnClass(int columnIndex) {  
                             return types [columnIndex];  
@@ -7036,7 +7050,7 @@ public class ProteoSuiteView extends JFrame {
                     model.addColumn("Base peak m/z");
                     model.addColumn("Base peak int");
                     model.addColumn("RT (sec)");
-                    model.addColumn("RT (min)");
+                    model.addColumn("Precurs m/z");
                     String sOutput="";
 
                     MzMLUnmarshaller unmarshaller = aMzMLUnmarshaller.get(iIndexRef);
@@ -7118,21 +7132,49 @@ public class ProteoSuiteView extends JFrame {
                                 }
                             }
                         }
+                        PrecursorList plist = spectrum.getPrecursorList(); //... Get precursor ion ...//
+                        float precursMZ = 0.0f;
+                        if (plist != null){
+                            if (plist.getCount().intValue() == 1){
+                                List<CVParam> scanPrecParam = plist.getPrecursor().get(0).getSelectedIonList().getSelectedIon().get(0).getCvParam();
+
+                                //... Detect parent ion m/z and charge ...//
+                                for (Iterator lCVParamIterator = scanPrecParam.iterator(); lCVParamIterator.hasNext();){
+                                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                                    if (lCVParam.getAccession().equals("MS:1000744")){
+                                        precursMZ = Float.parseFloat(lCVParam.getValue().trim());
+                                    }
+                                }
+                            }
+                        }
+                        
                         Object color = null;
                         if (msLevel.equals("1")){
                             color = new Color(204, 192, 218);
                         }else{
                             color = new Color(252, 213, 218);
                         }
-                        model.insertRow(model.getRowCount(), new Object[]{
-                            Integer.parseInt(spectrum.getIndex().toString()), 
-                            spectrum.getId().toString(),
-                            msLevel,
-                            Float.parseFloat(String.format("%.2f", basePeakMZ)),
-                            Float.parseFloat(String.format("%.2f", basePeakInt)),
-                            Float.parseFloat(String.format("%.2f", rt)),
-                            Float.parseFloat(String.format("%.2f", rtMin))                
-                            });
+                        if(precursMZ>0.0){
+                            model.insertRow(model.getRowCount(), new Object[]{
+                                Integer.parseInt(spectrum.getIndex().toString()), 
+                                spectrum.getId().toString(),
+                                msLevel,
+                                Float.parseFloat(String.format("%.2f", basePeakMZ)),
+                                Float.parseFloat(String.format("%.2f", basePeakInt)),
+                                Float.parseFloat(String.format("%.2f", rt)),
+                                String.format("%.4f", precursMZ)                
+                                });                            
+                        }else{
+                            model.insertRow(model.getRowCount(), new Object[]{
+                                Integer.parseInt(spectrum.getIndex().toString()), 
+                                spectrum.getId().toString(),
+                                msLevel,
+                                Float.parseFloat(String.format("%.2f", basePeakMZ)),
+                                Float.parseFloat(String.format("%.2f", basePeakInt)),
+                                Float.parseFloat(String.format("%.2f", rt)),
+                                ""                
+                                });
+                        }
                         iCount++;
                         //jtMzML.setDefaultRenderer(Color.class, new MSLevelRender(true, msLevel));
                     }
@@ -7821,7 +7863,7 @@ public class ProteoSuiteView extends JFrame {
         model5.addColumn("Base peak m/z");
         model5.addColumn("Base peak int");
         model5.addColumn("RT (sec)");
-        model5.addColumn("RT (min)");
+        model5.addColumn("Precurs m/z");
         
         DefaultTableModel model6 = new DefaultTableModel();
         jtMGF.setModel(model6);     
@@ -9172,6 +9214,7 @@ public class ProteoSuiteView extends JFrame {
      --------------------------------------------------------*/    
     private void writeXTrackerQuant(String sPlugin) 
     {       
+        System.out.println("Quant="+sPlugin);
         String sFileName = sWorkspace + "/xTracker_" + sPlugin + ".xtp";
         
         //... Read files using XPath xml parser ...//
@@ -9357,7 +9400,7 @@ public class ProteoSuiteView extends JFrame {
             {
                 System.err.println("Error: " + e.getMessage());
             }   
-        } else if (sPlugin.equals("emPAIquantitation")){
+        } else if (sPlugin.startsWith("emPAI")){
             
             //... Write configuration file ...//
             try{
