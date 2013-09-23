@@ -69,7 +69,7 @@
 					<SearchScore>20</SearchScore>
 					<Enzyme>Trypsin</Enzyme>
 					<FastaFiles>
-						<File>D:/Data/D-015-emPai-AB/uniprot_sprot.fasta</File>
+						<File>D:/Data/D-001-iTRAQ-4plex-AB/ksl_itraq2.fasta</File>
 					</FastaFiles>
 				</technique>
 			</techniques>

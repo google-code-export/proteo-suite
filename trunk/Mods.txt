@@ -1,6 +1,3 @@
-NumMods=5
+NumMods=2
 57.021464,C,fix,any,Carbamidomethyl
-144.102063,K,fix,any,iTRAQ4plex
-144.102063,*,fix,N-term,iTRAQ4plex
 15.994915,M,opt,any,Oxidation
-144.102063,Y,opt,any,iTRAQ4plex
