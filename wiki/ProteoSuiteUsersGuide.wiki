@@ -48,6 +48,6 @@ Tip: You can create a shortcut to this file and place it into your desktop.
 
 == Running ProteoSuite ==
 
-Try the [http://www.proteosuite.org/?q=tutorials tutorials] described on our [http://www.proteosuite.org/ official website]. 
+Try the [http://www.proteosuite.org/?q=tutorials tutorials] described in our [http://www.proteosuite.org/ official website]. 
 <br />
 <br />
