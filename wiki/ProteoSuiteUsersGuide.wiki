@@ -11,7 +11,7 @@ Use one of the following set of instructions depending on your operating system.
 
 === Windows ===
 
-  * Download the latest release at http://code.google.com/p/proteo-suite/downloads/list.
+  * Download the latest release at http://proteosuite.org/?q=downloads.
 
   * Save the *`ProteoSuite-X.X.X.zip`* file into one of your local drives. 
 
@@ -23,7 +23,7 @@ Tip: You can create a shortcut to this file and place it into your desktop.
 
 === Linux ===
 
-  * Download the latest release at http://code.google.com/p/proteo-suite/downloads/list.
+  * Download the latest release at http://proteosuite.org/?q=downloads.
 
   * Save the *`ProteoSuite-X.X.X.zip`* file into one of your local drives. 
 
@@ -35,7 +35,7 @@ Tip: You can create a shortcut to this file and place it into your desktop.
    
 === OSX ===
 
-  * Download the latest release at http://code.google.com/p/proteo-suite/downloads/list.
+  * Download the latest release at http://proteosuite.org/?q=downloads.
 
   * Save the *`ProteoSuite-X.X.X.zip`* file into one of your local drives. 
 
