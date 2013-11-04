@@ -146,7 +146,7 @@ public class MzML2MGF {
                                 sOut = "TITLE=Scan:" + spectrum.getIndex() + ", (rt:" + rt + "), (id:" + spectrum.getId() + ")";
                                 out.write(sOut);
                                 out.newLine();
-                                System.out.println(SysUtils.getTime()+" - Scan="+sOut);
+                                //System.out.println(SysUtils.getTime()+" - Scan="+sOut);
 
                                 sOut = "PEPMASS=" + String.format("%.4f", parIonMz) + " " + String.format("%.4f", peakIntensity);
                                 out.write(sOut);

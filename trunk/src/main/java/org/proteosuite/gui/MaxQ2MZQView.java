@@ -24,7 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.datatype.DatatypeConfigurationException;
 import org.proteosuite.utils.ProgressBarDialog;
-import uk.ac.liv.maxquantmzquantmlconvertor.MaxquantMzquantmlConvertor;
+//import uk.ac.liv.maxquantmzquantmlconvertor.MaxquantMzquantmlConvertor;
 
 /**
  * Form to capture all MzML files to be converted into MGF.
@@ -183,13 +183,13 @@ public class MaxQ2MZQView extends javax.swing.JPanel {
                             progressBarDialog.setTitle("Converting folder " + jtWorkspace.getText());
                             progressBarDialog.setTaskName("Creating mzq file ...");
                             progressBarDialog.repaint();
-                            try {
-                                MaxquantMzquantmlConvertor convert = new MaxquantMzquantmlConvertor(jtWorkspace.getText(), outputFn);
-                            } catch (IOException ex) {
-                                Logger.getLogger(MaxQ2MZQView.class.getName()).log(Level.SEVERE, null, ex);
-                            } catch (DatatypeConfigurationException ex) {
-                                Logger.getLogger(MaxQ2MZQView.class.getName()).log(Level.SEVERE, null, ex);
-                            }
+//                            try {
+//                                MaxquantMzquantmlConvertor convert = new MaxquantMzquantmlConvertor(jtWorkspace.getText(), outputFn);
+//                            } catch (IOException ex) {
+//                                Logger.getLogger(MaxQ2MZQView.class.getName()).log(Level.SEVERE, null, ex);
+//                            } catch (DatatypeConfigurationException ex) {
+//                                Logger.getLogger(MaxQ2MZQView.class.getName()).log(Level.SEVERE, null, ex);
+//                            }
                             progressBarDialog.setVisible(false);
                             progressBarDialog.dispose();  
                             JOptionPane.showMessageDialog(MaxQ2MZQView.this, "Your file was created successfully! ", "Information", JOptionPane.INFORMATION_MESSAGE);

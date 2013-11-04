@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.datatype.DatatypeConfigurationException;
 import org.proteosuite.utils.ProgressBarDialog;
-import uk.ac.liv.progenmzquantmlconvertor.ProgenMzquantmlConvertor;
+//import uk.ac.liv.progenmzquantmlconvertor.ProgenMzquantmlConvertor;
 
 /**
  * Plugin to convert MaxQuant files to mzQuantML
@@ -214,13 +214,13 @@ public class Prog2MZQView extends javax.swing.JPanel {
                         progressBarDialog.setTitle("Converting files");
                         progressBarDialog.setTaskName("Creating mzq file ...");
                         progressBarDialog.repaint();
-                        try {
-                            String fileName = ProgenMzquantmlConvertor.createOutput(flFn, plFn, idFn, outputFn, false);
-                        } catch (IOException ex) {
-                            Logger.getLogger(Prog2MZQView.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (DatatypeConfigurationException ex) {
-                            Logger.getLogger(Prog2MZQView.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+//                        try {
+//                            String fileName = ProgenMzquantmlConvertor.createOutput(flFn, plFn, idFn, outputFn, false);
+//                        } catch (IOException ex) {
+//                            Logger.getLogger(Prog2MZQView.class.getName()).log(Level.SEVERE, null, ex);
+//                        } catch (DatatypeConfigurationException ex) {
+//                            Logger.getLogger(Prog2MZQView.class.getName()).log(Level.SEVERE, null, ex);
+//                        }
 
                         progressBarDialog.setVisible(false);
                         progressBarDialog.dispose();
