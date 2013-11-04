@@ -256,8 +256,6 @@ public class ProteoSuiteView extends JFrame {
     private ArrayList<MzMLUnmarshaller> aMzMLUnmarshaller = new ArrayList<MzMLUnmarshaller>();
     private ArrayList<MzIdentMLUnmarshaller> aMzIDUnmarshaller = new ArrayList<MzIdentMLUnmarshaller>();
     private ArrayList<MzQuantMLUnmarshaller> aMzQUnmarshaller = new ArrayList<MzQuantMLUnmarshaller>();
-    private ArrayList<MzQuantML> aMzQML = new ArrayList<MzQuantML>();
-    private MzQuantML mzQuantML = null; //... Project class ...//
     
     public ProteoSuiteView(){
         
@@ -3941,12 +3939,8 @@ public class ProteoSuiteView extends JFrame {
                                             jtaLog.append("\n"+sysutils.getTime()+" - ****** Running x-Tracker *****");                                            
                                             run = new xTracker(sWorkspace.replace("\\", "/") + "/" + sProjectName, sWorkspace.replace("\\", "/"));
                                             
-                                            //... Load the mzQuantML file into memory (Containing results) ...//
+                                            //... Load the mzQuantML file into memory (With results included) ...//
                                             File xmlFile = new File(sWorkspace + "/" +  sProjectName);
-                                            MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(xmlFile);
-                                            mzQuantML = unmarshaller.unmarshall();
-                                            aMzQML.clear();
-                                            aMzQML.add(mzQuantML);
                                             aMzQUnmarshaller.clear();
                                             final DefaultTableModel model = new DefaultTableModel();
                                             jtQuantFiles.setModel(model);
@@ -4756,7 +4750,9 @@ public class ProteoSuiteView extends JFrame {
                                 int iI=0;
                                 for (Map.Entry<String, String> entry : map.entrySet()) {
                                     argv[iI] = entry.getKey();
+                                    System.out.print(" " + argv[iI]);
                                     argv[iI+1] = entry.getValue();
+                                    System.out.print(" " + argv[iI+1]);
                                     iI = iI+2;
                                 }
 
@@ -6492,16 +6488,17 @@ public class ProteoSuiteView extends JFrame {
 
                 //... File Content ...//
                 sOutput = sOutput + "<b>Analysis Software:</b><br />";
-                AnalysisSoftwareList softwareList = unmarshaller.unmarshal(MzIdentMLElement.AnalysisSoftwareList);
                 String sSoftwareID = "Default";
-                if(softwareList!=null){
-                    for(AnalysisSoftware software : softwareList.getAnalysisSoftware()){
-                        uk.ac.ebi.jmzidml.model.mzidml.CvParam cvSoftware = software.getSoftwareName().getCvParam();
-                        sOutput = sOutput + " - " + cvSoftware.getName().trim()+"<br />";
-                        sSoftwareID = cvSoftware.getAccession();
-                    }
-                }
+                HashMap<String, AnalysisSoftware> analysisSoftwareHashMap;
+                analysisSoftwareHashMap = new HashMap();
 
+                Iterator<AnalysisSoftware> iterAnalysisSoftware = unmarshaller.unmarshalCollectionFromXpath(MzIdentMLElement.AnalysisSoftware);
+                while (iterAnalysisSoftware.hasNext()) {
+                    AnalysisSoftware analysisSoftware = iterAnalysisSoftware.next();
+                    analysisSoftwareHashMap.put(analysisSoftware.getId(), analysisSoftware);
+                    sOutput = sOutput + " - " + analysisSoftware.getName().trim()+"<br />";
+                    sSoftwareID = analysisSoftware.getVersion();
+                }                
                 ArrayList alClasses = new ArrayList();
                 alClasses.add(Integer.class);
                 alClasses.add(String.class);
@@ -6740,12 +6737,12 @@ public class ProteoSuiteView extends JFrame {
             }
         }.start();            
     }    
-    /*-----------------------------------------------
+    /*--------------------------------------------------------
      * Display MZQ data
-     * @param iIndex - Index to the aMzQML arraylist 
+     * @param iIndex - Index to the aMzQUnmarshaller arraylist 
      * @param sFile - File name
      * @return void
-     ------------------------------------------------*/
+     ---------------------------------------------------------*/
     private void loadMzQuantMLView(int iIndex, String sFile) 
     {
         if ((!jtQuantFiles.getValueAt(iIndex, 0).toString().equals(jlFileNameMzQText.getText()))||(jtPeptideQuant.getRowCount()<=0)){        
@@ -6775,20 +6772,24 @@ public class ProteoSuiteView extends JFrame {
                     model2.addColumn("Peptide");
                     model3.addColumn("Feature");
                     
-                    MzQuantMLUnmarshaller unmarshaller = aMzQUnmarshaller.get(iIndexRef);                               
+                    MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(jtQuantFiles.getValueAt(0, iIndexRef).toString());
+                    MzQuantML mzq = unmarshaller.unmarshall();
+                    
+                    System.out.println(sysutils.getTime()+" - (Loading mzQuantMLView)");
                     System.out.println(sysutils.getTime()+" - MZQ elements="+aMzQUnmarshaller.size());
-                    System.out.println(sysutils.getTime()+" - Unmarshalling element="+iIndexRef);
+                    System.out.println(sysutils.getTime()+" - Unmarshalling element "+iIndexRef+" from the array");
                     
                     //... File Name and Version ...//
                     jlFileNameMzQText.setText(sFileRef);
                     System.out.println(sysutils.getTime()+" - Loading "+sFileRef);
                     String sOutput="";
                     String sMessage="";
-                    sOutput = "<b>mzML Version:</b> <font color='red'>" + unmarshaller.getMzQuantMLVersion() + "</font><br />";
-                    System.out.println(sysutils.getTime()+" - mzML Version: " + unmarshaller.getMzQuantMLVersion());
+                    sOutput = "<b>mzML Version:</b> <font color='red'>" + mzq.getVersion() + "</font><br />";
+                    System.out.println(sysutils.getTime()+" - mzML Version: " + mzq.getVersion());
                     
-                    sOutput = sOutput + "<b>Software List:</b><br />";
+                    sOutput = sOutput + "<b>Software List:</b><br />";                    
                     SoftwareList softwareList = unmarshaller.unmarshal(MzQuantMLElement.SoftwareList);
+                    System.out.println(sysutils.getTime()+" - Software List Size: "+softwareList.getSoftware().size());
                     if(softwareList!=null){
                         for(Software software : softwareList.getSoftware()){
                             List<CvParam> cvlSoftware = software.getCvParam();
@@ -6796,7 +6797,7 @@ public class ProteoSuiteView extends JFrame {
                                 sOutput = sOutput + " - " + cvp.getName().trim()+"<br />";
                             }
                         }
-                    }                    
+                    }
                     
                     sOutput = sOutput + "<b>Data Processing:</b><br />";
                     DataProcessingList dpList = unmarshaller.unmarshal(MzQuantMLElement.DataProcessingList);
@@ -6846,7 +6847,7 @@ public class ProteoSuiteView extends JFrame {
                     //... Fill rows ...//           
                     Map<String, ArrayList<String>> hmProtein = new HashMap<String, ArrayList<String>>();
                     
-                    sMessage = sysutils.getTime()+" - Reading Protein Quantitation ";
+                    sMessage = sysutils.getTime()+" - Reading Protein Quantitation ...";
                     System.out.println(sMessage);
                     sOutput = sOutput + sMessage+"\n";
 
@@ -6914,7 +6915,7 @@ public class ProteoSuiteView extends JFrame {
         //============================//
         //... Peptide Quantitation ...//                
         //============================//
-                        sMessage = sysutils.getTime()+" - Reading Peptide Quantitation ";
+                        sMessage = sysutils.getTime()+" - Reading Peptide Quantitation ... ";
                         System.out.println(sMessage);
                         sOutput = sOutput + sMessage+"\n";                        
                         //... Based on the the assay list and study variables we will include the different columns ...//                
@@ -6959,7 +6960,7 @@ public class ProteoSuiteView extends JFrame {
         //============================//
         //... Feature Quantitation ...//                
         //============================//
-                        sMessage = sysutils.getTime()+" - Reading Feature Quantitation ";
+                        sMessage = sysutils.getTime()+" - Reading Feature Quantitation ... ";
                         System.out.println(sMessage);
                         sOutput = sOutput + sMessage+"\n";                        
                         //... Based on the the assay list and study variables we will include the different columns ...//
@@ -7372,7 +7373,7 @@ public class ProteoSuiteView extends JFrame {
             int numMods = 1;
             boolean isVariableMod = false;
             int dbCharge = -1;
-            String mascotPos = "";                     
+            String mascotPos = "";
             int iProteins = 0;
             int iPeptides = 0;
             String sChainToInsert="";
@@ -7738,7 +7739,7 @@ public class ProteoSuiteView extends JFrame {
      * @return void
      --------------------------------------------*/
     private void initProjectValues() 
-    {
+    {        
         //... Loading values from config file ...//
         initSettings();                 //... From config file (workspace) ...//
         initProjectStatusIcons();       //... Project pipeline ...//
@@ -7998,19 +7999,14 @@ public class ProteoSuiteView extends JFrame {
 	    if (file != null){
                 if (file.getName().toLowerCase().indexOf(".mzq") >0){                    
                     //... Unmarshall mzquantml file ...//
-                    System.out.println(sysutils.getTime()+" - Validating " + file.getPath());
+                    System.out.println(sysutils.getTime()+" - (Validation) Validating " + file.getPath());
                     Validator validator = XMLparser.getValidator(MZQ_XSD);
                     boolean validFlag = XMLparser.validate(validator, file.getPath());
                     if(!validFlag){
-                        JOptionPane.showMessageDialog(this, "The file " + file + " is not valid. \n Please make sure that the file is a valid mzq file (Release "+MZQ_XSD+")", "Error", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "The file " + file + " is not valid. \n Please make sure that the file is a valid mzq file (Release "+MZQ_XSD+")", "Error", JOptionPane.ERROR_MESSAGE);
                     }
-                    else{            
-                        MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(file);
-//                        mzQuantML = new MzQuantML();
-//                        mzQuantML = unmarshaller.unmarshall();
-//                        System.out.println("version"+unmarshaller.getMzQuantMLVersion());
-//                        aMzQML.clear();
-//                        aMzQML.add(mzQuantML);
+                    else{
+                        boolean isOK = false;
                         aMzQUnmarshaller.clear();
                         final DefaultTableModel model = new DefaultTableModel();
                         jtQuantFiles.setModel(model);
@@ -8018,16 +8014,22 @@ public class ProteoSuiteView extends JFrame {
                         model.addColumn("Path");
                         model.addColumn("Type");
                         model.addColumn("Version");
-                        unmarshalMzQMLFile(model, file);      
-                        
-                        loadProjectFromMZQ(unmarshaller, file);                                                
-                        bProjectModified = false;
-
-                        loadMzQuantMLView(0, file.getName());
-                        sProjectName = file.getName();
-                        uptStatusPipeline();
-                        uptSaveProjectStatus();
-                        uptCloseProjectStatus();
+                        isOK = unmarshalMzQMLFile(model, file);
+                        if (isOK){ 
+                            isOK = loadProjectFromMZQ(0, file);                                                
+                            if (isOK){
+                                bProjectModified = false;
+                                
+                                sProjectName = file.getName();
+                                uptStatusPipeline();
+                                uptSaveProjectStatus();
+                                uptCloseProjectStatus();                                
+                            }
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(this, "ProteoSuite was unable to unmarshall this file."+
+                                    "Please make sure you have selected a valid file.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
             }
@@ -8035,11 +8037,11 @@ public class ProteoSuiteView extends JFrame {
     }    
     /*----------------------------------------------
      * Load project from mzq 
-     * @param unmarshaller - mzQuantML unmarshaller 
+     * @param iIndex - Index to the aMzQUnmarshaller arraylist 
      * @param sFile - File name 
-     * @return void
+     * @boolean Success
      ----------------------------------------------*/
-    private void loadProjectFromMZQ(MzQuantMLUnmarshaller unmarshaller, File sFile){
+    private boolean loadProjectFromMZQ(int iIndex, File sFile){
         
         final DefaultTableModel model = new DefaultTableModel();
         final DefaultTableModel model2 = new DefaultTableModel();
@@ -8057,7 +8059,7 @@ public class ProteoSuiteView extends JFrame {
         model2.addColumn("Raw File");
                 
         final File sFileRef = sFile;
-        final MzQuantMLUnmarshaller funmarshaller = unmarshaller;
+        final int iIndexRef = iIndex;
         final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "LoadProjectFromMZQ");
         final Thread thread = new Thread(new Runnable(){
             @Override
@@ -8071,13 +8073,21 @@ public class ProteoSuiteView extends JFrame {
         new Thread("LoadProjectFromMZQ"){
             @Override
             public void run(){
-                System.out.println(sysutils.getTime()+" - Loading settings from the mzq file ...");                                                   
+                System.out.println(sysutils.getTime()+" - (From Project) Loading settings from the mzq file ...");                                                   
                             
                 String sGroup = "";
-                InputFiles inputFiles = funmarshaller.unmarshal(MzQuantMLElement.InputFiles);
+
+                MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(jtQuantFiles.getValueAt(0, 1).toString());
+                MzQuantML mzq = unmarshaller.unmarshall();
+                System.out.println(sysutils.getTime()+" - MzQuantML version="+mzq.getVersion());
+                System.out.println(sysutils.getTime()+" - ID="+mzq.getId());
+                System.out.println(sysutils.getTime()+" - Name="+mzq.getName());
+                
+                InputFiles inputFiles = mzq.getInputFiles();
                 
                 //... Load raw files ...//
                 List<RawFilesGroup> rawFilesGroup = inputFiles.getRawFilesGroup();
+                System.out.println(sysutils.getTime()+" - RawFilesGroup="+rawFilesGroup.size());
                 int iMGFRaw=0, iMzMLRaw=0;
                 for(RawFilesGroup group:rawFilesGroup){                    
                     sGroup = group.getId();
@@ -8127,7 +8137,7 @@ public class ProteoSuiteView extends JFrame {
                         show2DPlot(0, jtRawFiles.getValueAt(0, 1).toString());
                     }
                 }
-                //... Load raw files ...//
+                //... Load ident files ...//
                 List<IdentificationFile> idFilesList = inputFiles.getIdentificationFiles().getIdentificationFile();
                 System.out.println(sysutils.getTime()+" - Loading identification files");
                 int iXMLIdent=0, iMzID=0;
@@ -8179,9 +8189,12 @@ public class ProteoSuiteView extends JFrame {
                 renderIdentFiles();
                 uptStatusPipeline();
                 progressBarDialog.setVisible(false);
-                progressBarDialog.dispose();
-            }
+                progressBarDialog.dispose();    
+                
+                loadMzQuantMLView(0, sFileRef.getName());
+            }            
         }.start();
+        return true;
     }     
     /* ------------------------------------------------
      * Unmarshall mzML file 
@@ -8239,7 +8252,7 @@ public class ProteoSuiteView extends JFrame {
         aMzQUnmarshaller.add(unmarshaller);
             
         model.insertRow(model.getRowCount(), new Object[]{xmlFile.getName(), xmlFile.getPath().replace("\\", "/"), "mzq", mzQVersion});            
-        System.out.println(sysutils.getTime()+" - "+xmlFile.getName() + " was unmarshalled successfully!");
+        System.out.println(sysutils.getTime()+" - (Unmarshalling) "+xmlFile.getName() + " was unmarshalled successfully!");
         return true;
     }    
     /*------------------------------------------------

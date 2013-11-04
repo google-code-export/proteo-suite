@@ -245,8 +245,10 @@ public class MzMLCompress {
             mzml.setDataProcessingList(dataProcList);
             mzml.setRun(runFileW);       
             MzMLMarshaller marshaller = new MzMLMarshaller();
-
-            Writer writer = new FileWriter(sPath+"\\"+xmlFile.getName());
+            
+            String sNumpress = xmlFile.getName();
+            sNumpress = sNumpress.replace(".mzML", "_compress.mzML");
+            Writer writer = new FileWriter(sPath+"\\"+sNumpress);
             marshaller.marshall(mzml, writer);
             writer.close();     
     }

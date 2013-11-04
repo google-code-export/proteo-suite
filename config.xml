@@ -2,7 +2,7 @@
 <ProteoSuiteApplication xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="ProteoSuiteApplication.xsd" >
     <configSettings>
         <generalSettings>
-            <workspace>D:\Data\D-001-iTRAQ-4plex-AB</workspace>
+            <workspace>D:\3_ProteoSuite\D-001-iTRAQ-4plex-AB</workspace>
         </generalSettings>
         <xTrackerSettings>
             <plugins>

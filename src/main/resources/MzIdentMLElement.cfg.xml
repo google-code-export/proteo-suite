@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!-- FOR x-TRACKER by FG --
+<!-- FOR x-TRACKER by FG 
 Configurations for various properties of model classes.
 
         - 'autoRefResolving' determines if references within a class are automatically resolved. For example,
