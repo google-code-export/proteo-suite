@@ -1023,8 +1023,14 @@
                                                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                                                   <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new String [] {&#xa;        &quot;Name&quot;, &quot;Path&quot;, &quot;Type&quot;, &quot;Version&quot;, &quot;Raw File&quot;&#xa;    }&#xa;)" type="code"/>
                                                 </Property>
+                                                <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                                                  <TableColumnModel selectionModel="0"/>
+                                                </Property>
                                                 <Property name="selectionModel" type="javax.swing.ListSelectionModel" editor="org.netbeans.modules.form.editors2.JTableSelectionModelEditor">
                                                   <JTableSelectionModel selectionMode="0"/>
+                                                </Property>
+                                                <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
+                                                  <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                                                 </Property>
                                               </Properties>
                                               <Events>
@@ -2760,6 +2766,7 @@
                                                   <SubComponents>
                                                     <Component class="javax.swing.JTable" name="jtMzIDProtGroup">
                                                       <Properties>
+                                                        <Property name="autoCreateRowSorter" type="boolean" value="true"/>
                                                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                                                           <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {&#xa;&#xa;    },&#xa;    new Object [] {&#xa;        &quot;ID&quot;, &quot;Name&quot;, &quot;Protein Accesions&quot;, &quot;Representative Protein&quot;, &quot;Scores&quot;, &quot;P-values&quot;, &quot;Number of peptides&quot;, &quot;Is Decoy&quot;, &quot;passThreshold&quot;&#xa;    }&#xa;)" type="code"/>
                                                         </Property>
