@@ -1992,6 +1992,7 @@ public class ProteoSuiteView extends JFrame {
 
                                                         jspMzIdDetail.setTopComponent(jpMzIdMenu);
 
+                                                        jtMzIDProtGroup.setAutoCreateRowSorter(true);
                                                         jtMzIDProtGroup.setModel(new javax.swing.table.DefaultTableModel(
                                                             new Object [][] {
 
@@ -3526,14 +3527,26 @@ public class ProteoSuiteView extends JFrame {
                                     System.out.println(sMessage);
                                     sOutput = sOutput + sMessage+"\n";  
                                     jtaLog.setText(sOutput);
-                                    isOK = unmarshalMzQMLFile(model, xmlFile);
-                                    if (!isOK){ //... Invalid mzq file ...//
-                                        break;
+                                    
+                                    try{
+                                        isOK = unmarshalMzQMLFile(model, xmlFile);
+                                        if (!isOK){ //... Invalid mzq file ...//
+                                            break;
+                                        }
+                                        
+                                                    
+                                        sMessage = sysutils.getTime()+" - Unmarshalling ends ";
+                                        System.out.println(sMessage);
+                                        sOutput = sOutput + sMessage+"\n";
+                                        jtaLog.setText(sOutput);
                                     }
-                                    sMessage = sysutils.getTime()+" - Unmarshalling ends ";
-                                    System.out.println(sMessage);
-                                    sOutput = sOutput + sMessage+"\n";
-                                    jtaLog.setText(sOutput);
+                                    catch(Exception e){
+                                        jtaLog.append("Error reading mzQuantML - the mzQuantML file may be invalid.\nError: ");
+                                        jtaLog.append(e.getMessage());
+                                        e.printStackTrace();
+                                        isOK = false;
+                                    }
+
                                 }
                             } //... For files ...//                                                       
                             if (isOK){
@@ -3542,7 +3555,8 @@ public class ProteoSuiteView extends JFrame {
                                 System.out.println(sMessage);
                                 sOutput = sOutput + sMessage+"\n";
                                 jtaLog.setText(sOutput);
-                                loadMzQuantMLView(0, aFiles[0].getName());
+                                //loadMzQuantMLView(0, aFiles[0].getName());
+                                loadMzQuantMLView(0, aFiles[0].getAbsolutePath());
 
                                 sMessage = sysutils.getTime()+" - Quantification files imported successfully!";
                                 System.out.println(sMessage);
@@ -3948,20 +3962,28 @@ public class ProteoSuiteView extends JFrame {
                                             model.addColumn("Path");
                                             model.addColumn("Type");
                                             model.addColumn("Version");
-                                            unmarshalMzQMLFile(model, xmlFile);
+                                            try{
+                                                isOK = unmarshalMzQMLFile(model, xmlFile); 
+                                                System.out.println(sysutils.getTime()+" - Displaying mzquantml results...");
+                                                jtaLog.append("\n"+sysutils.getTime()+" - Displaying mzquantml results...");
+                                                jlFileNameMzQText.setText(sProjectName); //... Display of the results ...//
+                                                loadMzQuantMLView(0, sProjectName);
+                                                System.out.println(sysutils.getTime()+" - Execution finished...");
+                                                jtaLog.append("\n"+sysutils.getTime()+" - Execution finished...");
+
+                                                jbExportPepMZQExcel.setEnabled(true);
+                                                jbExportProtMZQExcel.setEnabled(true);
+                                                jbExportFeatMZQExcel.setEnabled(true);
+
+                                                JOptionPane.showMessageDialog(ProteoSuiteView.this, "Process finished. Quantitation results can be viewed in the mzQuantML View.", "Information", JOptionPane.INFORMATION_MESSAGE);
+
+                                            }
+                                            catch(Exception e){
+                                                jtaLog.append("Error reading mzQuantML - the mzQuantML file may be invalid.\nError: ");
+                                                jtaLog.append(e.getMessage());
+                                                e.printStackTrace();
+                                            }
                 
-                                            System.out.println(sysutils.getTime()+" - Displaying mzquantml results...");
-                                            jtaLog.append("\n"+sysutils.getTime()+" - Displaying mzquantml results...");
-                                            jlFileNameMzQText.setText(sProjectName); //... Display of the results ...//
-                                            loadMzQuantMLView(0, sProjectName);
-                                            System.out.println(sysutils.getTime()+" - Execution finished...");
-                                            jtaLog.append("\n"+sysutils.getTime()+" - Execution finished...");
-                                            
-                                            jbExportPepMZQExcel.setEnabled(true);
-                                            jbExportProtMZQExcel.setEnabled(true);
-                                            jbExportFeatMZQExcel.setEnabled(true);
-                            
-                                            JOptionPane.showMessageDialog(ProteoSuiteView.this, "Process finished. Quantitation results can be viewed in the mzQuantML View.", "Information", JOptionPane.INFORMATION_MESSAGE);
                                         }
                                         progressBarDialog.setVisible(false);
                                         progressBarDialog.dispose();
@@ -4724,10 +4746,7 @@ public class ProteoSuiteView extends JFrame {
                             Map<String, String> map = new HashMap();
                             map = identParamsExecute.getParams();
                             
-                            for(String param : map.keySet()){
-                                System.out.println("MSGF param:" + param + " value:" + map.get(param));
-                            }
-                            
+                         
                             
                             boolean bProteinInference = identParamsExecute.getProteinInference();
                             String sRegex = identParamsExecute.getRegex();
@@ -4816,10 +4835,6 @@ public class ProteoSuiteView extends JFrame {
                                         String[] args3 = {"ProteoGrouper", Path.replace(".mzid", "_fdr_thresh.mzid"), sFirstFile, "-requireSIIsToPassThreshold", "true", "-verboseOutput", "false", "-cvAccForSIIScore", "MS:1001874", "-logTransScore", "true", "-compress", "false"};
                                         System.out.print("Command line arguments for proteogrouper:");
                                         
-                                       
-                                        for(String arg : args3){
-                                            System.out.print(arg + " ");
-                                        }
                                         mzlib.init(args3);
                                         
                                     } catch (Exception ex) {
@@ -6497,7 +6512,7 @@ public class ProteoSuiteView extends JFrame {
                 //... File Name and Version ...//
                 jlFileNameMzIDText.setText(filename);
                 
-                System.out.println("Unmarshalling mzid file" + filename);
+                System.out.println("Unmarshalling mzid file: " + filename);
 
                 MzIdentMLUnmarshaller unmarshaller = aMzIDUnmarshaller.get(iIndexRef);
                 sOutput = "<b>mzIdentML Version:</b> <font color='red'>" + unmarshaller.getMzIdentMLVersion() + "</font><br />";
@@ -6771,271 +6786,282 @@ public class ProteoSuiteView extends JFrame {
      ---------------------------------------------------------*/
     private void loadMzQuantMLView(int iIndex, String sFile) 
     {
-        if ((!jtQuantFiles.getValueAt(iIndex, 0).toString().equals(jlFileNameMzQText.getText()))||(jtPeptideQuant.getRowCount()<=0)){        
-            final String sFileRef = sFile;
-            final int iIndexRef = iIndex;
-            final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "LoadMZQView");
-            final Thread thread = new Thread(new Runnable(){
-                @Override
-                public void run(){
-                    //... Progress Bar ...//
-                    progressBarDialog.setTitle("Loading MZQ data");
-                    progressBarDialog.setVisible(true);
-                }
-            }, "ProgressBarDialog");
-            thread.start();
-            new Thread("LoadMZQView"){
-                @Override
-                public void run(){                    
-                    jtpProperties.setSelectedIndex(4);
-                    DefaultTableModel model = new DefaultTableModel();
-                    DefaultTableModel model2 = new DefaultTableModel();
-                    DefaultTableModel model3 = new DefaultTableModel();
-                    jtProteinQuant.setModel(model);
-                    jtPeptideQuant.setModel(model2);
-                    jtFeatureQuant.setModel(model3);
-                    model.addColumn("Protein");
-                    model2.addColumn("Peptide");
-                    model3.addColumn("Feature");
-                    
-                    MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(jtQuantFiles.getValueAt(0, iIndexRef).toString());
-                    MzQuantML mzq = unmarshaller.unmarshall();
-                    
-                    System.out.println(sysutils.getTime()+" - (Loading mzQuantMLView)");
-                    System.out.println(sysutils.getTime()+" - MZQ elements="+aMzQUnmarshaller.size());
-                    System.out.println(sysutils.getTime()+" - Unmarshalling element "+iIndexRef+" from the array");
-                    
-                    //... File Name and Version ...//
-                    jlFileNameMzQText.setText(sFileRef);
-                    System.out.println(sysutils.getTime()+" - Loading "+sFileRef);
-                    String sOutput="";
-                    String sMessage="";
-                    sOutput = "<b>mzML Version:</b> <font color='red'>" + mzq.getVersion() + "</font><br />";
-                    System.out.println(sysutils.getTime()+" - mzML Version: " + mzq.getVersion());
-                    
-                    sOutput = sOutput + "<b>Software List:</b><br />";                    
-                    SoftwareList softwareList = unmarshaller.unmarshal(MzQuantMLElement.SoftwareList);
-                    System.out.println(sysutils.getTime()+" - Software List Size: "+softwareList.getSoftware().size());
-                    if(softwareList!=null){
-                        for(Software software : softwareList.getSoftware()){
-                            List<CvParam> cvlSoftware = software.getCvParam();
-                            for (CvParam cvp : cvlSoftware){
-                                sOutput = sOutput + " - " + cvp.getName().trim()+"<br />";
-                            }
-                        }
+        try{
+            if ((!jtQuantFiles.getValueAt(iIndex, 0).toString().equals(jlFileNameMzQText.getText()))||(jtPeptideQuant.getRowCount()<=0)){        
+                final String sFileRef = sFile;
+                final int iIndexRef = iIndex;
+                final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "LoadMZQView");
+                final Thread thread = new Thread(new Runnable(){
+                    @Override
+                    public void run(){
+                        //... Progress Bar ...//
+                        progressBarDialog.setTitle("Loading MZQ data");
+                        progressBarDialog.setVisible(true);
                     }
-                    
-                    sOutput = sOutput + "<b>Data Processing:</b><br />";
-                    DataProcessingList dpList = unmarshaller.unmarshal(MzQuantMLElement.DataProcessingList);
-                    if(dpList!=null){
-                        for(DataProcessing dp : dpList.getDataProcessing()){
-                            List<ProcessingMethod> dataProcessingMethodList = dp.getProcessingMethod();
-                            for (ProcessingMethod procMeth : dataProcessingMethodList){
-                                List<UserParam> usrpProcMeth = procMeth.getUserParam();
-                                for (UserParam usrp : usrpProcMeth){                                    
-                                    sOutput = sOutput + " - ["+ usrp.getName().trim()+ " = " + usrp.getValue().trim()+"]<br />";
-                                }
-                            }
-                        }
-                    }
-                    
-                    jepMZQView.setText(sOutput);
-                    sOutput="";
+                }, "ProgressBarDialog");
+                thread.start();
+                new Thread("LoadMZQView"){
+                    @Override
+                    public void run(){                    
+                        jtpProperties.setSelectedIndex(4);
+                        DefaultTableModel model = new DefaultTableModel();
+                        DefaultTableModel model2 = new DefaultTableModel();
+                        DefaultTableModel model3 = new DefaultTableModel();
+                        jtProteinQuant.setModel(model);
+                        jtPeptideQuant.setModel(model2);
+                        jtFeatureQuant.setModel(model3);
+                        model.addColumn("Protein");
+                        model2.addColumn("Peptide");
+                        model3.addColumn("Feature");
 
-    //============================//
-    //... Protein Quantitation ...//                
-    //============================//
-                    //... Based on the the assay list and study variables we will include the different columns ...//
-                    AssayList assayList = unmarshaller.unmarshal(MzQuantMLElement.AssayList);
-                    
-                    List<Assay> listAssay = assayList.getAssay();
-                    int iAssays = 0;
-                    for (Assay assay : listAssay) {
-                        model.addColumn(assay.getName());
-                        iAssays++;                        
-                    }
-                    sMessage = sysutils.getTime()+" - Assays: "+iAssays;
-                    System.out.println(sMessage);
-                    sOutput = sOutput + sMessage+"\n";
-                    
-                    StudyVariableList studyList = unmarshaller.unmarshal(MzQuantMLElement.StudyVariableList);
-                    
-                    List<StudyVariable> listStudy = studyList.getStudyVariable();
-                    int iStudyVars = 0;
-                    for (StudyVariable study : listStudy) {
-                        model.addColumn(study.getName());                        
-                        iStudyVars++;
-                    }
-                    sMessage = sysutils.getTime()+" - Study Variables: "+iStudyVars;
-                    System.out.println(sMessage);
-                    sOutput = sOutput + sMessage+"\n";
-                    
-                    //... Fill rows ...//           
-                    Map<String, ArrayList<String>> hmProtein = new HashMap<String, ArrayList<String>>();
-                    
-                    sMessage = sysutils.getTime()+" - Reading Protein Quantitation ...";
-                    System.out.println(sMessage);
-                    sOutput = sOutput + sMessage+"\n";
+                        //ARJ Update 21/11/2013 - we need a full file path, this is only delivering a local file name at the moment. 
+                        //When importing mzQuantML files, full path is needed
+                        //MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(jtQuantFiles.getValueAt(0, iIndexRef).toString());
+                        MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(new File(sFileRef));
+                        MzQuantML mzq = unmarshaller.unmarshal(uk.ac.liv.jmzqml.model.mzqml.MzQuantML.class);
 
-                    //... Check if mzq file contains protein list ...//
-                    ProteinList proteinList = unmarshaller.unmarshal(MzQuantMLElement.ProteinList);
-                    if (proteinList!=null){                        
-                        //... Getting DataMatrix from AssayQuantLayer ...//
-                        if (proteinList.getAssayQuantLayer().size()>0){
-                            List<Row> dataMatrix = proteinList.getAssayQuantLayer().get(0).getDataMatrix().getRow();
-                            for(Row row:dataMatrix){
-                                Protein prot = (Protein) row.getObjectRef();
-                                List<String> values = row.getValue();       
-                                ArrayList al = (ArrayList) values;
-                                hmProtein.put(prot.getAccession(), al);                                
-                            }
-                        }
-                        //... Getting DataMatrix from StudyVariableQuantLayer ...//
-                        if (proteinList.getStudyVariableQuantLayer().size()>0){
-                            List<Row> dataMatrix2 = proteinList.getStudyVariableQuantLayer().get(0).getDataMatrix().getRow();
-                            for(Row row:dataMatrix2){
-                                Protein prot = (Protein) row.getObjectRef();
-                                List<String> values = row.getValue();       
-                                ArrayList al = (ArrayList) values;
-                                ArrayList al2 = hmProtein.get(prot.getAccession());                                
-                                for(Object obj:al){
-                                    al2.add(obj);
-                                }
-                                hmProtein.put(prot.getAccession(), al2);
-                            }
-                        }
-                        for (Map.Entry<String, ArrayList<String>> entry : hmProtein.entrySet()){                    
-                            Object[] aObj = new Object[iAssays+iStudyVars+1];                    
-                            aObj[0] = entry.getKey();
+                        System.out.println(sysutils.getTime()+" - (Loading mzQuantMLView)");
+                        System.out.println(sysutils.getTime()+" - MZQ elements="+aMzQUnmarshaller.size());
+                        System.out.println(sysutils.getTime()+" - Unmarshalling element "+iIndexRef+" from the array");
 
-                            ArrayList<String> saParams = entry.getValue();
-                            Iterator<String> itr = saParams.iterator();
-                            int iI = 1;
-                            while (itr.hasNext()){
-                                if (iI>=iAssays+iStudyVars+1){
-                                    JOptionPane.showMessageDialog(ProteoSuiteView.this, 
-                                            "Invalid file. The mzq file contains duplications in the DataMatrix on "+
-                                            "the AssayQuantLayer or StudyVariableQuantLayer",
-                                            "Information", JOptionPane.INFORMATION_MESSAGE);
-                                    break;
-                                }
-                                else{
-                                    aObj[iI] = itr.next().toString(); 
-                                    iI++;                                    
-                                }                                   
-                            }
-                            model.insertRow(model.getRowCount(), aObj);
-                        }
-                        //... Tooltip for headers ...//
-                        jtProteinQuant.getTableHeader().setDefaultRenderer(new TableCellRenderer() {  
-                            final TableCellRenderer defaultRenderer = jtProteinQuant.getTableHeader().getDefaultRenderer();  
-                            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,  
-                                                                        int column) {  
-                                JComponent component = (JComponent)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);  
-                                component.setToolTipText("" + jtProteinQuant.getColumnName(column));
-                                return component;  
-                            }
-                        }); 
-                        jtProteinQuant.setAutoCreateRowSorter(true);
+                        //... File Name and Version ...//
+                        jlFileNameMzQText.setText(sFileRef);
+                        System.out.println(sysutils.getTime()+" - Loading "+sFileRef);
+                        String sOutput="";
+                        String sMessage="";
+                        sOutput = "<b>mzQuantML Version:</b> <font color='red'>" + mzq.getVersion() + "</font><br />";
+                        System.out.println(sysutils.getTime()+" - mzQuantML Version: " + mzq.getVersion());
 
-        //============================//
-        //... Peptide Quantitation ...//                
-        //============================//
-                        sMessage = sysutils.getTime()+" - Reading Peptide Quantitation ... ";
-                        System.out.println(sMessage);
-                        sOutput = sOutput + sMessage+"\n";                        
-                        //... Based on the the assay list and study variables we will include the different columns ...//                
-                        for (Assay assay : listAssay) {
-                            model2.addColumn(assay.getName());
-                        }
+                        sOutput = sOutput + "<b>Software List:</b><br />";                    
                         
-                        //... Fill rows ...//           
-
-                        //... Getting DataMatrix from AssayQuantLayer ...//
-                        PeptideConsensusList pepConsList = unmarshaller.unmarshal(MzQuantMLElement.PeptideConsensusList);
-                        if (pepConsList.getAssayQuantLayer().size()>0){
-                            List<Row> dataMatrix3 = pepConsList.getAssayQuantLayer().get(0).getDataMatrix().getRow();
-                            for(Row row:dataMatrix3){
-                                Object[] aObj = new Object[iAssays+1];                                                            
-                                PeptideConsensus pepConsensus = (PeptideConsensus) row.getObjectRef();
-
-                                aObj[0] = pepConsensus.getId();
-                                List<String> values = row.getValue();       
-                                ArrayList al = (ArrayList) values;
-                                Iterator<String> itr = al.iterator();
-                                int iI = 1;
-                                while (itr.hasNext()) {
-                                    aObj[iI] = itr.next().toString(); 
-                                    iI++;
+                        SoftwareList softwareList = unmarshaller.unmarshal(MzQuantMLElement.SoftwareList);
+                        System.out.println(sysutils.getTime()+" - Software List Size: "+softwareList.getSoftware().size());
+                        if(softwareList!=null){
+                            for(Software software : softwareList.getSoftware()){
+                                List<CvParam> cvlSoftware = software.getCvParam();
+                                for (CvParam cvp : cvlSoftware){
+                                    sOutput = sOutput + " - " + cvp.getName().trim()+"<br />";
                                 }
-                                model2.insertRow(model2.getRowCount(), aObj);
                             }
                         }
-                        //... Tooltip for headers ...//
-                        jtPeptideQuant.getTableHeader().setDefaultRenderer(new TableCellRenderer() {  
-                            final TableCellRenderer defaultRenderer = jtPeptideQuant.getTableHeader().getDefaultRenderer();  
-                            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,  
-                                                                        int column) {  
-                                JComponent component = (JComponent)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);  
-                                component.setToolTipText("" + jtPeptideQuant.getColumnName(column));
-                                return component;  
+
+                        sOutput = sOutput + "<b>Data Processing:</b><br />";
+                        DataProcessingList dpList = unmarshaller.unmarshal(MzQuantMLElement.DataProcessingList);
+                        if(dpList!=null){
+                            for(DataProcessing dp : dpList.getDataProcessing()){
+                                List<ProcessingMethod> dataProcessingMethodList = dp.getProcessingMethod();
+                                for (ProcessingMethod procMeth : dataProcessingMethodList){
+                                    List<UserParam> usrpProcMeth = procMeth.getUserParam();
+                                    for (UserParam usrp : usrpProcMeth){                                    
+                                        sOutput = sOutput + " - ["+ usrp.getName().trim()+ " = " + usrp.getValue().trim()+"]<br />";
+                                    }
+                                }
                             }
-                        }); 
-                        jtPeptideQuant.setAutoCreateRowSorter(true);                        
+                        }
+
+                        jepMZQView.setText(sOutput);
+                        sOutput="";
 
         //============================//
-        //... Feature Quantitation ...//                
+        //... Protein Quantitation ...//                
         //============================//
-                        sMessage = sysutils.getTime()+" - Reading Feature Quantitation ... ";
-                        System.out.println(sMessage);
-                        sOutput = sOutput + sMessage+"\n";                        
                         //... Based on the the assay list and study variables we will include the different columns ...//
+                        AssayList assayList = unmarshaller.unmarshal(MzQuantMLElement.AssayList);
+
+                        List<Assay> listAssay = assayList.getAssay();
+                        int iAssays = 0;
                         for (Assay assay : listAssay) {
-                            model3.addColumn(assay.getName());
+                            model.addColumn(assay.getName());
+                            iAssays++;                        
                         }
-                        //... Fill rows ...//
+                        sMessage = sysutils.getTime()+" - Assays: "+iAssays;
+                        System.out.println(sMessage);
+                        sOutput = sOutput + sMessage+"\n";
 
-                        //... Getting DataMatrix from AssayQuantLayer ...//
-                        FeatureList featureList = unmarshaller.unmarshal(MzQuantMLElement.FeatureList);
-                        if (featureList.getMS2AssayQuantLayer().size()>0){
-                            List<Row> dataMatrix4 = featureList.getMS2AssayQuantLayer().get(0).getDataMatrix().getRow();
-                            for(Row row:dataMatrix4){
-                                Object[] aObj = new Object[iAssays+1];
-                                Feature feature = (Feature) row.getObjectRef();
+                        StudyVariableList studyList = unmarshaller.unmarshal(MzQuantMLElement.StudyVariableList);
 
-                                aObj[0] = feature.getId();
-                                List<String> values = row.getValue();
-                                ArrayList al = (ArrayList) values;
-                                Iterator<String> itr = al.iterator();
-                                int iI = 1;
-                                while (itr.hasNext()) {
-                                    aObj[iI] = itr.next().toString(); 
-                                    iI++;
+                        List<StudyVariable> listStudy = studyList.getStudyVariable();
+                        int iStudyVars = 0;
+                        for (StudyVariable study : listStudy) {
+                            model.addColumn(study.getName());                        
+                            iStudyVars++;
+                        }
+                        sMessage = sysutils.getTime()+" - Study Variables: "+iStudyVars;
+                        System.out.println(sMessage);
+                        sOutput = sOutput + sMessage+"\n";
+
+                        //... Fill rows ...//           
+                        Map<String, ArrayList<String>> hmProtein = new HashMap<String, ArrayList<String>>();
+
+                        sMessage = sysutils.getTime()+" - Reading Protein Quantitation ...";
+                        System.out.println(sMessage);
+                        sOutput = sOutput + sMessage+"\n";
+
+                        //... Check if mzq file contains protein list ...//
+                        ProteinList proteinList = unmarshaller.unmarshal(MzQuantMLElement.ProteinList);
+                        if (proteinList!=null){                        
+                            //... Getting DataMatrix from AssayQuantLayer ...//
+                            if (proteinList.getAssayQuantLayer().size()>0){
+                                List<Row> dataMatrix = proteinList.getAssayQuantLayer().get(0).getDataMatrix().getRow();
+                                for(Row row:dataMatrix){
+                                    Protein prot = (Protein) row.getObjectRef();
+                                    List<String> values = row.getValue();       
+                                    ArrayList al = (ArrayList) values;
+                                    hmProtein.put(prot.getAccession(), al);                                
                                 }
-                                model3.insertRow(model3.getRowCount(), aObj);
-                            }   
-                        }                        
-                        jtaLog.setText(sOutput);
-                        
-                        //... Tooltip for headers ...//
-                        jtFeatureQuant.getTableHeader().setDefaultRenderer(new TableCellRenderer() {  
-                            final TableCellRenderer defaultRenderer = jtFeatureQuant.getTableHeader().getDefaultRenderer();  
-                            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,  
-                                                                        int column) {  
-                                JComponent component = (JComponent)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);  
-                                component.setToolTipText("" + jtFeatureQuant.getColumnName(column));
-                                return component;  
                             }
-                        }); 
-                        jtFeatureQuant.setAutoCreateRowSorter(true);                        
-                    }
-                    jtpProperties.setSelectedIndex(4);
-                    jtpMzQuantMLDetail.setSelectedIndex(1);
+                            //... Getting DataMatrix from StudyVariableQuantLayer ...//
+                            if (proteinList.getStudyVariableQuantLayer().size()>0){
+                                List<Row> dataMatrix2 = proteinList.getStudyVariableQuantLayer().get(0).getDataMatrix().getRow();
+                                for(Row row:dataMatrix2){
+                                    Protein prot = (Protein) row.getObjectRef();
+                                    List<String> values = row.getValue();       
+                                    ArrayList al = (ArrayList) values;
+                                    ArrayList al2 = hmProtein.get(prot.getAccession());                                
+                                    for(Object obj:al){
+                                        al2.add(obj);
+                                    }
+                                    hmProtein.put(prot.getAccession(), al2);
+                                }
+                            }
+                            for (Map.Entry<String, ArrayList<String>> entry : hmProtein.entrySet()){                    
+                                Object[] aObj = new Object[iAssays+iStudyVars+1];                    
+                                aObj[0] = entry.getKey();
 
-                    progressBarDialog.setVisible(false);
-                    progressBarDialog.dispose();
-                }
-            }.start();
+                                ArrayList<String> saParams = entry.getValue();
+                                Iterator<String> itr = saParams.iterator();
+                                int iI = 1;
+                                while (itr.hasNext()){
+                                    if (iI>=iAssays+iStudyVars+1){
+                                        JOptionPane.showMessageDialog(ProteoSuiteView.this, 
+                                                "Invalid file. The mzq file contains duplications in the DataMatrix on "+
+                                                "the AssayQuantLayer or StudyVariableQuantLayer",
+                                                "Information", JOptionPane.INFORMATION_MESSAGE);
+                                        break;
+                                    }
+                                    else{
+                                        aObj[iI] = itr.next().toString(); 
+                                        iI++;                                    
+                                    }                                   
+                                }
+                                model.insertRow(model.getRowCount(), aObj);
+                            }
+                            //... Tooltip for headers ...//
+                            jtProteinQuant.getTableHeader().setDefaultRenderer(new TableCellRenderer() {  
+                                final TableCellRenderer defaultRenderer = jtProteinQuant.getTableHeader().getDefaultRenderer();  
+                                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,  
+                                                                            int column) {  
+                                    JComponent component = (JComponent)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);  
+                                    component.setToolTipText("" + jtProteinQuant.getColumnName(column));
+                                    return component;  
+                                }
+                            }); 
+                            jtProteinQuant.setAutoCreateRowSorter(true);
+
+            //============================//
+            //... Peptide Quantitation ...//                
+            //============================//
+                            sMessage = sysutils.getTime()+" - Reading Peptide Quantitation ... ";
+                            System.out.println(sMessage);
+                            sOutput = sOutput + sMessage+"\n";                        
+                            //... Based on the the assay list and study variables we will include the different columns ...//                
+                            for (Assay assay : listAssay) {
+                                model2.addColumn(assay.getName());
+                            }
+
+                            //... Fill rows ...//           
+
+                            //... Getting DataMatrix from AssayQuantLayer ...//
+                            PeptideConsensusList pepConsList = unmarshaller.unmarshal(MzQuantMLElement.PeptideConsensusList);
+                            if (pepConsList.getAssayQuantLayer().size()>0){
+                                List<Row> dataMatrix3 = pepConsList.getAssayQuantLayer().get(0).getDataMatrix().getRow();
+                                for(Row row:dataMatrix3){
+                                    Object[] aObj = new Object[iAssays+1];                                                            
+                                    PeptideConsensus pepConsensus = (PeptideConsensus) row.getObjectRef();
+
+                                    aObj[0] = pepConsensus.getId();
+                                    List<String> values = row.getValue();       
+                                    ArrayList al = (ArrayList) values;
+                                    Iterator<String> itr = al.iterator();
+                                    int iI = 1;
+                                    while (itr.hasNext()) {
+                                        aObj[iI] = itr.next().toString(); 
+                                        iI++;
+                                    }
+                                    model2.insertRow(model2.getRowCount(), aObj);
+                                }
+                            }
+                            //... Tooltip for headers ...//
+                            jtPeptideQuant.getTableHeader().setDefaultRenderer(new TableCellRenderer() {  
+                                final TableCellRenderer defaultRenderer = jtPeptideQuant.getTableHeader().getDefaultRenderer();  
+                                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,  
+                                                                            int column) {  
+                                    JComponent component = (JComponent)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);  
+                                    component.setToolTipText("" + jtPeptideQuant.getColumnName(column));
+                                    return component;  
+                                }
+                            }); 
+                            jtPeptideQuant.setAutoCreateRowSorter(true);                        
+
+            //============================//
+            //... Feature Quantitation ...//                
+            //============================//
+                            sMessage = sysutils.getTime()+" - Reading Feature Quantitation ... ";
+                            System.out.println(sMessage);
+                            sOutput = sOutput + sMessage+"\n";                        
+                            //... Based on the the assay list and study variables we will include the different columns ...//
+                            for (Assay assay : listAssay) {
+                                model3.addColumn(assay.getName());
+                            }
+                            //... Fill rows ...//
+
+                            //... Getting DataMatrix from AssayQuantLayer ...//
+                            FeatureList featureList = unmarshaller.unmarshal(MzQuantMLElement.FeatureList);
+                            if (featureList.getMS2AssayQuantLayer().size()>0){
+                                List<Row> dataMatrix4 = featureList.getMS2AssayQuantLayer().get(0).getDataMatrix().getRow();
+                                for(Row row:dataMatrix4){
+                                    Object[] aObj = new Object[iAssays+1];
+                                    Feature feature = (Feature) row.getObjectRef();
+
+                                    aObj[0] = feature.getId();
+                                    List<String> values = row.getValue();
+                                    ArrayList al = (ArrayList) values;
+                                    Iterator<String> itr = al.iterator();
+                                    int iI = 1;
+                                    while (itr.hasNext()) {
+                                        aObj[iI] = itr.next().toString(); 
+                                        iI++;
+                                    }
+                                    model3.insertRow(model3.getRowCount(), aObj);
+                                }   
+                            }                        
+                            jtaLog.setText(sOutput);
+
+                            //... Tooltip for headers ...//
+                            jtFeatureQuant.getTableHeader().setDefaultRenderer(new TableCellRenderer() {  
+                                final TableCellRenderer defaultRenderer = jtFeatureQuant.getTableHeader().getDefaultRenderer();  
+                                public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,  
+                                                                            int column) {  
+                                    JComponent component = (JComponent)defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);  
+                                    component.setToolTipText("" + jtFeatureQuant.getColumnName(column));
+                                    return component;  
+                                }
+                            }); 
+                            jtFeatureQuant.setAutoCreateRowSorter(true);                        
+                        }
+                        jtpProperties.setSelectedIndex(4);
+                        jtpMzQuantMLDetail.setSelectedIndex(1);
+
+                        progressBarDialog.setVisible(false);
+                        progressBarDialog.dispose();
+                    }
+                }.start();
+            }
+        }
+        catch(Exception e){
+           jtaLog.append("Error reading mzQuantML - the mzQuantML file may be invalid.\nError: ");
+           jtaLog.append(e.getMessage());
+           e.printStackTrace();
         }
     }         
     /*----------------------------------------------------------------
@@ -8040,7 +8066,15 @@ public class ProteoSuiteView extends JFrame {
                         model.addColumn("Path");
                         model.addColumn("Type");
                         model.addColumn("Version");
-                        isOK = unmarshalMzQMLFile(model, file);
+                       try{
+                            isOK = unmarshalMzQMLFile(model, file);
+                                                    }
+                        catch(Exception e){
+                            jtaLog.append("Error reading mzQuantML - the mzQuantML file may be invalid.\nError: ");
+                            jtaLog.append(e.getMessage());
+                            e.printStackTrace();
+                            isOK = false;
+                        }
                         if (isOK){ 
                             isOK = loadProjectFromMZQ(0, file);                                                
                             if (isOK){
@@ -8103,7 +8137,7 @@ public class ProteoSuiteView extends JFrame {
                             
                 String sGroup = "";
 
-                MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(jtQuantFiles.getValueAt(0, 1).toString());
+                MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(new File(jtQuantFiles.getValueAt(0, 1).toString()));
                 MzQuantML mzq = unmarshaller.unmarshall();
                 System.out.println(sysutils.getTime()+" - MzQuantML version="+mzq.getVersion());
                 System.out.println(sysutils.getTime()+" - ID="+mzq.getId());
@@ -8217,7 +8251,7 @@ public class ProteoSuiteView extends JFrame {
                 progressBarDialog.setVisible(false);
                 progressBarDialog.dispose();    
                 
-                loadMzQuantMLView(0, sFileRef.getName());
+                //loadMzQuantMLView(0, sFileRef.getName());
             }            
         }.start();
         return true;
@@ -8271,7 +8305,7 @@ public class ProteoSuiteView extends JFrame {
      * @param xmlFile - File to unmarshall
      * @return boolean - Flag
      --------------------------------------*/
-    private boolean unmarshalMzQMLFile(DefaultTableModel model, File xmlFile)
+    private boolean unmarshalMzQMLFile(DefaultTableModel model, File xmlFile) throws Exception
     {
         //... Unmarshall mzquantml file ...//
         MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(xmlFile);                        
