@@ -78,7 +78,7 @@ Configurations for various properties of model classes.
         <indexed>true</indexed>
         <cvParamClass>uk.ac.liv.jmzqml.model.mzqml.params.AssayCvParam</cvParamClass>
         <userParamClass>uk.ac.liv.jmzqml.model.mzqml.params.AssayUserParam</userParamClass>
-        <refResolverClass>uk.ac.liv.jmzqnl.xml.jaxb.resolver.AssayRefResolver</refResolverClass>
+        <refResolverClass>uk.ac.liv.jmzqml.xml.jaxb.resolver.AssayRefResolver</refResolverClass>
         <tagName>Assay</tagName>
         <xpath>/MzQuantML/AssayList/Assay</xpath>
     </configurations>
@@ -192,11 +192,10 @@ Configurations for various properties of model classes.
     </configurations>	
 
     <configurations>
-        <autoRefResolving>true</autoRefResolving>
+        <autoRefResolving>false</autoRefResolving>
         <clazz>uk.ac.liv.jmzqml.model.mzqml.DataProcessing</clazz>
         <idMapped>true</idMapped>
         <indexed>true</indexed>
-        <refResolverClass>uk.ac.liv.jmzqml.xml.jaxb.resolver.DataProcessingRefResolver</refResolverClass>
         <tagName>DataProcessing</tagName>
         <xpath>/MzQuantML/DataProcessingList/DataProcessing</xpath>
     </configurations>
@@ -409,13 +408,12 @@ Configurations for various properties of model classes.
     </configurations>    
 
     <configurations>
-        <autoRefResolving>true</autoRefResolving>
+        <autoRefResolving>false</autoRefResolving>
         <clazz>uk.ac.liv.jmzqml.model.mzqml.PeptideConsensus</clazz>
         <idMapped>true</idMapped>
         <indexed>true</indexed>
         <cvParamClass>uk.ac.liv.jmzqml.model.mzqml.params.PeptideConsensusCvParam</cvParamClass>
         <userParamClass>uk.ac.liv.jmzqml.model.mzqml.params.PeptideConsensusUserParam</userParamClass>
-        <refResolverClass>uk.ac.liv.jmzqml.xml.jaxb.resolver.PeptideConsensusRefResolver</refResolverClass>
         <tagName>PeptideConsensus</tagName>
         <xpath>/MzQuantML/PeptideConsensusList/PeptideConsensus</xpath>
     </configurations>
@@ -487,13 +485,12 @@ Configurations for various properties of model classes.
     </configurations>    
 
     <configurations>
-        <autoRefResolving>true</autoRefResolving>
+        <autoRefResolving>false</autoRefResolving>
         <clazz>uk.ac.liv.jmzqml.model.mzqml.Protein</clazz>
         <idMapped>true</idMapped>
         <indexed>true</indexed>
         <cvParamClass>uk.ac.liv.jmzqml.model.mzqml.params.ProteinCvParam</cvParamClass>
         <userParamClass>uk.ac.liv.jmzqml.model.mzqml.params.ProteinUserParam</userParamClass>
-        <refResolverClass>uk.ac.liv.jmzqml.xml.jaxb.resolver.ProteinRefResolver</refResolverClass>
         <tagName>Protein</tagName>
         <xpath>/MzQuantML/ProteinList/Protein</xpath>
     </configurations>
@@ -638,7 +635,7 @@ Configurations for various properties of model classes.
     </configurations>
     
     <configurations>
-        <autoRefResolving>true</autoRefResolving>
+        <autoRefResolving>false</autoRefResolving>
         <clazz>uk.ac.liv.jmzqml.model.mzqml.Software</clazz>
         <idMapped>true</idMapped>
         <indexed>true</indexed>
@@ -667,13 +664,12 @@ Configurations for various properties of model classes.
     </configurations>   
 
     <configurations>
-        <autoRefResolving>true</autoRefResolving>
+        <autoRefResolving>false</autoRefResolving>
         <clazz>uk.ac.liv.jmzqml.model.mzqml.StudyVariable</clazz>
         <idMapped>true</idMapped>
         <indexed>true</indexed>
         <cvParamClass>uk.ac.liv.jmzqml.model.mzqml.params.StudyVariableCvParam</cvParamClass>
         <userParamClass>uk.ac.liv.jmzqml.model.mzqml.params.StudyVariableUserParam</userParamClass>
-        <refResolverClass>uk.ac.liv.jmzqml.xml.jaxb.resolver.StudyVariableRefResolver</refResolverClass>
         <tagName>StudyVariable</tagName>
         <xpath>/MzQuantML/StudyVariableList/StudyVariable</xpath>
     </configurations>
