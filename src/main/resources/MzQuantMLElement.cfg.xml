@@ -171,7 +171,7 @@
     </configurations>	
 
     <configurations>
-        <autoRefResolving>false</autoRefResolving>
+        <autoRefResolving>true</autoRefResolving>
         <clazz>uk.ac.liv.jmzqml.model.mzqml.DataProcessing</clazz>
         <idMapped>true</idMapped>
         <indexed>true</indexed>
