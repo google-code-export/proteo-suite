@@ -3968,7 +3968,8 @@ public class ProteoSuiteView extends JFrame {
                                                 System.out.println(sysutils.getTime()+" - Displaying mzquantml results...");
                                                 jtaLog.append("\n"+sysutils.getTime()+" - Displaying mzquantml results...");
                                                 jlFileNameMzQText.setText(sProjectName); //... Display of the results ...//
-                                                loadMzQuantMLView(0, sProjectName);
+                                                //loadMzQuantMLView(0, sProjectName);
+                                                loadMzQuantMLView(0, sWorkspace + "/" +  sProjectName);
                                                 System.out.println(sysutils.getTime()+" - Execution finished...");
                                                 jtaLog.append("\n"+sysutils.getTime()+" - Execution finished...");
 
