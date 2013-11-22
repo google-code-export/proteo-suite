@@ -189,6 +189,7 @@ import uk.ac.ebi.jmzml.model.mzml.params.BinaryDataArrayCVParam;
 import uk.ac.ebi.jmzml.xml.io.MzMLMarshaller;
 import uk.ac.liv.jmzqml.MzQuantMLElement;
 import uk.ac.liv.jmzqml.model.mzqml.AbstractParam;
+import uk.ac.liv.jmzqml.model.mzqml.AnalysisSummary;
 import uk.ac.liv.jmzqml.model.mzqml.Assay;
 import uk.ac.liv.jmzqml.model.mzqml.AssayList;
 import uk.ac.liv.jmzqml.model.mzqml.Column;
@@ -6812,7 +6813,8 @@ public class ProteoSuiteView extends JFrame {
                         jtFeatureQuant.setModel(model3);
                         model.addColumn("Protein");
                         model2.addColumn("Peptide");
-                        model3.addColumn("Feature");
+                        model3.addColumn("FeatureList");
+                        
 
                         //ARJ Update 21/11/2013 - we need a full file path, this is only delivering a local file name at the moment. 
                         //When importing mzQuantML files, full path is needed
@@ -6835,6 +6837,7 @@ public class ProteoSuiteView extends JFrame {
                         sOutput = sOutput + "<b>Software List:</b><br />";                    
                         
                         SoftwareList softwareList = unmarshaller.unmarshal(MzQuantMLElement.SoftwareList);
+                        //SoftwareList softwareList = mzq.getSoftwareList();
                         System.out.println(sysutils.getTime()+" - Software List Size: "+softwareList.getSoftware().size());
                         if(softwareList!=null){
                             for(Software software : softwareList.getSoftware()){
@@ -6847,6 +6850,7 @@ public class ProteoSuiteView extends JFrame {
 
                         sOutput = sOutput + "<b>Data Processing:</b><br />";
                         DataProcessingList dpList = unmarshaller.unmarshal(MzQuantMLElement.DataProcessingList);
+                        //DataProcessingList dpList = mzq.getDataProcessingList();
                         if(dpList!=null){
                             for(DataProcessing dp : dpList.getDataProcessing()){
                                 List<ProcessingMethod> dataProcessingMethodList = dp.getProcessingMethod();
@@ -6866,8 +6870,8 @@ public class ProteoSuiteView extends JFrame {
         //... Protein Quantitation ...//                
         //============================//
                         //... Based on the the assay list and study variables we will include the different columns ...//
-                        AssayList assayList = unmarshaller.unmarshal(MzQuantMLElement.AssayList);
-
+                        //AssayList assayList = unmarshaller.unmarshal(MzQuantMLElement.AssayList);
+                        AssayList assayList = mzq.getAssayList();
                         List<Assay> listAssay = assayList.getAssay();
                         int iAssays = 0;
                         for (Assay assay : listAssay) {
@@ -6879,7 +6883,7 @@ public class ProteoSuiteView extends JFrame {
                         sOutput = sOutput + sMessage+"\n";
 
                         StudyVariableList studyList = unmarshaller.unmarshal(MzQuantMLElement.StudyVariableList);
-
+                        //StudyVariableList studyList = mzq.getStudyVariableList();
                         List<StudyVariable> listStudy = studyList.getStudyVariable();
                         int iStudyVars = 0;
                         for (StudyVariable study : listStudy) {
@@ -6899,29 +6903,38 @@ public class ProteoSuiteView extends JFrame {
 
                         //... Check if mzq file contains protein list ...//
                         ProteinList proteinList = unmarshaller.unmarshal(MzQuantMLElement.ProteinList);
+                        //ProteinList proteinList = mzq.getProteinList();
+                        
+                        HashMap<String,Protein> mapIDToProt = new HashMap();
+                        
+                        for(Protein protein : proteinList.getProtein()){
+                            mapIDToProt.put(protein.getId(),protein);                            
+                        }
+                        
                         if (proteinList!=null){                        
                             //... Getting DataMatrix from AssayQuantLayer ...//
                             if (proteinList.getAssayQuantLayer().size()>0){
                                 List<Row> dataMatrix = proteinList.getAssayQuantLayer().get(0).getDataMatrix().getRow();
                                 for(Row row:dataMatrix){
-                                    Protein prot = (Protein) row.getObjectRef();
+                                    String protID = row.getObjectRef();
                                     List<String> values = row.getValue();       
-                                    ArrayList al = (ArrayList) values;
-                                    hmProtein.put(prot.getAccession(), al);                                
+                                    ArrayList<String> al = (ArrayList) values;
+                                    hmProtein.put(mapIDToProt.get(protID).getAccession(), al);                                
                                 }
                             }
                             //... Getting DataMatrix from StudyVariableQuantLayer ...//
                             if (proteinList.getStudyVariableQuantLayer().size()>0){
                                 List<Row> dataMatrix2 = proteinList.getStudyVariableQuantLayer().get(0).getDataMatrix().getRow();
                                 for(Row row:dataMatrix2){
-                                    Protein prot = (Protein) row.getObjectRef();
+                                    //Protein prot = (Protein) row.getObjectRef();
+                                    String protID = row.getObjectRef();
                                     List<String> values = row.getValue();       
                                     ArrayList al = (ArrayList) values;
-                                    ArrayList al2 = hmProtein.get(prot.getAccession());                                
+                                    ArrayList al2 = hmProtein.get(mapIDToProt.get(protID).getAccession());                                
                                     for(Object obj:al){
                                         al2.add(obj);
                                     }
-                                    hmProtein.put(prot.getAccession(), al2);
+                                    hmProtein.put(mapIDToProt.get(protID).getAccession(), al2);
                                 }
                             }
                             for (Map.Entry<String, ArrayList<String>> entry : hmProtein.entrySet()){                    
@@ -6973,13 +6986,21 @@ public class ProteoSuiteView extends JFrame {
 
                             //... Getting DataMatrix from AssayQuantLayer ...//
                             PeptideConsensusList pepConsList = unmarshaller.unmarshal(MzQuantMLElement.PeptideConsensusList);
+                            //PeptideConsensusList pepConsList = mzq.getPeptideConsensusList().get(0); //Set to get first list only TODO - needs a fix for multiple lists
+                            
+                            HashMap<String,PeptideConsensus> mapIDToPep = new HashMap();
+                        
+                            for(PeptideConsensus pep : pepConsList.getPeptideConsensus()){
+                               mapIDToPep.put(pep.getId(),pep);                            
+                            }
+                            
                             if (pepConsList.getAssayQuantLayer().size()>0){
                                 List<Row> dataMatrix3 = pepConsList.getAssayQuantLayer().get(0).getDataMatrix().getRow();
                                 for(Row row:dataMatrix3){
                                     Object[] aObj = new Object[iAssays+1];                                                            
-                                    PeptideConsensus pepConsensus = (PeptideConsensus) row.getObjectRef();
+                                    String pepID = row.getObjectRef();
 
-                                    aObj[0] = pepConsensus.getId();
+                                    aObj[0] = pepID;
                                     List<String> values = row.getValue();       
                                     ArrayList al = (ArrayList) values;
                                     Iterator<String> itr = al.iterator();
@@ -7010,31 +7031,60 @@ public class ProteoSuiteView extends JFrame {
                             System.out.println(sMessage);
                             sOutput = sOutput + sMessage+"\n";                        
                             //... Based on the the assay list and study variables we will include the different columns ...//
+                            
+                            /* ARJ 22/11/2013 - removed this code, since this isn't correct parsing of mzq files, even itraq, for simplicity just display mz, rt, charge 
                             for (Assay assay : listAssay) {
                                 model3.addColumn(assay.getName());
                             }
+                            * 
+                            */
+                            
+                            model3.addColumn("m/z");
+                            model3.addColumn("rt (m)");
+                            model3.addColumn("charge");
+                            
                             //... Fill rows ...//
 
                             //... Getting DataMatrix from AssayQuantLayer ...//
-                            FeatureList featureList = unmarshaller.unmarshal(MzQuantMLElement.FeatureList);
-                            if (featureList.getMS2AssayQuantLayer().size()>0){
-                                List<Row> dataMatrix4 = featureList.getMS2AssayQuantLayer().get(0).getDataMatrix().getRow();
-                                for(Row row:dataMatrix4){
-                                    Object[] aObj = new Object[iAssays+1];
-                                    Feature feature = (Feature) row.getObjectRef();
-
-                                    aObj[0] = feature.getId();
-                                    List<String> values = row.getValue();
-                                    ArrayList al = (ArrayList) values;
-                                    Iterator<String> itr = al.iterator();
-                                    int iI = 1;
-                                    while (itr.hasNext()) {
-                                        aObj[iI] = itr.next().toString(); 
-                                        iI++;
-                                    }
+                            //FeatureList featureList = unmarshaller.unmarshal(MzQuantMLElement.FeatureList);
+                            for(FeatureList featureList : mzq.getFeatureList()){
+                                //String rawFile = featureList.getRawFilesGroupRef();
+                                String featureListID = featureList.getId();
+                                
+                                for(Feature feature : featureList.getFeature()){
+                                    String mz = ""+feature.getMz();
+                                    String charge = feature.getCharge();       //Needs to be updated in jmzq to correct type
+                                    String rt = feature.getRt(); 
+                                    
+                                    Object[] aObj =  {featureListID,mz,rt,charge};
                                     model3.insertRow(model3.getRowCount(), aObj);
-                                }   
-                            }                        
+                                }
+                                /* Removed by ARJ - more complicated model is needed to load different types of mzq file
+                                if (featureList.getMS2AssayQuantLayer().size()>0){
+                                    List<Row> dataMatrix4 = featureList.getMS2AssayQuantLayer().get(0).getDataMatrix().getRow();
+                                    for(Row row:dataMatrix4){
+                                        Object[] aObj = new Object[iAssays+2];
+                                        Feature feature = (Feature) row.getObjectRef();
+
+                                        aObj[0] = feature.getId();
+                                        aObj[1] = featureListID;
+                                        List<String> values = row.getValue();
+                                        ArrayList al = (ArrayList) values;
+                                        Iterator<String> itr = al.iterator();
+                                        int iI = 1;
+                                        while (itr.hasNext()) {
+                                            aObj[iI] = itr.next().toString(); 
+                                            iI++;
+                                        }
+                                        model3.insertRow(model3.getRowCount(), aObj);
+                                    }   
+                                }
+                                else{
+                                    
+                                }
+                                * 
+                                */
+                            }
                             jtaLog.setText(sOutput);
 
                             //... Tooltip for headers ...//
@@ -8416,129 +8466,146 @@ public class ProteoSuiteView extends JFrame {
         //... CREATE ANALYSIS SUMMARY ...//
         //-------------------------------//
         
-        if (sExperiment.contains("iTRAQ")){                    
-            ParamList pl = new ParamList();
-            List<AbstractParam> cvParamList = pl.getParamGroup();
+        if (sExperiment.contains("iTRAQ")){    
+            
+            AnalysisSummary as = new AnalysisSummary();
+            List<CvParam> cvParamList = as.getCvParam();
+            
+            //ParamList pl = new ParamList();
+            //List<AbstractParam> cvParamList = pl.getParamGroup();
+            /*
             CvParam cvp = new CvParam();
-            cvp.setAccession("MS:1002010");
-            cvp.setCvRef(cvPSI_MS);
-            cvp.setName("TMT quantitation analysis");
-
+            //cvp.setAccession("MS:1002010");
+            cvp.setAccession("MS:1001837");
+            cvp.setCv(cvPSI_MS);
+            //cvp.setName("TMT quantitation analysis");
+            cvp.setName("iTRAQ quantitation analysis");
+            cvParamList.add(cvp);
+            * 
+            */
+//id: MS:1001837
+//name: iTRAQ quantitation analysis
+ 
+            
             CvParam cvp6 = new CvParam();
             cvp6.setAccession("MS:1002023");
-            cvp6.setCvRef(cvPSI_MS);
-            cvp6.setName("MS2 tag-based analysis");        
+            cvp6.setCv(cvPSI_MS);
+            cvp6.setName("MS2 tag-based analysis"); 
+            cvParamList.add(cvp6);
             
             CvParam cvp2 = new CvParam();
             cvp2.setAccession("MS:1002024");
-            cvp2.setCvRef(cvPSI_MS);
+            cvp2.setCv(cvPSI_MS);
             cvp2.setValue("true");
             cvp2.setName("MS2 tag-based analysis feature level quantitation");                   
+            cvParamList.add(cvp2);
 
             CvParam cvp3 = new CvParam();
             cvp3.setAccession("MS:1002025");
-            cvp3.setCvRef(cvPSI_MS);
+            cvp3.setCv(cvPSI_MS);
             cvp3.setValue("true");
             cvp3.setName("MS2 tag-based analysis group features by peptide quantitation");
+            cvParamList.add(cvp3);
 
             CvParam cvp4 = new CvParam();
             cvp4.setAccession("MS:1002026");
-            cvp4.setCvRef(cvPSI_MS);
+            cvp4.setCv(cvPSI_MS);
             cvp4.setValue("true");
             cvp4.setName("MS2 tag-based analysis protein level quantitation");
-
+            cvParamList.add(cvp4);
+            
             CvParam cvp5 = new CvParam();
             cvp5.setAccession("MS:1002027");
-            cvp5.setCvRef(cvPSI_MS);
+            cvp5.setCv(cvPSI_MS);
             cvp5.setValue("false");
-            cvp5.setName("MS2 tag-based analysis protein group level quantitation");        
-
-            cvParamList.add(cvp6);            
-            cvParamList.add(cvp2);
-            cvParamList.add(cvp3);
-            cvParamList.add(cvp4);
+            cvp5.setName("MS2 tag-based analysis protein group level quantitation");
             cvParamList.add(cvp5);
 
-            qml.setAnalysisSummary(pl);
+            qml.setAnalysisSummary(as);
         }
         if (sExperiment.contains("TMT")){                    
-            ParamList pl = new ParamList();
-            List<AbstractParam> cvParamList = pl.getParamGroup();
+
             CvParam cvp = new CvParam();
             cvp.setAccession("MS:1001837");
-            cvp.setCvRef(cvPSI_MS);
+            cvp.setCv(cvPSI_MS);
             cvp.setName("TMT quantitation analysis");
 
             CvParam cvp6 = new CvParam();
             cvp6.setAccession("MS:1002023");
-            cvp6.setCvRef(cvPSI_MS);
+            cvp6.setCv(cvPSI_MS);
             cvp6.setName("MS2 tag-based analysis");        
             
             CvParam cvp2 = new CvParam();
             cvp2.setAccession("MS:1002024");
-            cvp2.setCvRef(cvPSI_MS);
+            cvp2.setCv(cvPSI_MS);
             cvp2.setValue("true");
             cvp2.setName("MS2 tag-based analysis feature level quantitation");                   
 
             CvParam cvp3 = new CvParam();
             cvp3.setAccession("MS:1002025");
-            cvp3.setCvRef(cvPSI_MS);
+            cvp3.setCv(cvPSI_MS);
             cvp3.setValue("true");
             cvp3.setName("MS2 tag-based analysis group features by peptide quantitation");
 
             CvParam cvp4 = new CvParam();
             cvp4.setAccession("MS:1002026");
-            cvp4.setCvRef(cvPSI_MS);
+            cvp4.setCv(cvPSI_MS);
             cvp4.setValue("true");
             cvp4.setName("MS2 tag-based analysis protein level quantitation");
 
             CvParam cvp5 = new CvParam();
             cvp5.setAccession("MS:1002027");
-            cvp5.setCvRef(cvPSI_MS);
+            cvp5.setCv(cvPSI_MS);
             cvp5.setValue("false");
             cvp5.setName("MS2 tag-based analysis protein group level quantitation");        
 
+            
+            AnalysisSummary as = new AnalysisSummary();
+            List<CvParam> cvParamList = as.getCvParam();
+            
             cvParamList.add(cvp6);            
             cvParamList.add(cvp2);
             cvParamList.add(cvp3);
             cvParamList.add(cvp4);
             cvParamList.add(cvp5);
-
-            qml.setAnalysisSummary(pl);
+            
+            qml.setAnalysisSummary(as);
         }
         if (sExperiment.contains("emPAI")){                    
-            ParamList pl = new ParamList();
-            List<AbstractParam> cvParamList = pl.getParamGroup();
             
             CvParam cvp = new CvParam();
             cvp.setAccession("MS:1001836");
-            cvp.setCvRef(cvPSI_MS);
+            cvp.setCv(cvPSI_MS);
             cvp.setName("spectral counting quantitation analysis");
 
             CvParam cvp1 = new CvParam();
             cvp1.setAccession("MS:1002015");
-            cvp1.setCvRef(cvPSI_MS);
+            cvp1.setCv(cvPSI_MS);
             cvp1.setValue("false");
             cvp1.setName("spectral count peptide level quantitation");
             
             CvParam cvp2 = new CvParam();
             cvp2.setAccession("MS:1002016");
-            cvp2.setCvRef(cvPSI_MS);
+            cvp2.setCv(cvPSI_MS);
             cvp2.setValue("true");
             cvp2.setName("spectral count protein level quantitation");
 
             CvParam cvp3 = new CvParam();
             cvp3.setAccession("MS:1002017");
-            cvp3.setCvRef(cvPSI_MS);
+            cvp3.setCv(cvPSI_MS);
             cvp3.setValue("false");
             cvp3.setName("spectral count proteingroup level quantitation");      
+
+
+
+            AnalysisSummary as = new AnalysisSummary();
+            List<CvParam> cvParamList = as.getCvParam();
 
             cvParamList.add(cvp);
             cvParamList.add(cvp1);
             cvParamList.add(cvp2);
             cvParamList.add(cvp3);
-
-            qml.setAnalysisSummary(pl);
+            qml.setAnalysisSummary(as);
         }
         
         //--------------------------//
@@ -8645,7 +8712,7 @@ public class ProteoSuiteView extends JFrame {
         software.setVersion("2.0-ALPHA");
         CvParam cvpSW = new CvParam();
         cvpSW.setAccession("MS:1002123");
-        cvpSW.setCvRef(cvPSI_MS);
+        cvpSW.setCv(cvPSI_MS);
         cvpSW.setName("x-Tracker");
         software.getCvParam().add(cvpSW);
         
@@ -8655,7 +8722,7 @@ public class ProteoSuiteView extends JFrame {
         software2.setVersion(sPS_Version);        
         CvParam cvpSW2 = new CvParam();
         cvpSW2.setAccession("MS:1002124");
-        cvpSW2.setCvRef(cvPSI_MS);
+        cvpSW2.setCv(cvPSI_MS);
         cvpSW2.setName("ProteoSuite");    
         software2.getCvParam().add(cvpSW2);
         qml.setSoftwareList(softwareList);
@@ -8666,7 +8733,7 @@ public class ProteoSuiteView extends JFrame {
         DataProcessingList dataProcessingList = new DataProcessingList();
         DataProcessing dataProcessing = new DataProcessing();
         dataProcessing.setId("DP1");
-        dataProcessing.setSoftwareRef(software);
+        dataProcessing.setSoftware(software);
         dataProcessing.setOrder(BigInteger.ONE);
         
         //... Based on the technique, select the plugins that are available to perform the quantitation ...//
@@ -8902,7 +8969,7 @@ public class ProteoSuiteView extends JFrame {
                                 String sKey = sRawFile;
                                 RawFilesGroup rfGroup = rawFilesGroupList.get(iK);
                                 if(rfg.getId().equals(sKey)){
-                                    assay.setRawFilesGroupRef(rfGroup);                            
+                                    assay.setRawFilesGroup(rfGroup);                            
                                     break;
                                 }
                                 iK++;
@@ -8912,7 +8979,7 @@ public class ProteoSuiteView extends JFrame {
                             labelCvParam.setAccession("");
                             labelCvParam.setName(sAssayName);
                             labelCvParam.setValue(sMzValue);
-                            labelCvParam.setCvRef(cvPSI_MOD);
+                            labelCvParam.setCv(cvPSI_MOD);
                             List<ModParam> modParams = label.getModification();
                             ModParam modParam = new ModParam();
                             modParam.setCvParam(labelCvParam);
@@ -8941,12 +9008,12 @@ public class ProteoSuiteView extends JFrame {
                 Assay assay = new Assay();
                 assay.setId("assay_"+Integer.toString(iK+1));
                 assay.setName("assay_"+Integer.toString(iK+1));
-                assay.setRawFilesGroupRef(rfg);
+                assay.setRawFilesGroup(rfg);
                 Label label = new Label();
                 CvParam labelCvParam = new CvParam();
                 labelCvParam.setAccession("MS:1002038");
                 labelCvParam.setName("unlabeled sample");
-                labelCvParam.setCvRef(cvPSI_MS);
+                labelCvParam.setCv(cvPSI_MS);
                 List<ModParam> modParams = label.getModification();
                 ModParam modParam = new ModParam();
                 modParam.setCvParam(labelCvParam);
@@ -8971,17 +9038,17 @@ public class ProteoSuiteView extends JFrame {
             while (it.hasNext()){
                 Map.Entry pairs = (Map.Entry)it.next();
                 String group = pairs.getKey().toString();
-                ArrayList al = (ArrayList) pairs.getValue();
+                ArrayList<Assay> al = (ArrayList) pairs.getValue();
                 StudyVariable studyVariable = new StudyVariable();
                 studyVariable.setName(group);
                 studyVariable.setId("SV_"+group);
-                List<Object> assayRefList = studyVariable.getAssayRefs();        
-                for(Object obj:al){
-                    assayRefList.add(obj);
+                List<String> assayRefList = studyVariable.getAssayRefs();        
+                for(Assay assay:al){                    
+                    assayRefList.add(assay.getId());
                 }
                 CvParam cvp9 = new CvParam();
                 cvp9.setAccession("MS:1001807");
-                cvp9.setCvRef(cvPSI_MS);
+                cvp9.setCv(cvPSI_MS);
                 cvp9.setValue("1");
                 cvp9.setName("StudyVariable attribute");
                 List<AbstractParam> paramList = studyVariable.getParamGroup();
@@ -8993,8 +9060,8 @@ public class ProteoSuiteView extends JFrame {
             StudyVariable studyVariable = new StudyVariable();
             studyVariable.setName("Group");
             studyVariable.setId("SV_group");
-            List<Object> assayRefList = studyVariable.getAssayRefs();
-            assayRefList.add(assayList.get(0));
+            List<String> assayRefList = studyVariable.getAssayRefs();
+            assayRefList.add(assayList.get(0).getId());
             studyVariableList.add(studyVariable);
         }
         qml.setStudyVariableList(studyVariables);
