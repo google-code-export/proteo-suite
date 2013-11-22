@@ -48,7 +48,7 @@
     * mxq2mzq           0.1     Module to convert Maxquant to mzq       Manual installation
     * PPP               1.0.1   Module to convert Progenesis to mzq     Manual installation    
     * ProgReader        1.0     Module to read Progenesis files         Manual installation
-    * jmzquantml        1.0.0   mzQuantML API                           Manual installation
+    * jmzquantml        1.0.3   mzQuantML API                           Manual installation
     
     * Notes: For those dependencies that require manual installation, 
              JAR files are located under resources/lib
@@ -106,12 +106,13 @@
             <groupId>uk.ac.cranfield</groupId>
             <artifactId>xTracker</artifactId>
             <version>2.0-ALPHA</version>
-        </dependency>     
+        </dependency> 	
         <dependency>
             <groupId>uk.ac.liv</groupId>
             <artifactId>jmzquantml</artifactId>
-            <version>1.0.0-1.0.0</version>
-        </dependency>        
+            <version>1.0.0-1.0.3</version>
+        </dependency>   
+
     </dependencies>
     
 <!-- 

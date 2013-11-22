@@ -1,25 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!--
-TODO: change these comments as they are copied from defaultMzIdentMLElement.cfg.xml
-
-Configurations for various properties of model classes.
-
-        - 'autoRefResolving' determines if references within a class are automatically resolved. For example,
-            PeptideEvidence contains references to three separate classes. Setting this property to 'true'
-            for the PeptideEvidence config will cause these references to be resolved during unmarshalling.
-            Note: only elements that specify a refResolverClass can be switched to auto-resolving!
-        - Only if an element is idMapped, it can be searched using it's ID.
-        - An element cannot be idMapped if it is not indexed.
-        - If an element is not indexed it will not be visible to the API on it's own. To access a not indexed
-          element, it will have to be unmarshalled as part of the enclosing indexed parent element.
-        - xpath entries with leading or trailing whitespace will prevent elements from being indexed!
-            make sure to use a non-whitespace notation:
-              <xpath>/MzIQuantML/xyz</xpath>
-            instead of line breaks:
-              <xpath>
-                /MzQuantML/xyz
-              </xpath>
--->
 <mzQuantMLElementProperties>
     <configurations>
         <autoRefResolving>false</autoRefResolving>
@@ -78,7 +57,7 @@ Configurations for various properties of model classes.
         <indexed>true</indexed>
         <cvParamClass>uk.ac.liv.jmzqml.model.mzqml.params.AssayCvParam</cvParamClass>
         <userParamClass>uk.ac.liv.jmzqml.model.mzqml.params.AssayUserParam</userParamClass>
-        <refResolverClass>uk.ac.liv.jmzqml.xml.jaxb.resolver.AssayRefResolver</refResolverClass>
+        <refResolverClass>uk.ac.liv.jmzqnl.xml.jaxb.resolver.AssayRefResolver</refResolverClass>
         <tagName>Assay</tagName>
         <xpath>/MzQuantML/AssayList/Assay</xpath>
     </configurations>
@@ -196,6 +175,7 @@ Configurations for various properties of model classes.
         <clazz>uk.ac.liv.jmzqml.model.mzqml.DataProcessing</clazz>
         <idMapped>true</idMapped>
         <indexed>true</indexed>
+        <refResolverClass>uk.ac.liv.jmzqml.xml.jaxb.resolver.DataProcessingRefResolver</refResolverClass>
         <tagName>DataProcessing</tagName>
         <xpath>/MzQuantML/DataProcessingList/DataProcessing</xpath>
     </configurations>
@@ -414,6 +394,7 @@ Configurations for various properties of model classes.
         <indexed>true</indexed>
         <cvParamClass>uk.ac.liv.jmzqml.model.mzqml.params.PeptideConsensusCvParam</cvParamClass>
         <userParamClass>uk.ac.liv.jmzqml.model.mzqml.params.PeptideConsensusUserParam</userParamClass>
+        <refResolverClass>uk.ac.liv.jmzqml.xml.jaxb.resolver.PeptideConsensusRefResolver</refResolverClass>
         <tagName>PeptideConsensus</tagName>
         <xpath>/MzQuantML/PeptideConsensusList/PeptideConsensus</xpath>
     </configurations>
@@ -491,6 +472,7 @@ Configurations for various properties of model classes.
         <indexed>true</indexed>
         <cvParamClass>uk.ac.liv.jmzqml.model.mzqml.params.ProteinCvParam</cvParamClass>
         <userParamClass>uk.ac.liv.jmzqml.model.mzqml.params.ProteinUserParam</userParamClass>
+        <refResolverClass>uk.ac.liv.jmzqml.xml.jaxb.resolver.ProteinRefResolver</refResolverClass>
         <tagName>Protein</tagName>
         <xpath>/MzQuantML/ProteinList/Protein</xpath>
     </configurations>
@@ -670,6 +652,7 @@ Configurations for various properties of model classes.
         <indexed>true</indexed>
         <cvParamClass>uk.ac.liv.jmzqml.model.mzqml.params.StudyVariableCvParam</cvParamClass>
         <userParamClass>uk.ac.liv.jmzqml.model.mzqml.params.StudyVariableUserParam</userParamClass>
+        <refResolverClass>uk.ac.liv.jmzqml.xml.jaxb.resolver.StudyVariableRefResolver</refResolverClass>
         <tagName>StudyVariable</tagName>
         <xpath>/MzQuantML/StudyVariableList/StudyVariable</xpath>
     </configurations>
