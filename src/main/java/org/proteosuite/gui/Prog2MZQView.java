@@ -12,15 +12,13 @@
  */
 package org.proteosuite.gui;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.xml.datatype.DatatypeConfigurationException;
+
 import org.proteosuite.utils.ProgressBarDialog;
 //import uk.ac.liv.progenmzquantmlconvertor.ProgenMzquantmlConvertor;
 
@@ -30,7 +28,7 @@ import org.proteosuite.utils.ProgressBarDialog;
  * @param jframe Parent Frame
  * @param sPath Working directory
  */
-public class Prog2MZQView extends javax.swing.JPanel {
+public class Prog2MZQView extends JPanel {
 
     private JFrame jfFrame;
     private String sWorkspace = "";
@@ -42,30 +40,30 @@ public class Prog2MZQView extends javax.swing.JPanel {
         this.sWorkspace = sWorkspace;
     }    
 
-    @SuppressWarnings("unchecked")
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jbConvert = new javax.swing.JButton();
-        jlInstructions1 = new javax.swing.JLabel();
-        jlInstructions2 = new javax.swing.JLabel();
-        jlProteinList = new javax.swing.JLabel();
-        jtProteinList = new javax.swing.JTextField();
-        jtFeatureList = new javax.swing.JTextField();
-        jlFeatureList = new javax.swing.JLabel();
-        jbBrowseProtein = new javax.swing.JButton();
-        jbBrowseFeature = new javax.swing.JButton();
-        jlIdentificationFile = new javax.swing.JLabel();
-        jtIdentificationFile = new javax.swing.JTextField();
-        jbBrowseIdentification = new javax.swing.JButton();
+        jbConvert = new JButton();
+        jlInstructions1 = new JLabel();
+        jlInstructions2 = new JLabel();
+        jlProteinList = new JLabel();
+        jtProteinList = new JTextField();
+        jtFeatureList = new JTextField();
+        jlFeatureList = new JLabel();
+        jbBrowseProtein = new JButton();
+        jbBrowseFeature = new JButton();
+        jlIdentificationFile = new JLabel();
+        jtIdentificationFile = new JTextField();
+        jbBrowseIdentification = new JButton();
 
         setMaximumSize(new java.awt.Dimension(500, 180));
         setMinimumSize(new java.awt.Dimension(500, 180));
         setPreferredSize(new java.awt.Dimension(500, 180));
 
         jbConvert.setText("Convert");
-        jbConvert.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        jbConvert.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 jbConvertMouseClicked(evt);
             }
         });
@@ -79,15 +77,15 @@ public class Prog2MZQView extends javax.swing.JPanel {
         jlFeatureList.setText("Feature List File:");
 
         jbBrowseProtein.setText("Browse");
-        jbBrowseProtein.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        jbBrowseProtein.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 jbBrowseProteinMouseClicked(evt);
             }
         });
 
         jbBrowseFeature.setText("Browse");
-        jbBrowseFeature.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        jbBrowseFeature.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 jbBrowseFeatureMouseClicked(evt);
             }
         });
@@ -95,65 +93,65 @@ public class Prog2MZQView extends javax.swing.JPanel {
         jlIdentificationFile.setText("Identification File:");
 
         jbBrowseIdentification.setText("Browse");
-        jbBrowseIdentification.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
+        jbBrowseIdentification.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent evt) {
                 jbBrowseIdentificationMouseClicked(evt);
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(jlInstructions1)
                             .addComponent(jlInstructions2))
                         .addGap(16, 16, 16))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                             .addComponent(jlProteinList)
                             .addComponent(jlFeatureList)
                             .addComponent(jlIdentificationFile))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtProteinList, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
-                            .addComponent(jtFeatureList, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
-                            .addComponent(jtIdentificationFile, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(jtProteinList, GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+                            .addComponent(jtFeatureList, GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+                            .addComponent(jtIdentificationFile, GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jbBrowseProtein, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jbBrowseFeature, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jbBrowseIdentification, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(jbBrowseProtein, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jbBrowseFeature, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jbBrowseIdentification, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE))
                         .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 320, Short.MAX_VALUE)
+                    .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 320, Short.MAX_VALUE)
                         .addComponent(jbConvert)
                         .addGap(99, 99, 99))))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jlInstructions1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jlInstructions2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtProteinList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(jtProteinList, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(jlProteinList))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtFeatureList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(jtFeatureList, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(jlFeatureList))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jtIdentificationFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(jtIdentificationFile, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                             .addComponent(jlIdentificationFile))
                         .addGap(12, 12, 12)
                         .addComponent(jbConvert))
@@ -170,7 +168,7 @@ public class Prog2MZQView extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jbConvertMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbConvertMouseClicked
+    private void jbConvertMouseClicked(MouseEvent evt) {//GEN-FIRST:event_jbConvertMouseClicked
         //... Convert progrenesis files into mzq ...//               
         
         if (jtProteinList.getText().isEmpty() && jtFeatureList.getText().isEmpty()) {
@@ -179,7 +177,7 @@ public class Prog2MZQView extends javax.swing.JPanel {
                 (((!jtProteinList.getText().isEmpty()) && !jtProteinList.getText().endsWith(".csv")))) {
             JOptionPane.showMessageDialog(this, "The selected list file(s) is/are not in csv format. Please select the right format.");
         } else {
-            JFileChooser fileChooser = new javax.swing.JFileChooser(sWorkspace);
+            JFileChooser fileChooser = new JFileChooser(sWorkspace);
             fileChooser.setDialogTitle("Save the MzQuantML file");
 
             //... Applying file extension filters ...//
@@ -189,11 +187,11 @@ public class Prog2MZQView extends javax.swing.JPanel {
             int returnVal = fileChooser.showSaveDialog(this);
             
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File file = fileChooser.getSelectedFile();
-                final String outputFn = file.getAbsolutePath().endsWith("mzq") ? file.getAbsolutePath() : file.getAbsolutePath() + ".mzq";
-                final String flFn = jtFeatureList.getText();
-                final String plFn = jtProteinList.getText();
-                final String idFn = jtIdentificationFile.getText();
+                //File file = fileChooser.getSelectedFile();
+                //final String outputFn = file.getAbsolutePath().endsWith("mzq") ? file.getAbsolutePath() : file.getAbsolutePath() + ".mzq";
+                //final String flFn = jtFeatureList.getText();
+                //final String plFn = jtProteinList.getText();
+                //final String idFn = jtIdentificationFile.getText();
 
                 //... Start process ...//
                 final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this.jfFrame, true, "Prog2MZQ");
@@ -210,7 +208,7 @@ public class Prog2MZQView extends javax.swing.JPanel {
                     @Override
                     public void run(){
                         //... Convert each file ...//
-                        String sPath = "";
+                        //String sPath = "";
                         progressBarDialog.setTitle("Converting files");
                         progressBarDialog.setTaskName("Creating mzq file ...");
                         progressBarDialog.repaint();
@@ -231,7 +229,7 @@ public class Prog2MZQView extends javax.swing.JPanel {
         }               
     }//GEN-LAST:event_jbConvertMouseClicked
 
-    private void jbBrowseProteinMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbBrowseProteinMouseClicked
+    private void jbBrowseProteinMouseClicked(MouseEvent evt) {//GEN-FIRST:event_jbBrowseProteinMouseClicked
         //... Selecting protein list file ...//
         JFileChooser chooser = new JFileChooser(sWorkspace);        
         chooser.setDialogTitle("Select your protein list file");
@@ -251,7 +249,7 @@ public class Prog2MZQView extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jbBrowseProteinMouseClicked
 
-    private void jbBrowseFeatureMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbBrowseFeatureMouseClicked
+    private void jbBrowseFeatureMouseClicked(MouseEvent evt) {//GEN-FIRST:event_jbBrowseFeatureMouseClicked
         //... Selecting feature list file ...//
         JFileChooser chooser = new JFileChooser(sWorkspace);        
         chooser.setDialogTitle("Select your feature list file");
@@ -271,7 +269,7 @@ public class Prog2MZQView extends javax.swing.JPanel {
         }       
     }//GEN-LAST:event_jbBrowseFeatureMouseClicked
 
-    private void jbBrowseIdentificationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jbBrowseIdentificationMouseClicked
+    private void jbBrowseIdentificationMouseClicked(MouseEvent evt) {//GEN-FIRST:event_jbBrowseIdentificationMouseClicked
         //... Selecting identification file ...//
         JFileChooser chooser = new JFileChooser(sWorkspace);        
         chooser.setDialogTitle("Select your identification file");
@@ -292,17 +290,17 @@ public class Prog2MZQView extends javax.swing.JPanel {
     }//GEN-LAST:event_jbBrowseIdentificationMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jbBrowseFeature;
-    private javax.swing.JButton jbBrowseIdentification;
-    private javax.swing.JButton jbBrowseProtein;
-    private javax.swing.JButton jbConvert;
-    private javax.swing.JLabel jlFeatureList;
-    private javax.swing.JLabel jlIdentificationFile;
-    private javax.swing.JLabel jlInstructions1;
-    private javax.swing.JLabel jlInstructions2;
-    private javax.swing.JLabel jlProteinList;
-    private javax.swing.JTextField jtFeatureList;
-    private javax.swing.JTextField jtIdentificationFile;
-    private javax.swing.JTextField jtProteinList;
+    private JButton jbBrowseFeature;
+    private JButton jbBrowseIdentification;
+    private JButton jbBrowseProtein;
+    private JButton jbConvert;
+    private JLabel jlFeatureList;
+    private JLabel jlIdentificationFile;
+    private JLabel jlInstructions1;
+    private JLabel jlInstructions2;
+    private JLabel jlProteinList;
+    private JTextField jtFeatureList;
+    private JTextField jtIdentificationFile;
+    private JTextField jtProteinList;
     // End of variables declaration//GEN-END:variables
 }

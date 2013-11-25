@@ -34,7 +34,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
  */
 public class MzML2MGF {
         
-    private ArrayList<MzMLUnmarshaller> iUnmarshaller = null;    
+    private List<MzMLUnmarshaller> iUnmarshaller = null;    
     private SystemUtils SysUtils = new SystemUtils();
         
     public MzML2MGF(File xmlFile, String sPath) {        
@@ -62,8 +62,8 @@ public class MzML2MGF {
                 //... Reading CvParam to identify the MS level (1, 2) ...//
                 String mslevel = "";
                 List<CVParam> specParam = spectrum.getCvParam();
-                for (Iterator lCVParamIterator = specParam.iterator(); lCVParamIterator.hasNext();){
-                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                for (Iterator<CVParam> lCVParamIterator = specParam.iterator(); lCVParamIterator.hasNext();){
+                    CVParam lCVParam = lCVParamIterator.next();
                     if (lCVParam.getAccession().equals("MS:1000511")){
                         mslevel = lCVParam.getValue().trim();
                     }
@@ -73,8 +73,8 @@ public class MzML2MGF {
                 float rt = 0;
                 String unitRT = "";
                 List<CVParam> scanParam = spectrum.getScanList().getScan().get(0).getCvParam();
-                for (Iterator lCVParamIterator = scanParam.iterator(); lCVParamIterator.hasNext();){
-                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                for (Iterator<CVParam> lCVParamIterator = scanParam.iterator(); lCVParamIterator.hasNext();){
+                    CVParam lCVParam = lCVParamIterator.next();
                     if (lCVParam.getAccession().equals("MS:1000016")){
                         unitRT = lCVParam.getUnitAccession().trim();
                         if (unitRT.equals("UO:0000031")){    
@@ -96,8 +96,8 @@ public class MzML2MGF {
                             int parCharge = 0;
 
                             //... Detect parent ion m/z and charge ...//
-                            for (Iterator lCVParamIterator = scanPrecParam.iterator(); lCVParamIterator.hasNext();){
-                                CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                            for (Iterator<CVParam> lCVParamIterator = scanPrecParam.iterator(); lCVParamIterator.hasNext();){
+                                CVParam lCVParam = lCVParamIterator.next();
                                 if (lCVParam.getAccession().equals("MS:1000744")){
                                     parIonMz = Float.parseFloat(lCVParam.getValue().trim());
                                 }

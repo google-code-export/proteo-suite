@@ -17,11 +17,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import java.util.List;
+
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,6 +30,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
 import org.proteosuite.utils.SystemUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -43,14 +44,14 @@ import org.xml.sax.SAXException;
  * @author fgonzalez
  * @param void
  */
-public class QuantParamsView extends javax.swing.JPanel {
+public class QuantParamsView extends JPanel {
 
     private String sWorkspace = "";
     private String sTechnique = "";
     private SystemUtils sysutils = new SystemUtils();
     
     //... Class constructor ...//
-    public QuantParamsView(ArrayList alRawFiles, String sWorkspace, String sTechnique) {
+    public QuantParamsView(List<String> alRawFiles, String sWorkspace, String sTechnique) {
         //... Initialising components and values ...//
         this.sWorkspace = sWorkspace;
         this.sTechnique = sTechnique;
@@ -63,86 +64,86 @@ public class QuantParamsView extends javax.swing.JPanel {
             jtpTechniques.setSelectedIndex(2);
         }
     }
-    @SuppressWarnings("unchecked")
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jtpTechniques = new javax.swing.JTabbedPane();
-        jpSILAC = new javax.swing.JPanel();
-        jTextField5 = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
-        jLabel7 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
-        jComboBox2 = new javax.swing.JComboBox();
-        jToggleButton2 = new javax.swing.JToggleButton();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jpiTraq = new javax.swing.JPanel();
-        jliTraqMinMz = new javax.swing.JLabel();
-        jtiTraqMinMz = new javax.swing.JTextField();
-        jliTraqMaxMz = new javax.swing.JLabel();
-        jtiTraqMaxMz = new javax.swing.JTextField();
-        jbDefaultValues = new javax.swing.JButton();
-        jlIntegrationMethod = new javax.swing.JLabel();
-        jcbIntegrationMethod = new javax.swing.JComboBox();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jtiTRAQParams = new javax.swing.JTable();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        jbAdd = new javax.swing.JButton();
-        jbRemove = new javax.swing.JButton();
-        jlSearchScore = new javax.swing.JLabel();
-        jtSearchScore = new javax.swing.JTextField();
-        jpemPAI = new javax.swing.JPanel();
-        jlSearchScoreEmPAI = new javax.swing.JLabel();
-        jtSearchScoreEmPAI = new javax.swing.JTextField();
-        jlPepMolRange = new javax.swing.JLabel();
-        jtMinMolRange = new javax.swing.JTextField();
-        jlMaxMolRange = new javax.swing.JLabel();
-        jtMaxMolRange = new javax.swing.JTextField();
-        jlMinMolRange = new javax.swing.JLabel();
-        jspFastaFiles = new javax.swing.JScrollPane();
-        jtFastaFiles = new javax.swing.JTable();
-        jlFastaFiles = new javax.swing.JLabel();
-        jlEnzyme = new javax.swing.JLabel();
-        jbAddFasta = new javax.swing.JButton();
-        jbRemoveFasta = new javax.swing.JButton();
-        jcbEnzyme = new javax.swing.JComboBox();
-        jbDefaultValues1 = new javax.swing.JButton();
-        jbSave = new javax.swing.JToggleButton();
-        jLabel13 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
+        jtpTechniques = new JTabbedPane();
+        jpSILAC = new JPanel();
+        jTextField5 = new JTextField();
+        jLabel6 = new JLabel();
+        jTextField4 = new JTextField();
+        jLabel5 = new JLabel();
+        jScrollPane1 = new JScrollPane();
+        jList1 = new JList<String>();
+        jLabel7 = new JLabel();
+        jTextField6 = new JTextField();
+        jComboBox2 = new JComboBox<String>();
+        jToggleButton2 = new JToggleButton();
+        jLabel10 = new JLabel();
+        jLabel11 = new JLabel();
+        jLabel1 = new JLabel();
+        jComboBox1 = new JComboBox<String>();
+        jLabel2 = new JLabel();
+        jTextField1 = new JTextField();
+        jLabel12 = new JLabel();
+        jLabel3 = new JLabel();
+        jTextField2 = new JTextField();
+        jLabel8 = new JLabel();
+        jLabel4 = new JLabel();
+        jTextField3 = new JTextField();
+        jLabel9 = new JLabel();
+        jCheckBox1 = new JCheckBox();
+        jpiTraq = new JPanel();
+        jliTraqMinMz = new JLabel();
+        jtiTraqMinMz = new JTextField();
+        jliTraqMaxMz = new JLabel();
+        jtiTraqMaxMz = new JTextField();
+        jbDefaultValues = new JButton();
+        jlIntegrationMethod = new JLabel();
+        jcbIntegrationMethod = new JComboBox<String>();
+        jScrollPane2 = new JScrollPane();
+        jtiTRAQParams = new JTable();
+        jLabel15 = new JLabel();
+        jLabel16 = new JLabel();
+        jbAdd = new JButton();
+        jbRemove = new JButton();
+        jlSearchScore = new JLabel();
+        jtSearchScore = new JTextField();
+        jpemPAI = new JPanel();
+        jlSearchScoreEmPAI = new JLabel();
+        jtSearchScoreEmPAI = new JTextField();
+        jlPepMolRange = new JLabel();
+        jtMinMolRange = new JTextField();
+        jlMaxMolRange = new JLabel();
+        jtMaxMolRange = new JTextField();
+        jlMinMolRange = new JLabel();
+        jspFastaFiles = new JScrollPane();
+        jtFastaFiles = new JTable();
+        jlFastaFiles = new JLabel();
+        jlEnzyme = new JLabel();
+        jbAddFasta = new JButton();
+        jbRemoveFasta = new JButton();
+        jcbEnzyme = new JComboBox<String>();
+        jbDefaultValues1 = new JButton();
+        jbSave = new JToggleButton();
+        jLabel13 = new JLabel();
+        jLabel14 = new JLabel();
 
         jLabel6.setText("N-terminus shift:");
 
         jLabel5.setText("C-terminus shift:");
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
+        jList1.setModel(new AbstractListModel<String>() {
             String[] strings = { "R - 10.008269", "K - 8.014199" };
             public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane1.setViewportView(jList1);
 
         jLabel7.setText("Amino acid:");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A", "R", "N", "D", "C", "E", "Q", "G", "H", "I", "L", "K", "M", "F", "P", "S", "T", "W", "Y", "V" }));
+        jComboBox2.setModel(new DefaultComboBoxModel<String>(new String[] { "A", "R", "N", "D", "C", "E", "Q", "G", "H", "I", "L", "K", "M", "F", "P", "S", "T", "W", "Y", "V" }));
 
         jToggleButton2.setText("Add");
 
@@ -152,7 +153,7 @@ public class QuantParamsView extends javax.swing.JPanel {
 
         jLabel1.setText("Mass type:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Monoisotopic", "Average" }));
+        jComboBox1.setModel(new DefaultComboBoxModel<String>(new String[] { "Monoisotopic", "Average" }));
 
         jLabel2.setText("Incorporation rate:");
 
@@ -174,27 +175,27 @@ public class QuantParamsView extends javax.swing.JPanel {
 
         jCheckBox1.setText("Normalised");
 
-        javax.swing.GroupLayout jpSILACLayout = new javax.swing.GroupLayout(jpSILAC);
+        GroupLayout jpSILACLayout = new GroupLayout(jpSILAC);
         jpSILAC.setLayout(jpSILACLayout);
         jpSILACLayout.setHorizontalGroup(
-            jpSILACLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jpSILACLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jpSILACLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jpSILACLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jpSILACLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(jpSILACLayout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, 274, GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
-                    .addGroup(jpSILACLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jpSILACLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(jpSILACLayout.createSequentialGroup()
                             .addComponent(jLabel3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jTextField2, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabel8)
                             .addGap(45, 45, 45)
                             .addComponent(jLabel4)
                             .addGap(18, 18, 18)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField3, GroupLayout.PREFERRED_SIZE, 61, GroupLayout.PREFERRED_SIZE)
                             .addGap(22, 22, 22)
                             .addComponent(jLabel9)
                             .addContainerGap(314, Short.MAX_VALUE))
@@ -203,76 +204,76 @@ public class QuantParamsView extends javax.swing.JPanel {
                             .addContainerGap(644, Short.MAX_VALUE))
                         .addGroup(jpSILACLayout.createSequentialGroup()
                             .addComponent(jLabel7)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jComboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jTextField6, GroupLayout.PREFERRED_SIZE, 64, GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jToggleButton2)
                             .addContainerGap(494, Short.MAX_VALUE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpSILACLayout.createSequentialGroup()
-                            .addGroup(jpSILACLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpSILACLayout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, jpSILACLayout.createSequentialGroup()
+                            .addGroup(jpSILACLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                .addGroup(GroupLayout.Alignment.LEADING, jpSILACLayout.createSequentialGroup()
                                     .addComponent(jLabel1)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jComboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(jLabel2)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jpSILACLayout.createSequentialGroup()
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jTextField1, GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE))
+                                .addGroup(GroupLayout.Alignment.LEADING, jpSILACLayout.createSequentialGroup()
                                     .addComponent(jLabel5)
                                     .addGap(22, 22, 22)
-                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jTextField4, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(jLabel10)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(jLabel6)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(jpSILACLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jTextField5, GroupLayout.PREFERRED_SIZE, 62, GroupLayout.PREFERRED_SIZE)))
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addGroup(jpSILACLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel11)
                                 .addComponent(jLabel12))
                             .addGap(217, 217, 217)))))
         );
         jpSILACLayout.setVerticalGroup(
-            jpSILACLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jpSILACLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jpSILACLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jpSILACLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jpSILACLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jpSILACLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jpSILACLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
                     .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jCheckBox1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jpSILACLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jpSILACLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jpSILACLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(jpSILACLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel5)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextField4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel6)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextField5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel11))
-                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jpSILACLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10, GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jpSILACLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jToggleButton2))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -291,9 +292,9 @@ public class QuantParamsView extends javax.swing.JPanel {
 
         jlIntegrationMethod.setText("Integration Method:");
 
-        jcbIntegrationMethod.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "SumIntensities", "Area", "Highest" }));
+        jcbIntegrationMethod.setModel(new DefaultComboBoxModel<String>(new String[] { "SumIntensities", "Area", "Highest" }));
 
-        jtiTRAQParams.setModel(new javax.swing.table.DefaultTableModel(
+        jtiTRAQParams.setModel(new DefaultTableModel(
             new Object [][] {
 
             },
@@ -325,75 +326,75 @@ public class QuantParamsView extends javax.swing.JPanel {
 
         jlSearchScore.setText("Search Score:");
 
-        javax.swing.GroupLayout jpiTraqLayout = new javax.swing.GroupLayout(jpiTraq);
+        GroupLayout jpiTraqLayout = new GroupLayout(jpiTraq);
         jpiTraq.setLayout(jpiTraqLayout);
         jpiTraqLayout.setHorizontalGroup(
-            jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jpiTraqLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jpiTraqLayout.createSequentialGroup()
-                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jpiTraqLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(jpiTraqLayout.createSequentialGroup()
                         .addGap(19, 19, 19)
-                        .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpiTraqLayout.createSequentialGroup()
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
+                        .addGroup(jpiTraqLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addGroup(GroupLayout.Alignment.TRAILING, jpiTraqLayout.createSequentialGroup()
+                                .addComponent(jScrollPane2, GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
                                 .addGap(16, 16, 16)
-                                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jbAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jbRemove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGroup(jpiTraqLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jbAdd, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jbRemove, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(jpiTraqLayout.createSequentialGroup()
                                 .addComponent(jLabel15)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 333, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 333, Short.MAX_VALUE)
                                 .addComponent(jLabel16)
                                 .addGap(219, 219, 219))
                             .addComponent(jbDefaultValues)))
                     .addGroup(jpiTraqLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jpiTraqLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                             .addGroup(jpiTraqLayout.createSequentialGroup()
                                 .addComponent(jliTraqMaxMz)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jtiTraqMaxMz, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jtiTraqMaxMz, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE))
                             .addGroup(jpiTraqLayout.createSequentialGroup()
                                 .addComponent(jliTraqMinMz)
                                 .addGap(18, 18, 18)
-                                .addComponent(jtiTraqMinMz, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jtiTraqMinMz, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)))
                         .addGap(32, 32, 32)
                         .addComponent(jlIntegrationMethod)
                         .addGap(18, 18, 18)
-                        .addComponent(jcbIntegrationMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jcbIntegrationMethod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)
                         .addComponent(jlSearchScore)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jtSearchScore, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jtSearchScore, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jpiTraqLayout.setVerticalGroup(
-            jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jpiTraqLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jpiTraqLayout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jtiTraqMinMz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jpiTraqLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtiTraqMinMz, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jliTraqMinMz)
                     .addComponent(jlIntegrationMethod)
-                    .addComponent(jcbIntegrationMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jcbIntegrationMethod, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jlSearchScore)
-                    .addComponent(jtSearchScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jtSearchScore, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jpiTraqLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jliTraqMaxMz)
-                    .addComponent(jtiTraqMaxMz, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jtiTraqMaxMz, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addGap(13, 13, 13)
-                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jpiTraqLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15)
                     .addComponent(jLabel16))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jpiTraqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jpiTraqLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, 270, GroupLayout.PREFERRED_SIZE)
                     .addGroup(jpiTraqLayout.createSequentialGroup()
                         .addComponent(jbAdd)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jbRemove)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jbDefaultValues)
                 .addGap(43, 43, 43))
         );
@@ -408,7 +409,7 @@ public class QuantParamsView extends javax.swing.JPanel {
 
         jlMinMolRange.setText("Min:");
 
-        jtFastaFiles.setModel(new javax.swing.table.DefaultTableModel(
+        jtFastaFiles.setModel(new DefaultTableModel(
             new Object [][] {
 
             },
@@ -437,7 +438,7 @@ public class QuantParamsView extends javax.swing.JPanel {
             }
         });
 
-        jcbEnzyme.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Trypsin" }));
+        jcbEnzyme.setModel(new DefaultComboBoxModel<String>(new String[] { "Trypsin" }));
 
         jbDefaultValues1.setText("Restore to default values");
         jbDefaultValues1.addActionListener(new java.awt.event.ActionListener() {
@@ -446,66 +447,66 @@ public class QuantParamsView extends javax.swing.JPanel {
             }
         });
 
-        javax.swing.GroupLayout jpemPAILayout = new javax.swing.GroupLayout(jpemPAI);
+        GroupLayout jpemPAILayout = new GroupLayout(jpemPAI);
         jpemPAI.setLayout(jpemPAILayout);
         jpemPAILayout.setHorizontalGroup(
-            jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jpemPAILayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jpemPAILayout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jpemPAILayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(jbDefaultValues1)
                     .addGroup(jpemPAILayout.createSequentialGroup()
                         .addComponent(jlEnzyme)
                         .addGap(18, 18, 18)
-                        .addComponent(jcbEnzyme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jcbEnzyme, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addComponent(jlFastaFiles)
                     .addGroup(jpemPAILayout.createSequentialGroup()
-                        .addComponent(jspFastaFiles, javax.swing.GroupLayout.PREFERRED_SIZE, 607, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jspFastaFiles, GroupLayout.PREFERRED_SIZE, 607, GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addGroup(jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jbAddFasta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jpemPAILayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jbAddFasta, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jbRemoveFasta)))
                     .addGroup(jpemPAILayout.createSequentialGroup()
                         .addComponent(jlPepMolRange)
                         .addGap(18, 18, 18)
                         .addComponent(jlMinMolRange)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jtMinMolRange, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jtMinMolRange, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jlMaxMolRange)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jtMaxMolRange, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jtMaxMolRange, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jlSearchScoreEmPAI)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jtSearchScoreEmPAI, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jtSearchScoreEmPAI, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jpemPAILayout.setVerticalGroup(
-            jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            jpemPAILayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(jpemPAILayout.createSequentialGroup()
                 .addGap(28, 28, 28)
-                .addGroup(jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jpemPAILayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jlPepMolRange)
-                    .addComponent(jtSearchScoreEmPAI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jtSearchScoreEmPAI, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jlSearchScoreEmPAI)
-                    .addComponent(jtMaxMolRange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jtMaxMolRange, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jlMaxMolRange)
-                    .addComponent(jtMinMolRange, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jtMinMolRange, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(jlMinMolRange))
                 .addGap(15, 15, 15)
-                .addGroup(jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jpemPAILayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jlEnzyme)
-                    .addComponent(jcbEnzyme, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jcbEnzyme, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jlFastaFiles)
                 .addGap(18, 18, 18)
-                .addGroup(jpemPAILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jpemPAILayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(jpemPAILayout.createSequentialGroup()
                         .addComponent(jbAddFasta)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jbRemoveFasta))
-                    .addComponent(jspFastaFiles, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE))
+                    .addComponent(jspFastaFiles, GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addComponent(jbDefaultValues1)
                 .addContainerGap())
@@ -524,41 +525,41 @@ public class QuantParamsView extends javax.swing.JPanel {
 
         jLabel14.setText(" installation folder. You can make a copy of this file in case you need it in the future.");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jtpTechniques, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 736, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 545, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                    .addComponent(jtpTechniques, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 736, Short.MAX_VALUE)
+                    .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel13, GroupLayout.PREFERRED_SIZE, 545, GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(28, 28, 28)
                                 .addComponent(jLabel14)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 126, Short.MAX_VALUE)
-                        .addComponent(jbSave, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 126, Short.MAX_VALUE)
+                        .addComponent(jbSave, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jtpTechniques, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jtpTechniques, GroupLayout.PREFERRED_SIZE, 448, GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel14))
                     .addComponent(jbSave))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     //... Initialise default settings using the config.xml file ...//
-    private void initValues(ArrayList alRawFiles)
+    private void initValues(List<String> alRawFiles)
     {
         //... Validate if config file exists ...//
         boolean exists = (new File("configQuant.xml")).exists();
@@ -574,7 +575,7 @@ public class QuantParamsView extends javax.swing.JPanel {
         }
     }
     //... Read configuration settings ...//
-    private void readConfigFile(ArrayList alRawFiles, String sTechnique)
+    private void readConfigFile(List<String> alRawFiles, String sTechnique)
     {          
 
     //=============//
@@ -627,7 +628,7 @@ public class QuantParamsView extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, "In order to fill the iTRAQ/TMT labels, please select a raw file in the main window.", "Information", JOptionPane.INFORMATION_MESSAGE);
             }
             else{
-                for(Object obj:alRawFiles){
+                for(String obj: alRawFiles){
                     
                     System.out.println(sysutils.getTime()+" - Checking file ... "+obj.toString());
                     expr = xpath.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='" + obj.toString()  + "']");
@@ -1363,66 +1364,66 @@ public class QuantParamsView extends javax.swing.JPanel {
     }//GEN-LAST:event_jbDefaultValues1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JList jList1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JToggleButton jToggleButton2;
-    private javax.swing.JButton jbAdd;
-    private javax.swing.JButton jbAddFasta;
-    private javax.swing.JButton jbDefaultValues;
-    private javax.swing.JButton jbDefaultValues1;
-    private javax.swing.JButton jbRemove;
-    private javax.swing.JButton jbRemoveFasta;
-    private javax.swing.JToggleButton jbSave;
-    private javax.swing.JComboBox jcbEnzyme;
-    private javax.swing.JComboBox jcbIntegrationMethod;
-    private javax.swing.JLabel jlEnzyme;
-    private javax.swing.JLabel jlFastaFiles;
-    private javax.swing.JLabel jlIntegrationMethod;
-    private javax.swing.JLabel jlMaxMolRange;
-    private javax.swing.JLabel jlMinMolRange;
-    private javax.swing.JLabel jlPepMolRange;
-    private javax.swing.JLabel jlSearchScore;
-    private javax.swing.JLabel jlSearchScoreEmPAI;
-    private javax.swing.JLabel jliTraqMaxMz;
-    private javax.swing.JLabel jliTraqMinMz;
-    private javax.swing.JPanel jpSILAC;
-    private javax.swing.JPanel jpemPAI;
-    private javax.swing.JPanel jpiTraq;
-    private javax.swing.JScrollPane jspFastaFiles;
-    private javax.swing.JTable jtFastaFiles;
-    private javax.swing.JTextField jtMaxMolRange;
-    private javax.swing.JTextField jtMinMolRange;
-    private javax.swing.JTextField jtSearchScore;
-    private javax.swing.JTextField jtSearchScoreEmPAI;
-    private javax.swing.JTable jtiTRAQParams;
-    private javax.swing.JTextField jtiTraqMaxMz;
-    private javax.swing.JTextField jtiTraqMinMz;
-    private javax.swing.JTabbedPane jtpTechniques;
+    private JCheckBox jCheckBox1;
+    private JComboBox<String> jComboBox1;
+    private JComboBox<String> jComboBox2;
+    private JLabel jLabel1;
+    private JLabel jLabel10;
+    private JLabel jLabel11;
+    private JLabel jLabel12;
+    private JLabel jLabel13;
+    private JLabel jLabel14;
+    private JLabel jLabel15;
+    private JLabel jLabel16;
+    private JLabel jLabel2;
+    private JLabel jLabel3;
+    private JLabel jLabel4;
+    private JLabel jLabel5;
+    private JLabel jLabel6;
+    private JLabel jLabel7;
+    private JLabel jLabel8;
+    private JLabel jLabel9;
+    private JList<String> jList1;
+    private JScrollPane jScrollPane1;
+    private JScrollPane jScrollPane2;
+    private JTextField jTextField1;
+    private JTextField jTextField2;
+    private JTextField jTextField3;
+    private JTextField jTextField4;
+    private JTextField jTextField5;
+    private JTextField jTextField6;
+    private JToggleButton jToggleButton2;
+    private JButton jbAdd;
+    private JButton jbAddFasta;
+    private JButton jbDefaultValues;
+    private JButton jbDefaultValues1;
+    private JButton jbRemove;
+    private JButton jbRemoveFasta;
+    private JToggleButton jbSave;
+    private JComboBox<String> jcbEnzyme;
+    private JComboBox<String> jcbIntegrationMethod;
+    private JLabel jlEnzyme;
+    private JLabel jlFastaFiles;
+    private JLabel jlIntegrationMethod;
+    private JLabel jlMaxMolRange;
+    private JLabel jlMinMolRange;
+    private JLabel jlPepMolRange;
+    private JLabel jlSearchScore;
+    private JLabel jlSearchScoreEmPAI;
+    private JLabel jliTraqMaxMz;
+    private JLabel jliTraqMinMz;
+    private JPanel jpSILAC;
+    private JPanel jpemPAI;
+    private JPanel jpiTraq;
+    private JScrollPane jspFastaFiles;
+    private JTable jtFastaFiles;
+    private JTextField jtMaxMolRange;
+    private JTextField jtMinMolRange;
+    private JTextField jtSearchScore;
+    private JTextField jtSearchScoreEmPAI;
+    private JTable jtiTRAQParams;
+    private JTextField jtiTraqMaxMz;
+    private JTextField jtiTraqMinMz;
+    private JTabbedPane jtpTechniques;
     // End of variables declaration//GEN-END:variables
 }

@@ -13,6 +13,7 @@ package org.proteosuite.external;
 import org.proteosuite.external.ViewChartGUI;
 import org.proteosuite.external.IPC.Options;
 import org.proteosuite.external.IPC.Results;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -27,26 +28,25 @@ import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
-import javax.swing.JFileChooser;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.JSpinner;
-import javax.swing.SwingUtilities;
+
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
+
 import org.jfree.ui.ExtensionFileFilter;
 
 /**
  *
  * @author mpcusack
  */
-public class ReadSearchResultsDialog extends javax.swing.JDialog {
+public class ReadSearchResultsDialog extends JDialog {
 
     private DefaultTableModel dataModel;
-    private HashMap<String, String> sequences = new HashMap<String, String>();
+    private Map<String, String> sequences = new HashMap<String, String>();
     ViewChartGUI parent;
 
     /**
@@ -61,13 +61,13 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
     }
 
     private static DefaultTableModel makeTableModel() {
-        return new javax.swing.table.DefaultTableModel(
+        return new DefaultTableModel(
                 new Object[][]{},
                 new String[]{
                     "Process (Click to Toggle All)", "Peptide", "Charge"
                 }) {
 
-            Class[] types = new Class[]{
+            Class<?>[] types = new Class[]{
                 java.lang.Boolean.class, java.lang.String.class, java.lang.Integer.class
             };
             boolean[] canEdit = new boolean[]{
@@ -75,7 +75,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
             };
 
             @Override
-            public Class getColumnClass(int columnIndex) {
+            public Class<?> getColumnClass(int columnIndex) {
                 return types[columnIndex];
             }
 
@@ -88,7 +88,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
 
     private void initComponents2() {
         setColmSpinnerEditors();
-        this.setSize(new Double(this.getSize().width * 1.5).intValue(), this.getSize().height);
+        setSize(new Double(this.getSize().width * 1.5).intValue(), this.getSize().height);
         setPanelsEnabled();
         //setAllGuiFieldsEnabled(false);
 
@@ -300,51 +300,50 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
         pepColmSpin.setEnabled(enabled);
     }
 
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        buttonGroup = new javax.swing.ButtonGroup();
-        numToSkipL = new javax.swing.JLabel();
-        numToSkipSpin = new javax.swing.JSpinner();
-        headerL = new javax.swing.JLabel();
-        headerSpin = new javax.swing.JSpinner();
-        colmsPanel = new javax.swing.JPanel();
-        colmsSep = new javax.swing.JSeparator();
-        startL = new javax.swing.JLabel();
-        endL = new javax.swing.JLabel();
-        startSpin = new javax.swing.JSpinner();
-        endSpin = new javax.swing.JSpinner();
-        pepColmL = new javax.swing.JLabel();
-        accL = new javax.swing.JLabel();
-        accSpin = new javax.swing.JSpinner();
-        pepColmSpin = new javax.swing.JSpinner();
-        stEndRB = new javax.swing.JRadioButton();
-        pepSeqRB = new javax.swing.JRadioButton();
-        fastaFilePanel = new javax.swing.JPanel();
-        fastaTF = new javax.swing.JTextField();
-        fastaBrowseBut = new javax.swing.JButton();
-        fastaL = new javax.swing.JLabel();
-        loadBut = new javax.swing.JButton();
-        saveClearPanel = new javax.swing.JPanel();
-        saveBut = new javax.swing.JButton();
-        clearBut = new javax.swing.JButton();
-        dataScrollPanel = new javax.swing.JScrollPane();
+        buttonGroup = new ButtonGroup();
+        numToSkipL = new JLabel();
+        numToSkipSpin = new JSpinner();
+        headerL = new JLabel();
+        headerSpin = new JSpinner();
+        colmsPanel = new JPanel();
+        colmsSep = new JSeparator();
+        startL = new JLabel();
+        endL = new JLabel();
+        startSpin = new JSpinner();
+        endSpin = new JSpinner();
+        pepColmL = new JLabel();
+        accL = new JLabel();
+        accSpin = new JSpinner();
+        pepColmSpin = new JSpinner();
+        stEndRB = new JRadioButton();
+        pepSeqRB = new JRadioButton();
+        fastaFilePanel = new JPanel();
+        fastaTF = new JTextField();
+        fastaBrowseBut = new JButton();
+        fastaL = new JLabel();
+        loadBut = new JButton();
+        saveClearPanel = new JPanel();
+        saveBut = new JButton();
+        clearBut = new JButton();
+        dataScrollPanel = new JScrollPane();
         dataModel = makeTableModel();
-        dataTable = new javax.swing.JTable();
-        nameFilePanel = new javax.swing.JPanel();
-        fileL = new javax.swing.JLabel();
-        fileTF = new javax.swing.JTextField();
-        fileBrowseBut = new javax.swing.JButton();
-        chargeColmL = new javax.swing.JLabel();
-        chargeColmSpin = new javax.swing.JSpinner();
-        outFilePanel = new javax.swing.JPanel();
-        outFileL = new javax.swing.JLabel();
-        outFileTF = new javax.swing.JTextField();
-        outFileBrowseBut = new javax.swing.JButton();
+        dataTable = new JTable();
+        nameFilePanel = new JPanel();
+        fileL = new JLabel();
+        fileTF = new JTextField();
+        fileBrowseBut = new JButton();
+        chargeColmL = new JLabel();
+        chargeColmSpin = new JSpinner();
+        outFilePanel = new JPanel();
+        outFileL = new JLabel();
+        outFileTF = new JTextField();
+        outFileBrowseBut = new JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Read Peptides From File");
         getContentPane().setLayout(new java.awt.GridBagLayout());
 
@@ -356,7 +355,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 10, 0, 0);
         getContentPane().add(numToSkipL, gridBagConstraints);
 
-        numToSkipSpin.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+        numToSkipSpin.setModel(new SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -373,7 +372,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
         getContentPane().add(headerL, gridBagConstraints);
 
-        headerSpin.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+        headerSpin.setModel(new SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 3;
         gridBagConstraints.gridy = 2;
@@ -382,7 +381,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 0, 10);
         getContentPane().add(headerSpin, gridBagConstraints);
 
-        colmsPanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        colmsPanel.setBorder(BorderFactory.createEtchedBorder());
         colmsPanel.setLayout(new java.awt.GridBagLayout());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -408,7 +407,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(3, 5, 5, 0);
         colmsPanel.add(endL, gridBagConstraints);
 
-        startSpin.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(3), Integer.valueOf(1), null, Integer.valueOf(1)));
+        startSpin.setModel(new SpinnerNumberModel(Integer.valueOf(3), Integer.valueOf(1), null, Integer.valueOf(1)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 6;
@@ -417,7 +416,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(3, 5, 0, 5);
         colmsPanel.add(startSpin, gridBagConstraints);
 
-        endSpin.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(4), Integer.valueOf(1), null, Integer.valueOf(1)));
+        endSpin.setModel(new SpinnerNumberModel(Integer.valueOf(4), Integer.valueOf(1), null, Integer.valueOf(1)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 7;
@@ -441,7 +440,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(3, 5, 0, 0);
         colmsPanel.add(accL, gridBagConstraints);
 
-        accSpin.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+        accSpin.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 5;
@@ -450,7 +449,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(3, 5, 0, 5);
         colmsPanel.add(accSpin, gridBagConstraints);
 
-        pepColmSpin.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+        pepColmSpin.setModel(new SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -527,7 +526,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 10, 5, 10);
         getContentPane().add(colmsPanel, gridBagConstraints);
 
-        loadBut.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ipc/gui/icons/View-refresh.png"))); // NOI18N
+        loadBut.setIcon(new ImageIcon(getClass().getResource("/ipc/gui/icons/View-refresh.png"))); // NOI18N
         loadBut.setText("(Re)Load File");
         loadBut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -632,7 +631,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(3, 10, 0, 0);
         getContentPane().add(chargeColmL, gridBagConstraints);
 
-        chargeColmSpin.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(2), Integer.valueOf(1), null, Integer.valueOf(1)));
+        chargeColmSpin.setModel(new SpinnerNumberModel(Integer.valueOf(2), Integer.valueOf(1), null, Integer.valueOf(1)));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -731,6 +730,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
             if (acc != null && seq != null) {
                 sequences.put(acc, seq.toString());
             }
+            fileIn.close();
         } catch (Exception ioe) {
             throw new RuntimeException("Error Reading FASTA File.");
         }
@@ -772,6 +772,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
                             readFasta();
                         }
                         if (!sequences.containsKey(acc)) {
+                            fileIn.close();
                             throw new RuntimeException("Can't find sequence for '" + acc + "'.");
                         }
                         String seq = sequences.get(acc);
@@ -810,6 +811,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
                             continue;
                         } else if (response == 2) {
                             clearRows();
+                            fileIn.close();
                             return;
                         }
                     }
@@ -871,8 +873,8 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
         }
     }
 
-    LinkedList<Peptide> getRowsToProcess() {
-        LinkedList<Peptide> rows = new LinkedList<Peptide>();
+    List<Peptide> getRowsToProcess() {
+        List<Peptide> rows = new LinkedList<Peptide>();
 
         for (Object o : dataModel.getDataVector()) {
             Vector v = (Vector) o;
@@ -901,7 +903,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
                 return;
             }
         }
-        LinkedList<Peptide> rowsToProcess = getRowsToProcess();
+        List<Peptide> rowsToProcess = getRowsToProcess();
         if (rowsToProcess.size() >= 5) {
             int response = JOptionPane.showConfirmDialog(this, "You have selected " + rowsToProcess.size() + " peptides to process.\n" +
                     "If these peptides are not in the cache this may take a long to process.\n" +
@@ -930,7 +932,7 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
                 ipcOptions.setTabOutput(true);
                 Results ipcResults = parent.getResults(ipcOptions, false);
 
-                fileOut.println(ipcResults.toString().replaceAll("\n", parent.nl));
+                fileOut.println(ipcResults.toString().replaceAll("\n", ViewChartGUI.nl));
                 fileOut.println();
             }
             fileOut.close();
@@ -998,43 +1000,43 @@ public class ReadSearchResultsDialog extends javax.swing.JDialog {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel accL;
-    private javax.swing.JSpinner accSpin;
-    private javax.swing.ButtonGroup buttonGroup;
-    private javax.swing.JLabel chargeColmL;
-    private javax.swing.JSpinner chargeColmSpin;
-    private javax.swing.JButton clearBut;
-    private javax.swing.JPanel colmsPanel;
-    private javax.swing.JSeparator colmsSep;
-    private javax.swing.JScrollPane dataScrollPanel;
-    private javax.swing.JTable dataTable;
-    private javax.swing.JLabel endL;
-    private javax.swing.JSpinner endSpin;
-    private javax.swing.JButton fastaBrowseBut;
-    private javax.swing.JPanel fastaFilePanel;
-    private javax.swing.JLabel fastaL;
-    private javax.swing.JTextField fastaTF;
-    private javax.swing.JButton fileBrowseBut;
-    private javax.swing.JLabel fileL;
-    private javax.swing.JTextField fileTF;
-    private javax.swing.JLabel headerL;
-    private javax.swing.JSpinner headerSpin;
-    private javax.swing.JButton loadBut;
-    private javax.swing.JPanel nameFilePanel;
-    private javax.swing.JLabel numToSkipL;
-    private javax.swing.JSpinner numToSkipSpin;
-    private javax.swing.JButton outFileBrowseBut;
-    private javax.swing.JLabel outFileL;
-    private javax.swing.JPanel outFilePanel;
-    private javax.swing.JTextField outFileTF;
-    private javax.swing.JLabel pepColmL;
-    private javax.swing.JSpinner pepColmSpin;
-    private javax.swing.JRadioButton pepSeqRB;
-    private javax.swing.JButton saveBut;
-    private javax.swing.JPanel saveClearPanel;
-    private javax.swing.JRadioButton stEndRB;
-    private javax.swing.JLabel startL;
-    private javax.swing.JSpinner startSpin;
+    private JLabel accL;
+    private JSpinner accSpin;
+    private ButtonGroup buttonGroup;
+    private JLabel chargeColmL;
+    private JSpinner chargeColmSpin;
+    private JButton clearBut;
+    private JPanel colmsPanel;
+    private JSeparator colmsSep;
+    private JScrollPane dataScrollPanel;
+    private JTable dataTable;
+    private JLabel endL;
+    private JSpinner endSpin;
+    private JButton fastaBrowseBut;
+    private JPanel fastaFilePanel;
+    private JLabel fastaL;
+    private JTextField fastaTF;
+    private JButton fileBrowseBut;
+    private JLabel fileL;
+    private JTextField fileTF;
+    private JLabel headerL;
+    private JSpinner headerSpin;
+    private JButton loadBut;
+    private JPanel nameFilePanel;
+    private JLabel numToSkipL;
+    private JSpinner numToSkipSpin;
+    private JButton outFileBrowseBut;
+    private JLabel outFileL;
+    private JPanel outFilePanel;
+    private JTextField outFileTF;
+    private JLabel pepColmL;
+    private JSpinner pepColmSpin;
+    private JRadioButton pepSeqRB;
+    private JButton saveBut;
+    private JPanel saveClearPanel;
+    private JRadioButton stEndRB;
+    private JLabel startL;
+    private JSpinner startSpin;
     // End of variables declaration//GEN-END:variables
     private JSpinner[] colmSpinners;
 }

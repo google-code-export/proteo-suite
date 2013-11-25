@@ -13,8 +13,10 @@
 
 package org.proteosuite.utils;
 
+import java.awt.Frame;
 import java.util.Set;
-import javax.swing.JDialog;
+
+import javax.swing.*;
 
 /**
  * Progress bar used for long procedures (tasks).
@@ -28,7 +30,7 @@ public class ProgressBarDialog extends javax.swing.JDialog {
     private SystemUtils SysUtils = new SystemUtils();
     
     //... Creates new form ProgressBarDialog ...//
-    public ProgressBarDialog(java.awt.Frame parent, boolean modal, String sThread) {
+    public ProgressBarDialog(Frame parent, boolean modal, String sThread) {
         super(parent, modal);        
         initComponents();
         setLocationRelativeTo(parent);
@@ -43,7 +45,6 @@ public class ProgressBarDialog extends javax.swing.JDialog {
     /** 
      * This method is called from within the constructor to initialise the form.
      */
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -108,9 +109,9 @@ public class ProgressBarDialog extends javax.swing.JDialog {
     }//GEN-LAST:event_jbCancelActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jbCancel;
-    private javax.swing.JLabel jlExecuting;
-    private javax.swing.JProgressBar jpbStatusBar;
+    private JButton jbCancel;
+    private JLabel jlExecuting;
+    private JProgressBar jpbStatusBar;
     // End of variables declaration//GEN-END:variables
 
 }

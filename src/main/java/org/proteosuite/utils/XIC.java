@@ -46,8 +46,8 @@ public class XIC {
             //... Identify MS1 data ...//
             String mslevel = "";                        
             List<CVParam> specParam = spectrum.getCvParam();       
-            for (Iterator lCVParamIterator = specParam.iterator(); lCVParamIterator.hasNext();){
-                CVParam lCVParam = (CVParam) lCVParamIterator.next();
+            for (Iterator<CVParam> lCVParamIterator = specParam.iterator(); lCVParamIterator.hasNext();){
+                CVParam lCVParam = lCVParamIterator.next();
                 if (lCVParam.getAccession().equals("MS:1000511")){
                     mslevel = lCVParam.getValue().trim();
                 }
@@ -57,8 +57,8 @@ public class XIC {
                 double rt = 0.0;
                 String unitRT = "";
                 List<CVParam> scanParam = spectrum.getScanList().getScan().get(0).getCvParam();
-                for (Iterator lCVParamIterator = scanParam.iterator(); lCVParamIterator.hasNext();){
-                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                for (Iterator<CVParam> lCVParamIterator = scanParam.iterator(); lCVParamIterator.hasNext();){
+                    CVParam lCVParam = lCVParamIterator.next();
                     if (lCVParam.getAccession().equals("MS:1000016")){
                         unitRT = lCVParam.getUnitAccession().trim();
                         if (unitRT.equals("UO:0000031")) //... Validating rt unit (mins or secs) ...//

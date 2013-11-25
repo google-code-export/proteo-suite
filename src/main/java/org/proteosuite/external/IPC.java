@@ -8,15 +8,17 @@ import java.io.File;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
+
 import org.jfree.data.UnknownKeyException;
+
 import static java.lang.Math.*;
 
 /**
@@ -44,14 +46,14 @@ public class IPC {
     final public static int ORBITRAP_RESOLUTION = 100000;
     final public static String ELEMENTFILE = "elemente.txt";
     //final private static Pattern isotopePattern = Pattern.compile("([\\d\\s]{3})\\s([\\w\\s]{3})\\s([\\d\\s]{3})\\s\\s([\\d.]+)(?:\\(\\d+\\))#?\\s+([\\d.]+)?(?:\\(\\d+\\))?\\s*([\\d.]+)?.*");
-    private HashMap<String, TreeSet<Peak>> elements;
-    private static HashMap<Character, HashMap<String, Integer>> aminoAcids = null;
+    private Map<String, TreeSet<Peak>> elements;
+    private static Map<Character, Map<String, Integer>> aminoAcids = null;
 
-    public HashMap<String, TreeSet<Peak>> getElements() {
+    public Map<String, TreeSet<Peak>> getElements() {
         return elements;
     }
 
-    public static HashMap<Character, HashMap<String, Integer>> getAminoAcids() {
+    public static Map<Character, Map<String, Integer>> getAminoAcids() {
         if (aminoAcids == null) {
             aminoAcids = makeAminoAcidsTable();
         }
@@ -204,10 +206,10 @@ public class IPC {
         private int charge = 1;
         private boolean printOutput = false;
         private double minIntensityToKeep = DEFAULT_MIN_INT;
-        private HashMap<String, Integer> components;
+        private Map<String, Integer> components;
         private boolean breakProcess = false;
-        private HashMap<String, TreeSet<Peak>> overriddenElements = null;
-        private HashMap<Character, HashMap<String, Integer>> overriddenAminoAcids = null;
+        private Map<String, TreeSet<Peak>> overriddenElements = null;
+        private Map<Character, Map<String, Integer>> overriddenAminoAcids = null;
 
         public Options() {
             components = new HashMap<String, Integer>();
@@ -243,7 +245,7 @@ public class IPC {
         public boolean addPeptideFile(String fileName) {
             BufferedReader peptidesIn;
             String line;
-            int index = 0;
+            //int index = 0;
             try {
                 peptidesIn = new BufferedReader(new FileReader(fileName));
                 StringBuilder sb = new StringBuilder();
@@ -259,8 +261,8 @@ public class IPC {
             }
         }
 
-        public static HashMap<String, Integer> parseChemFormula(String formula) throws IllegalArgumentException {
-            HashMap<String, Integer> components = new HashMap<String, Integer>();
+        public static Map<String, Integer> parseChemFormula(String formula) throws IllegalArgumentException {
+            Map<String, Integer> components = new HashMap<String, Integer>();
             String[] split = formula.replaceAll("([A-Z])", "\t$1").trim().split("\t");
             //System.out.println(Arrays.toString(split));
             for (String componentString : split) {
@@ -288,7 +290,7 @@ public class IPC {
             addComponents(parseChemFormula(formula));
         }
 
-        private static void addComponent(String symbol, int number, HashMap<String, Integer> components) {
+        private static void addComponent(String symbol, int number, Map<String, Integer> components) {
             symbol = symbol.trim();
             if (symbol.equals("")) {
                 return;
@@ -304,13 +306,13 @@ public class IPC {
             addComponent(symbol, number, components);
         }
 
-        public static void addComponents(HashMap<String, Integer> newComponents, HashMap<String, Integer> components) {
+        public static void addComponents(Map<String, Integer> newComponents, Map<String, Integer> components) {
             for (String symbol : newComponents.keySet()) {
                 addComponent(symbol, newComponents.get(symbol), components);
             }
         }
 
-        public void addComponents(HashMap<String, Integer> newComponents) {
+        public void addComponents(Map<String, Integer> newComponents) {
             if (newComponents == null) {
                 return;
             }
@@ -504,19 +506,19 @@ public class IPC {
             this.charge = charge;
         }
 
-        public void setOverriddenElements(HashMap<String, TreeSet<Peak>> overriddenElements) {
+        public void setOverriddenElements(Map<String, TreeSet<Peak>> overriddenElements) {
             this.overriddenElements = overriddenElements;
         }
 
-        public HashMap<String, TreeSet<Peak>> getOverriddenElements() {
+        public Map<String, TreeSet<Peak>> getOverriddenElements() {
             return overriddenElements;
         }
 
-        public HashMap<Character, HashMap<String, Integer>> getOverriddenAminoAcids() {
+        public Map<Character, Map<String, Integer>> getOverriddenAminoAcids() {
             return overriddenAminoAcids;
         }
 
-        public void setOverriddenAminoAcids(HashMap<Character, HashMap<String, Integer>> overriddenAminoAcids) {
+        public void setOverriddenAminoAcids(Map<Character, Map<String, Integer>> overriddenAminoAcids) {
             this.overriddenAminoAcids = overriddenAminoAcids;
         }
 
@@ -538,7 +540,7 @@ public class IPC {
             return atoms;
         }
 
-        public HashMap<String, Integer> getComponents() {
+        public Map<String, Integer> getComponents() {
             return components;
         }
 
@@ -963,7 +965,7 @@ public class IPC {
 
     public void calcPeaks(Results results) {
         BinController roundingBinningController = new MassDiffBinController(ROUNDING_MAX_DIFF);
-        HashMap<String, Integer> elementalComponents = results.getOptions().getComponents();
+        Map<String, Integer> elementalComponents = results.getOptions().getComponents();
         results.getPeaks().add(new Peak(0, 1));
         //System.out.println("peaks size: " + results.getPeaks().size());
         if (results.options.isBreakProcess()) {
@@ -1057,9 +1059,9 @@ public class IPC {
                 };
     }
 
-    public static HashMap<Character, HashMap<String, Integer>> makeAminoAcidsTable() {
-        HashMap<Character, HashMap<String, Integer>> newAminoAcidTable = new HashMap<Character, HashMap<String, Integer>>();
-        HashMap<String, Integer> map = new HashMap<String, Integer>();
+    public static Map<Character, Map<String, Integer>> makeAminoAcidsTable() {
+        Map<Character, Map<String, Integer>> newAminoAcidTable = new HashMap<Character, Map<String, Integer>>();
+        Map<String, Integer> map = new HashMap<String, Integer>();
         newAminoAcidTable.put('A', map);
         map.put("C", 3);
         map.put("H", 5);
@@ -1188,7 +1190,7 @@ public class IPC {
 
     boolean initElements() {
         BufferedReader data;
-        int count;
+        //int count;
         //Peak isotope;
         if ((data = openFile(ELEMENTFILE)) == null) {
             return false;
@@ -1286,13 +1288,13 @@ public class IPC {
         return sum;
     }
 
-    public static String calcSum(HashMap<String, Integer> components) {
+    public static String calcSum(Map<String, Integer> components) {
         return calcSum(components, true);
     }
 
-    public static String calcSum(HashMap<String, Integer> components, boolean spaces) {
+    public static String calcSum(Map<String, Integer> components, boolean spaces) {
         StringBuilder formula = new StringBuilder();
-        LinkedList<String> keys = new LinkedList<String>(components.keySet());
+        List<String> keys = new LinkedList<String>(components.keySet());
         Collections.sort(keys);
         for (String symbol : keys) {
             formula.append(String.format("%s%d", symbol, components.get(symbol)));

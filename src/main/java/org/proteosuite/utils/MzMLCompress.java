@@ -100,8 +100,8 @@ public class MzMLCompress {
 
                 //... cvParams ...//
                 List<CVParam> specParam = spectrum.getCvParam();
-                for (Iterator lCVParamIterator = specParam.iterator(); lCVParamIterator.hasNext();){
-                    CVParam lCVParam = (CVParam) lCVParamIterator.next();
+                for (Iterator<CVParam> lCVParamIterator = specParam.iterator(); lCVParamIterator.hasNext();){
+                    CVParam lCVParam = lCVParamIterator.next();
                     spectrumW.getCvParam().add(lCVParam);
                 }
 
@@ -152,8 +152,8 @@ public class MzMLCompress {
                         intensities[iI] = intenNumbers[iI].doubleValue();
                     }
                     //... Removing zero values ...//
-                    ArrayList<Double> zeroMz = new ArrayList<Double>();
-                    ArrayList<Double> zeroIntens = new ArrayList<Double>();
+                    List<Double> zeroMz = new ArrayList<Double>();
+                    List<Double> zeroIntens = new ArrayList<Double>();
                     double last=0.0d;
                     for (int iI = 0; iI < mzNumbers.length; iI++){  
                         if(bZeros){
