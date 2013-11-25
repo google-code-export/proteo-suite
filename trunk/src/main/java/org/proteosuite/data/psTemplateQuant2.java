@@ -24,11 +24,11 @@ public class psTemplateQuant2 {
     int template2Index;
 
     public psTemplateQuant2() {
-        this.mzIndex = 0;
-        this.scanID = "";
-        this.scanIndex = 0;
-        this.quantIntensities = 0.0f;
-        this.template2Index = 0;
+        mzIndex = 0;
+        scanID = "";
+        scanIndex = 0;
+        quantIntensities = 0.0f;
+        template2Index = 0;
     }    
     public int getMzIndex()
     {

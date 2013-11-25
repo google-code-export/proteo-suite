@@ -18,39 +18,16 @@ package org.proteosuite.utils;
  * @author fgonzalez
  */
 import java.awt.Color;
-import java.awt.Cursor;
-import java.net.URL;
-import java.net.MalformedURLException;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import java.awt.*;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
-import javax.swing.JComponent;
 import java.awt.event.MouseMotionListener;
-import javax.swing.JTextArea;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JInternalFrame;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.FastScatterPlot;
-import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
-import javax.swing.JButton;
-import org.jfree.data.RangeType;
-import org.jfree.chart.axis.DateTickUnit;
-import org.jfree.chart.axis.DateAxis;
-import java.text.SimpleDateFormat;
-import org.jfree.ui.RectangleEdge;
-import java.awt.geom.Point2D;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-import java.awt.geom.Line2D;
 
 /**
  * This class corresponds to 2D Visualisation of MS raw data. This is under construction ...//
@@ -63,9 +40,9 @@ import java.awt.geom.Line2D;
 public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
 
     private float[][] data = new float[2][1000000];
-    private float[] mz;
-    private float[] intens;
-    private float[] art;
+    //private float[] mz;
+    //private float[] intens;
+    //private float[] art;
 
     //... Generate chart from raw data ...//
     public TwoDPlot(final String title, float[] mz, float[] intens, float[] art) {            
@@ -77,9 +54,9 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
         setMaximizable(true);
         setClosable(true);
         setIconifiable(true);
-        this.mz = mz;
-        this.intens = intens;
-        this.art = art;
+        //this.mz = mz;
+        //this.intens = intens;
+        //this.art = art;
         
         //CheckMemory chm = new CheckMemory("Before filling arrays");
         

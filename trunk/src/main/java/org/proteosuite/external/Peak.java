@@ -46,9 +46,7 @@ public class Peak
 
    @Override
    public int hashCode() {
-
       return new Double(100 * p * mass).hashCode() ^ new Double(mass).hashCode();
-
    }
 
    @Override

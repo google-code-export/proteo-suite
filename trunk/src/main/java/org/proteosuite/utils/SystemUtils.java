@@ -27,9 +27,8 @@ public class SystemUtils {
     private Runtime runtime = Runtime.getRuntime(); 
             
     public String getTime(){
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-        Date date = new Date();
-        return dateFormat.format(date);
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");        
+        return dateFormat.format(new Date());
     }
     public void checkMemory(String sTitle) {                               
         System.out.println("Memory check at " + sTitle + " ... ");         
@@ -39,13 +38,13 @@ public class SystemUtils {
         System.out.println("Max Memory:" + (runtime.maxMemory() / mb) + " MB");
     }    
     public long getUsedMemory(){        
-        return ((runtime.totalMemory() - runtime.freeMemory()) / mb);
+        return (runtime.totalMemory() - runtime.freeMemory()) / mb;
     }    
     public long getFreeMemory(){        
-        return (runtime.freeMemory() / mb);
+        return runtime.freeMemory() / mb;
     }    
     public long getTotalMemory(){        
-        return (runtime.totalMemory() / mb);
+        return runtime.totalMemory() / mb;
     }        
     public long getMaxMemory(){        
         return runtime.maxMemory() / mb;

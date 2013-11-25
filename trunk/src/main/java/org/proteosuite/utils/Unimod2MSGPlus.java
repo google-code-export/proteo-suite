@@ -17,8 +17,6 @@ package org.proteosuite.utils;
  * This class allows the upload of modifications specified on Unimod
  * @author jonesar
  */
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +37,7 @@ public class Unimod2MSGPlus {
     
     private static String UNIMOD_PATH =  "/resources/unimod.xml";
     private List<ModT> modList;
-    private List<ArrayList> alMods = new ArrayList();
+    private List<List<String>> alMods = new ArrayList<List<String>>();
 
     //... Constructor ...//
     public Unimod2MSGPlus(){
@@ -54,7 +52,7 @@ public class Unimod2MSGPlus {
         }
     }
     //... Getting all modifications ...//
-    public List<ArrayList> getAllMods(){        
+    public List<List<String>> getAllMods(){        
         try{
             for (ModT mod : modList) {
                 String modValue = "";
@@ -88,8 +86,8 @@ public class Unimod2MSGPlus {
                     else{
                         System.out.println("Position not recognized:" + position);
                     }
-                    ArrayList al = new ArrayList();                                        
-                    modValue=psiMs+" ("+site2+")";
+                    List<String> al = new ArrayList<String>();                                        
+                    modValue = psiMs+" ("+site2+")";
 
                     al.add(modValue);
                     al.add(Double.toString(mass));
@@ -107,15 +105,12 @@ public class Unimod2MSGPlus {
         return alMods;
     }
     //... Sorting array ...//
-    private static class ArrayList2DComparator implements Comparator {  
-        public int compare(Object obj1, Object obj2) {  
-            if (! (obj1 instanceof ArrayList) || ! (obj2 instanceof ArrayList)) {  
-                throw new ClassCastException(  
-                            "compared objects must be instances of ArrayList");  
-            }  
-            String string1 = (String) ((ArrayList) obj1).get(0);  
-            String string2 = (String) ((ArrayList) obj2).get(0);  
-            return string1.toLowerCase().compareTo(string2.toLowerCase());  
+    private static class ArrayList2DComparator implements Comparator<List<String>> {  
+        public int compare(List<String> P, List<String> Q) {  
+            String S = P.get(0);
+            String T = Q.get(0);
+            
+            return S.toLowerCase().compareTo(T.toLowerCase());  
         }  
     }     
     

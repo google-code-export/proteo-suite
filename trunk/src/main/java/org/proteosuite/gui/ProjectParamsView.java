@@ -216,7 +216,7 @@ public class ProjectParamsView extends javax.swing.JPanel {
             System.err.println("Error: " + e.getMessage());
         }
     }
-    @SuppressWarnings("unchecked")
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

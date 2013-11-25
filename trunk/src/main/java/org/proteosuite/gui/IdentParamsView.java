@@ -20,19 +20,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.ListModel;
-import javax.swing.SwingUtilities;
+
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.apache.commons.lang.ArrayUtils;
+
 import org.proteosuite.utils.Unimod2MSGPlus;
 
 /**
@@ -46,9 +44,9 @@ public class IdentParamsView extends javax.swing.JPanel {
     private String sWorkspace = "";    
     private String sMode = "";
     private String sRegex = "";
-    private HashMap<String, String> hmParams = new HashMap();
-    private HashMap<String, String> hmUniModsFixed = new HashMap();
-    private HashMap<String, String> hmUniModsVar = new HashMap();
+    private Map<String, String> hmParams = new HashMap<String, String>();
+    private Map<String, String> hmUniModsFixed = new HashMap<String, String>();
+    private Map<String, String> hmUniModsVar = new HashMap<String, String>();
     private boolean bRun = false;
     private boolean bProteinInference = false;
     
@@ -66,11 +64,11 @@ public class IdentParamsView extends javax.swing.JPanel {
     //... Initialise modifications from Unimod ...//
     public void initMods(){
         Unimod2MSGPlus getMods = new Unimod2MSGPlus();
-        List<ArrayList> modList = new ArrayList();
-        DefaultListModel listModel = new DefaultListModel();
+        List<List<String>> modList = new ArrayList<List<String>>();
+        DefaultListModel<String> listModel = new DefaultListModel<String>();
 
         modList = getMods.getAllMods();
-        for (ArrayList al : modList) {
+        for (List<String> al : modList) {
             listModel.addElement(al.get(0));
             //... 0=Key, 1=Mass(E.g. 15.994915), 2=site(E.g. M), 3=position(E.g. N-term), 4=psiMod(E.g. Oxidation) ...//
             hmUniModsFixed.put(al.get(0).toString(), al.get(1).toString()+","+al.get(2).toString()+",fix,"+al.get(3).toString()+","+al.get(4).toString());
@@ -82,11 +80,13 @@ public class IdentParamsView extends javax.swing.JPanel {
     public void initValues(){
         //... Getting total available processors for multithreading ...//
         int processors = Runtime.getRuntime().availableProcessors();
-        if (processors <= 0){
+        if (processors <= 0)
             processors = 1;
-        }else{
+        else if (processors >= 8) // TODO: This needs fixing at the jcThreads level
+        	processors = 7;
+        else
             processors--;
-        }                        
+
         jcThreads.setSelectedIndex(processors);
         jcEnzyme.setSelectedIndex(1);
         jcMaxMissedCleavage.setSelectedIndex(2);
@@ -100,89 +100,88 @@ public class IdentParamsView extends javax.swing.JPanel {
             jbSave.setVisible(true);
             jbRun.setVisible(false);            
         }
-    }    
-    @SuppressWarnings("unchecked")
+    }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        bgMonoAver = new javax.swing.ButtonGroup();
-        jLabel13 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        jlEnzyme = new javax.swing.JLabel();
-        jcMSMSTol = new javax.swing.JComboBox();
-        jtMSMSTol = new javax.swing.JTextField();
-        jlMSMSTol = new javax.swing.JLabel();
-        jcEnzyme = new javax.swing.JComboBox();
-        jlDatabaseFile = new javax.swing.JLabel();
-        jtDatabaseFile = new javax.swing.JTextField();
-        jbAddDatabaseFile = new javax.swing.JButton();
-        jlErrorRange = new javax.swing.JLabel();
-        jchbSearchDecoy = new javax.swing.JCheckBox();
-        jlFragMethod = new javax.swing.JLabel();
-        jcFragMethod = new javax.swing.JComboBox();
-        jlInstrument = new javax.swing.JLabel();
-        jcInstrument = new javax.swing.JComboBox();
-        jtErrorRange = new javax.swing.JTextField();
-        jlProtocol = new javax.swing.JLabel();
-        jcProtocol = new javax.swing.JComboBox();
-        jlMaxMissedCleavage = new javax.swing.JLabel();
-        jcMaxMissedCleavage = new javax.swing.JComboBox();
-        jlMaxPepLen = new javax.swing.JLabel();
-        jtMaxPepLen = new javax.swing.JTextField();
-        jlMinPepLen = new javax.swing.JLabel();
-        jtMinPepLen = new javax.swing.JTextField();
-        jlMinCharge = new javax.swing.JLabel();
-        jlMaxCharge = new javax.swing.JLabel();
-        jtMinCharge = new javax.swing.JTextField();
-        jtMaxCharge = new javax.swing.JTextField();
-        jlMatches = new javax.swing.JLabel();
-        jtSpectraMatches = new javax.swing.JTextField();
-        jlOutput = new javax.swing.JLabel();
-        jcOutput = new javax.swing.JComboBox();
-        jlThreads = new javax.swing.JLabel();
-        jcThreads = new javax.swing.JComboBox();
-        jPanel2 = new javax.swing.JPanel();
-        jlFixedMods = new javax.swing.JLabel();
-        jlVarMods = new javax.swing.JLabel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        jlstVarMods = new javax.swing.JList();
-        jbAddVarMods = new javax.swing.JButton();
-        jbDelVarMods = new javax.swing.JButton();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jlstUnimods = new javax.swing.JList();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jlstFixedMods = new javax.swing.JList();
-        jbAddFixedMods = new javax.swing.JButton();
-        jbDelMods = new javax.swing.JButton();
-        jlUniMod = new javax.swing.JLabel();
-        jbSave = new javax.swing.JButton();
-        jbSetDefaults = new javax.swing.JButton();
-        jbRun = new javax.swing.JButton();
-        jlCancel = new javax.swing.JLabel();
-        jcbProteinInference = new javax.swing.JCheckBox();
-        jtRegex = new javax.swing.JTextField();
-        jlRegex = new javax.swing.JLabel();
+        bgMonoAver = new ButtonGroup();
+        jLabel13 = new JLabel();
+        jPanel1 = new JPanel();
+        jlEnzyme = new JLabel();
+        jcMSMSTol = new JComboBox<String>();
+        jtMSMSTol = new JTextField();
+        jlMSMSTol = new JLabel();
+        jcEnzyme = new JComboBox<String>();
+        jlDatabaseFile = new JLabel();
+        jtDatabaseFile = new JTextField();
+        jbAddDatabaseFile = new JButton();
+        jlErrorRange = new JLabel();
+        jchbSearchDecoy = new JCheckBox();
+        jlFragMethod = new JLabel();
+        jcFragMethod = new JComboBox<String>();
+        jlInstrument = new JLabel();
+        jcInstrument = new JComboBox<String>();
+        jtErrorRange = new JTextField();
+        jlProtocol = new JLabel();
+        jcProtocol = new JComboBox<String>();
+        jlMaxMissedCleavage = new JLabel();
+        jcMaxMissedCleavage = new JComboBox<String>();
+        jlMaxPepLen = new JLabel();
+        jtMaxPepLen = new JTextField();
+        jlMinPepLen = new JLabel();
+        jtMinPepLen = new JTextField();
+        jlMinCharge = new JLabel();
+        jlMaxCharge = new JLabel();
+        jtMinCharge = new JTextField();
+        jtMaxCharge = new JTextField();
+        jlMatches = new JLabel();
+        jtSpectraMatches = new JTextField();
+        jlOutput = new JLabel();
+        jcOutput = new JComboBox<String>();
+        jlThreads = new JLabel();
+        jcThreads = new JComboBox<String>();
+        jPanel2 = new JPanel();
+        jlFixedMods = new JLabel();
+        jlVarMods = new JLabel();
+        jScrollPane3 = new JScrollPane();
+        jlstVarMods = new JList<String>();
+        jbAddVarMods = new JButton();
+        jbDelVarMods = new JButton();
+        jScrollPane4 = new JScrollPane();
+        jlstUnimods = new JList<String>();
+        jScrollPane2 = new JScrollPane();
+        jlstFixedMods = new JList<String>();
+        jbAddFixedMods = new JButton();
+        jbDelMods = new JButton();
+        jlUniMod = new JLabel();
+        jbSave = new JButton();
+        jbSetDefaults = new JButton();
+        jbRun = new JButton();
+        jlCancel = new JLabel();
+        jcbProteinInference = new JCheckBox();
+        jtRegex = new JTextField();
+        jlRegex = new JLabel();
 
         jLabel13.setText("jLabel13");
 
         setMaximumSize(new java.awt.Dimension(792, 648));
         setMinimumSize(new java.awt.Dimension(792, 648));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters:"));
+        jPanel1.setBorder(BorderFactory.createTitledBorder("Parameters:"));
         jPanel1.setMaximumSize(new java.awt.Dimension(700, 234));
         jPanel1.setMinimumSize(new java.awt.Dimension(700, 234));
         jPanel1.setPreferredSize(new java.awt.Dimension(700, 234));
 
         jlEnzyme.setText("Enzyme:");
 
-        jcMSMSTol.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ppm", "Da" }));
+        jcMSMSTol.setModel(new DefaultComboBoxModel<String>(new String[] { "ppm", "Da" }));
 
         jtMSMSTol.setText("20");
         jtMSMSTol.setToolTipText("Precursor Mass Tolerance (E.g. +/- 2.5Da, +/- 20ppm, etc.), Use commas for asymetric values (e.g. 0.5,2.5)");
 
         jlMSMSTol.setText("<html> MS/MS tol. &plusmn;</html>");
 
-        jcEnzyme.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "unspecified cleavage", "Trypsin", "Chymotrypsin", "Lys-C", "Lys-N", "glutamyl endopeptidase", "Arg-C", "Asp-N", "alphaLP", "no cleavage" }));
+        jcEnzyme.setModel(new DefaultComboBoxModel<String>(new String[] { "unspecified cleavage", "Trypsin", "Chymotrypsin", "Lys-C", "Lys-N", "glutamyl endopeptidase", "Arg-C", "Asp-N", "alphaLP", "no cleavage" }));
 
         jlDatabaseFile.setText("Database file:");
 
@@ -201,22 +200,22 @@ public class IdentParamsView extends javax.swing.JPanel {
 
         jlFragMethod.setText("Fragmentation Method:");
 
-        jcFragMethod.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Default", "CID", "ETD", "HCD" }));
+        jcFragMethod.setModel(new DefaultComboBoxModel<String>(new String[] { "Default", "CID", "ETD", "HCD" }));
 
         jlInstrument.setText("Instrument:");
 
-        jcInstrument.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Low-res LCQ/LTQ", "High-res LTQ", "TOF", "Q-Exactive" }));
+        jcInstrument.setModel(new DefaultComboBoxModel<String>(new String[] { "Low-res LCQ/LTQ", "High-res LTQ", "TOF", "Q-Exactive" }));
 
         jtErrorRange.setText("0,1");
         jtErrorRange.setToolTipText("Range of allowed isotope peak errors (E.g. 0,1)");
 
         jlProtocol.setText("Protocol:");
 
-        jcProtocol.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Default", "Phosphorylation", "iTRAQ", "iTRAQPhospo" }));
+        jcProtocol.setModel(new DefaultComboBoxModel<String>(new String[] { "Default", "Phosphorylation", "iTRAQ", "iTRAQPhospo" }));
 
         jlMaxMissedCleavage.setText("Tryptic peptides:");
 
-        jcMaxMissedCleavage.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "non-tryptic", "semi-tryptic", "fully-tryptic peptides only" }));
+        jcMaxMissedCleavage.setModel(new DefaultComboBoxModel<String>(new String[] { "non-tryptic", "semi-tryptic", "fully-tryptic peptides only" }));
 
         jlMaxPepLen.setText("Max Peptide Length:");
 
@@ -245,14 +244,14 @@ public class IdentParamsView extends javax.swing.JPanel {
 
         jlOutput.setText("Output:");
 
-        jcOutput.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Basic scores only", "Additional features" }));
+        jcOutput.setModel(new DefaultComboBoxModel<String>(new String[] { "Basic scores only", "Additional features" }));
 
         jlThreads.setText("Threads:");
 
-        jcThreads.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6", "7", "8" }));
+        jcThreads.setModel(new DefaultComboBoxModel<String>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8" }));
         jcThreads.setToolTipText("Number of concurrent threads to be executed");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -399,10 +398,10 @@ public class IdentParamsView extends javax.swing.JPanel {
 
         jlVarMods.setText("Variable modifications:");
 
-        jlstVarMods.setModel(new javax.swing.AbstractListModel() {
+        jlstVarMods.setModel(new AbstractListModel<String>() {
             String[] strings = { "Oxidation (M)" };
             public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane3.setViewportView(jlstVarMods);
 
@@ -422,10 +421,10 @@ public class IdentParamsView extends javax.swing.JPanel {
 
         jScrollPane4.setViewportView(jlstUnimods);
 
-        jlstFixedMods.setModel(new javax.swing.AbstractListModel() {
+        jlstFixedMods.setModel(new AbstractListModel<String>() {
             String[] strings = { "Carbamidomethyl (C)" };
             public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+            public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane2.setViewportView(jlstFixedMods);
 
@@ -612,31 +611,28 @@ public class IdentParamsView extends javax.swing.JPanel {
 
     private void jbAddFixedModsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddFixedModsActionPerformed
         //... Add Fixed Modifications ...//
-        Object[] selectedFixedMods = jlstUnimods.getSelectedValues();
-        ListModel fixedModsModel = jlstFixedMods.getModel();
-
-        //... Copy elements from the list model ...//
-        int oldSize = fixedModsModel.getSize();
-        Object[] oldFixedMods = new Object[oldSize];
-        for (int iI = 0; iI < oldSize; iI++) {
-            oldFixedMods[iI] = fixedModsModel.getElementAt(iI);
-        }
+        List<String> selectedFixedMods = jlstUnimods.getSelectedValuesList();
+        ListModel<String> fixedModsModel = jlstFixedMods.getModel();
         
         //... Adding values ...//
-        if (oldFixedMods[0].equals("--- none selected ---")) {
-            DefaultListModel listModel = new DefaultListModel();
-            if (selectedFixedMods.length > 0) {
-                for (Object mod : selectedFixedMods) {
+        if (fixedModsModel.getElementAt(0).equals("--- none selected ---")) {
+            DefaultListModel<String> listModel = new DefaultListModel<String>();
+            if (selectedFixedMods.size() > 0) {
+                for (String mod : selectedFixedMods) {
                     listModel.addElement(mod);
                 }
                 jlstFixedMods.setModel(listModel);
             }
         }
         else {
-            DefaultListModel listModel = new DefaultListModel();
-            Object[] allMods = ArrayUtils.addAll(oldFixedMods, selectedFixedMods);
-            Arrays.sort(allMods);
-            for (Object mod : allMods) {
+            DefaultListModel<String> listModel = new DefaultListModel<String>();
+            List<String> allMods = new ArrayList<String>(selectedFixedMods);
+            for (int i = 0; i < fixedModsModel.getSize(); i++) {
+            	allMods.add(fixedModsModel.getElementAt(i));
+            }
+            
+            Collections.sort(allMods);
+            for (String mod : allMods) {
                 if (!listModel.contains(mod)) {
                     listModel.addElement(mod);
                 }
@@ -647,17 +643,17 @@ public class IdentParamsView extends javax.swing.JPanel {
 
     private void jbDelModsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDelModsActionPerformed
         //... Remove Fixed Modifications ...//
-        Object[] selectedFixedMods = jlstFixedMods.getSelectedValues();
-        ListModel fixedModsModel = jlstFixedMods.getModel();
+        List<String> selectedFixedMods = jlstFixedMods.getSelectedValuesList();
+        ListModel<String> fixedModsModel = jlstFixedMods.getModel();
 
         //... Copy elements from the list model ...//
         int size = fixedModsModel.getSize();
-        Object[] fixedMods = new Object[size];
+        String[] fixedMods = new String[size];
         for (int iI = 0; iI < size; iI++) {
             fixedMods[iI] = fixedModsModel.getElementAt(iI);
         }
 
-        List<Object> fixedModsList = new LinkedList(Arrays.asList(fixedMods));
+        List<String> fixedModsList = new LinkedList<String>(Arrays.asList(fixedMods));
 
         for (Object mod : selectedFixedMods) {
             fixedModsList.remove(mod);
@@ -666,8 +662,8 @@ public class IdentParamsView extends javax.swing.JPanel {
             fixedModsList.add("--- none selected ---");
         }
         //... Set new list ...//
-        DefaultListModel newFixedModsModel = new DefaultListModel();
-        for (Object mod : fixedModsList) {
+        DefaultListModel<String> newFixedModsModel = new DefaultListModel<String>();
+        for (String mod : fixedModsList) {
             newFixedModsModel.addElement(mod);
         }
         jlstFixedMods.setModel(newFixedModsModel);
@@ -675,31 +671,30 @@ public class IdentParamsView extends javax.swing.JPanel {
 
     private void jbAddVarModsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddVarModsActionPerformed
         //... Add Fixed Modifications ...//
-        Object[] selectedVarMods = jlstUnimods.getSelectedValues();
-        ListModel varModsModel = jlstVarMods.getModel();
-
-        //... Copy elements from the list model ...//
-        int oldSize = varModsModel.getSize();
-        Object[] oldVarMods = new Object[oldSize];
-        for (int iI = 0; iI < oldSize; iI++) {
-            oldVarMods[iI] = varModsModel.getElementAt(iI);
-        }
+        List<String> selectedVarMods = jlstUnimods.getSelectedValuesList();
+        ListModel<String> varModsModel = jlstVarMods.getModel();
         
         //... Adding values ...//
-        if (oldVarMods[0].equals("--- none selected ---")) {
-            DefaultListModel listModel = new DefaultListModel();
-            if (selectedVarMods.length > 0) {
-                for (Object mod : selectedVarMods) {
+        if (varModsModel.getElementAt(0).equals("--- none selected ---")) {
+            DefaultListModel<String> listModel = new DefaultListModel<String>();
+            if (selectedVarMods.size() > 0) {
+                for (String mod : selectedVarMods) {
                     listModel.addElement(mod);
                 }
                 jlstVarMods.setModel(listModel);
             }
         }
         else {
-            DefaultListModel listModel = new DefaultListModel();
-            Object[] allMods = ArrayUtils.addAll(oldVarMods, selectedVarMods);
-            Arrays.sort(allMods);
-            for (Object mod : allMods) {
+            DefaultListModel<String> listModel = new DefaultListModel<String>();
+
+            List<String> allMods = new ArrayList<String>(selectedVarMods);
+            for (int i = 0; i < varModsModel.getSize(); i++) {
+            	allMods.add(varModsModel.getElementAt(i));
+            }
+            
+            Collections.sort(allMods);
+            
+            for (String mod : allMods) {
                 if (!listModel.contains(mod)) {
                     listModel.addElement(mod);
                 }
@@ -710,27 +705,27 @@ public class IdentParamsView extends javax.swing.JPanel {
 
     private void jbDelVarModsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbDelVarModsActionPerformed
         //... Remove Fixed Modifications ...//
-        Object[] selectedVarMods = jlstVarMods.getSelectedValues();
-        ListModel varModsModel = jlstVarMods.getModel();
+        List<String> selectedVarMods = jlstVarMods.getSelectedValuesList();
+        ListModel<String> varModsModel = jlstVarMods.getModel();
 
         //... Copy elements from the list model ...//
         int size = varModsModel.getSize();
-        Object[] varMods = new Object[size];
+        String[] varMods = new String[size];
         for (int iI = 0; iI < size; iI++) {
             varMods[iI] = varModsModel.getElementAt(iI);
         }
 
-        List<Object> varModsList = new LinkedList(Arrays.asList(varMods));
+        List<String> varModsList = new LinkedList<String>(Arrays.asList(varMods));
 
-        for (Object mod : selectedVarMods) {
+        for (String mod : selectedVarMods) {
             varModsList.remove(mod);
         }
         if (varModsList.isEmpty()) {
             varModsList.add("--- none selected ---");
         }
         //... Set new list ...//
-        DefaultListModel newVarModsModel = new DefaultListModel();
-        for (Object mod : varModsList) {
+        DefaultListModel<String> newVarModsModel = new DefaultListModel<String>();
+        for (String mod : varModsList) {
             newVarModsModel.addElement(mod);
         }
         jlstVarMods.setModel(newVarModsModel);        
@@ -772,8 +767,8 @@ public class IdentParamsView extends javax.swing.JPanel {
                 hmParams.put("-ntt", Integer.toString(jcMaxMissedCleavage.getSelectedIndex())); //... 9 - Number of tolerable termini   ...//
 
                 //... 10 - Modification file name ...//            
-                ListModel fixedModsModel = jlstFixedMods.getModel();
-                ListModel varModsModel = jlstVarMods.getModel();
+                ListModel<String> fixedModsModel = jlstFixedMods.getModel();
+                ListModel<String> varModsModel = jlstVarMods.getModel();
                 int iSizeFixed = fixedModsModel.getSize();
                 int iSizeVar = varModsModel.getSize();
                 if(iSizeFixed>0||iSizeVar>0){
@@ -818,7 +813,7 @@ public class IdentParamsView extends javax.swing.JPanel {
     private void jbSetDefaultsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSetDefaultsActionPerformed
         
     }//GEN-LAST:event_jbSetDefaultsActionPerformed
-    public HashMap getParams() {
+    public Map<String, String> getParams() {
         return hmParams;
     }
     public boolean getRun() {
@@ -840,62 +835,62 @@ public class IdentParamsView extends javax.swing.JPanel {
         return hmUniModsVar.get(sValue);
     }    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup bgMonoAver;
-    private javax.swing.JLabel jLabel13;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JButton jbAddDatabaseFile;
-    private javax.swing.JButton jbAddFixedMods;
-    private javax.swing.JButton jbAddVarMods;
-    private javax.swing.JButton jbDelMods;
-    private javax.swing.JButton jbDelVarMods;
-    private javax.swing.JButton jbRun;
-    private javax.swing.JButton jbSave;
-    private javax.swing.JButton jbSetDefaults;
-    private javax.swing.JComboBox jcEnzyme;
-    private javax.swing.JComboBox jcFragMethod;
-    private javax.swing.JComboBox jcInstrument;
-    private javax.swing.JComboBox jcMSMSTol;
-    private javax.swing.JComboBox jcMaxMissedCleavage;
-    private javax.swing.JComboBox jcOutput;
-    private javax.swing.JComboBox jcProtocol;
-    private javax.swing.JComboBox jcThreads;
-    private javax.swing.JCheckBox jcbProteinInference;
-    private javax.swing.JCheckBox jchbSearchDecoy;
-    private javax.swing.JLabel jlCancel;
-    private javax.swing.JLabel jlDatabaseFile;
-    private javax.swing.JLabel jlEnzyme;
-    private javax.swing.JLabel jlErrorRange;
-    private javax.swing.JLabel jlFixedMods;
-    private javax.swing.JLabel jlFragMethod;
-    private javax.swing.JLabel jlInstrument;
-    private javax.swing.JLabel jlMSMSTol;
-    private javax.swing.JLabel jlMatches;
-    private javax.swing.JLabel jlMaxCharge;
-    private javax.swing.JLabel jlMaxMissedCleavage;
-    private javax.swing.JLabel jlMaxPepLen;
-    private javax.swing.JLabel jlMinCharge;
-    private javax.swing.JLabel jlMinPepLen;
-    private javax.swing.JLabel jlOutput;
-    private javax.swing.JLabel jlProtocol;
-    private javax.swing.JLabel jlRegex;
-    private javax.swing.JLabel jlThreads;
-    private javax.swing.JLabel jlUniMod;
-    private javax.swing.JLabel jlVarMods;
-    private javax.swing.JList jlstFixedMods;
-    private javax.swing.JList jlstUnimods;
-    private javax.swing.JList jlstVarMods;
-    private javax.swing.JTextField jtDatabaseFile;
-    private javax.swing.JTextField jtErrorRange;
-    private javax.swing.JTextField jtMSMSTol;
-    private javax.swing.JTextField jtMaxCharge;
-    private javax.swing.JTextField jtMaxPepLen;
-    private javax.swing.JTextField jtMinCharge;
-    private javax.swing.JTextField jtMinPepLen;
-    private javax.swing.JTextField jtRegex;
-    private javax.swing.JTextField jtSpectraMatches;
+    private ButtonGroup bgMonoAver;
+    private JLabel jLabel13;
+    private JPanel jPanel1;
+    private JPanel jPanel2;
+    private JScrollPane jScrollPane2;
+    private JScrollPane jScrollPane3;
+    private JScrollPane jScrollPane4;
+    private JButton jbAddDatabaseFile;
+    private JButton jbAddFixedMods;
+    private JButton jbAddVarMods;
+    private JButton jbDelMods;
+    private JButton jbDelVarMods;
+    private JButton jbRun;
+    private JButton jbSave;
+    private JButton jbSetDefaults;
+    private JComboBox<String> jcEnzyme;
+    private JComboBox<String> jcFragMethod;
+    private JComboBox<String> jcInstrument;
+    private JComboBox<String> jcMSMSTol;
+    private JComboBox<String> jcMaxMissedCleavage;
+    private JComboBox<String> jcOutput;
+    private JComboBox<String> jcProtocol;
+    private JComboBox<String> jcThreads;
+    private JCheckBox jcbProteinInference;
+    private JCheckBox jchbSearchDecoy;
+    private JLabel jlCancel;
+    private JLabel jlDatabaseFile;
+    private JLabel jlEnzyme;
+    private JLabel jlErrorRange;
+    private JLabel jlFixedMods;
+    private JLabel jlFragMethod;
+    private JLabel jlInstrument;
+    private JLabel jlMSMSTol;
+    private JLabel jlMatches;
+    private JLabel jlMaxCharge;
+    private JLabel jlMaxMissedCleavage;
+    private JLabel jlMaxPepLen;
+    private JLabel jlMinCharge;
+    private JLabel jlMinPepLen;
+    private JLabel jlOutput;
+    private JLabel jlProtocol;
+    private JLabel jlRegex;
+    private JLabel jlThreads;
+    private JLabel jlUniMod;
+    private JLabel jlVarMods;
+    private JList<String> jlstFixedMods;
+    private JList<String> jlstUnimods;
+    private JList<String> jlstVarMods;
+    private JTextField jtDatabaseFile;
+    private JTextField jtErrorRange;
+    private JTextField jtMSMSTol;
+    private JTextField jtMaxCharge;
+    private JTextField jtMaxPepLen;
+    private JTextField jtMinCharge;
+    private JTextField jtMinPepLen;
+    private JTextField jtRegex;
+    private JTextField jtSpectraMatches;
     // End of variables declaration//GEN-END:variables
 }

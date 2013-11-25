@@ -1,16 +1,20 @@
 package org.proteosuite.external;
 
 import org.proteosuite.external.IPC;
+
 import java.awt.Color;
 import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+
 import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.ChartPanel;
@@ -35,16 +39,17 @@ import org.jfree.ui.RefineryUtilities;
 public class Plot
         implements Serializable {
 
-   final static double DEFAULT_LESS_THAN = .0001;
-   ArrayList<Peak> peaks;
-   String title;
-   long resolvingPower;
-   final static int samples = 1000;
-   boolean useBars;
-   final public static Color color = new Color(0xFF, 0x55, 0x55);
-   JFreeChart jFreeChart;
-   XYItemRenderer renderer;
-   XYDataset dataset;
+private final static double DEFAULT_LESS_THAN = .0001;
+   private List<Peak> peaks;
+   private String title;
+   private long resolvingPower;
+   private final static int samples = 1000;
+   private boolean useBars;
+   private JFreeChart jFreeChart;
+   private XYItemRenderer renderer;
+   private XYDataset dataset;
+
+   public final static Color color = new Color(0xFF, 0x55, 0x55);
 
    public Plot(Collection<Peak> peaks, String title, long resolvingPower, boolean useBar) {
       this.peaks = new ArrayList<Peak>(peaks);
@@ -54,8 +59,6 @@ public class Plot
    }
 
    public JFreeChart makeChart() {
-
-
       final FixedRange domain;
       final FixedRange range;
       boolean legend = false;
@@ -249,7 +252,7 @@ public class Plot
    }
 
    void removeSmallPeaks(int peaksToLeave) {
-      int size = peaks.size();
+      //int size = peaks.size();
       for (Iterator<Peak> it = peaks.iterator(); it.hasNext();) {
          Peak tempPeak = it.next();
          if (tempPeak.getRelInt() < DEFAULT_LESS_THAN) {
