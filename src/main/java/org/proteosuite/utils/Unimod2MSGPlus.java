@@ -53,7 +53,7 @@ public class Unimod2MSGPlus {
     }
     //... Getting all modifications ...//
     public List<List<String>> getAllMods(){        
-        try{
+        try {
             for (ModT mod : modList) {
                 String modValue = "";
                 CompositionT comp = mod.getDelta();
@@ -65,25 +65,21 @@ public class Unimod2MSGPlus {
                     String site2 = spec.getSite();
                     String position = spec.getPosition().value();
 
-                    if(site.equals("N-term") || site.equals("C-term")){
+                    if (site.equals("N-term") || site.equals("C-term")) {
                         site = "*";
                     }
-                    if(position.equals("Anywhere")){
+                    
+                    if (position.equals("Anywhere")) {
                         position = "any";
-                    }
-                    else if(position.equals("Protein N-term")){
-                        position = "Prot-N-term";                            
-                    }
-                    else if(position.equals("Protein C-term")){
-                        position = "Prot-N-term";                            
-                    }
-                    else if(position.equals("Any N-term")){
-                        position = "N-term";                            
-                    }
-                    else if(position.equals("Any C-term")){
-                        position = "C-term";                            
-                    }
-                    else{
+                    } else if (position.equals("Protein N-term")) {
+                        position = "Prot-N-term";
+                    } else if (position.equals("Protein C-term")) {
+                        position = "Prot-N-term";
+                    } else if (position.equals("Any N-term")) {
+                        position = "N-term";
+                    } else if (position.equals("Any C-term")) {
+                        position = "C-term";
+                    } else {
                         System.out.println("Position not recognized:" + position);
                     }
                     List<String> al = new ArrayList<String>();                                        
