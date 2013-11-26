@@ -271,15 +271,15 @@ public class MzMLCompressView extends JPanel {
                         progressBarDialog.setTitle("Compressing file ("+(iI+1)+"/"+jtMzMLFiles.getRowCount()+") - " + xmlFile.getName());
                         progressBarDialog.setTaskName("This task may take up to several minutes (e.g. ~2mins for a 1.5GB file)");
                         progressBarDialog.repaint();
-                        try {
-                            MzMLCompress compress = new MzMLCompress(xmlFile, jtWorkspace.getText(), jcbZeros.isSelected());
+                        try {                            
+                            MzMLCompress.staticCompress(xmlFile, jtWorkspace.getText(), jcbZeros.isSelected());
                         } catch (IOException ex) {
                             Logger.getLogger(MzMLCompressView.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         jtMzMLFiles.setValueAt("Done", iI, 2);
                     }
                     progressBarDialog.setVisible(false);
-                    progressBarDialog.dispose();        
+                    progressBarDialog.dispose();
                 }
             }.start();                                   
         }

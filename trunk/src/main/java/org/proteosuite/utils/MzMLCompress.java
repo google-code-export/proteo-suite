@@ -45,8 +45,12 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
  *
  * @author fgonzalez
  */
-public class MzMLCompress {
+public class MzMLCompress extends MzMLCompressorBase implements MzMLCompressor {
 
+    public MzMLCompress() {
+        super();        
+    }
+    
     /**
      * Compresses the mzML file.     *
      * @param xmlFile a string containing the file name.
@@ -55,7 +59,39 @@ public class MzMLCompress {
      * @author fgonzalez
      * @throws IOException
      */
-    public MzMLCompress(File xmlFile, String sPath, boolean bZeros) throws IOException {
+    //public MzMLCompress(File xmlFile, String sPath, boolean bZeros) throws IOException {
+    //    staticCompress(xmlFile, sPath, bZeros);
+    //}
+
+    public String getCompressorName() {
+        return this.getClass().getName();
+    }
+    
+    /**
+     * Gets the file suffix for the compressor.
+     * @return Compressor file suffix.
+     */
+    public String getCompressorSpecificSuffix() {
+        return "_compress";
+    }
+    
+    public void compress(File xmlFile, String sPath) throws IOException {
+        compressionResult.setNonCompressedSize(xmlFile.length());
+        stampStart();
+        staticCompress(xmlFile, sPath, true);
+        stampStop();
+        compressionResult.setCompressedSize(new File(sPath + xmlFile.getName().replace(".mzML", getCompressorSpecificSuffix() + ".mzML")).length());
+    }
+    
+    public void compress(File xmlFile, String sPath, boolean bZeros) throws IOException {
+        staticCompress(xmlFile, sPath, bZeros);
+    }
+    
+    public void decompress(File xmlFile, String sPath) {
+        
+    }
+    
+    public static void staticCompress(File xmlFile, String sPath, boolean bZeros) throws IOException {        
         MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
         //... CV list ...//                
         System.out.println("- Reading /cvList");
@@ -255,14 +291,13 @@ public class MzMLCompress {
         marshaller.marshall(mzml, writer);
         writer.close();
     }
-
+    
     /**
-     * Checks whether the supplied Number array is an array of integers.
-     *
+     * Checks whether the supplied Number array is an array of integers.     *
      * @param numbers Number array.
      * @return Whether the Number array is all integers.
      */
-    private boolean isArrayOfIntegers(final Number[] numbers) {
+    private static boolean isArrayOfIntegers(final Number[] numbers) {
         if (numbers[0] instanceof Double) {
             for (Number number : numbers) {
                 if (!(((Double) number % 1) == 0)) {

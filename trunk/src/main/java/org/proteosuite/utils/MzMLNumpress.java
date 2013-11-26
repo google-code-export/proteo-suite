@@ -40,20 +40,29 @@ import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 /**
- * This plugin allows the compression of MzML files by storing deltas on m/z
- * values and removing zeros on intensity values.
+ * This plugin allows the compression of MzML files by storing the mz and intensity values using Numpress compression.
  * @author fgonzalez
+ * @author SPerkins
  */
-public class MzMLNumpress {
-
+public class MzMLNumpress extends MzMLCompressorBase implements MzMLCompressor {
+    
+    public MzMLNumpress() {
+        super();
+    }
+    
     /**
-     * Numpress compresses the given file.
-     *
-     * @param xmlFile A string containing the file name
-     * @param sPath A string for the path where the file is located
+     * Numpress compresses the given file.     *
+     * @param xmlFile A string containing the file name.
+     * @param outputDirectory A string for the path where the file is located.
      * @throws IOException Thrown if problem writing data.
      */
-    public MzMLNumpress(File xmlFile, final String sPath) throws IOException {
+    public void compress(File xmlFile, final String outputDirectory) throws IOException {
+        // Record the timing of the beginning of the compression.
+        stampStart();
+        
+        // Set the original file size in the compression result.
+        compressionResult.setNonCompressedSize(xmlFile.length());
+        
         MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
         //... CV list ...//                
         System.out.println("- Reading /cvList");
@@ -225,10 +234,39 @@ public class MzMLNumpress {
 
         String sNumpress = xmlFile.getName();
         sNumpress = sNumpress.replace(".mzML", "_numpress.mzML");
-        Writer writer = new FileWriter(sPath + "\\" + sNumpress);
+        Writer writer = new FileWriter(outputDirectory + "\\" + sNumpress);
         marshaller.marshall(mzml, writer);
         writer.close();
+        
+        // Record the timing of the end of the compression.
+        stampStop();
+        
+        compressionResult.setCompressedSize(new File(outputDirectory + "\\" + sNumpress).length());
     }
+    
+    /**
+     * Numpress decompresses the given file.
+     * @param xmlFile A string containing the file name.
+     * @param outputDirectory A string for the path where the file is located.
+     */
+    public void decompress(File xmlFile, String outputDirectory) {
+    
+    }
+    
+    /** Gets the name of the MzML compressor.
+     * @return Compressor name.
+     */    
+    public String getCompressorName() {
+        return this.getClass().getName();
+    }
+    
+    /**
+     * Gets the file suffix for the compressor.
+     * @return Compressor file suffix.
+     */
+    public String getCompressorSpecificSuffix() {
+        return "_numpress";
+    }  
 
     public static byte[] bytesFromNumbers(Number[] numbers) {
         ByteBuffer buffer = null;
