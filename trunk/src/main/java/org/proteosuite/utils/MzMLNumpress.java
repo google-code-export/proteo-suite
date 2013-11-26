@@ -16,7 +16,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -39,64 +40,69 @@ import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 /**
- * This plugin allows the compression of MzML files by storing deltas on 
- * m/z values and removing zeros on intensity values
- * @param xmlFile a string containing the file name
- * @param sPath a string for the path where the file is located 
+ * This plugin allows the compression of MzML files by storing deltas on m/z
+ * values and removing zeros on intensity values.
  * @author fgonzalez
  */
 public class MzMLNumpress {
-    public MzMLNumpress(File xmlFile, String sPath, boolean bZeros) throws IOException{
-           MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
-            //... CV list ...//                
-            System.out.println("- Reading /cvList");
-            CVList cvl = unmarshaller.unmarshalFromXpath("/cvList", CVList.class);
 
-            //... File Description ...//
-            System.out.println("- Reading /fileDescription");
-            FileDescription fdList = unmarshaller.unmarshalFromXpath("/fileDescription", FileDescription.class);
+    /**
+     * Numpress compresses the given file.
+     *
+     * @param xmlFile A string containing the file name
+     * @param sPath A string for the path where the file is located
+     * @throws IOException Thrown if problem writing data.
+     */
+    public MzMLNumpress(File xmlFile, final String sPath) throws IOException {
+        MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
+        //... CV list ...//                
+        System.out.println("- Reading /cvList");
+        CVList cvl = unmarshaller.unmarshalFromXpath("/cvList", CVList.class);
 
-            //... Referenceable Param Group ...//
-            System.out.println("- Reading /referenceableParamGroupList");
-            ReferenceableParamGroupList refList = unmarshaller.unmarshalFromXpath("/referenceableParamGroupList", ReferenceableParamGroupList.class);
+        //... File Description ...//
+        System.out.println("- Reading /fileDescription");
+        FileDescription fdList = unmarshaller.unmarshalFromXpath("/fileDescription", FileDescription.class);
 
-            //... Software List ...//
-            System.out.println("- Reading /softwareList");
-            uk.ac.ebi.jmzml.model.mzml.SoftwareList softList = unmarshaller.unmarshalFromXpath("/softwareList", uk.ac.ebi.jmzml.model.mzml.SoftwareList.class); 
+        //... Referenceable Param Group ...//
+        System.out.println("- Reading /referenceableParamGroupList");
+        ReferenceableParamGroupList refList = unmarshaller.unmarshalFromXpath("/referenceableParamGroupList", ReferenceableParamGroupList.class);
 
-            //... InstrumentConfiguration ...//
-            System.out.println("- Reading /instrumentConfigurationList");
-            InstrumentConfigurationList instConfList = unmarshaller.unmarshalFromXpath("/instrumentConfigurationList", InstrumentConfigurationList.class);
+        //... Software List ...//
+        System.out.println("- Reading /softwareList");
+        uk.ac.ebi.jmzml.model.mzml.SoftwareList softList = unmarshaller.unmarshalFromXpath("/softwareList", uk.ac.ebi.jmzml.model.mzml.SoftwareList.class);
 
-            //... Data Processing List ...//
-            System.out.println("- Reading /dataProcessingList");
-            uk.ac.ebi.jmzml.model.mzml.DataProcessingList dataProcList = unmarshaller.unmarshalFromXpath("/dataProcessingList", uk.ac.ebi.jmzml.model.mzml.DataProcessingList.class);
+        //... InstrumentConfiguration ...//
+        System.out.println("- Reading /instrumentConfigurationList");
+        InstrumentConfigurationList instConfList = unmarshaller.unmarshalFromXpath("/instrumentConfigurationList", InstrumentConfigurationList.class);
 
-            //... Runs ...//
-            Run runFileW = new Run();
-            Calendar date = Calendar.getInstance();
-            runFileW.setStartTimeStamp(date);
-            runFileW.setDefaultSourceFileRef("RAW1");
-            runFileW.setDefaultInstrumentConfigurationRef("IC1");
-            runFileW.setId(xmlFile.getName());
+        //... Data Processing List ...//
+        System.out.println("- Reading /dataProcessingList");
+        uk.ac.ebi.jmzml.model.mzml.DataProcessingList dataProcList = unmarshaller.unmarshalFromXpath("/dataProcessingList", uk.ac.ebi.jmzml.model.mzml.DataProcessingList.class);
 
-            SpectrumList specListW = new SpectrumList();
-            specListW.setDefaultDataProcessingRef("pwiz_Reader_conversion");        
+        //... Runs ...//
+        Run runFileW = new Run();
+        Calendar date = Calendar.getInstance();
+        runFileW.setStartTimeStamp(date);
+        runFileW.setDefaultSourceFileRef("RAW1");
+        runFileW.setDefaultInstrumentConfigurationRef("IC1");
+        runFileW.setId(xmlFile.getName());
 
-            //... Spectra ...//
-            MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
-            int iSpectrum = 0;
-            while (spectrumIterator.hasNext()){
-                Spectrum spectrum = spectrumIterator.next();
+        SpectrumList specListW = new SpectrumList();
+        specListW.setDefaultDataProcessingRef("pwiz_Reader_conversion");
 
-                //System.out.println(spectrum.getId());
-                //... Write spectrum ...//
+        //... Spectra ...//
+        MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
+        int iSpectrum = 0;
+        while (spectrumIterator.hasNext()) {
+            Spectrum spectrum = spectrumIterator.next();
 
-                //... Attributes ...//
-                Spectrum spectrumW = new Spectrum();
-                spectrumW.setDefaultArrayLength(spectrum.getDefaultArrayLength());
-                spectrumW.setIndex(spectrum.getIndex());
-                spectrumW.setId(spectrum.getId());            
+            //System.out.println(spectrum.getId());
+            //... Write spectrum ...//
+            //... Attributes ...//
+            Spectrum spectrumW = new Spectrum();
+            spectrumW.setDefaultArrayLength(spectrum.getDefaultArrayLength());
+            spectrumW.setIndex(spectrum.getIndex());
+            spectrumW.setId(spectrum.getId());
 
                 //... cvParams ...//
                 List<CVParam> specParam = spectrum.getCvParam();
@@ -105,151 +111,153 @@ public class MzMLNumpress {
                     spectrumW.getCvParam().add(lCVParam);
                 }
 
-                //... Scan List ...//
-                spectrumW.setScanList(spectrum.getScanList());
+            //... Scan List ...//
+            spectrumW.setScanList(spectrum.getScanList());
 
-                //... Precursor List ...//
-                spectrumW.setPrecursorList(spectrum.getPrecursorList());
+            //... Precursor List ...//
+            spectrumW.setPrecursorList(spectrum.getPrecursorList());
 
-                //... Binary Data Array ...//
-
-                //... Reading m/z and intensity values ...//
-                Number[] mzNumbers = null;
-                double[] mz = null;
-                double[] nonzerosMz = null;            
-                int mzCount = 0;
-
-                Number[] intenNumbers = null;
-                double[] intensities = null;
-                double[] nonzerosIntens = null;            
-
-                List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList().getBinaryDataArray();
-                for (BinaryDataArray bda:bdal){
-                    List<CVParam> cvpList = bda.getCvParam();
-                    for (CVParam cvp:cvpList){
-                        if(cvp.getAccession().equals("MS:1000514")){
-                            if (bda.getEncodedLength()>0){
-                                mzNumbers = bda.getBinaryDataAsNumberArray();
-                            }
+            //... Binary Data Array ...//
+            //... Reading m/z and intensity values ...//
+            Number[] mzNumbers = null;
+            Number[] intenNumbers = null;
+            List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList().getBinaryDataArray();
+            for (BinaryDataArray bda : bdal) {
+                List<CVParam> cvpList = bda.getCvParam();
+                for (CVParam cvp : cvpList) {
+                    if (cvp.getAccession().equals("MS:1000514")) {
+                        if (bda.getEncodedLength() > 0) {
+                            mzNumbers = bda.getBinaryDataAsNumberArray();
                         }
-                        if(cvp.getAccession().equals("MS:1000515")){
-                            if (bda.getEncodedLength()>0){
-                                intenNumbers = bda.getBinaryDataAsNumberArray();
-                            }
+                    }
+                    
+                    if (cvp.getAccession().equals("MS:1000515")) {
+                        if (bda.getEncodedLength() > 0) {
+                            intenNumbers = bda.getBinaryDataAsNumberArray();
                         }
                     }
                 }
-
-                //... Storing delta values ...//
-                if (mzNumbers != null){
-                    mz = new double[mzNumbers.length];
-                    intensities = new double[intenNumbers.length];
-                    mzCount = mzNumbers.length;
-
-                    //... Copy Numbers into doubles ...//
-                    for (int iI = 0; iI < mzNumbers.length; iI++){
-                        mz[iI] = mzNumbers[iI].doubleValue(); 
-                        intensities[iI] = intenNumbers[iI].doubleValue();
-                    }
-                    //... Removing zero values ...//
-                    List<Double> zeroMz = new ArrayList<Double>();
-                    List<Double> zeroIntens = new ArrayList<Double>();
-                    double last=0.0d;
-                    for (int iI = 0; iI < mzNumbers.length; iI++){  
-                        if(bZeros){
-                            if (intensities[iI]>0){
-                                zeroMz.add(mz[iI]-last);    //... Storing Deltas ...//
-                                zeroIntens.add(intensities[iI]);
-                                last=mz[iI];
-                            }
-                        }else{
-                            zeroMz.add(mz[iI]-last);    //... Storing Deltas ...//
-                            zeroIntens.add(intensities[iI]);
-                            last=mz[iI];                            
-                        }
-                    }
-                    nonzerosMz = new double[zeroMz.size()];
-                    nonzerosIntens = new double[zeroIntens.size()];
-                    int iI=0;
-                    for(Double d:zeroMz){
-                        nonzerosMz[iI++] = d.doubleValue();
-                    }
-                    iI=0;
-                    for(Double d:zeroIntens){
-                        nonzerosIntens[iI++] = d.doubleValue();
-                    }
-                }
-
-                //... Transforming data into Binary ...//
-                BinaryDataArray bdaW = new BinaryDataArray();
-                BinaryDataArray bda2W = new BinaryDataArray();
-
-                if (mzCount>0){
-                    CV cv = new CV();
-                    cv.setFullName("PSI-MS");
-                    cv.setId("MS");
-                    bdaW.set64BitFloatArrayAsBinaryData(nonzerosMz, true, cv);
-                    CVParam cvParam1 = new BinaryDataArrayCVParam();
-                    cvParam1.setUnitCvRef("MS");
-                    cvParam1.setUnitName("m/z");
-                    cvParam1.setUnitAccession("MS:1000040");
-                    cvParam1.setName("m/z array");
-                    cvParam1.setAccession("MS:1000514");
-                    cvParam1.setCvRef("MS");
-                    bdaW.getCvParam().add(cvParam1);
-                    CVParam cvParam1_2 = new BinaryDataArrayCVParam();
-                    cvParam1_2.setAccession("MS:1000000");
-                    cvParam1_2.setName("deltas_zeros");
-                    cvParam1_2.setCvRef("MS");
-                    bdaW.getCvParam().add(cvParam1_2);
-                    bdaW.setEncodedLength(bdaW.getArrayLength());
-
-                    bda2W.set64BitFloatArrayAsBinaryData(nonzerosIntens, true, cv);
-                    CVParam cvParam2 = new BinaryDataArrayCVParam();
-                    cvParam2.setUnitCvRef("MS");
-                    cvParam2.setUnitName("number of counts");
-                    cvParam2.setAccession("MS:1000131");
-                    cvParam2.setName("intensity array");
-                    cvParam2.setAccession("MS:1000515");
-                    cvParam2.setCvRef("MS");
-                    bda2W.getCvParam().add(cvParam2);
-                    bda2W.getCvParam().add(cvParam1_2);                            
-                    bda2W.setEncodedLength(bda2W.getArrayLength());
-                }
-                BinaryDataArrayList bdalstW = new BinaryDataArrayList();
-                bdalstW.getBinaryDataArray().add(bdaW);
-                bdalstW.getBinaryDataArray().add(bda2W);
-                bdalstW.setCount(2);
-                spectrumW.setBinaryDataArrayList(bdalstW);
-                specListW.getSpectrum().add(spectrumW);
-
-                iSpectrum++;
             }
-            specListW.setCount(iSpectrum);
 
-            System.out.println("- Writing spectrumList");
-            runFileW.setSpectrumList(specListW);
+            //... Transforming data into Binary ...//
+            BinaryDataArray bdaW = new BinaryDataArray();
+            BinaryDataArray bda2W = new BinaryDataArray();
 
-            System.out.println("- Writing /run/chromatogramList");
-            ChromatogramList chromat = unmarshaller.unmarshalFromXpath("/run/chromatogramList", ChromatogramList.class);
-            runFileW.setChromatogramList(chromat);
+            if (mzNumbers != null && mzNumbers.length > 0
+                    && intenNumbers != null
+                    && intenNumbers.length == mzNumbers.length) {
+                CV cv = new CV();
+                cv.setFullName("PSI-MS");
+                cv.setId("MS");
 
-            MzML mzml = new MzML();
-            mzml.setVersion("1.1.0");
-            mzml.setId(xmlFile.getName());  
-            mzml.setCvList(cvl);
-            mzml.setFileDescription(fdList);
-            mzml.setReferenceableParamGroupList(refList);
-            mzml.setSoftwareList(softList);
-            mzml.setInstrumentConfigurationList(instConfList);
-            mzml.setDataProcessingList(dataProcList);
-            mzml.setRun(runFileW);       
-            MzMLMarshaller marshaller = new MzMLMarshaller();
-            
-            String sNumpress = xmlFile.getName();
-            sNumpress = sNumpress.replace(".mzML", "_compress.mzML");
-            Writer writer = new FileWriter(sPath+"\\"+sNumpress);
-            marshaller.marshall(mzml, writer);
-            writer.close();     
+                // Numpress code.               
+                byte[] encodedMzNumbers = new byte[8 + (mzNumbers.length * 5)];
+                int encodedBytes = MSNumpress.encodeLinear(doublesFromNumbers(mzNumbers), mzNumbers.length, encodedMzNumbers, 
+                        MSNumpress.optimalLinearFixedPoint(doublesFromNumbers(mzNumbers), mzNumbers.length));
+                
+                // Set the numpress compressed binary - note: can't set jmzml to use zlib when using this method.
+                bdaW.setBinary(Arrays.copyOf(encodedMzNumbers, encodedBytes));
+                bdaW.setEncodedLength(mzNumbers.length);
+                
+                // Set a CVParam for the numpress linear compression.
+                CVParam compressionParam = new BinaryDataArrayCVParam();
+                compressionParam.setAccession("MS:1000574");
+                compressionParam.setName("numpress linear compression");
+                bdaW.getCvParam().add(compressionParam);
+
+                CVParam cvParam1 = new BinaryDataArrayCVParam();
+                cvParam1.setUnitCvRef("MS");
+                cvParam1.setUnitName("m/z");
+                cvParam1.setUnitAccession("MS:1000040");
+                cvParam1.setName("m/z array");
+                cvParam1.setAccession("MS:1000514");
+                cvParam1.setCvRef("MS");
+                bdaW.getCvParam().add(cvParam1);                
+                
+                byte[] encodedIntensityNumbers = new byte[(intenNumbers.length * 5)];
+                encodedBytes = MSNumpress.encodePic(doublesFromNumbers(intenNumbers), intenNumbers.length, encodedIntensityNumbers);
+                
+                bda2W.setBinary(Arrays.copyOf(encodedIntensityNumbers, encodedBytes));
+                bda2W.setEncodedLength(intenNumbers.length);
+                
+                bda2W.getCvParam().add(compressionParam);
+
+                CVParam cvParam2 = new BinaryDataArrayCVParam();
+                cvParam2.setUnitCvRef("MS");
+                cvParam2.setUnitName("number of counts");
+                cvParam2.setAccession("MS:1000131");
+                cvParam2.setName("intensity array");
+                cvParam2.setAccession("MS:1000515");
+                cvParam2.setCvRef("MS");
+                bda2W.getCvParam().add(cvParam2);                
+            }
+
+            BinaryDataArrayList bdalstW = new BinaryDataArrayList();
+            bdalstW.getBinaryDataArray().add(bdaW);
+            bdalstW.getBinaryDataArray().add(bda2W);
+            bdalstW.setCount(2);
+            spectrumW.setBinaryDataArrayList(bdalstW);
+            specListW.getSpectrum().add(spectrumW);
+
+            iSpectrum++;
+        }
+        
+        specListW.setCount(iSpectrum);
+
+        System.out.println("- Writing spectrumList");
+        runFileW.setSpectrumList(specListW);
+
+        System.out.println("- Writing /run/chromatogramList");
+        ChromatogramList chromat = unmarshaller.unmarshalFromXpath("/run/chromatogramList", ChromatogramList.class);
+        runFileW.setChromatogramList(chromat);
+
+        MzML mzml = new MzML();
+        mzml.setVersion("1.1.0");
+        mzml.setId(xmlFile.getName());
+        mzml.setCvList(cvl);
+        mzml.setFileDescription(fdList);
+        mzml.setReferenceableParamGroupList(refList);
+        mzml.setSoftwareList(softList);
+        mzml.setInstrumentConfigurationList(instConfList);
+        mzml.setDataProcessingList(dataProcList);
+        mzml.setRun(runFileW);
+        MzMLMarshaller marshaller = new MzMLMarshaller();
+
+        String sNumpress = xmlFile.getName();
+        sNumpress = sNumpress.replace(".mzML", "_numpress.mzML");
+        Writer writer = new FileWriter(sPath + "\\" + sNumpress);
+        marshaller.marshall(mzml, writer);
+        writer.close();
+    }
+
+    public static byte[] bytesFromNumbers(Number[] numbers) {
+        ByteBuffer buffer = null;
+        if (numbers[0] instanceof Double) {
+            buffer = ByteBuffer.allocate(numbers.length * 8);
+            for (Number value : numbers) {
+                buffer.putDouble((Double) value);
+            }
+        } else if (numbers[0] instanceof Float) {
+            buffer = ByteBuffer.allocate(numbers.length * 4);
+            for (Number value : numbers) {
+                buffer.putDouble((Float) value);
+            }
+        }
+
+        return buffer.array();
+    }
+
+    /**
+     * Converts an array of Number objects into an array of double primitives.
+     * @param numbers Number array.
+     * @return Primitive double array.
+     */
+    public static double[] doublesFromNumbers(final Number[] numbers) {
+        double[] doubles = new double[numbers.length];
+        for (int i = 0; i < numbers.length; i++) {
+            doubles[i] = (Double) numbers[i];
+        }
+
+        return doubles;
     }
 }
