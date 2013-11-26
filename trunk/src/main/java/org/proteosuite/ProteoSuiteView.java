@@ -176,18 +176,6 @@ public class ProteoSuiteView extends JFrame {
 	private List<MzQuantMLUnmarshaller> aMzQUnmarshaller = new ArrayList<MzQuantMLUnmarshaller>();
 
 	public ProteoSuiteView() {
-		// ... Setting standard look and feel ...//
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException ex) {
-			System.out.println(ex.getStackTrace());
-		} catch (InstantiationException ex) {
-			System.out.println(ex.getStackTrace());
-		} catch (IllegalAccessException ex) {
-			System.out.println(ex.getStackTrace());
-		} catch (UnsupportedLookAndFeelException ex) {
-			System.out.println(ex.getStackTrace());
-		}
 
 		// ... Initializing all components (handled by netbeans) ...//
 		initComponents();
@@ -9578,6 +9566,18 @@ public class ProteoSuiteView extends JFrame {
 	 * @return void
 	 -------------------------------------------------------*/
 	public static void main(String args[]) {
+		// ... Setting standard look and feel ...//
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException ex) {
+			System.out.println(ex.getStackTrace());
+		} catch (InstantiationException ex) {
+			System.out.println(ex.getStackTrace());
+		} catch (IllegalAccessException ex) {
+			System.out.println(ex.getStackTrace());
+		} catch (UnsupportedLookAndFeelException ex) {
+			System.out.println(ex.getStackTrace());
+		}
 
 		/* Create and display the form */
 		EventQueue.invokeLater(new Runnable() {
