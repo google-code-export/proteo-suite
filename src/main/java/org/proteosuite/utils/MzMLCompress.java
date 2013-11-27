@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
+import org.proteosuite.utils.DeltaConversion.DeltaSourceDataFormatException;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray.Precision;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArrayList;
@@ -187,7 +188,12 @@ public class MzMLCompress extends MzMLCompressorBase implements MzMLCompressor {
                 }
 
                 // Convert MZ values to delta values.
+                try {
                 DeltaConversion.toDeltaNumberFormat(mzNumbers);
+                } catch (DeltaSourceDataFormatException d) {
+                    System.out.println("Terminating compression to to issue with MZ data: " + d.getLocalizedMessage());
+                    return;
+                }
             }
 
             //... Transforming data into Binary ...//

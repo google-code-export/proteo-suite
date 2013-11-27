@@ -124,10 +124,10 @@ public class BinaryUtils {
 		int iCompCount = 1;
 
 		iPos = (iLowerBound + iUpperBound) / 2;
-		while ((NumericalUtils.Round(nArray[iPos].floatValue(), 4) != NumericalUtils.Round(fKey, 4))
+		while ((NumericalUtils.round(nArray[iPos].floatValue(), 4) != NumericalUtils.round(fKey, 4))
 				&& (iLowerBound <= iUpperBound)) {
 			iCompCount++;
-			if (NumericalUtils.Round(nArray[iPos].floatValue(), 4) > NumericalUtils.Round(fKey, 4)) {
+			if (NumericalUtils.round(nArray[iPos].floatValue(), 4) > NumericalUtils.round(fKey, 4)) {
 				iUpperBound = iPos - 1;
 			} else {
 				iLowerBound = iPos + 1;
@@ -135,7 +135,7 @@ public class BinaryUtils {
 			iPos = (iLowerBound + iUpperBound) / 2;
 		}
 		if (debug) {
-			System.out.println("Searching for m/z = " + NumericalUtils.Round(fKey, 4)
+			System.out.println("Searching for m/z = " + NumericalUtils.round(fKey, 4)
 					+ " in array");
 			if (iLowerBound <= iUpperBound) {
 				System.out.println("The number was found in array at position "
