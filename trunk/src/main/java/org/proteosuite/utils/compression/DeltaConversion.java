@@ -9,7 +9,7 @@
  * --------------------------------------------------------------------------
  */
 
-package org.proteosuite.utils;
+package org.proteosuite.utils.compression;
 
 /**
  * Class for converting back and forth from the delta number format.

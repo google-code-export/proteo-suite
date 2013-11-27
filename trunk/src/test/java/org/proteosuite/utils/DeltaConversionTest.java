@@ -5,12 +5,13 @@
  */
 package org.proteosuite.utils;
 
+import org.proteosuite.utils.compression.DeltaConversion;
 import java.util.Arrays;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.proteosuite.utils.DeltaConversion.DeltaEncodedDataFormatException;
-import org.proteosuite.utils.DeltaConversion.DeltaSourceDataFormatException;
 import static org.junit.Assert.*;
+import org.proteosuite.utils.compression.DeltaConversion.DeltaEncodedDataFormatException;
+import org.proteosuite.utils.compression.DeltaConversion.DeltaSourceDataFormatException;
 
 /**
  *
