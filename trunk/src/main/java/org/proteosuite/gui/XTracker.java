@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
@@ -19,6 +20,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.utils.PluginManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -26,14 +28,37 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class XTracker {
+	/**
+	 * Write xTrackerMain based on the technique
+	 * 
+	 * @param sExperiment
+	 *            - Pipeline type
+	 * @param jtIdentFiles
+	 * @param jtQuantFiles
+	 * @return void
+	 **/
+	public void writeXTrackerFiles(String sExperiment, JTable jtRawFiles,
+			JComboBox<String> jcbOutputFormat, JTable jtIdentFiles,
+			JTable jtQuantFiles) {
+		// ... Based on the technique, select the plugins that are available to
+		// perform the quantitation ...//
+		String[] sPipeline = PluginManager.getPlugins(sExperiment, jtRawFiles, jtIdentFiles, jcbOutputFormat.getSelectedItem().toString());
 
+		// ... xTracker consists of 4 main plugins (read more on
+		// www.x-tracker.info) ...//
+		writeXTrackerIdent(sExperiment, sPipeline[0], ProteoSuiteView.sWorkspace, jtIdentFiles, jtRawFiles);
+		writeXTrackerRaw(sPipeline[1], jtRawFiles, ProteoSuiteView.sWorkspace);
+		writeXTrackerQuant(sPipeline[2], jtRawFiles, ProteoSuiteView.sWorkspace);
+		writeXTrackerOutput(sPipeline[3], jtQuantFiles, ProteoSuiteView.sWorkspace, ProteoSuiteView.sProjectName);
+	}
+	
 	/**
 	 * Write the xTracker identification plugin
 	 * @param sExperiment - Type of experiment (e.g. emPAI, etc.)
 	 * @param sPlugin - Plugin (e.g. loadRawMzML111, etc.)
 	 * @return void
 	 **/
-	public void writeXTrackerIdent(String sExperiment, String sPlugin, String sWorkspace, JTable jtIdentFiles, JTable jtRawFiles) {
+	private void writeXTrackerIdent(String sExperiment, String sPlugin, String sWorkspace, JTable jtIdentFiles, JTable jtRawFiles) {
 		String sFileName = sWorkspace + "/xTracker_" + sPlugin + ".xtp";
 		try {
 			FileWriter fstream = new FileWriter(sFileName);
@@ -173,7 +198,7 @@ public class XTracker {
 	 * @param sPlugin - Plugin (e.g. loadMzIdentML, etc.)
 	 * @return void
 	 **/
-	public void writeXTrackerRaw(String sPlugin, JTable jtRawFiles, String sWorkspace) {
+	private void writeXTrackerRaw(String sPlugin, JTable jtRawFiles, String sWorkspace) {
 		String sFileName = sWorkspace + "/xTracker_" + sPlugin + ".xtp";
 		try {
 			FileWriter fstream = new FileWriter(sFileName);
@@ -212,7 +237,7 @@ public class XTracker {
 	 * @param sPlugin - Plugin (e.g. iTraqQuantitation, etc.)
 	 * @return void
 	 **/
-	public void writeXTrackerQuant(String sPlugin, JTable jtRawFiles, String sWorkspace) {
+	private void writeXTrackerQuant(String sPlugin, JTable jtRawFiles, String sWorkspace) {
 		System.out.println("Quant=" + sPlugin);
 		String sFileName = sWorkspace + "/xTracker_" + sPlugin + ".xtp";
 
@@ -480,7 +505,7 @@ public class XTracker {
 	 * @param sPlugin - Plugin type (e.g. outputMZQ)
 	 * @return void
 	 **/
-	public void writeXTrackerOutput(String sPlugin, JTable jtQuantFiles, String sWorkspace, String sProjectName) {
+	private void writeXTrackerOutput(String sPlugin, JTable jtQuantFiles, String sWorkspace, String sProjectName) {
 		String sFileName = sWorkspace.replace("\\", "/") + "/xTracker_"
 				+ sPlugin + ".xtp";
 		String sType = "", sVersion = "";

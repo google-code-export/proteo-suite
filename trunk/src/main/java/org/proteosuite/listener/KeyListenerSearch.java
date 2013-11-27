@@ -10,6 +10,9 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+/**
+ * @author Andrew Collins
+ */
 public class KeyListenerSearch implements KeyListener {
 	private final int iColumn;
 	private final JTable jTable;
@@ -23,26 +26,26 @@ public class KeyListenerSearch implements KeyListener {
 	}
 
 	@Override
-	public void keyPressed(KeyEvent evt) {
+	public void keyPressed(KeyEvent keyEvent) {
 		if (patternMatch)
 		{
-			keyPressedPattern(evt);
+			keyPressedPattern(keyEvent);
 			return;
 		}
 
-		JTextField jtScanTitle = (JTextField) evt.getSource();
+		JTextField jtScanTitle = (JTextField) keyEvent.getSource();
 		String sChain = "";
-		sChain = jtScanTitle.getText() + evt.getKeyChar();
+		sChain = jtScanTitle.getText() + keyEvent.getKeyChar();
 		searchValueInJTable(sChain, iColumn, jTable);
 	}
 
-	private void keyPressedPattern(KeyEvent evt) {
-		JTextField jtMSIndex = (JTextField) evt.getSource();
-		String sChain = "" + evt.getKeyChar();
+	private void keyPressedPattern(KeyEvent keyEvent) {
+		JTextField jtMSIndex = (JTextField) keyEvent.getSource();
+		String sChain = "" + keyEvent.getKeyChar();
 		Pattern p = Pattern.compile("^[a-zA-Z0-9]*$");
 		Matcher m = p.matcher(sChain);
 		if (m.find()) {
-			sChain = jtMSIndex.getText() + evt.getKeyChar();
+			sChain = jtMSIndex.getText() + keyEvent.getKeyChar();
 			searchValueInJTable(sChain, iColumn, jTable);
 		}
 	}
@@ -50,22 +53,20 @@ public class KeyListenerSearch implements KeyListener {
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-
 	}
 
 
-	/*-------------------------------------------------------------------------------
+	/**
 	 * Search a value within the raw table and position the cursor accordingly 
 	 * @param sChain - Value
 	 * @param iColumn - Look up column 
 	 * @return void
-	 --------------------------------------------------------------------------------*/
+	 */
 	private void searchValueInJTable(String sChain, int iColumn, JTable jtable) {
 		DefaultTableModel dtm = (DefaultTableModel) jtable.getModel();
 		int nRow = dtm.getRowCount();

@@ -15,7 +15,7 @@ import javax.xml.bind.JAXBException;
 
 import org.proteosuite.ProteoSuiteView;
 import org.proteosuite.utils.DecoyDetection;
-import org.proteosuite.utils.Homeless;
+import org.proteosuite.utils.FileFormatUtils;
 import org.proteosuite.utils.ProgressBarDialog;
 import org.proteosuite.utils.SystemUtils;
 
@@ -248,7 +248,7 @@ public class FileFormatMzIdentML extends Thread implements Runnable {
 						alValues.add(iCount);
 						alValues.add(sAccesion);
 						alValues.add(peptide.getPeptideSequence());
-						alValues.add(Homeless.getResidueComposition(peptide
+						alValues.add(FileFormatUtils.getResidueComposition(peptide
 								.getPeptideSequence()));
 						alValues.add(sii.getExperimentalMassToCharge());
 						alValues.add(sii.getCalculatedMassToCharge());
