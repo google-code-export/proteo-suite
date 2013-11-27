@@ -1,4 +1,4 @@
-package org.proteosuite.utils;
+package org.proteosuite.utils.compression;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,7 @@ public interface MzMLCompressor {
      * @return Compressor name.
      */
     String getCompressorName();
-    
+
     /**
      * Gets the file suffix for the compressor.
      * @return Compressor file suffix.
@@ -23,14 +23,17 @@ public interface MzMLCompressor {
     /** Compresses the MzML file.
      * @param inputFile MzML input file.
      * @param outputDirectory Output directory.
+     * @return CompressionResult Result object containing compression statistics.
      * @throws IOException Thrown if problem writing the compressed file.
      */
-    void compress(File inputFile, String outputDirectory) throws IOException;
+    CompressionResult compress(File inputFile, String outputDirectory) throws IOException;
 
     /**
      * Decompresses the MzML file.
      * @param inputFile MzML input file.
      * @param outputDirectory Output directory.
+     * @return DecompressionResult Result object containing decompression statistics.
+     * @throws java.io.IOException Thrown if problem writing the decompressed file.
      */
-    void decompress(File inputFile, String outputDirectory);
+    DecompressionResult decompress(File inputFile, String outputDirectory) throws IOException;
 }

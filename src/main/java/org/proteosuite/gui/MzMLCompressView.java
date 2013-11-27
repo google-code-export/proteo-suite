@@ -24,7 +24,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
-import org.proteosuite.utils.MzMLCompress;
+import org.proteosuite.utils.compression.MzMLCompress;
 import org.proteosuite.utils.ProgressBarDialog;
 
 /**

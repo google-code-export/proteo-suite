@@ -11,7 +11,7 @@
  * --------------------------------------------------------------------------
  */
 
-package org.proteosuite.utils;
+package org.proteosuite.utils.compression;
 
 import java.util.Arrays;
 

@@ -8,8 +8,8 @@ import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
-import org.proteosuite.utils.DeltaConversion;
-import org.proteosuite.utils.DeltaConversion.DeltaEncodedDataFormatException;
+import org.proteosuite.utils.compression.DeltaConversion;
+import org.proteosuite.utils.compression.DeltaConversion.DeltaEncodedDataFormatException;
 import org.proteosuite.utils.NumericalUtils;
 
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;

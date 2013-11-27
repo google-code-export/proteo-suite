@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.proteosuite.utils;
+package org.proteosuite.utils.compression;
 
 /**
  *
@@ -42,9 +42,17 @@ public class CompressionResult {
         compressedSizeSet = true;
     }
     
+    public long getCompressedSize() {
+        return compressedSize;
+    }
+    
     public void setNonCompressedSize(final long nonCompressedSize) {
         this.nonCompressedSize = nonCompressedSize;
         nonCompressedSizeSet = true;
+    }
+    
+    public long getNonCompressedSize() {
+        return nonCompressedSize;
     }
     
     public double getCompressionRatio() {
