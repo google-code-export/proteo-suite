@@ -92,6 +92,8 @@ import org.proteosuite.fileformat.FileFormatMzQuantML;
 import org.proteosuite.gui.*;
 import org.proteosuite.listener.*;
 import org.proteosuite.utils.BinaryUtils;
+import org.proteosuite.utils.DeltaConversion;
+import org.proteosuite.utils.DeltaConversion.DeltaEncodedDataFormatException;
 import org.proteosuite.utils.ExcelExporter;
 import org.proteosuite.utils.Homeless;
 import org.proteosuite.utils.NumericalUtils;
@@ -5708,12 +5710,12 @@ public class ProteoSuiteView extends JFrame {
 			float resamplingFactor = 1.0f / 120.0f; // ... e.g. 0.008333334
 													// Daltons ...//
 			System.out.println("Resampling factor=" + resamplingFactor);
-			float lengthArray = NumericalUtils.Round(mzWindow / resamplingFactor, 1);
+			float lengthArray = NumericalUtils.round(mzWindow / resamplingFactor, 1);
 			System.out.println("length=" + lengthArray);
 			final int MZ_SIZE = (int) lengthArray;
 			System.out.println("SIZE=" + MZ_SIZE);
-			float resolution = (float) NumericalUtils.Truncate(
-					(NumericalUtils.Round((float) (resamplingFactor), 8)), 8);
+			float resolution = (float) NumericalUtils.truncate(
+					(NumericalUtils.round((float) (resamplingFactor), 8)), 8);
 			System.out.println("resolution=" + resolution);
 			float[][] resamplingArray = new float[2][MZ_SIZE];
 			for (int iI = 0; iI < MZ_SIZE; iI++) {
@@ -6294,7 +6296,13 @@ public class ProteoSuiteView extends JFrame {
 					if (cvp.getAccession().equals("MS:1000514")) {
 						mzNumbers = bda.getBinaryDataAsNumberArray();
 						if (bCompressed) {
-							mzNumbers = NumericalUtils.decodeMzDeltas(mzNumbers);
+                                                    try {
+                                                        DeltaConversion.fromDeltaNumberFormat(mzNumbers);
+                                                    } catch (DeltaEncodedDataFormatException dex) {
+                                                        System.out.println("Problem converting back from delta m/z format: " + dex.getLocalizedMessage());
+                                                        return;
+                                                    }
+							
 						}
 					}
 					if (cvp.getAccession().equals("MS:1000515")) {
@@ -6432,7 +6440,12 @@ public class ProteoSuiteView extends JFrame {
 					if (cvp.getAccession().equals("MS:1000514")) {
 						mzNumbers = bda.getBinaryDataAsNumberArray();
 						if (bCompressed) {
-							mzNumbers = NumericalUtils.decodeMzDeltas(mzNumbers);
+							try {
+                                                            DeltaConversion.fromDeltaNumberFormat(mzNumbers);
+                                                        } catch (DeltaEncodedDataFormatException dex) {
+                                                            System.out.println("Problem converting back from delta m/z format: " + dex.getLocalizedMessage());
+                                                            return;
+                                                        }
 						}
 					}
 					if (cvp.getAccession().equals("MS:1000515")) {
