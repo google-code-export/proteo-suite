@@ -13,14 +13,10 @@
  */
 package org.proteosuite;
 
-import com.compomics.util.gui.spectrum.ChromatogramPanel;
-import com.compomics.util.gui.spectrum.SpectrumPanel;
-
 import edu.ucsd.msjava.mzml.MzMLAdapter;
 import edu.ucsd.msjava.params.ParamManager;
 import edu.ucsd.msjava.ui.MSGFPlus;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog.ModalityType;
@@ -45,18 +41,12 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -68,43 +58,27 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.validation.Validator;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
-import org.proteosuite.data.psTemplate;
-import org.proteosuite.data.psTemplateQuant;
-import org.proteosuite.external.IPC;
-import org.proteosuite.external.IPC.Options;
-import org.proteosuite.external.IPC.Results;
 import org.proteosuite.fileformat.FileFormatMGF;
+import org.proteosuite.fileformat.FileFormatMascot;
 import org.proteosuite.fileformat.FileFormatMzIdentML;
 import org.proteosuite.fileformat.FileFormatMzML;
 import org.proteosuite.fileformat.FileFormatMzQuantML;
 import org.proteosuite.gui.*;
+import org.proteosuite.gui.chart.ChartChromatogram;
+import org.proteosuite.gui.chart.ChartPlot2D;
+import org.proteosuite.gui.chart.ChartSpectrum;
 import org.proteosuite.listener.*;
-import org.proteosuite.utils.BinaryUtils;
 import org.proteosuite.utils.DeltaConversion;
 import org.proteosuite.utils.DeltaConversion.DeltaEncodedDataFormatException;
-import org.proteosuite.utils.ExcelExporter;
-import org.proteosuite.utils.Homeless;
 import org.proteosuite.utils.NumericalUtils;
 import org.proteosuite.utils.ProgressBarDialog;
 import org.proteosuite.utils.SystemUtils;
 import org.proteosuite.utils.TwoDPlot;
 import org.proteosuite.utils.Unmarshaller;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -114,36 +88,14 @@ import uk.ac.cranfield.xTracker.utils.XMLparser;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
-import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
-import uk.ac.ebi.jmzml.model.mzml.PrecursorList;
 import uk.ac.ebi.jmzml.model.mzml.Spectrum;
-import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
-import uk.ac.liv.jmzqml.model.mzqml.AbstractParam;
-import uk.ac.liv.jmzqml.model.mzqml.AnalysisSummary;
-import uk.ac.liv.jmzqml.model.mzqml.Assay;
-import uk.ac.liv.jmzqml.model.mzqml.AssayList;
-import uk.ac.liv.jmzqml.model.mzqml.Cv;
-import uk.ac.liv.jmzqml.model.mzqml.CvList;
-import uk.ac.liv.jmzqml.model.mzqml.CvParam;
-import uk.ac.liv.jmzqml.model.mzqml.DataProcessing;
-import uk.ac.liv.jmzqml.model.mzqml.DataProcessingList;
 import uk.ac.liv.jmzqml.model.mzqml.IdentificationFile;
-import uk.ac.liv.jmzqml.model.mzqml.IdentificationFiles;
 import uk.ac.liv.jmzqml.model.mzqml.InputFiles;
-import uk.ac.liv.jmzqml.model.mzqml.Label;
-import uk.ac.liv.jmzqml.model.mzqml.ModParam;
 import uk.ac.liv.jmzqml.model.mzqml.MzQuantML;
-import uk.ac.liv.jmzqml.model.mzqml.ProcessingMethod;
 import uk.ac.liv.jmzqml.model.mzqml.RawFile;
 import uk.ac.liv.jmzqml.model.mzqml.RawFilesGroup;
-import uk.ac.liv.jmzqml.model.mzqml.Software;
-import uk.ac.liv.jmzqml.model.mzqml.SoftwareList;
-import uk.ac.liv.jmzqml.model.mzqml.StudyVariable;
-import uk.ac.liv.jmzqml.model.mzqml.StudyVariableList;
-import uk.ac.liv.jmzqml.model.mzqml.UserParam;
-import uk.ac.liv.jmzqml.xml.io.MzQuantMLMarshaller;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 import uk.ac.liv.mzidlib.MzIdentMLLib;
 
@@ -155,21 +107,21 @@ import uk.ac.liv.mzidlib.MzIdentMLLib;
  */
 public class ProteoSuiteView extends JFrame {
 	// Project settings
-	private static final String sPS_Version = "0.3.1";
-	private static String sProjectName = "";
-	private static String sWorkspace = "";
-	private static String sPreviousLocation = "user.home";
-	private boolean bProjectModified = false;
-	private static final String MZQ_XSD = "mzQuantML_1_0_0.xsd";
-	private static final String mzMLVersion = "1.1";
-	private static final String mzIDVersion = "1.1";
+	public static final String sPS_Version = "0.3.1";
+	public static String sProjectName = "";
+	public static String sWorkspace = "";
+	public static String sPreviousLocation = "user.home";
+	public boolean bProjectModified = false;
+	public static final String MZQ_XSD = "mzQuantML_1_0_0.xsd";
+	public static final String mzMLVersion = "1.1";
+	public static final String mzIDVersion = "1.1";
 	public static final String MZQUANT_VERSION = "1.0.0";
-	private static final String PSI_MS_VERSION = "3.37.0";
-	private static final String PSI_MOD_VERSION = "1.2";
-	private static final SystemUtils SYS_UTILS = new SystemUtils();
+	public static final String PSI_MS_VERSION = "3.37.0";
+	public static final String PSI_MOD_VERSION = "1.2";
+	public static final SystemUtils SYS_UTILS = new SystemUtils();
 
 	private IdentParamsView identParamsExecute;
-	private JDialog dialogIdentParamsExecute;
+	// private JDialog dialogIdentParamsExecute;
 
 	// List of unmarshaller objects
 	private List<MzMLUnmarshaller> aMzMLUnmarshaller = new ArrayList<MzMLUnmarshaller>();
@@ -177,14 +129,137 @@ public class ProteoSuiteView extends JFrame {
 	private List<MzQuantMLUnmarshaller> aMzQUnmarshaller = new ArrayList<MzQuantMLUnmarshaller>();
 
 	public ProteoSuiteView() {
-		// ... Initializing all components (handled by netbeans) ...//
-		initComponents();
+		// Initializing all components (handled by netbeans)
+		final JMenuItem jmCloseProject = new JMenuItem("Close Project");
+		final JMenuItem jmSaveProject = new JMenuItem("Save Project",
+				new ImageIcon(getClass().getClassLoader().getResource(
+						"images/save.gif")));
+		final JTextArea jtaLog = new JTextArea();
+		final JTabbedPane jtpLog = new JTabbedPane();
+		final JTabbedPane jtpProperties = new JTabbedPane();
+		final JSplitPane jspLeftViewerDetails = new JSplitPane();
+		final JSplitPane jspMainPanelView = new JSplitPane();
+		final JSplitPane jspMzML = new JSplitPane();
+		final JSplitPane jspViewerAndProperties = new JSplitPane();
+		final JDesktopPane jdpTIC = new JDesktopPane();
+		final JDesktopPane jdpMS = new JDesktopPane();
+
+		final JButton jbExportFeatMZQExcel = new JButton();
+		final JButton jbExportMGFExcel = new JButton();
+		final JButton jbExportMascotXMLExcel = new JButton();
+		final JButton jbExportMzIdentMLExcel = new JButton();
+		final JButton jbExportMzMLExcel = new JButton();
+		final JButton jbExportPepMZQExcel = new JButton();
+		final JButton jbExportProtMZQExcel = new JButton();
+		final JButton jbSaveProject = new JButton(new ImageIcon(getClass()
+				.getClassLoader().getResource("images/save.gif")));
+		final JComboBox<String> jcbTechnique = new JComboBox<String>();
+		final JEditorPane jepMGFView = new JEditorPane();
+		final JEditorPane jepMZQView = new JEditorPane();
+		final JEditorPane jepMascotXMLView = new JEditorPane();
+		final JEditorPane jepMzIDView = new JEditorPane();
+		final JEditorPane jepMzMLView = new JEditorPane();
+		final JLabel jlFileNameMzIDText = new JLabel();
+		final JLabel jlFileNameMzMLText = new JLabel();
+		final JLabel jlFileNameMzQText = new JLabel();
+		final JLabel jlIdentFilesStatus = new JLabel();
+
+		final JTable jtRawData = new JTable() {
+			public boolean isCellEditable(int rowIndex, int colIndex) {
+				return false;
+			}
+		};
+
+		final JTable jtFeatureQuant = new JTable() {
+			public boolean isCellEditable(int rowIndex, int colIndex) {
+				return false;
+			}
+		};
+		final JTable jtIdentFiles = new JTable() {
+			public boolean isCellEditable(int rowIndex, int colIndex) {
+				if (colIndex < 4) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		};
+		final JTable jtMGF = new JTable() {
+			public boolean isCellEditable(int rowIndex, int colIndex) {
+				return false;
+			}
+		};
+		final JTable jtMascotXMLView = new JTable() {
+			public boolean isCellEditable(int rowIndex, int colIndex) {
+				return false;
+			}
+		};
+		final JTable jtMzIDProtGroup = new JTable();
+		final JTable jtMzId = new JTable() {
+			public boolean isCellEditable(int rowIndex, int colIndex) {
+				return false;
+			}
+		};
+		final JTable jtMzML = new JTable() {
+			public boolean isCellEditable(int rowIndex, int colIndex) {
+				return false;
+			}
+		};
+		final JTable jtPeptideQuant = new JTable() {
+			public boolean isCellEditable(int rowIndex, int colIndex) {
+				return false;
+			}
+		};
+		final JTable jtProteinQuant = new JTable() {
+			public boolean isCellEditable(int rowIndex, int colIndex) {
+				return false;
+			}
+		};
+		final JTable jtQuantFiles = new JTable() {
+			public boolean isCellEditable(int rowIndex, int colIndex) {
+				return false;
+			}
+		};
+		final JTable jtRawFiles = new JTable() {
+			public boolean isCellEditable(int rowIndex, int colIndex) {
+				if (colIndex < 4) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		};
+
+		final JPanel jp2D = new JPanel();
+		final JTabbedPane jtpViewer = new TabbedChartViewer(jdpMS, jdpTIC, jp2D);
+		
+		initComponents(jmCloseProject, jmSaveProject, jtaLog, jtpProperties,
+				jtpLog, jtpViewer, jspLeftViewerDetails, jspMainPanelView,
+				jspMzML, jspViewerAndProperties, jdpTIC, jdpMS,
+				jbExportPepMZQExcel, jbExportProtMZQExcel,
+				jbExportFeatMZQExcel, jbExportMascotXMLExcel,
+				jbExportMzIdentMLExcel, jbExportMGFExcel, jbExportMzMLExcel,
+				jbSaveProject, jcbTechnique, jepMGFView, jepMZQView,
+				jepMascotXMLView, jepMzIDView, jepMzMLView, jlFileNameMzMLText,
+				jlFileNameMzIDText, jlIdentFilesStatus, jlFileNameMzQText,
+				jtRawFiles, jtIdentFiles, jtQuantFiles, jtRawData, jtMzML,
+				jtMGF, jtMzId, jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
+				jtFeatureQuant, jp2D);
 
 		// ... Load parameter settings ...//
 		identParamsExecute = new IdentParamsView(sWorkspace, "execute");
 
 		// ... Project default settings ...//
-		initProjectValues();
+		initProjectValues(jmCloseProject, jmSaveProject, jtaLog, jdpTIC, jdpMS,
+				jbSaveProject, jbExportMzMLExcel, jbExportMGFExcel,
+				jbExportMzIdentMLExcel, jbExportMascotXMLExcel,
+				jbExportPepMZQExcel, jbExportProtMZQExcel,
+				jbExportFeatMZQExcel, jcbTechnique, jepMGFView, jepMZQView,
+				jepMascotXMLView, jepMzIDView, jepMzMLView, jlFileNameMzMLText,
+				jlFileNameMzIDText, jlIdentFilesStatus, jlFileNameMzQText,
+				jtRawFiles, jtIdentFiles, jtQuantFiles, jtRawData, jtMzML,
+				jtMGF, jtMzId, jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
+				jtFeatureQuant);
 
 		setTitle("ProteoSuite " + sPS_Version + " (Beta Version) - <Project: "
 				+ sWorkspace + " - " + sProjectName
@@ -208,63 +283,57 @@ public class ProteoSuiteView extends JFrame {
 		System.out.println("****************************************");
 
 		// ... Tabsheet and other shortcut icons ...//
-		Icon spectrumIcon = new ImageIcon(getClass().getClassLoader().getResource("images/ident_file.gif"));
-		JLabel jlSpectrumIcon = new JLabel("Spectrum", spectrumIcon, SwingConstants.RIGHT);
-		jlSpectrumIcon.setIconTextGap(5);
-		jtpViewer.setTabComponentAt(0, jlSpectrumIcon);
-
-		Icon TICIcon = new ImageIcon(getClass().getClassLoader().getResource("images/chromat.gif"));
-		JLabel jlTICIcon = new JLabel("TIC", TICIcon, SwingConstants.RIGHT);
-		jlTICIcon.setIconTextGap(5);
-		jtpViewer.setTabComponentAt(1, jlTICIcon);
-
-		Icon twoDIcon = new ImageIcon(getClass().getClassLoader().getResource("images/twod.gif"));
-		JLabel jlTwoDIcon = new JLabel("2D View", twoDIcon, SwingConstants.RIGHT);
-		jlTwoDIcon.setIconTextGap(5);
-		jtpViewer.setTabComponentAt(2, jlTwoDIcon);
-
-		Icon threeDIcon = new ImageIcon(getClass().getClassLoader().getResource("images/threed.gif"));
-		JLabel jlThreeDIcon = new JLabel("3D View", threeDIcon, SwingConstants.RIGHT);
-		jlThreeDIcon.setIconTextGap(5);
-		jtpViewer.setTabComponentAt(3, jlThreeDIcon);
-
-		Icon logIcon = new ImageIcon(getClass().getClassLoader().getResource("images/log.gif"));
+		Icon logIcon = new ImageIcon(getClass().getClassLoader().getResource(
+				"images/log.gif"));
 		JLabel jlLogIcon = new JLabel("Log  ", logIcon, SwingConstants.RIGHT);
 		jlLogIcon.setIconTextGap(5);
 		jtpLog.setTabComponentAt(0, jlLogIcon);
 
-		Icon rawDataIcon = new ImageIcon(getClass().getClassLoader().getResource("images/raw_data.gif"));
-		JLabel jlRawDataIcon = new JLabel("Raw data", rawDataIcon, SwingConstants.RIGHT);
+		Icon rawDataIcon = new ImageIcon(getClass().getClassLoader()
+				.getResource("images/raw_data.gif"));
+		JLabel jlRawDataIcon = new JLabel("Raw data", rawDataIcon,
+				SwingConstants.RIGHT);
 		jlRawDataIcon.setIconTextGap(5);
 		jtpLog.setTabComponentAt(1, jlRawDataIcon);
 
-		Icon propertiesMzMLIcon = new ImageIcon(getClass().getClassLoader().getResource("images/properties.gif"));
-		JLabel jlPropertiesMzMLIcon = new JLabel("mzML View", propertiesMzMLIcon, SwingConstants.RIGHT);
+		Icon propertiesMzMLIcon = new ImageIcon(getClass().getClassLoader()
+				.getResource("images/properties.gif"));
+		JLabel jlPropertiesMzMLIcon = new JLabel("mzML View",
+				propertiesMzMLIcon, SwingConstants.RIGHT);
 		jlPropertiesMzMLIcon.setIconTextGap(5);
 		jtpProperties.setTabComponentAt(0, jlPropertiesMzMLIcon);
 
-		Icon propertiesMGFIcon = new ImageIcon(getClass().getClassLoader().getResource("images/properties.gif"));
-		JLabel jlPropertiesMGFIcon = new JLabel("MGF View", propertiesMGFIcon, SwingConstants.RIGHT);
+		Icon propertiesMGFIcon = new ImageIcon(getClass().getClassLoader()
+				.getResource("images/properties.gif"));
+		JLabel jlPropertiesMGFIcon = new JLabel("MGF View", propertiesMGFIcon,
+				SwingConstants.RIGHT);
 		jlPropertiesMGFIcon.setIconTextGap(5);
 		jtpProperties.setTabComponentAt(1, jlPropertiesMGFIcon);
 
-		Icon propertiesMzIdenMLIcon = new ImageIcon(getClass().getClassLoader().getResource("images/properties.gif"));
-		JLabel jlPropertiesMzIdentMLIcon = new JLabel("mzIdentML View", propertiesMzIdenMLIcon, SwingConstants.RIGHT);
+		Icon propertiesMzIdenMLIcon = new ImageIcon(getClass().getClassLoader()
+				.getResource("images/properties.gif"));
+		JLabel jlPropertiesMzIdentMLIcon = new JLabel("mzIdentML View",
+				propertiesMzIdenMLIcon, SwingConstants.RIGHT);
 		jlPropertiesMzIdentMLIcon.setIconTextGap(5);
 		jtpProperties.setTabComponentAt(2, jlPropertiesMzIdentMLIcon);
 
-		Icon propertiesMascotIcon = new ImageIcon(getClass().getClassLoader().getResource("images/properties.gif"));
-		JLabel jlPropertiesMascotIcon = new JLabel("Mascot XML View", propertiesMascotIcon, SwingConstants.RIGHT);
+		Icon propertiesMascotIcon = new ImageIcon(getClass().getClassLoader()
+				.getResource("images/properties.gif"));
+		JLabel jlPropertiesMascotIcon = new JLabel("Mascot XML View",
+				propertiesMascotIcon, SwingConstants.RIGHT);
 		jlPropertiesMascotIcon.setIconTextGap(5);
 		jtpProperties.setTabComponentAt(3, jlPropertiesMascotIcon);
 
-		Icon propertiesMzQuantMLIcon = new ImageIcon(getClass().getClassLoader().getResource("images/properties.gif"));
-		JLabel jlPropertiesMzQuantMLIcon = new JLabel("mzQuantML View", propertiesMzQuantMLIcon, SwingConstants.RIGHT);
+		Icon propertiesMzQuantMLIcon = new ImageIcon(getClass()
+				.getClassLoader().getResource("images/properties.gif"));
+		JLabel jlPropertiesMzQuantMLIcon = new JLabel("mzQuantML View",
+				propertiesMzQuantMLIcon, SwingConstants.RIGHT);
 		jlPropertiesMzQuantMLIcon.setIconTextGap(5);
 		jtpProperties.setTabComponentAt(4, jlPropertiesMzQuantMLIcon);
 
 		// ... Buttons ...//
-		Icon iconExcel = new ImageIcon(getClass().getClassLoader().getResource("images/xls.gif"));
+		Icon iconExcel = new ImageIcon(getClass().getClassLoader().getResource(
+				"images/xls.gif"));
 		jbExportMzMLExcel.setIcon(iconExcel);
 		jbExportMzMLExcel.setToolTipText("Export to Excel Spreadsheet (.xls)");
 		jbExportMGFExcel.setIcon(iconExcel);
@@ -298,12 +367,11 @@ public class ProteoSuiteView extends JFrame {
 														// (Viewer) ...//
 
 		jspMzML.setDividerLocation(100); // ... MzML data ...//
-		
+
 		JSplitPane jspProjectDetails = new JSplitPane();
 		jspProjectDetails.setDividerLocation(200); // ... MzML files ...//
 
 		// ... Setting default selection (Viewers) ...//
-		jtpViewer.setSelectedIndex(0);
 		jtpLog.setSelectedIndex(0);
 		jtpProperties.setSelectedIndex(0);
 
@@ -311,60 +379,107 @@ public class ProteoSuiteView extends JFrame {
 		pack();
 	}
 
-	/**
-	 * This method is called from within the constructor to initialise the form.
-	 * WARNING: Do NOT modify this code. The content of this method is always
-	 * regenerated by the Form Editor.
-	 */
+	private void initComponents(final JMenuItem jmCloseProject,
+			final JMenuItem jmSaveProject, final JTextArea jtaLog,
+			final JTabbedPane jtpProperties, final JTabbedPane jtpLog,
+			final JTabbedPane jtpViewer, final JSplitPane jspLeftViewerDetails,
+			final JSplitPane jspMainPanelView, final JSplitPane jspMzML,
+			final JSplitPane jspViewerAndProperties, final JDesktopPane jdpTIC,
+			final JDesktopPane jdpMS, final JButton jbExportPepMZQExcel,
+			final JButton jbExportProtMZQExcel,
+			final JButton jbExportFeatMZQExcel,
+			final JButton jbExportMascotXMLExcel,
+			final JButton jbExportMzIdentMLExcel,
+			final JButton jbExportMGFExcel, final JButton jbExportMzMLExcel,
+			final JButton jbSaveProject, final JComboBox<String> jcbTechnique,
+			final JEditorPane jepMGFView, final JEditorPane jepMZQView,
+			final JEditorPane jepMascotXMLView, final JEditorPane jepMzIDView,
+			final JEditorPane jepMzMLView, final JLabel jlFileNameMzMLText,
+			final JLabel jlFileNameMzIDText, final JLabel jlIdentFilesStatus,
+			final JLabel jlFileNameMzQText, final JTable jtRawFiles,
+			final JTable jtIdentFiles, final JTable jtQuantFiles,
+			final JTable jtRawData, final JTable jtMzML, final JTable jtMGF,
+			final JTable jtMzId, final JTable jtMascotXMLView,
+			final JTable jtPeptideQuant, final JTable jtProteinQuant,
+			final JTable jtFeatureQuant, final JPanel jp2D) {
 
-	// <editor-fold defaultstate="collapsed"
-	// desc="Generated Code">//GEN-BEGIN:initComponents
-	private void initComponents() {
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new ActionListenerExit());
 
-		JButton jbNewProject = new JButton(new ImageIcon(getClass().getClassLoader().getResource("images/new.gif")));
+		final JComboBox<String> jcbOutputFormat = new JComboBox<String>();
+		JButton jbNewProject = new JButton(new ImageIcon(getClass()
+				.getClassLoader().getResource("images/new.gif")));
 		jbNewProject.setToolTipText("New Project (Ctrl + N)");
 		jbNewProject.setFocusable(false);
-		jbNewProject
-				.setHorizontalTextPosition(SwingConstants.CENTER);
+		jbNewProject.setHorizontalTextPosition(SwingConstants.CENTER);
 		jbNewProject.setVerticalTextPosition(SwingConstants.BOTTOM);
 		jbNewProject.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
-				jmNewProjectActionPerformed(null, jtRawFiles);
+				jmNewProjectActionPerformed(jcbTechnique, jmSaveProject,
+						jmCloseProject, jtaLog, jdpTIC, jdpMS, jbSaveProject,
+						jbExportMzMLExcel, jbExportMGFExcel,
+						jbExportMzIdentMLExcel, jbExportMascotXMLExcel,
+						jbExportPepMZQExcel, jbExportProtMZQExcel,
+						jbExportFeatMZQExcel, jcbOutputFormat, jepMGFView,
+						jepMZQView, jepMascotXMLView, jepMzIDView, jepMzMLView,
+						jlFileNameMzMLText, jlFileNameMzIDText,
+						jlIdentFilesStatus, jlFileNameMzQText, jtRawFiles,
+						jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF,
+						jtMzId, jtMascotXMLView, jtPeptideQuant,
+						jtProteinQuant, jtFeatureQuant);
 			}
 		});
 		JToolBar jToolBar1 = new JToolBar();
 		jToolBar1.add(jbNewProject);
 
-		JButton jbImportFile = new JButton(new ImageIcon(getClass().getClassLoader()
-				.getResource("images/import.gif")));
+		final JTabbedPane jtpMzQuantMLDetail = new JTabbedPane();
+		final JLabel jlFileNameMGFText = new JLabel();
+		final JLabel jlRawFilesStatus = new JLabel();
+		JButton jbImportFile = new JButton(new ImageIcon(getClass()
+				.getClassLoader().getResource("images/import.gif")));
+
+		final JTable jtMzIDProtGroup = new JTable();
+		final JComboBox<String> jcbPSM = new JComboBox<String>();
 		jbImportFile.setToolTipText("Import File (Ctrl + I)");
 		jbImportFile.setFocusable(false);
-		jbImportFile
-				.setHorizontalTextPosition(SwingConstants.CENTER);
+		jbImportFile.setHorizontalTextPosition(SwingConstants.CENTER);
 		jbImportFile.setMaximumSize(new Dimension(27, 21));
 		jbImportFile.setMinimumSize(new Dimension(27, 21));
 		jbImportFile.setPreferredSize(new Dimension(27, 21));
 		jbImportFile.setVerticalTextPosition(SwingConstants.BOTTOM);
 		jbImportFile.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
-				jmImportFileActionPerformed(null, jtRawFiles);
+				jmImportFileActionPerformed(jtRawFiles, jlFileNameMGFText,
+						jtFeatureQuant, jtMzIDProtGroup, jmSaveProject, jp2D,
+						jtaLog, jtpProperties, jtpMzQuantMLDetail, jdpTIC,
+						jbExportPepMZQExcel, jbExportProtMZQExcel,
+						jbExportFeatMZQExcel, jbExportMascotXMLExcel,
+						jbExportMzIdentMLExcel, jbExportMGFExcel,
+						jbExportMzMLExcel, jbSaveProject, jcbPSM, jepMZQView,
+						jepMzIDView, jepMzMLView, jlFileNameMzQText,
+						jlRawFilesStatus, jlIdentFilesStatus,
+						jlFileNameMzIDText, jlFileNameMzMLText, jtIdentFiles,
+						jtMGF, jtMascotXMLView, jtMzId, jtMzML, jtPeptideQuant,
+						jtProteinQuant, jtQuantFiles);
 			}
 		});
 		jToolBar1.add(jbImportFile);
 
-		JButton jbOpenProject = new JButton(new ImageIcon(getClass().getClassLoader().getResource(
-				"images/open.gif")));
+		JButton jbOpenProject = new JButton(new ImageIcon(getClass()
+				.getClassLoader().getResource("images/open.gif")));
 		jbOpenProject.setToolTipText("Open Project (Ctrl + O)");
 		jbOpenProject.setFocusable(false);
-		jbOpenProject
-				.setHorizontalTextPosition(SwingConstants.CENTER);
-		jbOpenProject
-				.setVerticalTextPosition(SwingConstants.BOTTOM);
+		jbOpenProject.setHorizontalTextPosition(SwingConstants.CENTER);
+		jbOpenProject.setVerticalTextPosition(SwingConstants.BOTTOM);
 		jbOpenProject.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
-				openProject(sPreviousLocation, sWorkspace, jtRawFiles);
+				openProject(jtRawFiles, jlFileNameMGFText, jtMzIDProtGroup,
+						jmCloseProject, jmSaveProject, jp2D, jtaLog,
+						jtpProperties, jdpTIC, jbSaveProject, jcbPSM,
+						jepMzMLView, jepMzIDView, jlRawFilesStatus,
+						jlIdentFilesStatus, jlFileNameMzMLText,
+						jlFileNameMzIDText, jtIdentFiles, jtMGF,
+						jtMascotXMLView, jtMzId, jtMzML, jtQuantFiles);
 			}
 		});
 		jToolBar1.add(jbOpenProject);
@@ -372,18 +487,19 @@ public class ProteoSuiteView extends JFrame {
 		jbSaveProject.setToolTipText("Save Project (Ctrl + S)");
 		jbSaveProject.setEnabled(false);
 		jbSaveProject.setFocusable(false);
-		jbSaveProject
-				.setHorizontalTextPosition(SwingConstants.CENTER);
-		jbSaveProject
-				.setVerticalTextPosition(SwingConstants.BOTTOM);
+		jbSaveProject.setHorizontalTextPosition(SwingConstants.CENTER);
+		jbSaveProject.setVerticalTextPosition(SwingConstants.BOTTOM);
 		jbSaveProject.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
-				jmSaveProjectActionPerformed(null, jtRawFiles);
+				jmSaveProjectActionPerformed(jtRawFiles, jcbTechnique,
+						jmSaveProject, jmCloseProject, jbSaveProject,
+						jcbOutputFormat, jtIdentFiles);
 			}
 		});
 		jToolBar1.add(jbSaveProject);
 
-		JButton jbCut = new JButton(new ImageIcon(getClass().getClassLoader().getResource("images/cut.gif")));
+		JButton jbCut = new JButton(new ImageIcon(getClass().getClassLoader()
+				.getResource("images/cut.gif")));
 		jbCut.setToolTipText("Cut (Ctrl + X)");
 		jbCut.setEnabled(false);
 		jbCut.setFocusable(false);
@@ -393,110 +509,110 @@ public class ProteoSuiteView extends JFrame {
 		JToolBar jToolBar2 = new JToolBar();
 		jToolBar2.add(jbCut);
 
-		JButton jbCopy = new JButton(new ImageIcon(getClass().getClassLoader().getResource("images/copy.gif")));
+		JButton jbCopy = new JButton(new ImageIcon(getClass().getClassLoader()
+				.getResource("images/copy.gif")));
 		jbCopy.setEnabled(false);
 		jbCopy.setFocusable(false);
 		jbCopy.setHorizontalTextPosition(SwingConstants.CENTER);
 		jbCopy.setVerticalTextPosition(SwingConstants.BOTTOM);
 		jToolBar2.add(jbCopy);
 
-		JButton jbPaste = new JButton(new ImageIcon(getClass().getClassLoader().getResource("images/paste.gif")));
+		JButton jbPaste = new JButton(new ImageIcon(getClass().getClassLoader()
+				.getResource("images/paste.gif")));
 		jbPaste.setEnabled(false);
 		jbPaste.setFocusable(false);
 		jbPaste.setHorizontalTextPosition(SwingConstants.CENTER);
 		jbPaste.setVerticalTextPosition(SwingConstants.BOTTOM);
 		jToolBar2.add(jbPaste);
 
-
 		JToolBar jToolBar3 = new JToolBar();
 		jToolBar3.setMaximumSize(new Dimension(34, 9));
 		jToolBar3.setMinimumSize(new Dimension(34, 9));
 
-		JButton jbRunIdentAnalysis = new JButton(new ImageIcon(getClass().getClassLoader().getResource("images/runid.gif")));
+		JButton jbRunIdentAnalysis = new JButton(new ImageIcon(getClass()
+				.getClassLoader().getResource("images/runid.gif")));
 		jbRunIdentAnalysis.setToolTipText("Run Identification Pipeline (F7)");
 		jbRunIdentAnalysis.setFocusable(false);
 		jbRunIdentAnalysis.setHorizontalTextPosition(SwingConstants.CENTER);
 		jbRunIdentAnalysis.setVerticalTextPosition(SwingConstants.BOTTOM);
 		jbRunIdentAnalysis.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
-				jmRunIdentAnalysisActionPerformed(null, jtRawFiles);
+				jmRunIdentAnalysisActionPerformed(null, jtRawFiles,
+						jtMzIDProtGroup, identParamsExecute, jtaLog,
+						jtIdentFiles, aMzIDUnmarshaller, jlRawFilesStatus,
+						jlIdentFilesStatus, jtpProperties, jcbPSM, jepMzIDView,
+						jlFileNameMzIDText, jtMzId);
 			}
 		});
 		jToolBar3.add(jbRunIdentAnalysis);
 
-		JButton jbRunQuantAnalysis = new JButton(new ImageIcon(getClass().getClassLoader().getResource("images/run.gif")));
+		JButton jbRunQuantAnalysis = new JButton(new ImageIcon(getClass()
+				.getClassLoader().getResource("images/run.gif")));
 		jbRunQuantAnalysis.setToolTipText("Run Quantitation Pipeline (F5)");
 		jbRunQuantAnalysis.setFocusable(false);
 		jbRunQuantAnalysis.setHorizontalTextPosition(SwingConstants.CENTER);
 		jbRunQuantAnalysis.setVerticalTextPosition(SwingConstants.BOTTOM);
 		jbRunQuantAnalysis.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
-				jmRunQuantAnalysisActionPerformed(null, jtRawFiles, jtpLog);
+				jmRunQuantAnalysisActionPerformed(jtpLog, jmCloseProject,
+						jmSaveProject, jtaLog, jtpProperties,
+						jtpMzQuantMLDetail, jbSaveProject, jbExportPepMZQExcel,
+						jbExportProtMZQExcel, jbExportFeatMZQExcel,
+						jcbTechnique, jcbOutputFormat, jepMZQView,
+						jlFileNameMzQText, jtFeatureQuant, jtIdentFiles,
+						jtPeptideQuant, jtProteinQuant, jtQuantFiles,
+						jtRawFiles);
 			}
 		});
 		jToolBar3.add(jbRunQuantAnalysis);
 
+		final JPanel jpToolBar = new JPanel();
 		jpToolBar.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 		jpToolBar.setPreferredSize(new Dimension(933, 32));
 		GroupLayout jpToolBarLayout = new GroupLayout(jpToolBar);
 		jpToolBar.setLayout(jpToolBarLayout);
-		jpToolBarLayout
-				.setHorizontalGroup(jpToolBarLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+		jpToolBarLayout.setHorizontalGroup(jpToolBarLayout.createParallelGroup(
+				GroupLayout.Alignment.LEADING)
+				.addGroup(
+						jpToolBarLayout
+								.createSequentialGroup()
+								.addComponent(jToolBar1,
+										GroupLayout.PREFERRED_SIZE, 125,
+										GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(
+										LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(jToolBar2,
+										GroupLayout.PREFERRED_SIZE, 132,
+										GroupLayout.PREFERRED_SIZE)
+								.addGap(18, 18, 18)
+								.addComponent(jToolBar3,
+										GroupLayout.PREFERRED_SIZE, 121,
+										GroupLayout.PREFERRED_SIZE)
+								.addContainerGap(826, Short.MAX_VALUE)));
+		jpToolBarLayout.setVerticalGroup(jpToolBarLayout.createParallelGroup(
+				GroupLayout.Alignment.LEADING).addGroup(
+				GroupLayout.Alignment.TRAILING,
+				jpToolBarLayout
+						.createSequentialGroup()
 						.addGroup(
 								jpToolBarLayout
-										.createSequentialGroup()
-										.addComponent(
-												jToolBar1,
-												GroupLayout.PREFERRED_SIZE,
-												125,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(
-												LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(
-												jToolBar2,
-												GroupLayout.PREFERRED_SIZE,
-												132,
-												GroupLayout.PREFERRED_SIZE)
-										.addGap(18, 18, 18)
-										.addComponent(
-												jToolBar3,
-												GroupLayout.PREFERRED_SIZE,
-												121,
-												GroupLayout.PREFERRED_SIZE)
-										.addContainerGap(826, Short.MAX_VALUE)));
-		jpToolBarLayout
-				.setVerticalGroup(jpToolBarLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
-						.addGroup(
-								GroupLayout.Alignment.TRAILING,
-								jpToolBarLayout
-										.createSequentialGroup()
-										.addGroup(
-												jpToolBarLayout
-														.createParallelGroup(
-																GroupLayout.Alignment.TRAILING)
-														.addComponent(
-																jToolBar3,
-																GroupLayout.Alignment.LEADING,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																Short.MAX_VALUE)
-														.addComponent(
-																jToolBar2,
-																GroupLayout.Alignment.LEADING,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																Short.MAX_VALUE)
-														.addComponent(
-																jToolBar1,
-																GroupLayout.Alignment.LEADING,
-																GroupLayout.PREFERRED_SIZE,
-																25,
-																GroupLayout.PREFERRED_SIZE))
-										.addContainerGap()));
+										.createParallelGroup(
+												GroupLayout.Alignment.TRAILING)
+										.addComponent(jToolBar3,
+												GroupLayout.Alignment.LEADING,
+												GroupLayout.DEFAULT_SIZE,
+												GroupLayout.DEFAULT_SIZE,
+												Short.MAX_VALUE)
+										.addComponent(jToolBar2,
+												GroupLayout.Alignment.LEADING,
+												GroupLayout.DEFAULT_SIZE,
+												GroupLayout.DEFAULT_SIZE,
+												Short.MAX_VALUE)
+										.addComponent(jToolBar1,
+												GroupLayout.Alignment.LEADING,
+												GroupLayout.PREFERRED_SIZE, 25,
+												GroupLayout.PREFERRED_SIZE))
+						.addContainerGap()));
 
 		jspMainPanelView.setDividerLocation(280);
 		jspMainPanelView.setDividerSize(3);
@@ -504,38 +620,6 @@ public class ProteoSuiteView extends JFrame {
 		JPanel jpLeftPanelView = new JPanel();
 		jpLeftPanelView.setBackground(new Color(204, 204, 255));
 
-		JSplitPane jspLeftPanelView = new JSplitPane();
-		jspLeftPanelView.setDividerLocation(20);
-		jspLeftPanelView.setDividerSize(1);
-		jspLeftPanelView.setOrientation(JSplitPane.VERTICAL_SPLIT);
-
-		JPanel jpProjectHeader = new JPanel();
-		jpProjectHeader.setMaximumSize(new Dimension(32767, 25));
-		jpProjectHeader.setMinimumSize(new Dimension(279, 25));
-		jpProjectHeader.setPreferredSize(new Dimension(280, 25));
-
-		JLabel jlFiles = new JLabel("Files");
-		jlFiles.requestFocusInWindow();
-		jlFiles.setBackground(new Color(255, 255, 255));
-		jlFiles.setFont(new Font("Verdana", 1, 14)); // NOI18N
-		jlFiles.setForeground(new Color(102, 102, 102));
-
-		GroupLayout jpProjectHeaderLayout = new GroupLayout(jpProjectHeader);
-		jpProjectHeader.setLayout(jpProjectHeaderLayout);
-		jpProjectHeaderLayout.setHorizontalGroup(jpProjectHeaderLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(
-						jpProjectHeaderLayout.createSequentialGroup()
-								.addContainerGap().addComponent(jlFiles)
-								.addContainerGap(235, Short.MAX_VALUE)));
-		jpProjectHeaderLayout.setVerticalGroup(jpProjectHeaderLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(
-						jpProjectHeaderLayout.createSequentialGroup()
-								.addComponent(jlFiles)
-								.addContainerGap(7, Short.MAX_VALUE)));
-
-		jspLeftPanelView.setTopComponent(jpProjectHeader);
 
 		JPanel jpProjectDetails = new JPanel();
 		jpProjectDetails.setBackground(new Color(255, 255, 255));
@@ -546,38 +630,53 @@ public class ProteoSuiteView extends JFrame {
 		jspProjectDetails.setDividerSize(1);
 		jspProjectDetails.setOrientation(JSplitPane.VERTICAL_SPLIT);
 
-
 		JScrollPane jspRawFiles = new JScrollPane();
 		jspRawFiles.setBackground(new Color(255, 255, 255));
 
-		jtRawFiles.setModel(new DefaultTableModel(
-				new String[][] {
-
-				}, new String[] { "Name", "Path", "Type", "Version" }));
+		jtRawFiles.setModel(new DefaultTableModel(new String[][] {},
+				new String[] { "Name", "Path", "Type", "Version" }));
 		jtRawFiles.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jtRawFiles.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				JTable jtRawFiles = (JTable) evt.getSource();
-				
+
 				// ... Right click event for displaying mzML data ...//
 				if ((evt.getButton() == 1)
-						&& (jtRawFiles.getValueAt(jtRawFiles.getSelectedRow(), 2)
-								.toString().equals("mzML"))) {
-					loadMzMLView(jtRawFiles.getSelectedRow(), jtRawFiles);
-					showChromatogram(jtRawFiles.getSelectedRow(), jtRawFiles
-							.getValueAt(jtRawFiles.getSelectedRow(), 1).toString());
+						&& (jtRawFiles.getValueAt(jtRawFiles.getSelectedRow(),
+								2).toString().equals("mzML"))) {
+					loadMzMLView(jtRawFiles.getSelectedRow(), jtRawFiles,
+							jtpProperties, jepMzMLView, jlFileNameMzMLText,
+							jtMzML);
+
+					// Clear container
+					jdpTIC.removeAll();
+					JInternalFrame jifViewChromatogram = getInternalFrame();
+					jifViewChromatogram.setTitle("Chromatogram <"
+							+ jtRawFiles.getValueAt(
+									jtRawFiles.getSelectedRow(), 1) + ">");
+					jifViewChromatogram.add(ChartChromatogram
+							.getChromatogram(aMzMLUnmarshaller.get(jtRawFiles
+									.getSelectedRow())));
+
+					jdpTIC.add(jifViewChromatogram);
+					jdpTIC.revalidate();
+					jdpTIC.repaint();
 				}
 				// ... Right click event for displaying MGF data ...//
 				if ((evt.getButton() == 1)
-						&& (jtRawFiles.getValueAt(jtRawFiles.getSelectedRow(), 2)
-								.toString().equals("MGF"))) {
-					loadMGFView(jtRawFiles.getSelectedRow(), jlFileNameMGFText, jtRawFiles);
+						&& (jtRawFiles.getValueAt(jtRawFiles.getSelectedRow(),
+								2).toString().equals("MGF"))) {
+					loadMGFView(jtRawFiles.getSelectedRow(), jlFileNameMGFText,
+							jtRawFiles, jtpProperties, jtMGF);
 				}
 			}
 		});
 		jspRawFiles.setViewportView(jtRawFiles);
-		
-		JLabel jlRawFilesIcon = new JLabel("Raw Files                                 ", new ImageIcon(getClass().getClassLoader().getResource("images/raw_file.gif")), SwingConstants.RIGHT);
+
+		JLabel jlRawFilesIcon = new JLabel(
+				"Raw Files                                 ", new ImageIcon(
+						getClass().getClassLoader().getResource(
+								"images/raw_file.gif")), SwingConstants.RIGHT);
 		jlRawFilesIcon.setIconTextGap(5);
 		final JTabbedPane jtpRawFiles = new JTabbedPane();
 		jtpRawFiles.setBackground(new Color(255, 255, 255));
@@ -592,55 +691,59 @@ public class ProteoSuiteView extends JFrame {
 				.addGap(0, 277, Short.MAX_VALUE)
 				.addGroup(
 						jpLeftMenuTopLayout.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
-								.addComponent(jtpRawFiles,
-										GroupLayout.DEFAULT_SIZE,
-										277, Short.MAX_VALUE)));
+								GroupLayout.Alignment.LEADING).addComponent(
+								jtpRawFiles, GroupLayout.DEFAULT_SIZE, 277,
+								Short.MAX_VALUE)));
 		jpLeftMenuTopLayout
 				.setVerticalGroup(jpLeftMenuTopLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGap(0, 129, Short.MAX_VALUE)
 						.addGroup(
-								jpLeftMenuTopLayout
-										.createParallelGroup(
-												GroupLayout.Alignment.LEADING)
-										.addComponent(
-												jtpRawFiles,
+								jpLeftMenuTopLayout.createParallelGroup(
+										GroupLayout.Alignment.LEADING)
+										.addComponent(jtpRawFiles,
 												GroupLayout.Alignment.TRAILING,
-												GroupLayout.DEFAULT_SIZE,
-												129, Short.MAX_VALUE)));
+												GroupLayout.DEFAULT_SIZE, 129,
+												Short.MAX_VALUE)));
 
 		jspProjectDetails.setTopComponent(jpLeftMenuTop);
 
 		final JSplitPane jspLeftMenuBottom = new JSplitPane();
-		 // ... Ident and Quantitation separator
+		// ... Ident and Quantitation separator
 		jspLeftMenuBottom.setDividerLocation(200);
 		jspLeftMenuBottom.setDividerSize(1);
 		jspLeftMenuBottom.setOrientation(JSplitPane.VERTICAL_SPLIT);
 
-		jtQuantFiles.setModel(new DefaultTableModel(
-				new String[][] {
+		jtQuantFiles.setModel(new DefaultTableModel(new String[][] {
 
-				}, new String[] { "Name", "Path", "Type", "Version" }));
-		jtQuantFiles
-				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		}, new String[] { "Name", "Path", "Type", "Version" }));
+		jtQuantFiles.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jtQuantFiles.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				JTable jtQuantFiles = (JTable) evt.getSource();
-				
+
 				if ((evt.getButton() == 1)
-						&& (jtQuantFiles.getValueAt(jtQuantFiles.getSelectedRow(), 2)
-								.toString().equals("mzq"))) {
-					loadMzQuantMLView(jtQuantFiles.getSelectedRow(), jtQuantFiles
-							.getValueAt(jtQuantFiles.getSelectedRow(), 1).toString());
+						&& (jtQuantFiles.getValueAt(
+								jtQuantFiles.getSelectedRow(), 2).toString()
+								.equals("mzq"))) {
+					loadMzQuantMLView(
+							jtQuantFiles.getSelectedRow(),
+							jtQuantFiles.getValueAt(
+									jtQuantFiles.getSelectedRow(), 1)
+									.toString(), jtFeatureQuant, jtaLog,
+							jtpProperties, jtpMzQuantMLDetail, jepMZQView,
+							jlFileNameMzQText, jtPeptideQuant, jtProteinQuant,
+							jtQuantFiles);
 				}
 			}
 		});
 		JScrollPane jspQuantFiles = new JScrollPane();
 		jspQuantFiles.setViewportView(jtQuantFiles);
 
-		JLabel jlQuantFilesIcon = new JLabel("Quantitation Files                      ", new ImageIcon(getClass().getClassLoader().getResource("images/quant_file.gif")), SwingConstants.RIGHT);
+		JLabel jlQuantFilesIcon = new JLabel(
+				"Quantitation Files                      ", new ImageIcon(
+						getClass().getClassLoader().getResource(
+								"images/quant_file.gif")), SwingConstants.RIGHT);
 		jlQuantFilesIcon.setIconTextGap(5);
 		JTabbedPane jtpQuantFiles = new JTabbedPane();
 		jtpQuantFiles.setBackground(new Color(255, 255, 255));
@@ -648,105 +751,103 @@ public class ProteoSuiteView extends JFrame {
 		jtpQuantFiles.setTabComponentAt(0, jlQuantFilesIcon);
 
 		JPanel jpQuantFiles = new JPanel();
-		GroupLayout jpQuantFilesLayout = new GroupLayout(
-				jpQuantFiles);
+		GroupLayout jpQuantFilesLayout = new GroupLayout(jpQuantFiles);
 		jpQuantFiles.setLayout(jpQuantFilesLayout);
 		jpQuantFilesLayout.setHorizontalGroup(jpQuantFilesLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jtpQuantFiles,
-						GroupLayout.DEFAULT_SIZE, 275,
+				.addComponent(jtpQuantFiles, GroupLayout.DEFAULT_SIZE, 275,
 						Short.MAX_VALUE));
 		jpQuantFilesLayout.setVerticalGroup(jpQuantFilesLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jtpQuantFiles,
-						GroupLayout.DEFAULT_SIZE, 281,
+				.addComponent(jtpQuantFiles, GroupLayout.DEFAULT_SIZE, 281,
 						Short.MAX_VALUE));
 
 		jspLeftMenuBottom.setRightComponent(jpQuantFiles);
-		
-		jtIdentFiles
-				.setModel(new DefaultTableModel(
-						new String[][] {
 
-						}, new String[] { "Name", "Path", "Type", "Version",
-								"Raw File" }));
-		jtIdentFiles
-				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		jtIdentFiles.setModel(new DefaultTableModel(new String[][] {
+
+		}, new String[] { "Name", "Path", "Type", "Version", "Raw File" }));
+		jtIdentFiles.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jtIdentFiles.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				JTable jtIdentFiles = (JTable) evt.getSource();
 				if ((evt.getButton() == 1)
-						&& (jtIdentFiles.getValueAt(jtIdentFiles.getSelectedRow(), 2)
-								.toString().equals("mascot_xml"))) {
-					loadMascotView(
-							jtIdentFiles.getValueAt(jtIdentFiles.getSelectedRow(), 0)
+						&& (jtIdentFiles.getValueAt(
+								jtIdentFiles.getSelectedRow(), 2).toString()
+								.equals("mascot_xml"))) {
+					FileFormatMascot.loadMascotView(
+							jtIdentFiles.getValueAt(
+									jtIdentFiles.getSelectedRow(), 0)
 									.toString(),
-							jtIdentFiles.getValueAt(jtIdentFiles.getSelectedRow(), 1)
-									.toString());
+							jtIdentFiles.getValueAt(
+									jtIdentFiles.getSelectedRow(), 1)
+									.toString(), jtMascotXMLView, jtpProperties);
 				}
 				if ((evt.getButton() == 1)
-						&& (jtIdentFiles.getValueAt(jtIdentFiles.getSelectedRow(), 2)
-								.toString().equals("mzid"))) {
-					loadMzIdentMLView(jtIdentFiles.getSelectedRow(), jtIdentFiles
-							.getValueAt(jtIdentFiles.getSelectedRow(), 0).toString());
+						&& (jtIdentFiles.getValueAt(
+								jtIdentFiles.getSelectedRow(), 2).toString()
+								.equals("mzid"))) {
+					loadMzIdentMLView(
+							jtIdentFiles.getSelectedRow(),
+							jtIdentFiles.getValueAt(
+									jtIdentFiles.getSelectedRow(), 0)
+									.toString(), jtMzIDProtGroup,
+							jtpProperties, jcbPSM, jepMzIDView,
+							jlFileNameMzIDText, jtMzId);
 				}
 			}
 		});
 		JScrollPane jspIdentFiles = new JScrollPane();
 		jspIdentFiles.setViewportView(jtIdentFiles);
 
-		JLabel jlIdentFilesIcon = new JLabel("Identification Files                    ", new ImageIcon(getClass().getClassLoader().getResource("images/ident_file.gif")), SwingConstants.RIGHT);
+		JLabel jlIdentFilesIcon = new JLabel(
+				"Identification Files                    ", new ImageIcon(
+						getClass().getClassLoader().getResource(
+								"images/ident_file.gif")), SwingConstants.RIGHT);
 		jlIdentFilesIcon.setIconTextGap(5);
 		JTabbedPane jtpIdentFiles = new JTabbedPane();
 		jtpIdentFiles.setBackground(new Color(255, 255, 255));
 		jtpIdentFiles.addTab("Identification Files", jspIdentFiles);
 		jtpIdentFiles.setTabComponentAt(0, jlIdentFilesIcon);
 
-
 		jspLeftMenuBottom.setTopComponent(jtpIdentFiles);
 
 		JPanel jpLeftMenuBottom = new JPanel();
-		GroupLayout jpLeftMenuBottomLayout = new GroupLayout(
-				jpLeftMenuBottom);
+		GroupLayout jpLeftMenuBottomLayout = new GroupLayout(jpLeftMenuBottom);
 		jpLeftMenuBottom.setLayout(jpLeftMenuBottomLayout);
 		jpLeftMenuBottomLayout.setHorizontalGroup(jpLeftMenuBottomLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspLeftMenuBottom,
-						GroupLayout.DEFAULT_SIZE, 277,
+				.addComponent(jspLeftMenuBottom, GroupLayout.DEFAULT_SIZE, 277,
 						Short.MAX_VALUE));
 		jpLeftMenuBottomLayout.setVerticalGroup(jpLeftMenuBottomLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspLeftMenuBottom,
-						GroupLayout.DEFAULT_SIZE, 483,
+				.addComponent(jspLeftMenuBottom, GroupLayout.DEFAULT_SIZE, 483,
 						Short.MAX_VALUE));
 
 		jspProjectDetails.setRightComponent(jpLeftMenuBottom);
 
-		GroupLayout jpProjectDetailsLayout = new GroupLayout(
-				jpProjectDetails);
+		GroupLayout jpProjectDetailsLayout = new GroupLayout(jpProjectDetails);
 		jpProjectDetails.setLayout(jpProjectDetailsLayout);
 		jpProjectDetailsLayout.setHorizontalGroup(jpProjectDetailsLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jspProjectDetails));
-		jpProjectDetailsLayout.setVerticalGroup(jpProjectDetailsLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspProjectDetails,
-						GroupLayout.Alignment.TRAILING));
+		jpProjectDetailsLayout
+				.setVerticalGroup(jpProjectDetailsLayout.createParallelGroup(
+						GroupLayout.Alignment.LEADING).addComponent(
+						jspProjectDetails, GroupLayout.Alignment.TRAILING));
 
+		JSplitPane jspLeftPanelView = new LeftPanelView();
 		jspLeftPanelView.setRightComponent(jpProjectDetails);
 
-		GroupLayout jpLeftPanelViewLayout = new GroupLayout(
-				jpLeftPanelView);
+		GroupLayout jpLeftPanelViewLayout = new GroupLayout(jpLeftPanelView);
 		jpLeftPanelView.setLayout(jpLeftPanelViewLayout);
 		jpLeftPanelViewLayout.setHorizontalGroup(jpLeftPanelViewLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspLeftPanelView,
-						GroupLayout.DEFAULT_SIZE, 281,
+				.addComponent(jspLeftPanelView, GroupLayout.DEFAULT_SIZE, 281,
 						Short.MAX_VALUE));
 		jpLeftPanelViewLayout.setVerticalGroup(jpLeftPanelViewLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspLeftPanelView,
-						GroupLayout.DEFAULT_SIZE, 637,
+				.addComponent(jspLeftPanelView, GroupLayout.DEFAULT_SIZE, 637,
 						Short.MAX_VALUE));
 
 		jspMainPanelView.setLeftComponent(jpLeftPanelView);
@@ -754,6 +855,7 @@ public class ProteoSuiteView extends JFrame {
 		jspViewerAndProperties.setDividerLocation(380);
 		jspViewerAndProperties.setDividerSize(3);
 
+		final JSplitPane jspLeftViewer = new JSplitPane();
 		jspLeftViewer.setDividerLocation(20);
 		jspLeftViewer.setDividerSize(1);
 		jspLeftViewer.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -772,14 +874,12 @@ public class ProteoSuiteView extends JFrame {
 				jspLeftViewerHeader);
 		jspLeftViewerHeader.setLayout(jspLeftViewerHeaderLayout);
 		jspLeftViewerHeaderLayout.setHorizontalGroup(jspLeftViewerHeaderLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(
+				.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
 						jspLeftViewerHeaderLayout.createSequentialGroup()
 								.addContainerGap().addComponent(jlViewer)
 								.addContainerGap(316, Short.MAX_VALUE)));
 		jspLeftViewerHeaderLayout.setVerticalGroup(jspLeftViewerHeaderLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(
+				.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
 						jspLeftViewerHeaderLayout.createSequentialGroup()
 								.addComponent(jlViewer)
 								.addContainerGap(7, Short.MAX_VALUE)));
@@ -816,7 +916,7 @@ public class ProteoSuiteView extends JFrame {
 
 		JLabel jLabel2 = new JLabel("Index:");
 		JLabel jLabel3 = new JLabel("m/z:");
-		
+
 		final JTextField jtMSMz = new JTextField();
 		jtMSMz.setToolTipText("Enter the m/z value ");
 		jtMSMz.addKeyListener(new KeyListenerSearch(1, jtRawData, true));
@@ -826,8 +926,7 @@ public class ProteoSuiteView extends JFrame {
 		jpRawDataValuesMenu.setLayout(jpRawDataValuesMenuLayout);
 		jpRawDataValuesMenuLayout
 				.setHorizontalGroup(jpRawDataValuesMenuLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpRawDataValuesMenuLayout
 										.createSequentialGroup()
@@ -838,26 +937,21 @@ public class ProteoSuiteView extends JFrame {
 										.addComponent(jLabel2)
 										.addPreferredGap(
 												LayoutStyle.ComponentPlacement.UNRELATED)
-										.addComponent(
-												jtMSIndex,
-												GroupLayout.PREFERRED_SIZE,
-												54,
+										.addComponent(jtMSIndex,
+												GroupLayout.PREFERRED_SIZE, 54,
 												GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(
 												LayoutStyle.ComponentPlacement.UNRELATED)
 										.addComponent(jLabel3)
 										.addPreferredGap(
 												LayoutStyle.ComponentPlacement.UNRELATED)
-										.addComponent(
-												jtMSMz,
-												GroupLayout.PREFERRED_SIZE,
-												69,
+										.addComponent(jtMSMz,
+												GroupLayout.PREFERRED_SIZE, 69,
 												GroupLayout.PREFERRED_SIZE)
 										.addContainerGap(103, Short.MAX_VALUE)));
 		jpRawDataValuesMenuLayout
 				.setVerticalGroup(jpRawDataValuesMenuLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpRawDataValuesMenuLayout
 										.createSequentialGroup()
@@ -883,10 +977,9 @@ public class ProteoSuiteView extends JFrame {
 
 		jspRawDataValues.setLeftComponent(jpRawDataValuesMenu);
 
-		jtRawData.setModel(new DefaultTableModel(
-				new String[][] {
+		jtRawData.setModel(new DefaultTableModel(new String[][] {
 
-				}, new String[] { "Index", "m/z", "Intensity" }));
+		}, new String[] { "Index", "m/z", "Intensity" }));
 		jtRawData
 				.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		JScrollPane jspRawData = new JScrollPane();
@@ -895,27 +988,28 @@ public class ProteoSuiteView extends JFrame {
 		jspRawDataValues.setBottomComponent(jspRawData);
 
 		JPanel jpRawDataValues = new JPanel();
-		GroupLayout jpRawDataValuesLayout = new GroupLayout(
-				jpRawDataValues);
+		GroupLayout jpRawDataValuesLayout = new GroupLayout(jpRawDataValues);
 		jpRawDataValues.setLayout(jpRawDataValuesLayout);
 		jpRawDataValuesLayout.setHorizontalGroup(jpRawDataValuesLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspRawDataValues,
-						GroupLayout.DEFAULT_SIZE, 373,
+				.addComponent(jspRawDataValues, GroupLayout.DEFAULT_SIZE, 373,
 						Short.MAX_VALUE));
 		jpRawDataValuesLayout.setVerticalGroup(jpRawDataValuesLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspRawDataValues,
-						GroupLayout.Alignment.TRAILING,
-						GroupLayout.DEFAULT_SIZE, 232,
-						Short.MAX_VALUE));
+				.addComponent(jspRawDataValues, GroupLayout.Alignment.TRAILING,
+						GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE));
 
 		jtpLog.addTab("Raw Data", jpRawDataValues);
 
-		jtTemplate1.setModel(new DefaultTableModel(
-				new String[][] {
+		final JTable jtTemplate1 = new JTable() {
+			public boolean isCellEditable(int rowIndex, int colIndex) {
+				return false;
+			}
+		};
+		jtTemplate1.setModel(new DefaultTableModel(new String[][] {
 
-				}, new String[] { "m/z Index", "Scan Index", "Quant",
+		},
+				new String[] { "m/z Index", "Scan Index", "Quant",
 						"Template2 Index" }));
 		JScrollPane jScrollPane1 = new JScrollPane();
 		jScrollPane1.setViewportView(jtTemplate1);
@@ -927,52 +1021,47 @@ public class ProteoSuiteView extends JFrame {
 		JPanel jPanel5 = new JPanel();
 		JPanel jPanel6 = new JPanel();
 		JPanel jPanel7 = new JPanel();
-		
-		GroupLayout jPanel5Layout = new GroupLayout(
-				jPanel5);
+
+		GroupLayout jPanel5Layout = new GroupLayout(jPanel5);
 		jPanel5.setLayout(jPanel5Layout);
 		jPanel5Layout.setHorizontalGroup(jPanel5Layout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addGap(0, 373,
-				Short.MAX_VALUE));
+				GroupLayout.Alignment.LEADING).addGap(0, 373, Short.MAX_VALUE));
 		jPanel5Layout.setVerticalGroup(jPanel5Layout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addGap(0, 51,
-				Short.MAX_VALUE));
+				GroupLayout.Alignment.LEADING).addGap(0, 51, Short.MAX_VALUE));
 
-		GroupLayout jPanel1Layout = new GroupLayout(
-				jPanel1);
+		GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
 		jPanel1.setLayout(jPanel1Layout);
 		jPanel1Layout.setHorizontalGroup(jPanel1Layout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jPanel5, GroupLayout.DEFAULT_SIZE,
 						GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addComponent(jScrollPane1,
-						GroupLayout.DEFAULT_SIZE, 373,
+				.addComponent(jScrollPane1, GroupLayout.DEFAULT_SIZE, 373,
 						Short.MAX_VALUE));
-		jPanel1Layout
-				.setVerticalGroup(jPanel1Layout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
-						.addGroup(
-								jPanel1Layout
-										.createSequentialGroup()
-										.addComponent(
-												jPanel5,
-												GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(
-												LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(
-												jScrollPane1,
-												GroupLayout.DEFAULT_SIZE,
-												175, Short.MAX_VALUE)));
+		jPanel1Layout.setVerticalGroup(jPanel1Layout.createParallelGroup(
+				GroupLayout.Alignment.LEADING)
+				.addGroup(
+						jPanel1Layout
+								.createSequentialGroup()
+								.addComponent(jPanel5,
+										GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(
+										LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(jScrollPane1,
+										GroupLayout.DEFAULT_SIZE, 175,
+										Short.MAX_VALUE)));
 
 		jtpLog.addTab("Template 1", jPanel1);
 
-		jtTemplate2.setModel(new DefaultTableModel(
-				new String[][] {
+		final JTable jtTemplate2 = new JTable() {
+			public boolean isCellEditable(int rowIndex, int colIndex) {
+				return false;
+			}
+		};
+		jtTemplate2.setModel(new DefaultTableModel(new String[][] {
 
-				}, new String[] { "Template Index", "x", "y", "i" }));
+		}, new String[] { "Template Index", "x", "y", "i" }));
 		JScrollPane jScrollPane2 = new JScrollPane();
 		jScrollPane2.setViewportView(jtTemplate2);
 
@@ -983,132 +1072,107 @@ public class ProteoSuiteView extends JFrame {
 		jPanel6Layout.setVerticalGroup(jPanel6Layout.createParallelGroup(
 				GroupLayout.Alignment.LEADING).addGap(0, 52, Short.MAX_VALUE));
 
-		GroupLayout jPanel2Layout = new GroupLayout(
-				jPanel2);
+		GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
 		jPanel2.setLayout(jPanel2Layout);
 		jPanel2Layout.setHorizontalGroup(jPanel2Layout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jPanel6, GroupLayout.DEFAULT_SIZE,
 						GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addComponent(jScrollPane2,
-						GroupLayout.Alignment.TRAILING,
-						GroupLayout.DEFAULT_SIZE, 373,
-						Short.MAX_VALUE));
-		jPanel2Layout
-				.setVerticalGroup(jPanel2Layout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
-						.addGroup(
-								jPanel2Layout
-										.createSequentialGroup()
-										.addComponent(
-												jPanel6,
-												GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(
-												LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(
-												jScrollPane2,
-												GroupLayout.DEFAULT_SIZE,
-												174, Short.MAX_VALUE)));
+				.addComponent(jScrollPane2, GroupLayout.Alignment.TRAILING,
+						GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE));
+		jPanel2Layout.setVerticalGroup(jPanel2Layout.createParallelGroup(
+				GroupLayout.Alignment.LEADING)
+				.addGroup(
+						jPanel2Layout
+								.createSequentialGroup()
+								.addComponent(jPanel6,
+										GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(
+										LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(jScrollPane2,
+										GroupLayout.DEFAULT_SIZE, 174,
+										Short.MAX_VALUE)));
 
 		jtpLog.addTab("Template 2", jPanel2);
 
-		jTable1.setModel(new DefaultTableModel(
-				new String[][] {
+		final JTable jTable1 = new JTable();
+		jTable1.setModel(new DefaultTableModel(new String[][] {
 
-				}, new String[] { "Scan Number" }));
+		}, new String[] { "Scan Number" }));
 		JScrollPane jScrollPane3 = new JScrollPane();
 		jScrollPane3.setViewportView(jTable1);
 
-		GroupLayout jPanel4Layout = new GroupLayout(
-				jPanel4);
+		GroupLayout jPanel4Layout = new GroupLayout(jPanel4);
 		jPanel4.setLayout(jPanel4Layout);
 		jPanel4Layout.setHorizontalGroup(jPanel4Layout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addGap(0, 373,
-				Short.MAX_VALUE));
+				GroupLayout.Alignment.LEADING).addGap(0, 373, Short.MAX_VALUE));
 		jPanel4Layout.setVerticalGroup(jPanel4Layout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addGap(0, 58,
-				Short.MAX_VALUE));
+				GroupLayout.Alignment.LEADING).addGap(0, 58, Short.MAX_VALUE));
 
-		GroupLayout jPanel3Layout = new GroupLayout(
-				jPanel3);
+		GroupLayout jPanel3Layout = new GroupLayout(jPanel3);
 		jPanel3.setLayout(jPanel3Layout);
 		jPanel3Layout.setHorizontalGroup(jPanel3Layout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jPanel4, GroupLayout.DEFAULT_SIZE,
 						GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addComponent(jScrollPane3,
-						GroupLayout.DEFAULT_SIZE, 373,
+				.addComponent(jScrollPane3, GroupLayout.DEFAULT_SIZE, 373,
 						Short.MAX_VALUE));
-		jPanel3Layout
-				.setVerticalGroup(jPanel3Layout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
-						.addGroup(
-								jPanel3Layout
-										.createSequentialGroup()
-										.addComponent(
-												jPanel4,
-												GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(
-												LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(
-												jScrollPane3,
-												GroupLayout.DEFAULT_SIZE,
-												168, Short.MAX_VALUE)));
+		jPanel3Layout.setVerticalGroup(jPanel3Layout.createParallelGroup(
+				GroupLayout.Alignment.LEADING)
+				.addGroup(
+						jPanel3Layout
+								.createSequentialGroup()
+								.addComponent(jPanel4,
+										GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(
+										LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(jScrollPane3,
+										GroupLayout.DEFAULT_SIZE, 168,
+										Short.MAX_VALUE)));
 
 		jtpLog.addTab("Synth Array", jPanel3);
 
-		jTable2.setModel(new DefaultTableModel(
-				new String[][] {
+		final JTable jTable2 = new JTable();
+		jTable2.setModel(new DefaultTableModel(new String[][] {
 
-				}, new String[] { "Scan Number" }));
+		}, new String[] { "Scan Number" }));
 		JScrollPane jScrollPane7 = new JScrollPane();
 		jScrollPane7.setViewportView(jTable2);
 
-		GroupLayout jPanel7Layout = new GroupLayout(
-				jPanel7);
+		GroupLayout jPanel7Layout = new GroupLayout(jPanel7);
 		jPanel7.setLayout(jPanel7Layout);
 		jPanel7Layout.setHorizontalGroup(jPanel7Layout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addGap(0, 373,
-				Short.MAX_VALUE));
+				GroupLayout.Alignment.LEADING).addGap(0, 373, Short.MAX_VALUE));
 		jPanel7Layout.setVerticalGroup(jPanel7Layout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addGap(0, 57,
-				Short.MAX_VALUE));
+				GroupLayout.Alignment.LEADING).addGap(0, 57, Short.MAX_VALUE));
 
 		JPanel jpPanel4 = new JPanel();
-		GroupLayout jpPanel4Layout = new GroupLayout(
-				jpPanel4);
+		GroupLayout jpPanel4Layout = new GroupLayout(jpPanel4);
 		jpPanel4.setLayout(jpPanel4Layout);
 		jpPanel4Layout.setHorizontalGroup(jpPanel4Layout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jPanel7, GroupLayout.DEFAULT_SIZE,
 						GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addComponent(jScrollPane7,
-						GroupLayout.DEFAULT_SIZE, 373,
+				.addComponent(jScrollPane7, GroupLayout.DEFAULT_SIZE, 373,
 						Short.MAX_VALUE));
-		jpPanel4Layout
-				.setVerticalGroup(jpPanel4Layout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
-						.addGroup(
-								jpPanel4Layout
-										.createSequentialGroup()
-										.addComponent(
-												jPanel7,
-												GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE,
-												GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(
-												LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(
-												jScrollPane7,
-												GroupLayout.DEFAULT_SIZE,
-												169, Short.MAX_VALUE)));
+		jpPanel4Layout.setVerticalGroup(jpPanel4Layout.createParallelGroup(
+				GroupLayout.Alignment.LEADING)
+				.addGroup(
+						jpPanel4Layout
+								.createSequentialGroup()
+								.addComponent(jPanel7,
+										GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE)
+								.addPreferredGap(
+										LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(jScrollPane7,
+										GroupLayout.DEFAULT_SIZE, 169,
+										Short.MAX_VALUE)));
 
 		jtpLog.addTab("Resamp Array", jpPanel4);
 
@@ -1127,85 +1191,6 @@ public class ProteoSuiteView extends JFrame {
 
 		jdpMS.setBackground(new Color(255, 255, 255));
 
-		JPanel jpSpectrum = new JPanel();
-		GroupLayout jpSpectrumLayout = new GroupLayout(
-				jpSpectrum);
-		jpSpectrum.setLayout(jpSpectrumLayout);
-		jpSpectrumLayout
-				.setHorizontalGroup(jpSpectrumLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
-						.addGap(0, 373, Short.MAX_VALUE)
-						.addGroup(
-								jpSpectrumLayout
-										.createParallelGroup(
-												GroupLayout.Alignment.LEADING)
-										.addComponent(
-												jdpMS,
-												GroupLayout.Alignment.TRAILING,
-												GroupLayout.DEFAULT_SIZE,
-												373, Short.MAX_VALUE)));
-		jpSpectrumLayout
-				.setVerticalGroup(jpSpectrumLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
-						.addGap(0, 321, Short.MAX_VALUE)
-						.addGroup(
-								jpSpectrumLayout
-										.createParallelGroup(
-												GroupLayout.Alignment.LEADING)
-										.addComponent(
-												jdpMS,
-												GroupLayout.Alignment.TRAILING,
-												GroupLayout.DEFAULT_SIZE,
-												321, Short.MAX_VALUE)));
-
-		jtpViewer.addTab("Spectrum View", jpSpectrum);
-
-		JPanel jpTIC = new JPanel();
-		jpTIC.setBackground(new Color(255, 255, 255));
-
-		jdpTIC.setBackground(new Color(255, 255, 255));
-		jdpTIC.setForeground(new Color(255, 255, 255));
-
-		GroupLayout jpTICLayout = new GroupLayout(jpTIC);
-		jpTIC.setLayout(jpTICLayout);
-		jpTICLayout.setHorizontalGroup(jpTICLayout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addComponent(jdpTIC,
-				GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE));
-		jpTICLayout.setVerticalGroup(jpTICLayout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addComponent(jdpTIC,
-				GroupLayout.DEFAULT_SIZE, 321, Short.MAX_VALUE));
-
-		jtpViewer.addTab("TIC View", jpTIC);
-
-		jp2D.setBackground(new Color(255, 255, 255));
-
-		GroupLayout jp2DLayout = new GroupLayout(jp2D);
-		jp2D.setLayout(jp2DLayout);
-		jp2DLayout.setHorizontalGroup(jp2DLayout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addGap(0, 373,
-				Short.MAX_VALUE));
-		jp2DLayout.setVerticalGroup(jp2DLayout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addGap(0, 321,
-				Short.MAX_VALUE));
-
-		jtpViewer.addTab("2D View", jp2D);
-
-		JPanel jp3D = new JPanel();
-		jp3D.setBackground(new Color(255, 255, 255));
-
-		GroupLayout jp3DLayout = new GroupLayout(jp3D);
-		jp3D.setLayout(jp3DLayout);
-		jp3DLayout.setHorizontalGroup(jp3DLayout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addGap(0, 373,
-				Short.MAX_VALUE));
-		jp3DLayout.setVerticalGroup(jp3DLayout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addGap(0, 321,
-				Short.MAX_VALUE));
-
-		jtpViewer.addTab("3D View", jp3D);
-
 		jspLeftViewerDetails.setTopComponent(jtpViewer);
 
 		JPanel jpLeftViewerDetails = new JPanel();
@@ -1223,20 +1208,19 @@ public class ProteoSuiteView extends JFrame {
 		jspLeftViewer.setRightComponent(jpLeftViewerDetails);
 
 		JPanel jpLeftViewer = new JPanel();
-		GroupLayout jpLeftViewerLayout = new GroupLayout(
-				jpLeftViewer);
+		GroupLayout jpLeftViewerLayout = new GroupLayout(jpLeftViewer);
 		jpLeftViewer.setLayout(jpLeftViewerLayout);
 		jpLeftViewerLayout.setHorizontalGroup(jpLeftViewerLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jspLeftViewer));
 		jpLeftViewerLayout.setVerticalGroup(jpLeftViewerLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspLeftViewer,
-						GroupLayout.DEFAULT_SIZE, 635,
+				.addComponent(jspLeftViewer, GroupLayout.DEFAULT_SIZE, 635,
 						Short.MAX_VALUE));
 
 		jspViewerAndProperties.setLeftComponent(jpLeftViewer);
 
+		final JSplitPane jspProperties = new JSplitPane();
 		jspProperties.setDividerLocation(20);
 		jspProperties.setDividerSize(1);
 		jspProperties.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -1251,18 +1235,15 @@ public class ProteoSuiteView extends JFrame {
 		jlProperties.setFont(new Font("Verdana", 1, 14)); // NOI18N
 		jlProperties.setForeground(new Color(102, 102, 102));
 
-		GroupLayout jpPropertiesLayout = new GroupLayout(
-				jpProperties);
+		GroupLayout jpPropertiesLayout = new GroupLayout(jpProperties);
 		jpProperties.setLayout(jpPropertiesLayout);
 		jpPropertiesLayout.setHorizontalGroup(jpPropertiesLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(
+				.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
 						jpPropertiesLayout.createSequentialGroup()
 								.addContainerGap().addComponent(jlProperties)
 								.addContainerGap(417, Short.MAX_VALUE)));
 		jpPropertiesLayout.setVerticalGroup(jpPropertiesLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGroup(
+				.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
 						jpPropertiesLayout.createSequentialGroup()
 								.addComponent(jlProperties)
 								.addContainerGap(7, Short.MAX_VALUE)));
@@ -1292,7 +1273,7 @@ public class ProteoSuiteView extends JFrame {
 
 		JLabel jlRT = new JLabel("RT (sec):");
 		final JTextField jtRT = new JTextField();
-		
+
 		jtRT.setToolTipText("Enter a retention time value (in seconds)");
 		jtRT.addKeyListener(new KeyListenerSearch(5, jtMzML, false));
 
@@ -1300,8 +1281,7 @@ public class ProteoSuiteView extends JFrame {
 		jlSearchMzML.setFont(new Font("Tahoma", 1, 11)); // NOI18N
 
 		JToolBar jtbMzMLOptions = new JToolBar();
-		jtbMzMLOptions
-				.setBorder(BorderFactory.createEtchedBorder());
+		jtbMzMLOptions.setBorder(BorderFactory.createEtchedBorder());
 		jtbMzMLOptions.setFloatable(false);
 		jtbMzMLOptions.setMaximumSize(new Dimension(30, 23));
 		jtbMzMLOptions.setMinimumSize(new Dimension(30, 23));
@@ -1310,22 +1290,17 @@ public class ProteoSuiteView extends JFrame {
 		jbExportMzMLExcel.setMaximumSize(new Dimension(28, 24));
 		jbExportMzMLExcel.setMinimumSize(new Dimension(28, 24));
 		jbExportMzMLExcel.setPreferredSize(new Dimension(28, 24));
-		jbExportMzMLExcel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent evt) {
-				jbExportMzMLExcelMouseClicked(evt);
-			}
-		});
+		jbExportMzMLExcel
+				.addMouseListener(new MouseListenerExcelExport(jtMzML));
 		jtbMzMLOptions.add(jbExportMzMLExcel);
 
 		JLabel jlExportMzMLXLS = new JLabel("Export to:");
 
-		GroupLayout jpMzMLMenuLayout = new GroupLayout(
-				jpMzMLMenu);
+		GroupLayout jpMzMLMenuLayout = new GroupLayout(jpMzMLMenu);
 		jpMzMLMenu.setLayout(jpMzMLMenuLayout);
 		jpMzMLMenuLayout
 				.setHorizontalGroup(jpMzMLMenuLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMzMLMenuLayout
 										.createSequentialGroup()
@@ -1378,8 +1353,7 @@ public class ProteoSuiteView extends JFrame {
 										.addContainerGap(210, Short.MAX_VALUE)));
 		jpMzMLMenuLayout
 				.setVerticalGroup(jpMzMLMenuLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMzMLMenuLayout
 										.createSequentialGroup()
@@ -1434,21 +1408,28 @@ public class ProteoSuiteView extends JFrame {
 		jtMzML.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				JTable jtMzML = (JTable) evt.getSource();
-				
-				// ... Right click event for displaying MS raw data and spectrum ...//
+
+				// Right click event for displaying MS raw data and spectrum
 				if (evt.getButton() == 1) {
 					if (jtRawFiles.getSelectedRow() > -1) {
-						showRawData(jtRawFiles.getSelectedRow(),
-								jtMzML.getValueAt(jtMzML.getSelectedRow(), 1)
-										.toString(), jtRawData, jtpLog);
-						showSpectrum(jtRawFiles.getSelectedRow(),
-								jtMzML.getValueAt(jtMzML.getSelectedRow(), 1)
-										.toString());
+						showRawData(jtRawFiles.getSelectedRow(), jtMzML
+								.getValueAt(jtMzML.getSelectedRow(), 1)
+								.toString(), jtRawData, jtpLog,
+								aMzMLUnmarshaller);
+
+						ChartSpectrum.getSpectrum(aMzMLUnmarshaller
+								.get(jtRawFiles.getSelectedRow()), jtMzML
+								.getValueAt(jtMzML.getSelectedRow(), 1)
+								.toString(), jdpMS, getInternalFrame());
 					} else {
-						showRawData(0, jtMzML.getValueAt(jtMzML.getSelectedRow(), 1)
-								.toString(), jtRawData, jtpLog);
-						showSpectrum(0, jtMzML.getValueAt(jtMzML.getSelectedRow(), 1)
-								.toString());
+						showRawData(0,
+								jtMzML.getValueAt(jtMzML.getSelectedRow(), 1)
+										.toString(), jtRawData, jtpLog,
+								aMzMLUnmarshaller);
+
+						ChartSpectrum.getSpectrum(aMzMLUnmarshaller.get(0),
+								jtMzML.getValueAt(jtMzML.getSelectedRow(), 1)
+										.toString(), jdpMS, getInternalFrame());
 					}
 					jtpViewer.setSelectedIndex(0);
 				}
@@ -1471,13 +1452,11 @@ public class ProteoSuiteView extends JFrame {
 		jScrollPane9.setViewportView(jepMzMLView);
 
 		JPanel jpMzMLViewHeader = new JPanel();
-		GroupLayout jpMzMLViewHeaderLayout = new GroupLayout(
-				jpMzMLViewHeader);
+		GroupLayout jpMzMLViewHeaderLayout = new GroupLayout(jpMzMLViewHeader);
 		jpMzMLViewHeader.setLayout(jpMzMLViewHeaderLayout);
 		jpMzMLViewHeaderLayout
 				.setHorizontalGroup(jpMzMLViewHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMzMLViewHeaderLayout
 										.createSequentialGroup()
@@ -1507,8 +1486,7 @@ public class ProteoSuiteView extends JFrame {
 										.addContainerGap(20, Short.MAX_VALUE)));
 		jpMzMLViewHeaderLayout
 				.setVerticalGroup(jpMzMLViewHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMzMLViewHeaderLayout
 										.createSequentialGroup()
@@ -1526,26 +1504,21 @@ public class ProteoSuiteView extends JFrame {
 																GroupLayout.PREFERRED_SIZE))
 										.addPreferredGap(
 												LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(
-												jScrollPane9,
-												GroupLayout.PREFERRED_SIZE,
-												52,
+										.addComponent(jScrollPane9,
+												GroupLayout.PREFERRED_SIZE, 52,
 												GroupLayout.PREFERRED_SIZE)
 										.addContainerGap(18, Short.MAX_VALUE)));
 
 		jspMzML.setLeftComponent(jpMzMLViewHeader);
 
 		JPanel jpMzML = new JPanel();
-		GroupLayout jpMzMLLayout = new GroupLayout(
-				jpMzML);
+		GroupLayout jpMzMLLayout = new GroupLayout(jpMzML);
 		jpMzML.setLayout(jpMzMLLayout);
 		jpMzMLLayout.setHorizontalGroup(jpMzMLLayout.createParallelGroup(
-				GroupLayout.Alignment.LEADING)
-				.addComponent(jspMzML));
+				GroupLayout.Alignment.LEADING).addComponent(jspMzML));
 		jpMzMLLayout.setVerticalGroup(jpMzMLLayout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addComponent(
-				jspMzML, GroupLayout.DEFAULT_SIZE, 585,
-				Short.MAX_VALUE));
+				GroupLayout.Alignment.LEADING).addComponent(jspMzML,
+				GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE));
 
 		jtpProperties.addTab("mzML View", jpMzML);
 
@@ -1566,13 +1539,11 @@ public class ProteoSuiteView extends JFrame {
 		JScrollPane jScrollPane10 = new JScrollPane();
 		jScrollPane10.setViewportView(jepMGFView);
 
-		GroupLayout jpMGFViewHeaderLayout = new GroupLayout(
-				jpMGFViewHeader);
+		GroupLayout jpMGFViewHeaderLayout = new GroupLayout(jpMGFViewHeader);
 		jpMGFViewHeader.setLayout(jpMGFViewHeaderLayout);
 		jpMGFViewHeaderLayout
 				.setHorizontalGroup(jpMGFViewHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMGFViewHeaderLayout
 										.createSequentialGroup()
@@ -1602,8 +1573,7 @@ public class ProteoSuiteView extends JFrame {
 										.addContainerGap(20, Short.MAX_VALUE)));
 		jpMGFViewHeaderLayout
 				.setVerticalGroup(jpMGFViewHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMGFViewHeaderLayout
 										.createSequentialGroup()
@@ -1621,10 +1591,8 @@ public class ProteoSuiteView extends JFrame {
 																jlFileNameMGF))
 										.addPreferredGap(
 												LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(
-												jScrollPane10,
-												GroupLayout.PREFERRED_SIZE,
-												52,
+										.addComponent(jScrollPane10,
+												GroupLayout.PREFERRED_SIZE, 52,
 												GroupLayout.PREFERRED_SIZE)
 										.addContainerGap(19, Short.MAX_VALUE)));
 
@@ -1640,9 +1608,9 @@ public class ProteoSuiteView extends JFrame {
 
 		JLabel jlScanTitle = new JLabel("Scan title:");
 
-		
 		final JTextField jtScanTitle = new JTextField();
-		jtScanTitle.setToolTipText("Enter any character(s) that is (are) specified in the scan title");
+		jtScanTitle
+				.setToolTipText("Enter any character(s) that is (are) specified in the scan title");
 		jtScanTitle.addKeyListener(new KeyListenerSearch(1, jtMGF, false));
 
 		JToolBar jtbMGFOptions = new JToolBar();
@@ -1655,22 +1623,16 @@ public class ProteoSuiteView extends JFrame {
 		jbExportMGFExcel.setMaximumSize(new Dimension(28, 24));
 		jbExportMGFExcel.setMinimumSize(new Dimension(28, 24));
 		jbExportMGFExcel.setPreferredSize(new Dimension(28, 24));
-		jbExportMGFExcel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent evt) {
-				jbExportMGFExcelMouseClicked(evt);
-			}
-		});
+		jbExportMGFExcel.addMouseListener(new MouseListenerExcelExport(jtMGF));
 		jtbMGFOptions.add(jbExportMGFExcel);
 
 		JLabel jlExportMGFXLS = new JLabel("Export To:");
 		JPanel jpMGFMenu = new JPanel();
-		GroupLayout jpMGFMenuLayout = new GroupLayout(
-				jpMGFMenu);
+		GroupLayout jpMGFMenuLayout = new GroupLayout(jpMGFMenu);
 		jpMGFMenu.setLayout(jpMGFMenuLayout);
 		jpMGFMenuLayout
 				.setHorizontalGroup(jpMGFMenuLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMGFMenuLayout
 										.createSequentialGroup()
@@ -1711,8 +1673,7 @@ public class ProteoSuiteView extends JFrame {
 										.addContainerGap(197, Short.MAX_VALUE)));
 		jpMGFMenuLayout
 				.setVerticalGroup(jpMGFMenuLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMGFMenuLayout
 										.createSequentialGroup()
@@ -1763,14 +1724,18 @@ public class ProteoSuiteView extends JFrame {
 		jtMGF.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				JTable jtMGF = (JTable) evt.getSource();
-				
+
 				// ... Validate right click selection for MGF files ...//
 				if (evt.getButton() == 1) {
 					if (jtRawFiles.getSelectedRow() > -1) {
-						showRawDataMGF(jtRawFiles.getSelectedRow(),
-								jtMGF.getValueAt(jtMGF.getSelectedRow(), 4).toString(), jtRawData, jtRawFiles, jtpLog);
+						showRawDataMGF(jtRawFiles.getSelectedRow(), jtMGF
+								.getValueAt(jtMGF.getSelectedRow(), 4)
+								.toString(), jtRawData, jtRawFiles, jtpLog);
 					} else {
-						showRawDataMGF(0, jtMGF.getValueAt(jtMGF.getSelectedRow(), 4).toString(), jtRawData, jtRawFiles, jtpLog);
+						showRawDataMGF(0,
+								jtMGF.getValueAt(jtMGF.getSelectedRow(), 4)
+										.toString(), jtRawData, jtRawFiles,
+								jtpLog);
 					}
 					jtpViewer.setSelectedIndex(0);
 				}
@@ -1821,8 +1786,7 @@ public class ProteoSuiteView extends JFrame {
 		jtPeptideMzId.addKeyListener(new KeyListenerSearch(2, jtMzId, true));
 
 		JToolBar jtbMzIdentMLOptions = new JToolBar();
-		jtbMzIdentMLOptions.setBorder(BorderFactory
-				.createEtchedBorder());
+		jtbMzIdentMLOptions.setBorder(BorderFactory.createEtchedBorder());
 		jtbMzIdentMLOptions.setFloatable(false);
 		jtbMzIdentMLOptions.setMaximumSize(new Dimension(30, 23));
 		jtbMzIdentMLOptions.setMinimumSize(new Dimension(30, 23));
@@ -1831,12 +1795,8 @@ public class ProteoSuiteView extends JFrame {
 		jbExportMzIdentMLExcel.setMaximumSize(new Dimension(28, 24));
 		jbExportMzIdentMLExcel.setMinimumSize(new Dimension(28, 24));
 		jbExportMzIdentMLExcel.setPreferredSize(new Dimension(28, 24));
-		jbExportMzIdentMLExcel
-				.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent evt) {
-						jbExportMzIdentMLExcelMouseClicked(evt);
-					}
-				});
+		jbExportMzIdentMLExcel.addMouseListener(new MouseListenerExcelExport(
+				jtMzId));
 		jtbMzIdentMLOptions.add(jbExportMzIdentMLExcel);
 
 		JLabel jlExportMzIDXLS = new JLabel("Export to:");
@@ -1847,33 +1807,46 @@ public class ProteoSuiteView extends JFrame {
 		JScrollPane jspMzIdProtGroup = new JScrollPane();
 		jspMzIdProtGroup.setViewportView(jtMzId);
 
-		JLabel jlPeptideSpectrumMatches = new JLabel("Peptide-Spectrum matches with rank:");
+		JLabel jlPeptideSpectrumMatches = new JLabel(
+				"Peptide-Spectrum matches with rank:");
 
-		jcbPSM.setModel(new DefaultComboBoxModel<String>(new String[] {
-				"<=1", "<=2", "<=3", "All" }));
+		jcbPSM.setModel(new DefaultComboBoxModel<String>(new String[] { "<=1",
+				"<=2", "<=3", "All" }));
 		jcbPSM.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				// ... Check file to visualize .../
-				if (!jlFileNameMzIDText.equals("")) {
-					int iIndex = getMzMLIndex(jlFileNameMzIDText.getText());
-					loadMzIdentMLView(iIndex, jlFileNameMzIDText.getText());
+				if (jlFileNameMzIDText.equals(""))
+					return;
+
+				int iIndex = getMzMLIndex(jlFileNameMzIDText.getText(),
+						jtIdentFiles);
+				loadMzIdentMLView(iIndex, jlFileNameMzIDText.getText(),
+						jtMzIDProtGroup, jtpProperties, jcbPSM, jepMzIDView,
+						jlFileNameMzIDText, jtMzId);
+			}
+
+			private int getMzMLIndex(String sFileName, JTable jtIdentFiles) {
+				int iIndex = 0;
+				for (int iI = 0; iI < jtIdentFiles.getRowCount(); iI++) {
+					if (jtIdentFiles.getValueAt(iI, 0).toString()
+							.equals(sFileName)) {
+						iIndex = iI;
+						break;
+					}
 				}
+				return iIndex;
 			}
 		});
 
-
 		JPanel jpMzIdMenu = new JPanel();
-		GroupLayout jpMzIdMenuLayout = new GroupLayout(
-				jpMzIdMenu);
+		GroupLayout jpMzIdMenuLayout = new GroupLayout(jpMzIdMenu);
 		jpMzIdMenu.setLayout(jpMzIdMenuLayout);
 		jpMzIdMenuLayout
 				.setHorizontalGroup(jpMzIdMenuLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addComponent(jspMzIdProtGroup,
 								GroupLayout.Alignment.TRAILING,
-								GroupLayout.DEFAULT_SIZE, 563,
-								Short.MAX_VALUE)
+								GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE)
 						.addGroup(
 								jpMzIdMenuLayout
 										.createSequentialGroup()
@@ -1945,8 +1918,7 @@ public class ProteoSuiteView extends JFrame {
 										.addContainerGap()));
 		jpMzIdMenuLayout
 				.setVerticalGroup(jpMzIdMenuLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMzIdMenuLayout
 										.createSequentialGroup()
@@ -2007,22 +1979,19 @@ public class ProteoSuiteView extends JFrame {
 														.addComponent(
 																jlPeptideSpectrumMatches))
 										.addGap(18, 18, 18)
-										.addComponent(
-												jspMzIdProtGroup,
-												GroupLayout.DEFAULT_SIZE,
-												155, Short.MAX_VALUE)
+										.addComponent(jspMzIdProtGroup,
+												GroupLayout.DEFAULT_SIZE, 155,
+												Short.MAX_VALUE)
 										.addGap(23, 23, 23)));
 
 		jspMzIdDetail.setTopComponent(jpMzIdMenu);
 
 		jtMzIDProtGroup.setAutoCreateRowSorter(true);
-		jtMzIDProtGroup.setModel(new DefaultTableModel(
-				new String[][] {
+		jtMzIDProtGroup.setModel(new DefaultTableModel(new String[][] {
 
-				}, new String[] { "ID", "Name", "Protein Accesions",
-						"Representative Protein", "Scores", "P-values",
-						"Number of peptides", "Is Decoy", "passThreshold" }));
-		
+		}, new String[] { "ID", "Name", "Protein Accesions",
+				"Representative Protein", "Scores", "P-values",
+				"Number of peptides", "Is Decoy", "passThreshold" }));
 
 		JScrollPane jspMzIDProtGroup = new JScrollPane();
 		jspMzIDProtGroup.setViewportView(jtMzIDProtGroup);
@@ -2045,8 +2014,7 @@ public class ProteoSuiteView extends JFrame {
 		jpMzIdentMLViewHeader.setLayout(jpMzIdentMLViewHeaderLayout);
 		jpMzIdentMLViewHeaderLayout
 				.setHorizontalGroup(jpMzIdentMLViewHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMzIdentMLViewHeaderLayout
 										.createSequentialGroup()
@@ -2075,8 +2043,7 @@ public class ProteoSuiteView extends JFrame {
 										.addContainerGap(20, Short.MAX_VALUE)));
 		jpMzIdentMLViewHeaderLayout
 				.setVerticalGroup(jpMzIdentMLViewHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMzIdentMLViewHeaderLayout
 										.createSequentialGroup()
@@ -2094,26 +2061,22 @@ public class ProteoSuiteView extends JFrame {
 																GroupLayout.PREFERRED_SIZE))
 										.addPreferredGap(
 												LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(
-												jspMzIDView,
-												GroupLayout.PREFERRED_SIZE,
-												52,
+										.addComponent(jspMzIDView,
+												GroupLayout.PREFERRED_SIZE, 52,
 												GroupLayout.PREFERRED_SIZE)
 										.addContainerGap(17, Short.MAX_VALUE)));
 
 		jspMzId.setLeftComponent(jpMzIdentMLViewHeader);
 
 		JPanel jpMzId = new JPanel();
-		GroupLayout jpMzIdLayout = new GroupLayout(
-				jpMzId);
+		GroupLayout jpMzIdLayout = new GroupLayout(jpMzId);
 		jpMzId.setLayout(jpMzIdLayout);
 		jpMzIdLayout.setHorizontalGroup(jpMzIdLayout.createParallelGroup(
-				GroupLayout.Alignment.LEADING)
-				.addComponent(jspMzId));
+				GroupLayout.Alignment.LEADING).addComponent(jspMzId));
 		jpMzIdLayout.setVerticalGroup(jpMzIdLayout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addComponent(
-				jspMzId, GroupLayout.Alignment.TRAILING,
-				GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE));
+				GroupLayout.Alignment.LEADING).addComponent(jspMzId,
+				GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 585,
+				Short.MAX_VALUE));
 
 		jtpProperties.addTab("mzIdentML View", jpMzId);
 
@@ -2125,15 +2088,13 @@ public class ProteoSuiteView extends JFrame {
 		JSplitPane jspMascotXMLSubDetail = new JSplitPane();
 		jspMascotXMLSubDetail.setDividerLocation(80);
 		jspMascotXMLSubDetail.setDividerSize(1);
-		jspMascotXMLSubDetail
-				.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		jspMascotXMLSubDetail.setOrientation(JSplitPane.VERTICAL_SPLIT);
 
-		jtMascotXMLView.setModel(new DefaultTableModel(
-				new String[][] {
+		jtMascotXMLView.setModel(new DefaultTableModel(new String[][] {
 
-				}, new String[] { "Index", "Protein", "Peptide", "Composition",
-						"Exp Mz", "Exp Mr", "Charge", "Score", "Scan",
-						"Scan ID", "RT (sec)" }));
+		}, new String[] { "Index", "Protein", "Peptide", "Composition",
+				"Exp Mz", "Exp Mr", "Charge", "Score", "Scan", "Scan ID",
+				"RT (sec)" }));
 		JScrollPane jspMascotXMLDetail = new JScrollPane();
 		jspMascotXMLDetail.setViewportView(jtMascotXMLView);
 
@@ -2145,18 +2106,19 @@ public class ProteoSuiteView extends JFrame {
 		JLabel jlProtein = new JLabel("Protein:");
 
 		final JTextField jtProtein = new JTextField();
-		jtProtein.addKeyListener(new KeyListenerSearch(1, jtMascotXMLView, true));
+		jtProtein
+				.addKeyListener(new KeyListenerSearch(1, jtMascotXMLView, true));
 
 		JLabel jlPeptide = new JLabel("Peptide:");
 
 		final JTextField jtPeptide = new JTextField();
-		jtPeptide.addKeyListener(new KeyListenerSearch(2, jtMascotXMLView, true));
+		jtPeptide
+				.addKeyListener(new KeyListenerSearch(2, jtMascotXMLView, true));
 
 		JLabel jlExportMzIDXLS1 = new JLabel("Export to:");
 
 		JToolBar jtbMzIdentMLOptions1 = new JToolBar();
-		jtbMzIdentMLOptions1.setBorder(BorderFactory
-				.createEtchedBorder());
+		jtbMzIdentMLOptions1.setBorder(BorderFactory.createEtchedBorder());
 		jtbMzIdentMLOptions1.setFloatable(false);
 		jtbMzIdentMLOptions1.setMaximumSize(new Dimension(30, 23));
 		jtbMzIdentMLOptions1.setMinimumSize(new Dimension(30, 23));
@@ -2165,22 +2127,17 @@ public class ProteoSuiteView extends JFrame {
 		jbExportMascotXMLExcel.setMaximumSize(new Dimension(28, 24));
 		jbExportMascotXMLExcel.setMinimumSize(new Dimension(28, 24));
 		jbExportMascotXMLExcel.setPreferredSize(new Dimension(28, 24));
-		jbExportMascotXMLExcel
-				.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent evt) {
-						jbExportMascotXMLExcelMouseClicked(evt);
-					}
-				});
+		jbExportMascotXMLExcel.addMouseListener(new MouseListenerExcelExport(
+				jtMascotXMLView));
+
 		jtbMzIdentMLOptions1.add(jbExportMascotXMLExcel);
 
 		JPanel jpMascotXMLMenu = new JPanel();
-		GroupLayout jpMascotXMLMenuLayout = new GroupLayout(
-				jpMascotXMLMenu);
+		GroupLayout jpMascotXMLMenuLayout = new GroupLayout(jpMascotXMLMenu);
 		jpMascotXMLMenu.setLayout(jpMascotXMLMenuLayout);
 		jpMascotXMLMenuLayout
 				.setHorizontalGroup(jpMascotXMLMenuLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMascotXMLMenuLayout
 										.createSequentialGroup()
@@ -2233,8 +2190,7 @@ public class ProteoSuiteView extends JFrame {
 										.addContainerGap(112, Short.MAX_VALUE)));
 		jpMascotXMLMenuLayout
 				.setVerticalGroup(jpMascotXMLMenuLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMascotXMLMenuLayout
 										.createSequentialGroup()
@@ -2303,8 +2259,7 @@ public class ProteoSuiteView extends JFrame {
 		jpMascotXMLViewHeader.setLayout(jpMascotXMLViewHeaderLayout);
 		jpMascotXMLViewHeaderLayout
 				.setHorizontalGroup(jpMascotXMLViewHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMascotXMLViewHeaderLayout
 										.createSequentialGroup()
@@ -2334,8 +2289,7 @@ public class ProteoSuiteView extends JFrame {
 										.addContainerGap(20, Short.MAX_VALUE)));
 		jpMascotXMLViewHeaderLayout
 				.setVerticalGroup(jpMascotXMLViewHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMascotXMLViewHeaderLayout
 										.createSequentialGroup()
@@ -2353,26 +2307,22 @@ public class ProteoSuiteView extends JFrame {
 																jlFileNameMascotXML))
 										.addPreferredGap(
 												LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(
-												jspMascotXMLView,
-												GroupLayout.PREFERRED_SIZE,
-												52,
+										.addComponent(jspMascotXMLView,
+												GroupLayout.PREFERRED_SIZE, 52,
 												GroupLayout.PREFERRED_SIZE)
 										.addContainerGap(19, Short.MAX_VALUE)));
 
 		jspMascotXML.setLeftComponent(jpMascotXMLViewHeader);
 
 		JPanel jpMascotXML = new JPanel();
-		GroupLayout jpMascotXMLLayout = new GroupLayout(
-				jpMascotXML);
+		GroupLayout jpMascotXMLLayout = new GroupLayout(jpMascotXML);
 		jpMascotXML.setLayout(jpMascotXMLLayout);
 		jpMascotXMLLayout.setHorizontalGroup(jpMascotXMLLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jspMascotXML));
 		jpMascotXMLLayout.setVerticalGroup(jpMascotXMLLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspMascotXML,
-						GroupLayout.DEFAULT_SIZE, 585,
+				.addComponent(jspMascotXML, GroupLayout.DEFAULT_SIZE, 585,
 						Short.MAX_VALUE));
 
 		jtpProperties.addTab("Mascot XML View", jpMascotXML);
@@ -2394,7 +2344,8 @@ public class ProteoSuiteView extends JFrame {
 
 		final JTextField jtPeptideMZQ = new JTextField();
 		jtPeptideMZQ.setToolTipText("Enter the scan number");
-		jtPeptideMZQ.addKeyListener(new KeyListenerSearch(0, jtPeptideQuant, false));
+		jtPeptideMZQ.addKeyListener(new KeyListenerSearch(0, jtPeptideQuant,
+				false));
 
 		JToolBar jtbPepMZQ = new JToolBar();
 		jtbPepMZQ.setBorder(BorderFactory
@@ -2408,21 +2359,17 @@ public class ProteoSuiteView extends JFrame {
 		jbExportPepMZQExcel.setMaximumSize(new Dimension(26, 20));
 		jbExportPepMZQExcel.setMinimumSize(new Dimension(26, 20));
 		jbExportPepMZQExcel.setPreferredSize(new Dimension(26, 20));
-		jbExportPepMZQExcel.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent evt) {
-				jbExportPepMZQExcelMouseClicked(evt);
-			}
-		});
+		jbExportPepMZQExcel.addMouseListener(new MouseListenerExcelExport(
+				jtPeptideQuant));
 		jtbPepMZQ.add(jbExportPepMZQExcel);
-		
+
 		JPanel jpPeptideQuantHeader = new JPanel();
 		GroupLayout jpPeptideQuantHeaderLayout = new GroupLayout(
 				jpPeptideQuantHeader);
 		jpPeptideQuantHeader.setLayout(jpPeptideQuantHeaderLayout);
 		jpPeptideQuantHeaderLayout
 				.setHorizontalGroup(jpPeptideQuantHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpPeptideQuantHeaderLayout
 										.createSequentialGroup()
@@ -2431,21 +2378,17 @@ public class ProteoSuiteView extends JFrame {
 										.addGap(18, 18, 18)
 										.addComponent(jlPeptideMZQ)
 										.addGap(18, 18, 18)
-										.addComponent(
-												jtPeptideMZQ,
+										.addComponent(jtPeptideMZQ,
 												GroupLayout.PREFERRED_SIZE,
-												209,
-												GroupLayout.PREFERRED_SIZE)
+												209, GroupLayout.PREFERRED_SIZE)
 										.addGap(18, 18, 18)
-										.addComponent(
-												jtbPepMZQ,
-												GroupLayout.DEFAULT_SIZE,
-												193, Short.MAX_VALUE)
+										.addComponent(jtbPepMZQ,
+												GroupLayout.DEFAULT_SIZE, 193,
+												Short.MAX_VALUE)
 										.addContainerGap()));
 		jpPeptideQuantHeaderLayout
 				.setVerticalGroup(jpPeptideQuantHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpPeptideQuantHeaderLayout
 										.createSequentialGroup()
@@ -2476,10 +2419,10 @@ public class ProteoSuiteView extends JFrame {
 
 		jspPeptideQuant.setTopComponent(jpPeptideQuantHeader);
 
-		jtPeptideQuant.setModel(new DefaultTableModel(
-				new String[][] {
+		jtPeptideQuant.setModel(new DefaultTableModel(new String[][] {
 
-				}, new String[] { "Peptide", "Label 1", "Label 2", "Label 3",
+		},
+				new String[] { "Peptide", "Label 1", "Label 2", "Label 3",
 						"Label 4" }));
 		JScrollPane jspPeptideQuantDetail = new JScrollPane();
 		jspPeptideQuantDetail.setViewportView(jtPeptideQuant);
@@ -2487,16 +2430,14 @@ public class ProteoSuiteView extends JFrame {
 		jspPeptideQuant.setRightComponent(jspPeptideQuantDetail);
 
 		JPanel jpPeptideQuant = new JPanel();
-		GroupLayout jpPeptideQuantLayout = new GroupLayout(
-				jpPeptideQuant);
+		GroupLayout jpPeptideQuantLayout = new GroupLayout(jpPeptideQuant);
 		jpPeptideQuant.setLayout(jpPeptideQuantLayout);
 		jpPeptideQuantLayout.setHorizontalGroup(jpPeptideQuantLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jspPeptideQuant));
 		jpPeptideQuantLayout.setVerticalGroup(jpPeptideQuantLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspPeptideQuant,
-						GroupLayout.DEFAULT_SIZE, 445,
+				.addComponent(jspPeptideQuant, GroupLayout.DEFAULT_SIZE, 445,
 						Short.MAX_VALUE));
 
 		jtpMzQuantMLDetail.addTab("Peptide Quantitation", jpPeptideQuant);
@@ -2513,7 +2454,8 @@ public class ProteoSuiteView extends JFrame {
 
 		final JTextField jtProteinMZQ = new JTextField();
 		jtProteinMZQ.setToolTipText("Enter the scan number");
-		jtProteinMZQ.addKeyListener(new KeyListenerSearch(0, jtProteinQuant, false));
+		jtProteinMZQ.addKeyListener(new KeyListenerSearch(0, jtProteinQuant,
+				false));
 
 		JToolBar jtbProtMZQ = new JToolBar();
 		jtbProtMZQ.setBorder(BorderFactory
@@ -2527,12 +2469,9 @@ public class ProteoSuiteView extends JFrame {
 		jbExportProtMZQExcel.setMaximumSize(new Dimension(26, 20));
 		jbExportProtMZQExcel.setMinimumSize(new Dimension(26, 20));
 		jbExportProtMZQExcel.setPreferredSize(new Dimension(26, 20));
-		jbExportProtMZQExcel
-				.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent evt) {
-						jbExportProtMZQExcelMouseClicked(evt);
-					}
-				});
+		jbExportProtMZQExcel.addMouseListener(new MouseListenerExcelExport(
+				jtProteinQuant));
+
 		jtbProtMZQ.add(jbExportProtMZQExcel);
 
 		JPanel jpProteinQuantHeader = new JPanel();
@@ -2541,8 +2480,7 @@ public class ProteoSuiteView extends JFrame {
 		jpProteinQuantHeader.setLayout(jpProteinQuantHeaderLayout);
 		jpProteinQuantHeaderLayout
 				.setHorizontalGroup(jpProteinQuantHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpProteinQuantHeaderLayout
 										.createSequentialGroup()
@@ -2551,21 +2489,17 @@ public class ProteoSuiteView extends JFrame {
 										.addGap(18, 18, 18)
 										.addComponent(jlProteinMZQ)
 										.addGap(18, 18, 18)
-										.addComponent(
-												jtProteinMZQ,
+										.addComponent(jtProteinMZQ,
 												GroupLayout.PREFERRED_SIZE,
-												209,
-												GroupLayout.PREFERRED_SIZE)
+												209, GroupLayout.PREFERRED_SIZE)
 										.addGap(18, 18, 18)
-										.addComponent(
-												jtbProtMZQ,
-												GroupLayout.DEFAULT_SIZE,
-												195, Short.MAX_VALUE)
+										.addComponent(jtbProtMZQ,
+												GroupLayout.DEFAULT_SIZE, 195,
+												Short.MAX_VALUE)
 										.addContainerGap()));
 		jpProteinQuantHeaderLayout
 				.setVerticalGroup(jpProteinQuantHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpProteinQuantHeaderLayout
 										.createSequentialGroup()
@@ -2596,10 +2530,10 @@ public class ProteoSuiteView extends JFrame {
 
 		jspProteinQuant.setTopComponent(jpProteinQuantHeader);
 
-		jtProteinQuant.setModel(new DefaultTableModel(
-				new String[][] {
+		jtProteinQuant.setModel(new DefaultTableModel(new String[][] {
 
-				}, new String[] { "Protein", "Label 1", "Label 2", "Label 3",
+		},
+				new String[] { "Protein", "Label 1", "Label 2", "Label 3",
 						"Label 4" }));
 		JScrollPane jspProteinQuantDetail = new JScrollPane();
 		jspProteinQuantDetail.setViewportView(jtProteinQuant);
@@ -2607,16 +2541,14 @@ public class ProteoSuiteView extends JFrame {
 		jspProteinQuant.setRightComponent(jspProteinQuantDetail);
 
 		JPanel jpProteinQuant = new JPanel();
-		GroupLayout jpProteinQuantLayout = new GroupLayout(
-				jpProteinQuant);
+		GroupLayout jpProteinQuantLayout = new GroupLayout(jpProteinQuant);
 		jpProteinQuant.setLayout(jpProteinQuantLayout);
 		jpProteinQuantLayout.setHorizontalGroup(jpProteinQuantLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jspProteinQuant));
 		jpProteinQuantLayout.setVerticalGroup(jpProteinQuantLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspProteinQuant,
-						GroupLayout.DEFAULT_SIZE, 445,
+				.addComponent(jspProteinQuant, GroupLayout.DEFAULT_SIZE, 445,
 						Short.MAX_VALUE));
 
 		jtpMzQuantMLDetail.addTab("Protein Quantitation", jpProteinQuant);
@@ -2633,7 +2565,8 @@ public class ProteoSuiteView extends JFrame {
 
 		final JTextField jtFeatureMZQ = new JTextField();
 		jtFeatureMZQ.setToolTipText("Enter the scan number");
-		jtFeatureMZQ.addKeyListener(new KeyListenerSearch(0, jtFeatureQuant, false));
+		jtFeatureMZQ.addKeyListener(new KeyListenerSearch(0, jtFeatureQuant,
+				false));
 
 		JToolBar jtbFeatMZQ = new JToolBar();
 		jtbFeatMZQ.setBorder(BorderFactory
@@ -2647,12 +2580,8 @@ public class ProteoSuiteView extends JFrame {
 		jbExportFeatMZQExcel.setMaximumSize(new Dimension(26, 20));
 		jbExportFeatMZQExcel.setMinimumSize(new Dimension(26, 20));
 		jbExportFeatMZQExcel.setPreferredSize(new Dimension(26, 20));
-		jbExportFeatMZQExcel
-				.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent evt) {
-						jbExportFeatMZQExcelMouseClicked(evt);
-					}
-				});
+		jbExportFeatMZQExcel.addMouseListener(new MouseListenerExcelExport(
+				jtFeatureQuant));
 		jtbFeatMZQ.add(jbExportFeatMZQExcel);
 
 		JPanel jpFeatureQuantHeader = new JPanel();
@@ -2661,8 +2590,7 @@ public class ProteoSuiteView extends JFrame {
 		jpFeatureQuantHeader.setLayout(jpFeatureQuantHeaderLayout);
 		jpFeatureQuantHeaderLayout
 				.setHorizontalGroup(jpFeatureQuantHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpFeatureQuantHeaderLayout
 										.createSequentialGroup()
@@ -2671,21 +2599,17 @@ public class ProteoSuiteView extends JFrame {
 										.addGap(18, 18, 18)
 										.addComponent(jlFeatureMZQ)
 										.addGap(18, 18, 18)
-										.addComponent(
-												jtFeatureMZQ,
+										.addComponent(jtFeatureMZQ,
 												GroupLayout.PREFERRED_SIZE,
-												209,
-												GroupLayout.PREFERRED_SIZE)
+												209, GroupLayout.PREFERRED_SIZE)
 										.addGap(18, 18, 18)
-										.addComponent(
-												jtbFeatMZQ,
-												GroupLayout.DEFAULT_SIZE,
-												191, Short.MAX_VALUE)
+										.addComponent(jtbFeatMZQ,
+												GroupLayout.DEFAULT_SIZE, 191,
+												Short.MAX_VALUE)
 										.addContainerGap()));
 		jpFeatureQuantHeaderLayout
 				.setVerticalGroup(jpFeatureQuantHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpFeatureQuantHeaderLayout
 										.createSequentialGroup()
@@ -2716,10 +2640,10 @@ public class ProteoSuiteView extends JFrame {
 
 		jspFeatureQuant.setTopComponent(jpFeatureQuantHeader);
 
-		jtFeatureQuant.setModel(new DefaultTableModel(
-				new String[][] {
+		jtFeatureQuant.setModel(new DefaultTableModel(new String[][] {
 
-				}, new String[] { "Feature", "Label 1", "Label 2", "Label 3",
+		},
+				new String[] { "Feature", "Label 1", "Label 2", "Label 3",
 						"Label 4" }));
 		JScrollPane jspFeatureQuantDetail = new JScrollPane();
 		jspFeatureQuantDetail.setViewportView(jtFeatureQuant);
@@ -2727,17 +2651,14 @@ public class ProteoSuiteView extends JFrame {
 		jspFeatureQuant.setRightComponent(jspFeatureQuantDetail);
 
 		final JPanel FeatureQuant = new JPanel();
-		GroupLayout FeatureQuantLayout = new GroupLayout(
-				FeatureQuant);
+		GroupLayout FeatureQuantLayout = new GroupLayout(FeatureQuant);
 		FeatureQuant.setLayout(FeatureQuantLayout);
 		FeatureQuantLayout.setHorizontalGroup(FeatureQuantLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspFeatureQuant,
-						GroupLayout.Alignment.TRAILING));
+				.addComponent(jspFeatureQuant, GroupLayout.Alignment.TRAILING));
 		FeatureQuantLayout.setVerticalGroup(FeatureQuantLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspFeatureQuant,
-						GroupLayout.DEFAULT_SIZE, 445,
+				.addComponent(jspFeatureQuant, GroupLayout.DEFAULT_SIZE, 445,
 						Short.MAX_VALUE));
 
 		jtpMzQuantMLDetail.addTab("Feature Quantitation", FeatureQuant);
@@ -2753,13 +2674,11 @@ public class ProteoSuiteView extends JFrame {
 		jScrollPane12.setViewportView(jepMZQView);
 
 		JPanel jpMzQuantMLHeader = new JPanel();
-		GroupLayout jpMzQuantMLHeaderLayout = new GroupLayout(
-				jpMzQuantMLHeader);
+		GroupLayout jpMzQuantMLHeaderLayout = new GroupLayout(jpMzQuantMLHeader);
 		jpMzQuantMLHeader.setLayout(jpMzQuantMLHeaderLayout);
 		jpMzQuantMLHeaderLayout
 				.setHorizontalGroup(jpMzQuantMLHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMzQuantMLHeaderLayout
 										.createSequentialGroup()
@@ -2789,8 +2708,7 @@ public class ProteoSuiteView extends JFrame {
 										.addContainerGap(20, Short.MAX_VALUE)));
 		jpMzQuantMLHeaderLayout
 				.setVerticalGroup(jpMzQuantMLHeaderLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpMzQuantMLHeaderLayout
 										.createSequentialGroup()
@@ -2812,18 +2730,15 @@ public class ProteoSuiteView extends JFrame {
 																Short.MAX_VALUE))
 										.addPreferredGap(
 												LayoutStyle.ComponentPlacement.UNRELATED)
-										.addComponent(
-												jScrollPane12,
-												GroupLayout.PREFERRED_SIZE,
-												52,
+										.addComponent(jScrollPane12,
+												GroupLayout.PREFERRED_SIZE, 52,
 												GroupLayout.PREFERRED_SIZE)
 										.addContainerGap(13, Short.MAX_VALUE)));
 
 		jspMzQuantML.setLeftComponent(jpMzQuantMLHeader);
 
 		JPanel jpMzQuantML = new JPanel();
-		GroupLayout jpMzQuantMLLayout = new GroupLayout(
-				jpMzQuantML);
+		GroupLayout jpMzQuantMLLayout = new GroupLayout(jpMzQuantML);
 		jpMzQuantML.setLayout(jpMzQuantMLLayout);
 		jpMzQuantMLLayout.setHorizontalGroup(jpMzQuantMLLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -2837,8 +2752,7 @@ public class ProteoSuiteView extends JFrame {
 		JPanel jpPropetiesTab = new JPanel();
 		jpPropetiesTab.setBackground(new Color(255, 255, 255));
 		jpPropetiesTab.setForeground(new Color(153, 153, 255));
-		GroupLayout jpPropetiesTabLayout = new GroupLayout(
-				jpPropetiesTab);
+		GroupLayout jpPropetiesTabLayout = new GroupLayout(jpPropetiesTab);
 		jpPropetiesTab.setLayout(jpPropetiesTabLayout);
 		jpPropetiesTabLayout.setHorizontalGroup(jpPropetiesTabLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -2850,16 +2764,14 @@ public class ProteoSuiteView extends JFrame {
 		jspProperties.setRightComponent(jpPropetiesTab);
 
 		JPanel jpPropertiesBox = new JPanel();
-		GroupLayout jpPropertiesBoxLayout = new GroupLayout(
-				jpPropertiesBox);
+		GroupLayout jpPropertiesBoxLayout = new GroupLayout(jpPropertiesBox);
 		jpPropertiesBox.setLayout(jpPropertiesBoxLayout);
 		jpPropertiesBoxLayout.setHorizontalGroup(jpPropertiesBoxLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jspProperties));
 		jpPropertiesBoxLayout.setVerticalGroup(jpPropertiesBoxLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspProperties,
-						GroupLayout.DEFAULT_SIZE, 635,
+				.addComponent(jspProperties, GroupLayout.DEFAULT_SIZE, 635,
 						Short.MAX_VALUE));
 
 		jspViewerAndProperties.setRightComponent(jpPropertiesBox);
@@ -2871,71 +2783,67 @@ public class ProteoSuiteView extends JFrame {
 		jpViewerAndProperties.setLayout(jpViewerAndPropertiesLayout);
 		jpViewerAndPropertiesLayout
 				.setHorizontalGroup(jpViewerAndPropertiesLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addComponent(jspViewerAndProperties,
-								GroupLayout.DEFAULT_SIZE, 958,
-								Short.MAX_VALUE));
+								GroupLayout.DEFAULT_SIZE, 958, Short.MAX_VALUE));
 		jpViewerAndPropertiesLayout
 				.setVerticalGroup(jpViewerAndPropertiesLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addComponent(jspViewerAndProperties));
 
 		jspMainPanelView.setRightComponent(jpViewerAndProperties);
 
+		final JPanel jpMainPanelView = new JPanel();
 		GroupLayout jpMainPanelViewLayout = new GroupLayout(jpMainPanelView);
 		jpMainPanelView.setLayout(jpMainPanelViewLayout);
-		
+
 		jpMainPanelViewLayout.setHorizontalGroup(jpMainPanelViewLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspMainPanelView,
-						GroupLayout.DEFAULT_SIZE, 1242,
+				.addComponent(jspMainPanelView, GroupLayout.DEFAULT_SIZE, 1242,
 						Short.MAX_VALUE));
 		jpMainPanelViewLayout.setVerticalGroup(jpMainPanelViewLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jspMainPanelView));
 
-		jpProjectStatus.setBorder(BorderFactory
-				.createEtchedBorder());
-		jpProjectStatus.setForeground(new Color(153, 153, 153));
-		jpProjectStatus.setPreferredSize(new Dimension(102, 30));
-
 		JLabel jlRawFiles = new JLabel("1) Raw Files:");
 		JLabel jlIdentFiles = new JLabel("2) Identification Files:");
 		JLabel jlTechnique = new JLabel("3) Technique:");
 		JLabel jlQuantFiles = new JLabel("4) Quant Files:");
-		
+
 		jlQuantFiles.setBackground(new Color(255, 255, 255));
 
-		jlRawFilesStatus.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/empty.gif")));
+		jlRawFilesStatus.setIcon(new ImageIcon(getClass().getClassLoader()
+				.getResource("images/empty.gif")));
 		jlRawFilesStatus.setFont(new Font("Tahoma", 1, 11)); // NOI18N
 		jlRawFilesStatus.setForeground(new Color(51, 102, 0));
 
 		jlIdentFilesStatus.setFont(new Font("Tahoma", 1, 11)); // NOI18N
 		jlIdentFilesStatus.setForeground(new Color(51, 102, 0));
 
-		JLabel jlQuantFilesStatus = new JLabel(new ImageIcon(getClass().getClassLoader()
-				.getResource("images/empty.gif")));
+		JLabel jlQuantFilesStatus = new JLabel(new ImageIcon(getClass()
+				.getClassLoader().getResource("images/empty.gif")));
 		jlQuantFilesStatus.setFont(new Font("Tahoma", 1, 11)); // NOI18N
 		jlQuantFilesStatus.setForeground(new Color(51, 102, 0));
 
-		jcbTechnique.setModel(new DefaultComboBoxModel<String>(
-				new String[] { "Select technique", "iTRAQ", "TMT", "emPAI" }));
+		jcbTechnique.setModel(new DefaultComboBoxModel<String>(new String[] {
+				"Select technique", "iTRAQ", "TMT", "emPAI" }));
 		jcbTechnique.setToolTipText("Select a technique for the analysis");
 		jcbTechnique.setBorder(BorderFactory.createEtchedBorder());
 
-		jcbOutputFormat.setModel(new DefaultComboBoxModel<String>(
-				new String[] { "Select format", "mzq" }));
+		jcbOutputFormat.setModel(new DefaultComboBoxModel<String>(new String[] {
+				"Select format", "mzq" }));
 		jcbOutputFormat.setToolTipText("Select an output format");
 
-		GroupLayout jpProjectStatusLayout = new GroupLayout(
-				jpProjectStatus);
+		final JPanel jpProjectStatus = new JPanel();
+		jpProjectStatus.setBorder(BorderFactory.createEtchedBorder());
+		jpProjectStatus.setForeground(new Color(153, 153, 153));
+		jpProjectStatus.setPreferredSize(new Dimension(102, 30));
+		
+		GroupLayout jpProjectStatusLayout = new GroupLayout(jpProjectStatus);
 		jpProjectStatus.setLayout(jpProjectStatusLayout);
 		jpProjectStatusLayout
 				.setHorizontalGroup(jpProjectStatusLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpProjectStatusLayout
 										.createSequentialGroup()
@@ -2943,50 +2851,40 @@ public class ProteoSuiteView extends JFrame {
 										.addComponent(jlRawFiles)
 										.addPreferredGap(
 												LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(
-												jlRawFilesStatus,
-												GroupLayout.PREFERRED_SIZE,
-												37,
+										.addComponent(jlRawFilesStatus,
+												GroupLayout.PREFERRED_SIZE, 37,
 												GroupLayout.PREFERRED_SIZE)
 										.addGap(18, 18, 18)
 										.addComponent(jlIdentFiles)
 										.addPreferredGap(
 												LayoutStyle.ComponentPlacement.UNRELATED)
-										.addComponent(
-												jlIdentFilesStatus,
-												GroupLayout.PREFERRED_SIZE,
-												34,
+										.addComponent(jlIdentFilesStatus,
+												GroupLayout.PREFERRED_SIZE, 34,
 												GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(
 												LayoutStyle.ComponentPlacement.UNRELATED)
 										.addComponent(jlTechnique)
 										.addGap(18, 18, 18)
-										.addComponent(
-												jcbTechnique,
+										.addComponent(jcbTechnique,
 												GroupLayout.PREFERRED_SIZE,
-												119,
-												GroupLayout.PREFERRED_SIZE)
+												119, GroupLayout.PREFERRED_SIZE)
 										.addGap(18, 18, 18)
 										.addComponent(jlQuantFiles)
 										.addPreferredGap(
 												LayoutStyle.ComponentPlacement.UNRELATED)
-										.addComponent(
-												jcbOutputFormat,
+										.addComponent(jcbOutputFormat,
 												GroupLayout.PREFERRED_SIZE,
 												GroupLayout.DEFAULT_SIZE,
 												GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(
 												LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(
-												jlQuantFilesStatus,
-												GroupLayout.PREFERRED_SIZE,
-												43,
+										.addComponent(jlQuantFilesStatus,
+												GroupLayout.PREFERRED_SIZE, 43,
 												GroupLayout.PREFERRED_SIZE)
 										.addContainerGap(499, Short.MAX_VALUE)));
 		jpProjectStatusLayout
 				.setVerticalGroup(jpProjectStatusLayout
-						.createParallelGroup(
-								GroupLayout.Alignment.LEADING)
+						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGroup(
 								jpProjectStatusLayout
 										.createSequentialGroup()
@@ -3035,35 +2933,68 @@ public class ProteoSuiteView extends JFrame {
 
 		JMenu jmFile = new JMenu("File");
 
-		JMenuItem jmNewProject = new JMenuItem("New Project", new ImageIcon(getClass().getClassLoader().getResource("images/new.gif")));
-		jmNewProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
+		JMenuItem jmNewProject = new JMenuItem("New Project", new ImageIcon(
+				getClass().getClassLoader().getResource("images/new.gif")));
+		jmNewProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
+				InputEvent.CTRL_MASK));
 		jmNewProject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				jmNewProjectActionPerformed(evt, jtRawFiles);
+				jmNewProjectActionPerformed(jcbTechnique, jmSaveProject,
+						jmCloseProject, jtaLog, jdpTIC, jdpMS, jbSaveProject,
+						jbExportMzMLExcel, jbExportMGFExcel,
+						jbExportMzIdentMLExcel, jbExportMascotXMLExcel,
+						jbExportPepMZQExcel, jbExportProtMZQExcel,
+						jbExportFeatMZQExcel, jcbOutputFormat, jepMGFView,
+						jepMZQView, jepMascotXMLView, jepMzIDView, jepMzMLView,
+						jlFileNameMzMLText, jlFileNameMzIDText,
+						jlIdentFilesStatus, jlFileNameMzQText, jtRawFiles,
+						jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF,
+						jtMzId, jtMascotXMLView, jtPeptideQuant,
+						jtProteinQuant, jtFeatureQuant);
 			}
 		});
 		jmFile.add(jmNewProject);
-		
-		
-		JMenuItem jmImportFile = new JMenuItem("Import File", new ImageIcon(getClass().getClassLoader().getResource("images/import.gif")));
-		jmImportFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_MASK));
+
+		JMenuItem jmImportFile = new JMenuItem("Import File", new ImageIcon(
+				getClass().getClassLoader().getResource("images/import.gif")));
+		jmImportFile.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I,
+				InputEvent.CTRL_MASK));
 		jmImportFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				jmImportFileActionPerformed(evt, jtRawFiles);
+				jmImportFileActionPerformed(jtRawFiles, jlFileNameMGFText,
+						jtFeatureQuant, jtMzIDProtGroup, jmSaveProject, jp2D,
+						jtaLog, jtpProperties, jtpMzQuantMLDetail, jdpTIC,
+						jbExportPepMZQExcel, jbExportProtMZQExcel,
+						jbExportFeatMZQExcel, jbExportMascotXMLExcel,
+						jbExportMzIdentMLExcel, jbExportMGFExcel,
+						jbExportMzMLExcel, jbSaveProject, jcbPSM, jepMZQView,
+						jepMzIDView, jepMzMLView, jlFileNameMzQText,
+						jlRawFilesStatus, jlIdentFilesStatus,
+						jlFileNameMzIDText, jlFileNameMzMLText, jtIdentFiles,
+						jtMGF, jtMascotXMLView, jtMzId, jtMzML, jtPeptideQuant,
+						jtProteinQuant, jtQuantFiles);
 			}
 		});
 		jmFile.add(jmImportFile);
 		jmFile.add(new JPopupMenu.Separator());
 
-		JMenuItem jmOpenProject = new JMenuItem("Open Project", new ImageIcon(getClass().getClassLoader().getResource("images/open.gif")));
-		jmOpenProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_MASK));
+		JMenuItem jmOpenProject = new JMenuItem("Open Project", new ImageIcon(
+				getClass().getClassLoader().getResource("images/open.gif")));
+		jmOpenProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
+				InputEvent.CTRL_MASK));
 		jmOpenProject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				openProject(sPreviousLocation, sWorkspace, jtRawFiles);
+				openProject(jtRawFiles, jlFileNameMGFText, jtMzIDProtGroup,
+						jmCloseProject, jmSaveProject, jp2D, jtaLog,
+						jtpProperties, jdpTIC, jbSaveProject, jcbPSM,
+						jepMzMLView, jepMzIDView, jlRawFilesStatus,
+						jlIdentFilesStatus, jlFileNameMzMLText,
+						jlFileNameMzIDText, jtIdentFiles, jtMGF,
+						jtMascotXMLView, jtMzId, jtMzML, jtQuantFiles);
 			}
 		});
 		jmFile.add(jmOpenProject);
-		
+
 		JMenuItem jmOpenRecentProject = new JMenuItem("Open Recent Project");
 		jmOpenRecentProject.setEnabled(false);
 		jmFile.add(jmOpenRecentProject);
@@ -3071,17 +3002,31 @@ public class ProteoSuiteView extends JFrame {
 		jmCloseProject.setEnabled(false);
 		jmCloseProject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				jmCloseProjectActionPerformed(evt, jtRawFiles);
+				jmCloseProjectActionPerformed(evt, jmCloseProject,
+						jmSaveProject, jtaLog, jdpTIC, jdpMS, jbSaveProject,
+						jbExportMzMLExcel, jbExportMGFExcel,
+						jbExportMzIdentMLExcel, jbExportMascotXMLExcel,
+						jbExportPepMZQExcel, jbExportProtMZQExcel,
+						jbExportFeatMZQExcel, jcbTechnique, jcbOutputFormat,
+						jepMGFView, jepMZQView, jepMascotXMLView, jepMzIDView,
+						jepMzMLView, jlFileNameMzQText, jlIdentFilesStatus,
+						jlFileNameMzIDText, jlFileNameMzMLText, jtRawFiles,
+						jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF,
+						jtMzId, jtMascotXMLView, jtPeptideQuant,
+						jtProteinQuant, jtFeatureQuant);
 			}
 		});
 		jmFile.add(jmCloseProject);
 		jmFile.add(new JPopupMenu.Separator());
 
-		jmSaveProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_MASK));
+		jmSaveProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
+				InputEvent.CTRL_MASK));
 		jmSaveProject.setEnabled(false);
 		jmSaveProject.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				jmSaveProjectActionPerformed(evt, jtRawFiles);
+				jmSaveProjectActionPerformed(jtRawFiles, jcbTechnique,
+						jmSaveProject, jmCloseProject, jbSaveProject,
+						jcbOutputFormat, jtIdentFiles);
 			}
 		});
 		jmFile.add(jmSaveProject);
@@ -3091,14 +3036,17 @@ public class ProteoSuiteView extends JFrame {
 		jmFile.add(jmSaveProjectAs);
 		jmFile.add(new JPopupMenu.Separator());
 
-		JMenuItem jmPrint = new JMenuItem("Print", new ImageIcon(getClass().getClassLoader().getResource("images/print.gif")));
-		jmPrint.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, InputEvent.CTRL_MASK));
+		JMenuItem jmPrint = new JMenuItem("Print", new ImageIcon(getClass()
+				.getClassLoader().getResource("images/print.gif")));
+		jmPrint.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,
+				InputEvent.CTRL_MASK));
 		jmPrint.setEnabled(false);
 		jmFile.add(jmPrint);
 		jmFile.add(new JPopupMenu.Separator());
 
 		JMenuItem jmExit = new JMenuItem("Exit");
-		jmExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_MASK));
+		jmExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q,
+				InputEvent.CTRL_MASK));
 		jmExit.addActionListener(new ActionListenerExit());
 		jmFile.add(jmExit);
 
@@ -3107,26 +3055,23 @@ public class ProteoSuiteView extends JFrame {
 
 		JMenu jmEdit = new JMenu("Edit");
 
-		JMenuItem jmCut = new JMenuItem("Cut", new ImageIcon(getClass().getClassLoader().getResource("images/cut.gif")));
-		jmCut.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_C,
+		JMenuItem jmCut = new JMenuItem("Cut", new ImageIcon(getClass()
+				.getClassLoader().getResource("images/cut.gif")));
+		jmCut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C,
 				InputEvent.CTRL_MASK));
 		jmCut.setEnabled(false);
 		jmEdit.add(jmCut);
 
-		JMenuItem jmCopy = new JMenuItem("Copy", new ImageIcon(getClass().getClassLoader().getResource(
-				"images/copy.gif")));
-		jmCopy.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_X,
+		JMenuItem jmCopy = new JMenuItem("Copy", new ImageIcon(getClass()
+				.getClassLoader().getResource("images/copy.gif")));
+		jmCopy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
 				InputEvent.CTRL_MASK));
 		jmCopy.setEnabled(false);
 		jmEdit.add(jmCopy);
 
-
-		JMenuItem jmPaste = new JMenuItem("Paste", new ImageIcon(getClass().getClassLoader().getResource(
-				"images/paste.gif")));
-		jmPaste.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_V,
+		JMenuItem jmPaste = new JMenuItem("Paste", new ImageIcon(getClass()
+				.getClassLoader().getResource("images/paste.gif")));
+		jmPaste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V,
 				InputEvent.CTRL_MASK));
 		jmPaste.setEnabled(false);
 		jmEdit.add(jmPaste);
@@ -3136,30 +3081,35 @@ public class ProteoSuiteView extends JFrame {
 
 		JMenu jmView = new JMenu("View");
 
-		final JMenuItem jmShowProjectFiles = new JMenuItem("Show/Hide Project Files", new ImageIcon(getClass().getClassLoader().getResource("images/thick.gif")));
-		jmShowProjectFiles
-				.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
-						if (jspMainPanelView.getDividerLocation() <= 5) {
-							jspMainPanelView.setDividerLocation(250);
-							Icon thick = new ImageIcon(getClass().getClassLoader().getResource(
-									"images/thick.gif"));
-							jmShowProjectFiles.setIcon(thick);
-						} else {
-							jspMainPanelView.setDividerLocation(0);
-							jmShowProjectFiles.setIcon(null);
-						}
-					}
-				});
+		final JMenuItem jmShowProjectFiles = new JMenuItem(
+				"Show/Hide Project Files", new ImageIcon(getClass()
+						.getClassLoader().getResource("images/thick.gif")));
+		jmShowProjectFiles.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				if (jspMainPanelView.getDividerLocation() <= 5) {
+					jspMainPanelView.setDividerLocation(250);
+					Icon thick = new ImageIcon(getClass().getClassLoader()
+							.getResource("images/thick.gif"));
+					jmShowProjectFiles.setIcon(thick);
+				} else {
+					jspMainPanelView.setDividerLocation(0);
+					jmShowProjectFiles.setIcon(null);
+				}
+			}
+		});
 		jmView.add(jmShowProjectFiles);
 
-		final JMenuItem jmLog = new JMenuItem("Log", new ImageIcon(getClass().getClassLoader().getResource("images/thick.gif")));
-		final JMenuItem jmShowViewer = new JMenuItem("Show/Hide Viewer", new ImageIcon(getClass().getClassLoader().getResource("images/thick.gif")));
+		final JMenuItem jmLog = new JMenuItem("Log", new ImageIcon(getClass()
+				.getClassLoader().getResource("images/thick.gif")));
+		final JMenuItem jmShowViewer = new JMenuItem("Show/Hide Viewer",
+				new ImageIcon(getClass().getClassLoader().getResource(
+						"images/thick.gif")));
 		jmShowViewer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				if (jspViewerAndProperties.getDividerLocation() <= 5) {
 					jspViewerAndProperties.setDividerLocation(600);
-					jmShowViewer.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/thick.gif")));
+					jmShowViewer.setIcon(new ImageIcon(getClass()
+							.getClassLoader().getResource("images/thick.gif")));
 				} else {
 					jspViewerAndProperties.setDividerLocation(0);
 					jmShowViewer.setIcon(null);
@@ -3168,57 +3118,65 @@ public class ProteoSuiteView extends JFrame {
 		});
 		jmView.add(jmShowViewer);
 
-		JMenuItem jmShowProperties = new JMenuItem("Show/Hide Properties", new ImageIcon(getClass().getClassLoader().getResource("images/thick.gif")));
+		JMenuItem jmShowProperties = new JMenuItem("Show/Hide Properties",
+				new ImageIcon(getClass().getClassLoader().getResource(
+						"images/thick.gif")));
 		jmShowProperties.setEnabled(false);
-		jmShowProperties.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-			}
-		});
 		jmView.add(jmShowProperties);
 
 		jmMain.add(jmView);
 
 		JMenu jmProject = new JMenu("Project");
 
-		JMenuItem jmEditIdent = new JMenuItem("Set Identification Parameters", new ImageIcon(getClass().getClassLoader().getResource(
-				"images/settings.gif")));
+		JMenuItem jmEditIdent = new JMenuItem("Set Identification Parameters",
+				new ImageIcon(getClass().getClassLoader().getResource(
+						"images/settings.gif")));
 		jmProject.add(jmEditIdent);
 
-
-		JMenuItem jmEditQuant = new JMenuItem("Set Quantitation Parameters", new ImageIcon(getClass().getClassLoader().getResource("images/settings.gif")));
-		jmEditQuant.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				jmEditQuantActionPerformed(evt, jtRawFiles);
-			}
-		});
+		JMenuItem jmEditQuant = new JMenuItem("Set Quantitation Parameters",
+				new ImageIcon(getClass().getClassLoader().getResource(
+						"images/settings.gif")));
+		jmEditQuant.addActionListener(new ActionListenerEditQuant(jtRawFiles,
+				jcbTechnique));
 		jmProject.add(jmEditQuant);
 
 		jmMain.add(jmProject);
 
 		JMenu jmAnalyze = new JMenu("Analyze");
 
-		JMenuItem jmRunIdentAnalysis = new JMenuItem("Run Identification Analysis", new ImageIcon(getClass().getClassLoader().getResource(
-				"images/runid.gif")));
+		JMenuItem jmRunIdentAnalysis = new JMenuItem(
+				"Run Identification Analysis", new ImageIcon(getClass()
+						.getClassLoader().getResource("images/runid.gif")));
 		jmRunIdentAnalysis.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_F7, 0));
-		jmRunIdentAnalysis
-				.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
-						jmRunIdentAnalysisActionPerformed(evt, jtRawFiles);
-					}
-				});
+		jmRunIdentAnalysis.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				jmRunIdentAnalysisActionPerformed(evt, jtRawFiles,
+						jtMzIDProtGroup, identParamsExecute, jtaLog,
+						jtIdentFiles, aMzIDUnmarshaller, jlRawFilesStatus,
+						jlIdentFilesStatus, jtpProperties, jcbPSM, jepMzIDView,
+						jlFileNameMzIDText, jtMzId);
+			}
+		});
 		jmAnalyze.add(jmRunIdentAnalysis);
 
-		JMenuItem jmRunQuantAnalysis = new JMenuItem("Run Quantition Analysis", new ImageIcon(getClass().getClassLoader().getResource(
-				"images/run.gif")));
+		JMenuItem jmRunQuantAnalysis = new JMenuItem("Run Quantition Analysis",
+				new ImageIcon(getClass().getClassLoader().getResource(
+						"images/run.gif")));
 		jmRunQuantAnalysis.setAccelerator(KeyStroke.getKeyStroke(
 				KeyEvent.VK_F5, 0));
-		jmRunQuantAnalysis
-				.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent evt) {
-						jmRunQuantAnalysisActionPerformed(evt, jtRawFiles, jtpLog);
-					}
-				});
+		jmRunQuantAnalysis.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				jmRunQuantAnalysisActionPerformed(jtpLog, jmCloseProject,
+						jmSaveProject, jtaLog, jtpProperties,
+						jtpMzQuantMLDetail, jbSaveProject, jbExportPepMZQExcel,
+						jbExportProtMZQExcel, jbExportFeatMZQExcel,
+						jcbTechnique, jcbOutputFormat, jepMZQView,
+						jlFileNameMzQText, jtFeatureQuant, jtIdentFiles,
+						jtPeptideQuant, jtProteinQuant, jtQuantFiles,
+						jtRawFiles);
+			}
+		});
 		jmAnalyze.add(jmRunQuantAnalysis);
 
 		jmMain.add(jmAnalyze);
@@ -3237,11 +3195,12 @@ public class ProteoSuiteView extends JFrame {
 				// ... Load MaxQuant2MZQ GUI ...//
 				final JFrame jfWinParams = new JFrame(
 						"Convert MaxQuant result files to mzQuantML");
-				MaxQ2MZQView winParams = new MaxQ2MZQView(jfWinParams, sWorkspace);
+				MaxQ2MZQView winParams = new MaxQ2MZQView(jfWinParams,
+						sWorkspace);
 				jfWinParams.setResizable(false);
 				jfWinParams.setSize(500, 150);
-				KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,
-						0, false);
+				KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(
+						KeyEvent.VK_ESCAPE, 0, false);
 				Action escapeAction = new AbstractAction() {
 					public void actionPerformed(ActionEvent e) {
 						jfWinParams.dispose();
@@ -3250,7 +3209,8 @@ public class ProteoSuiteView extends JFrame {
 				jfWinParams.getRootPane()
 						.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 						.put(escapeKeyStroke, "ESCAPE");
-				jfWinParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);
+				jfWinParams.getRootPane().getActionMap()
+						.put("ESCAPE", escapeAction);
 
 				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 				int x1 = dim.width / 2;
@@ -3258,8 +3218,8 @@ public class ProteoSuiteView extends JFrame {
 				int x2 = jfWinParams.getSize().width / 2;
 				int y2 = jfWinParams.getSize().height / 2;
 				jfWinParams.setLocation(x1 - x2, y1 - y2);
-				Image iconApp = new ImageIcon(getClass().getClassLoader().getResource(
-						"images/icon.gif")).getImage();
+				Image iconApp = new ImageIcon(getClass().getClassLoader()
+						.getResource("images/icon.gif")).getImage();
 				jfWinParams.setIconImage(iconApp);
 				jfWinParams.setAlwaysOnTop(true);
 
@@ -3273,18 +3233,24 @@ public class ProteoSuiteView extends JFrame {
 		JMenuItem jmProgenesis2MZQ = new JMenuItem("Progenesis to mzQuantML");
 		jmProgenesis2MZQ.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				final JFrame jfWinParams = new JFrame("Convert Progenesis result files to mzQuantML");
-				Prog2MZQView winParams = new Prog2MZQView(jfWinParams, sWorkspace);
+				final JFrame jfWinParams = new JFrame(
+						"Convert Progenesis result files to mzQuantML");
+				Prog2MZQView winParams = new Prog2MZQView(jfWinParams,
+						sWorkspace);
 				jfWinParams.setResizable(false);
 				jfWinParams.setSize(500, 180);
-				KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false);
+				KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(
+						KeyEvent.VK_ESCAPE, 0, false);
 				Action escapeAction = new AbstractAction() {
 					public void actionPerformed(ActionEvent e) {
 						jfWinParams.dispose();
 					}
 				};
-				jfWinParams.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(escapeKeyStroke, "ESCAPE");
-				jfWinParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);
+				jfWinParams.getRootPane()
+						.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+						.put(escapeKeyStroke, "ESCAPE");
+				jfWinParams.getRootPane().getActionMap()
+						.put("ESCAPE", escapeAction);
 
 				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 				int x1 = dim.width / 2;
@@ -3292,7 +3258,8 @@ public class ProteoSuiteView extends JFrame {
 				int x2 = jfWinParams.getSize().width / 2;
 				int y2 = jfWinParams.getSize().height / 2;
 				jfWinParams.setLocation(x1 - x2, y1 - y2);
-				Image iconApp = new ImageIcon(getClass().getClassLoader().getResource("images/icon.gif")).getImage();
+				Image iconApp = new ImageIcon(getClass().getClassLoader()
+						.getResource("images/icon.gif")).getImage();
 				jfWinParams.setIconImage(iconApp);
 				jfWinParams.setAlwaysOnTop(true);
 
@@ -3304,7 +3271,7 @@ public class ProteoSuiteView extends JFrame {
 		jmConverters.add(jmProgenesis2MZQ);
 
 		jmTools.add(jmConverters);
-		
+
 		final JMenuItem jMzMLCompressed = new JMenuItem("Compress MzML file");
 		jMzMLCompressed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
@@ -3314,8 +3281,8 @@ public class ProteoSuiteView extends JFrame {
 						sWorkspace);
 				jfWinParams.setResizable(false);
 				jfWinParams.setSize(500, 450);
-				KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,
-						0, false);
+				KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(
+						KeyEvent.VK_ESCAPE, 0, false);
 				Action escapeAction = new AbstractAction() {
 					public void actionPerformed(ActionEvent e) {
 						jfWinParams.dispose();
@@ -3324,7 +3291,8 @@ public class ProteoSuiteView extends JFrame {
 				jfWinParams.getRootPane()
 						.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 						.put(escapeKeyStroke, "ESCAPE");
-				jfWinParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);
+				jfWinParams.getRootPane().getActionMap()
+						.put("ESCAPE", escapeAction);
 
 				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 				int x1 = dim.width / 2;
@@ -3332,8 +3300,8 @@ public class ProteoSuiteView extends JFrame {
 				int x2 = jfWinParams.getSize().width / 2;
 				int y2 = jfWinParams.getSize().height / 2;
 				jfWinParams.setLocation(x1 - x2, y1 - y2);
-				Image iconApp = new ImageIcon(getClass().getClassLoader().getResource(
-						"images/icon.gif")).getImage();
+				Image iconApp = new ImageIcon(getClass().getClassLoader()
+						.getResource("images/icon.gif")).getImage();
 				jfWinParams.setIconImage(iconApp);
 				jfWinParams.setAlwaysOnTop(true);
 
@@ -3359,7 +3327,11 @@ public class ProteoSuiteView extends JFrame {
 		JMenuItem jmSubmitPRIDE = new JMenuItem("Submit to PRIDE");
 		jmSubmitPRIDE.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				jmSubmitPRIDEActionPerformed(evt);
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"The module for submitting data into PRIDE is under development.",
+								"Information", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
 		jmDatabases.add(jmSubmitPRIDE);
@@ -3370,175 +3342,90 @@ public class ProteoSuiteView extends JFrame {
 		final JMenuItem jm2DView = new JMenuItem("2D View");
 		final JMenuItem jm3DView = new JMenuItem("3D View");
 		final JMenuItem jmTIC = new JMenuItem("TIC");
-		
-		final JMenuItem jmSpectrum = new JMenuItem("Spectrum", new ImageIcon(getClass().getClassLoader().getResource("images/thick.gif")));
-		jmSpectrum.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				jtpViewer.setSelectedIndex(0);
-				Icon thick = new ImageIcon(getClass().getClassLoader().getResource(
-						"images/thick.gif"));
-				jmSpectrum.setIcon(thick);
-				jmTIC.setIcon(null);
-				jm2DView.setIcon(null);
-				jm3DView.setIcon(null);
-			}
-		});
+
+		final JMenuItem jmSpectrum = new JMenuItem("Spectrum", new ImageIcon(
+				getClass().getClassLoader().getResource("images/thick.gif")));
+
+		jmSpectrum.addActionListener(new ActionListenerViewerChanged(jtpViewer,
+				jmSpectrum, jmTIC, jm2DView, jm3DView, 0));
 		jmWindow.add(jmSpectrum);
 
-		jmTIC.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				jtpViewer.setSelectedIndex(1);
-				Icon thick = new ImageIcon(getClass().getClassLoader().getResource(
-						"images/thick.gif"));
-				jmSpectrum.setIcon(null);
-				jmTIC.setIcon(thick);
-				jm2DView.setIcon(null);
-				jm3DView.setIcon(null);
-			}
-		});
+		jmTIC.addActionListener(new ActionListenerViewerChanged(jtpViewer,
+				jmSpectrum, jmTIC, jm2DView, jm3DView, 1));
 		jmWindow.add(jmTIC);
 
-		jm2DView.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				jtpViewer.setSelectedIndex(2);
-				Icon thick = new ImageIcon(getClass().getClassLoader().getResource(
-						"images/thick.gif"));
-				jmSpectrum.setIcon(null);
-				jmTIC.setIcon(null);
-				jm2DView.setIcon(thick);
-				jm3DView.setIcon(null);
-			}
-		});
+		jm2DView.addActionListener(new ActionListenerViewerChanged(jtpViewer,
+				jmSpectrum, jmTIC, jm2DView, jm3DView, 1));
 		jmWindow.add(jm2DView);
 
-		jm3DView.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				jtpViewer.setSelectedIndex(3);
-				Icon thick = new ImageIcon(getClass().getClassLoader().getResource(
-						"images/thick.gif"));
-				jmSpectrum.setIcon(null);
-				jmTIC.setIcon(null);
-				jm2DView.setIcon(null);
-				jm3DView.setIcon(thick);
-			}
-		});
+		jm3DView.addActionListener(new ActionListenerViewerChanged(jtpViewer,
+				jmSpectrum, jmTIC, jm2DView, jm3DView, 1));
 		jmWindow.add(jm3DView);
+
 		jmWindow.add(new JPopupMenu.Separator());
 		final JMenuItem jmMGFView = new JMenuItem("MGF View");
 		final JMenuItem jmMascotXMLView = new JMenuItem("Mascot XML View");
 		final JMenuItem jmMzIdentMLView = new JMenuItem("mzIdentML View");
 
-		final JMenuItem jmMzMLView = new JMenuItem("mzML View", new ImageIcon(getClass().getClassLoader().getResource("images/thick.gif")));
+		final JMenuItem jmMzMLView = new JMenuItem("mzML View", new ImageIcon(
+				getClass().getClassLoader().getResource("images/thick.gif")));
 		final JMenuItem jmMzQuantMLView = new JMenuItem("mzQuantML View");
 		final JMenuItem jmRawData = new JMenuItem("Raw Data");
-		
-		
-		jmMzMLView.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				jtpProperties.setSelectedIndex(0);
-				Icon thick = new ImageIcon(getClass().getClassLoader().getResource(
-						"images/thick.gif"));
-				jmMzMLView.setIcon(thick);
-				jmMGFView.setIcon(null);
-				jmMzIdentMLView.setIcon(null);
-				jmMascotXMLView.setIcon(null);
-				jmMzQuantMLView.setIcon(null);
-			}
-		});
+
+		jmMzMLView.addActionListener(new ActionListenerMetaDataChanged(
+				jtpProperties, jmMzMLView, jmMGFView, jmMzIdentMLView,
+				jmMascotXMLView, jmMzQuantMLView, 0));
 		jmWindow.add(jmMzMLView);
 
-		jmMGFView.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				jtpProperties.setSelectedIndex(1);
-				Icon thick = new ImageIcon(getClass().getClassLoader().getResource(
-						"images/thick.gif"));
-				jmMzMLView.setIcon(null);
-				jmMGFView.setIcon(thick);
-				jmMzIdentMLView.setIcon(null);
-				jmMascotXMLView.setIcon(null);
-				jmMzQuantMLView.setIcon(null);
-			}
-		});
+		jmMGFView.addActionListener(new ActionListenerMetaDataChanged(
+				jtpProperties, jmMzMLView, jmMGFView, jmMzIdentMLView,
+				jmMascotXMLView, jmMzQuantMLView, 1));
 		jmWindow.add(jmMGFView);
 
-		jmMzIdentMLView.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				jtpProperties.setSelectedIndex(2);
-				jmMzMLView.setIcon(null);
-				jmMGFView.setIcon(null);
-				jmMzIdentMLView.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/thick.gif")));
-				jmMascotXMLView.setIcon(null);
-				jmMzQuantMLView.setIcon(null);
-			}
-		});
+		jmMzIdentMLView.addActionListener(new ActionListenerMetaDataChanged(
+				jtpProperties, jmMzMLView, jmMGFView, jmMzIdentMLView,
+				jmMascotXMLView, jmMzQuantMLView, 2));
 		jmWindow.add(jmMzIdentMLView);
 
-		jmMascotXMLView.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				jtpProperties.setSelectedIndex(3);
-				Icon thick = new ImageIcon(getClass().getClassLoader().getResource(
-						"images/thick.gif"));
-				jmMzMLView.setIcon(null);
-				jmMGFView.setIcon(null);
-				jmMzIdentMLView.setIcon(null);
-				jmMascotXMLView.setIcon(thick);
-				jmMzQuantMLView.setIcon(null);
-			}
-		});
+		jmMascotXMLView.addActionListener(new ActionListenerMetaDataChanged(
+				jtpProperties, jmMzMLView, jmMGFView, jmMzIdentMLView,
+				jmMascotXMLView, jmMzQuantMLView, 3));
 		jmWindow.add(jmMascotXMLView);
 
-		jmMzQuantMLView.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				jtpProperties.setSelectedIndex(4);
-				Icon thick = new ImageIcon(getClass().getClassLoader().getResource(
-						"images/thick.gif"));
-				jmMzMLView.setIcon(null);
-				jmMGFView.setIcon(null);
-				jmMzIdentMLView.setIcon(null);
-				jmMascotXMLView.setIcon(null);
-				jmMzQuantMLView.setIcon(thick);
-			}
-		});
+		jmMzQuantMLView.addActionListener(new ActionListenerMetaDataChanged(
+				jtpProperties, jmMzMLView, jmMGFView, jmMzIdentMLView,
+				jmMascotXMLView, jmMzQuantMLView, 4));
 		jmWindow.add(jmMzQuantMLView);
 		jmWindow.add(new JPopupMenu.Separator());
 
-		jmLog.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				jtpLog.setSelectedIndex(0);
-				jmLog.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/thick.gif")));
-				jmRawData.setIcon(null);
-			}
-		});
+		jmLog.addActionListener(new ActionListenerViewerExtraChanged(jtpLog,
+				jmLog, jmRawData, 0));
 		jmWindow.add(jmLog);
 
-		jmRawData.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent evt) {
-				jtpLog.setSelectedIndex(1);
-				Icon thick = new ImageIcon(getClass().getClassLoader().getResource(
-						"images/thick.gif"));
-				jmLog.setIcon(null);
-				jmRawData.setIcon(thick);
-			}
-		});
+		jmRawData.addActionListener(new ActionListenerViewerExtraChanged(
+				jtpLog, jmLog, jmRawData, 1));
 		jmWindow.add(jmRawData);
 
 		jmMain.add(jmWindow);
 
 		JMenu jmHelp = new JMenu("Help");
 
-		JMenuItem jmHelpContent = new JMenuItem("ProteoSuite Help", new ImageIcon(getClass().getClassLoader().getResource(
-				"images/help.gif")));
-		jmHelpContent.setAccelerator(KeyStroke.getKeyStroke(
-				KeyEvent.VK_F1, 0));
+		JMenuItem jmHelpContent = new JMenuItem("ProteoSuite Help",
+				new ImageIcon(getClass().getClassLoader().getResource(
+						"images/help.gif")));
+		jmHelpContent.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
 		jmHelpContent.setToolTipText("Find how to use ProteoSuite");
-		jmHelpContent.addActionListener(new ActionListenerOpenURL("http://www.proteosuite.org/?q=tutorials"));
+		jmHelpContent.addActionListener(new ActionListenerOpenURL(
+				"http://www.proteosuite.org/?q=tutorials"));
 
 		jmHelp.add(jmHelpContent);
 		jmHelp.add(new JPopupMenu.Separator());
 
 		JMenuItem jmContactUs = new JMenuItem("Contact us");
-		jmContactUs.setToolTipText("Click here for contacting our group and collaborators");
-		jmContactUs.addActionListener(new ActionListenerOpenURL("http://www.proteosuite.org/?q=contact"));
+		jmContactUs
+				.setToolTipText("Click here for contacting our group and collaborators");
+		jmContactUs.addActionListener(new ActionListenerOpenURL(
+				"http://www.proteosuite.org/?q=contact"));
 
 		jmHelp.add(jmContactUs);
 
@@ -3559,8 +3446,7 @@ public class ProteoSuiteView extends JFrame {
 		getContentPane().setLayout(layout);
 		layout.setHorizontalGroup(layout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jpMainPanelView,
-						GroupLayout.DEFAULT_SIZE,
+				.addComponent(jpMainPanelView, GroupLayout.DEFAULT_SIZE,
 						GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 				.addGroup(
 						GroupLayout.Alignment.TRAILING,
@@ -3578,19 +3464,17 @@ public class ProteoSuiteView extends JFrame {
 														GroupLayout.DEFAULT_SIZE,
 														1232, Short.MAX_VALUE))
 								.addContainerGap()));
-		layout.setVerticalGroup(layout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
+		layout.setVerticalGroup(layout.createParallelGroup(
+				GroupLayout.Alignment.LEADING)
 				.addGroup(
 						layout.createSequentialGroup()
 								.addComponent(jpToolBar,
-										GroupLayout.PREFERRED_SIZE,
-										40,
+										GroupLayout.PREFERRED_SIZE, 40,
 										GroupLayout.PREFERRED_SIZE)
 								.addPreferredGap(
 										LayoutStyle.ComponentPlacement.RELATED)
 								.addComponent(jpProjectStatus,
-										GroupLayout.PREFERRED_SIZE,
-										37,
+										GroupLayout.PREFERRED_SIZE, 37,
 										GroupLayout.PREFERRED_SIZE)
 								.addGap(23, 23, 23)
 								.addComponent(jpMainPanelView,
@@ -3599,10 +3483,28 @@ public class ProteoSuiteView extends JFrame {
 										Short.MAX_VALUE)));
 
 		pack();
-	}// </editor-fold>//GEN-END:initComponents
+	}
 
-	private void jmNewProjectActionPerformed(ActionEvent evt, JTable jtRawFiles) {// GEN-FIRST:event_jmNewProjectActionPerformed
-		// ... Check if the project needs to be saved ...//
+	private void jmNewProjectActionPerformed(JComboBox<String> jcbTechnique,
+			JMenuItem jmSaveProject, JMenuItem jmCloseProject,
+			JTextArea jtaLog, final JDesktopPane jdpTIC,
+			final JDesktopPane jdpMS, final JButton jbSaveProject,
+			final JButton jbExportMzMLExcel, final JButton jbExportMGFExcel,
+			final JButton jbExportMzIdentMLExcel,
+			final JButton jbExportMascotXMLExcel,
+			final JButton jbExportPepMZQExcel,
+			final JButton jbExportProtMZQExcel,
+			final JButton jbExportFeatMZQExcel,
+			JComboBox<String> jcbOutputFormat, final JEditorPane jepMGFView,
+			final JEditorPane jepMZQView, final JEditorPane jepMascotXMLView,
+			final JEditorPane jepMzIDView, final JEditorPane jepMzMLView,
+			JLabel jlFileNameMzMLText, JLabel jlFileNameMzIDText,
+			JLabel jlIdentFilesStatus, JLabel jlFileNameMzQText,
+			JTable jtRawFiles, JTable jtIdentFiles, JTable jtQuantFiles,
+			JTable jtRawData, JTable jtMzML, JTable jtMGF, JTable jtMzId,
+			JTable jtMascotXMLView, JTable jtPeptideQuant,
+			JTable jtProteinQuant, JTable jtFeatureQuant) {
+		// Check if the project needs to be saved
 		if (bProjectModified) {
 			int iOption = JOptionPane
 					.showConfirmDialog(
@@ -3611,25 +3513,82 @@ public class ProteoSuiteView extends JFrame {
 							"Warning", JOptionPane.YES_NO_CANCEL_OPTION,
 							JOptionPane.PLAIN_MESSAGE);
 			if (iOption == JOptionPane.OK_OPTION) {
-				jmSaveProjectActionPerformed(null, jtRawFiles);
-				initProjectValues();
+				jmSaveProjectActionPerformed(jtRawFiles, jcbTechnique,
+						jmSaveProject, jmCloseProject, jbSaveProject,
+						jcbOutputFormat, jtIdentFiles);
+				initProjectValues(jmCloseProject, jmSaveProject, jtaLog,
+						jdpTIC, jdpMS, jbSaveProject, jbExportMzMLExcel,
+						jbExportMGFExcel, jbExportMzIdentMLExcel,
+						jbExportMascotXMLExcel, jbExportPepMZQExcel,
+						jbExportProtMZQExcel, jbExportFeatMZQExcel,
+						jcbTechnique, jepMGFView, jepMZQView, jepMascotXMLView,
+						jepMzIDView, jepMzMLView, jlFileNameMzMLText,
+						jlFileNameMzIDText, jlIdentFilesStatus,
+						jlFileNameMzQText, jtRawFiles, jtIdentFiles,
+						jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
+						jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
+						jtFeatureQuant);
 			} else if (iOption == JOptionPane.NO_OPTION) {
-				initProjectValues();
+				initProjectValues(jmCloseProject, jmSaveProject, jtaLog,
+						jdpTIC, jdpMS, jbSaveProject, jbExportMzMLExcel,
+						jbExportMGFExcel, jbExportMzIdentMLExcel,
+						jbExportMascotXMLExcel, jbExportPepMZQExcel,
+						jbExportProtMZQExcel, jbExportFeatMZQExcel,
+						jcbTechnique, jepMGFView, jepMZQView, jepMascotXMLView,
+						jepMzIDView, jepMzMLView, jlFileNameMzMLText,
+						jlFileNameMzIDText, jlIdentFilesStatus,
+						jlFileNameMzQText, jtRawFiles, jtIdentFiles,
+						jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
+						jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
+						jtFeatureQuant);
 			}
 		} else {
-			initProjectValues();
+			initProjectValues(jmCloseProject, jmSaveProject, jtaLog, jdpTIC,
+					jdpMS, jbSaveProject, jbExportMzMLExcel, jbExportMGFExcel,
+					jbExportMzIdentMLExcel, jbExportMascotXMLExcel,
+					jbExportPepMZQExcel, jbExportProtMZQExcel,
+					jbExportFeatMZQExcel, jcbTechnique, jepMGFView, jepMZQView,
+					jepMascotXMLView, jepMzIDView, jepMzMLView,
+					jlFileNameMzMLText, jlFileNameMzIDText, jlIdentFilesStatus,
+					jlFileNameMzQText, jtRawFiles, jtIdentFiles, jtQuantFiles,
+					jtRawData, jtMzML, jtMGF, jtMzId, jtMascotXMLView,
+					jtPeptideQuant, jtProteinQuant, jtFeatureQuant);
 		}
-	}// GEN-LAST:event_jmNewProjectActionPerformed
+	}
 
-	private void jmImportFileActionPerformed(ActionEvent evt, final JTable jtRawFiles) {// GEN-FIRST:event_jmImportFileActionPerformed
-		// ... Selecting file(s) ...//
+	private void jmImportFileActionPerformed(final JTable jtRawFiles,
+			final JLabel jlFileNameMGFText, final JTable jtFeatureQuant,
+			final JTable jtMzIDProtGroup, JMenuItem jmSaveProject,
+			final JPanel jp2D, final JTextArea jtaLog,
+			final JTabbedPane jtpProperties,
+			final JTabbedPane jtpMzQuantMLDetail, final JDesktopPane jdpTIC,
+			final JButton jbExportPepMZQExcel,
+			final JButton jbExportProtMZQExcel,
+			final JButton jbExportFeatMZQExcel,
+			final JButton jbExportMascotXMLExcel,
+			final JButton jbExportMzIdentMLExcel,
+			final JButton jbExportMGFExcel, final JButton jbExportMzMLExcel,
+			final JButton jbSaveProject, final JComboBox<String> jcbPSM,
+			final JEditorPane jepMZQView, final JEditorPane jepMzIDView,
+			final JEditorPane jepMzMLView, final JLabel jlFileNameMzQText,
+			final JLabel jlRawFilesStatus, final JLabel jlIdentFilesStatus,
+			final JLabel jlFileNameMzIDText, final JLabel jlFileNameMzMLText,
+			final JTable jtIdentFiles, final JTable jtMGF,
+			final JTable jtMascotXMLView, final JTable jtMzId,
+			final JTable jtMzML, final JTable jtPeptideQuant,
+			final JTable jtProteinQuant, final JTable jtQuantFiles) {
+		// Selecting file(s)
 		JFileChooser chooser = new JFileChooser(sPreviousLocation);
 		chooser.setDialogTitle("Select the file(s) to analyze");
 
 		// ... Filters must be in descending order ...//
-		chooser.addChoosableFileFilter(new FileNameExtensionFilter("mzQuantML Files (*.mzq, *.mzq.gz)", "mzq"));
-		chooser.addChoosableFileFilter(new FileNameExtensionFilter("Identification Files (*.mzid, *.mzid.gz, *.xml)", "mzid", "gz", "xml"));
-		chooser.addChoosableFileFilter(new FileNameExtensionFilter("Raw Files (*.mzML, *.mzML.gz, *.mgf)", "mzML", "gz", "mgf"));
+		chooser.addChoosableFileFilter(new FileNameExtensionFilter(
+				"mzQuantML Files (*.mzq, *.mzq.gz)", "mzq"));
+		chooser.addChoosableFileFilter(new FileNameExtensionFilter(
+				"Identification Files (*.mzid, *.mzid.gz, *.xml)", "mzid",
+				"gz", "xml"));
+		chooser.addChoosableFileFilter(new FileNameExtensionFilter(
+				"Raw Files (*.mzML, *.mzML.gz, *.mgf)", "mzML", "gz", "mgf"));
 
 		// ... Enable multiple file selection ...//
 		chooser.setMultiSelectionEnabled(true);
@@ -3645,12 +3604,12 @@ public class ProteoSuiteView extends JFrame {
 
 		// ... Retrieving selection from user ...//
 		int returnVal = chooser.showOpenDialog(this);
-		
+
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			final File[] aFiles = chooser.getSelectedFiles();
 			if (aFiles != null && aFiles.length > 0) {
 				bProjectModified = true;
-				updateSaveProjectStatus(jmSaveProject);
+				updateSaveProjectStatus(jmSaveProject, jbSaveProject);
 				sPreviousLocation = aFiles[0].getParent();
 				// ---------------//
 				// Read mzML //
@@ -3768,8 +3727,9 @@ public class ProteoSuiteView extends JFrame {
 									System.out.println(sMessage);
 									sOutput = sOutput + sMessage + "\n";
 									jtaLog.setText(sOutput);
-									Unmarshaller.unmarshalMzMLFile(model, xmlFile, "", aMzMLUnmarshaller);
-									
+									Unmarshaller.unmarshalMzMLFile(model,
+											xmlFile, "", aMzMLUnmarshaller);
+
 									sMessage = SYS_UTILS.getTime()
 											+ " - Unmarshalling ends ";
 									System.out.println(sMessage);
@@ -3785,19 +3745,39 @@ public class ProteoSuiteView extends JFrame {
 							System.out.println(sMessage);
 							sOutput = sOutput + sMessage + "\n";
 							jtaLog.setText(sOutput);
-							loadMzMLView(0, jtRawFiles);
+							loadMzMLView(0, jtRawFiles, jtpProperties,
+									jepMzMLView, jlFileNameMzMLText, jtMzML);
 							sMessage = SYS_UTILS.getTime()
 									+ " - Displaying chromatogram ";
 							System.out.println(sMessage);
 							sOutput = sOutput + sMessage + "\n";
 							jtaLog.setText(sOutput);
-							showChromatogram(0, aFiles[0].getPath());
+
+							// Clear container
+							jdpTIC.removeAll();
+							JInternalFrame jifViewChromatogram = getInternalFrame();
+							jifViewChromatogram.setTitle("Chromatogram <"
+									+ aFiles[0].getPath() + ">");
+							jifViewChromatogram.add(ChartChromatogram
+									.getChromatogram(aMzMLUnmarshaller.get(0)));
+
+							jdpTIC.add(jifViewChromatogram);
+							jdpTIC.revalidate();
+							jdpTIC.repaint();
+
 							sMessage = SYS_UTILS.getTime()
 									+ " - Displaying 2D Plot";
 							System.out.println(sMessage);
 							sOutput = sOutput + sMessage + "\n";
 							jtaLog.setText(sOutput);
-							show2DPlot(0, aFiles[0].getPath(), jp2D);
+							TwoDPlot jifView2D = ChartPlot2D.get2DPlot(
+									aMzMLUnmarshaller.get(0),
+									aFiles[0].getPath());
+							if (jifView2D != null) {
+								jp2D.add(jifView2D);
+								jifView2D.pack();
+								jifView2D.setVisible(true);
+							}
 
 							progressBarDialog.setVisible(false);
 							progressBarDialog.dispose();
@@ -3808,13 +3788,14 @@ public class ProteoSuiteView extends JFrame {
 							jtaLog.setText(sOutput);
 							jbExportMzMLExcel.setEnabled(true);
 							renderIdentFiles(jtRawFiles, jtIdentFiles);
-							updateStatusPipeline(jlRawFilesStatus, jtRawFiles);
+							updateStatusPipeline(jlRawFilesStatus, jtRawFiles,
+									jlIdentFilesStatus, jtIdentFiles);
 						}
 					}.start();
 				} // ... From reading mzML files ...//
-				// ---------------//
-				// Read MGF //
-				// ---------------//
+					// ---------------//
+					// Read MGF //
+					// ---------------//
 				if (aFiles[0].getName().toLowerCase().indexOf(".mgf") > 0) {
 					// ... Fill JTable ...//
 					final DefaultTableModel model = new DefaultTableModel();
@@ -3879,7 +3860,8 @@ public class ProteoSuiteView extends JFrame {
 							System.out.println(sMessage);
 							sOutput = sOutput + sMessage + "\n";
 							jtaLog.setText(sOutput);
-							loadMGFView(0, jlFileNameMGFText, jtRawFiles);
+							loadMGFView(0, jlFileNameMGFText, jtRawFiles,
+									jtpProperties, jtMGF);
 
 							progressBarDialog.setVisible(false);
 							progressBarDialog.dispose();
@@ -3890,13 +3872,14 @@ public class ProteoSuiteView extends JFrame {
 							jtaLog.setText(sOutput);
 							jbExportMGFExcel.setEnabled(true);
 							renderIdentFiles(jtRawFiles, jtIdentFiles);
-							updateStatusPipeline(jlRawFilesStatus, jtRawFiles);
+							updateStatusPipeline(jlRawFilesStatus, jtRawFiles,
+									jlIdentFilesStatus, jtIdentFiles);
 						}
 					}.start();
 				} // ... From reading MGF files ...//
-				// -------------------//
-				// Read mzIdentML //
-				// -------------------//
+					// -------------------//
+					// Read mzIdentML //
+					// -------------------//
 				if ((aFiles[0].getName().toLowerCase().indexOf(".mzid") > 0)
 						|| (aFiles[0].getName().toLowerCase()
 								.indexOf(".mzid.gz") > 0)) {
@@ -4006,7 +3989,8 @@ public class ProteoSuiteView extends JFrame {
 									System.out.println(sMessage);
 									sOutput = sOutput + sMessage + "\n";
 									jtaLog.setText(sOutput);
-									Unmarshaller.unmarshalMzIDFile(model, xmlFile, "", aMzIDUnmarshaller);
+									Unmarshaller.unmarshalMzIDFile(model,
+											xmlFile, "", aMzIDUnmarshaller);
 									sMessage = SYS_UTILS.getTime()
 											+ " - Unmarshalling ends ";
 									System.out.println(sMessage);
@@ -4021,7 +4005,9 @@ public class ProteoSuiteView extends JFrame {
 							System.out.println(sMessage);
 							sOutput = sOutput + sMessage + "\n";
 							jtaLog.setText(sOutput);
-							loadMzIdentMLView(0, aFiles[0].getName());
+							loadMzIdentMLView(0, aFiles[0].getName(),
+									jtMzIDProtGroup, jtpProperties, jcbPSM,
+									jepMzIDView, jlFileNameMzIDText, jtMzId);
 
 							progressBarDialog.setVisible(false);
 							progressBarDialog.dispose();
@@ -4033,7 +4019,8 @@ public class ProteoSuiteView extends JFrame {
 							jtaLog.setText(sOutput);
 							jbExportMzIdentMLExcel.setEnabled(true);
 							renderIdentFiles(jtRawFiles, jtIdentFiles);
-							updateStatusPipeline(jlRawFilesStatus, jtRawFiles);
+							updateStatusPipeline(jlRawFilesStatus, jtRawFiles,
+									jlIdentFilesStatus, jtIdentFiles);
 						}
 					}.start();
 				}
@@ -4061,8 +4048,7 @@ public class ProteoSuiteView extends JFrame {
 						}
 					}, "ProgressBarDialog");
 					thread.start();
-					
-					
+
 					new Thread("ReadingMascot") {
 						@Override
 						public void run() {
@@ -4108,8 +4094,9 @@ public class ProteoSuiteView extends JFrame {
 							System.out.println(sMessage);
 							sOutput = sOutput + sMessage + "\n";
 							jtaLog.setText(sOutput);
-							loadMascotView(aFiles[0].getName(), aFiles[0]
-									.getPath().toString().replace("\\", "/"));
+							FileFormatMascot.loadMascotView(aFiles[0].getName(), aFiles[0]
+									.getPath().toString().replace("\\", "/"),
+									jtMascotXMLView, jtpProperties);
 
 							progressBarDialog.setVisible(false);
 							progressBarDialog.dispose();
@@ -4120,7 +4107,8 @@ public class ProteoSuiteView extends JFrame {
 							jtaLog.setText(sOutput);
 							jbExportMascotXMLExcel.setEnabled(true);
 							renderIdentFiles(jtRawFiles, jtIdentFiles);
-							updateStatusPipeline(jlRawFilesStatus, jtRawFiles);
+							updateStatusPipeline(jlRawFilesStatus, jtRawFiles,
+									jlIdentFilesStatus, jtIdentFiles);
 
 						}
 					}.start();
@@ -4166,11 +4154,11 @@ public class ProteoSuiteView extends JFrame {
 								aMzQUnmarshaller.clear();
 							}
 
-							// ... Reading selected files ...//
+							// Reading selected files
 							boolean isOK = true;
 							for (int iI = 0; iI < aFiles.length; iI++) {
-								// ... Validate file extension (mixed files)
-								// ...//
+								// Validate file extension (mixed files)
+								//
 								if (aFiles[iI].getName().toLowerCase()
 										.indexOf(".mzq") > 0) {
 									File xmlFile = new File(
@@ -4182,8 +4170,7 @@ public class ProteoSuiteView extends JFrame {
 													+ xmlFile.getName());
 									progressBarDialog.setVisible(true);
 
-									// ... Unmarshall data using jmzIdentML API
-									// ...//
+									// Unmarshall data using jmzIdentML API
 									sMessage = SYS_UTILS.getTime()
 											+ " - Unmarshalling "
 											+ xmlFile.getName() + " starts ";
@@ -4192,7 +4179,9 @@ public class ProteoSuiteView extends JFrame {
 									jtaLog.setText(sOutput);
 
 									try {
-										isOK = Unmarshaller.unmarshalMzQMLFile(model, xmlFile, aMzQUnmarshaller);
+										isOK = Unmarshaller.unmarshalMzQMLFile(
+												model, xmlFile,
+												aMzQUnmarshaller);
 										// Invalid mzq file
 										if (!isOK) {
 											break;
@@ -4211,9 +4200,10 @@ public class ProteoSuiteView extends JFrame {
 									}
 
 								}
-							} // ... For files ...//
+							}
+							// For files
 							if (isOK) {
-								// ... Display first element ...//
+								// Display first element
 								sMessage = SYS_UTILS.getTime()
 										+ " - Loading mzQuantML view ";
 								System.out.println(sMessage);
@@ -4221,7 +4211,11 @@ public class ProteoSuiteView extends JFrame {
 								jtaLog.setText(sOutput);
 								// loadMzQuantMLView(0, aFiles[0].getName());
 								loadMzQuantMLView(0,
-										aFiles[0].getAbsolutePath());
+										aFiles[0].getAbsolutePath(),
+										jtFeatureQuant, jtaLog, jtpProperties,
+										jtpMzQuantMLDetail, jepMZQView,
+										jlFileNameMzQText, jtPeptideQuant,
+										jtProteinQuant, jtQuantFiles);
 
 								sMessage = SYS_UTILS.getTime()
 										+ " - Quantification files imported successfully!";
@@ -4239,20 +4233,42 @@ public class ProteoSuiteView extends JFrame {
 				}
 			} // ... From Files
 		} // ... From If
-	}// GEN-LAST:event_jmImportFileActionPerformed
+	}
 
-	private void jmSaveProjectActionPerformed(ActionEvent evt, JTable jtRawFiles) {// GEN-FIRST:event_jmSaveProjectActionPerformed
-		// ... Save data using a mzq file ...//
-		boolean isOK = saveProject(jtRawFiles);
+	private void jmSaveProjectActionPerformed(JTable jtRawFiles,
+			JComboBox<String> jcbTechnique, JMenuItem jmSaveProject,
+			JMenuItem jmCloseProject, JButton jbSaveProject,
+			JComboBox<String> jcbOutputFormat, JTable jtIdentFiles) {
+		// Save data using a mzq file
+		boolean isOK = saveProject(jtRawFiles, jcbTechnique, jmSaveProject,
+				jmCloseProject, jbSaveProject, jcbOutputFormat, jtIdentFiles);
 		if (isOK) {
 			JOptionPane.showMessageDialog(this,
 					"Your file was saved successfully!", "Information",
 					JOptionPane.INFORMATION_MESSAGE);
 		}
-	}// GEN-LAST:event_jmSaveProjectActionPerformed
+	}
 
-	private void jmCloseProjectActionPerformed(ActionEvent evt, JTable jtRawFiles) {// GEN-FIRST:event_jmCloseProjectActionPerformed
-		// ... Check if the project needs to be saved ...//
+	private void jmCloseProjectActionPerformed(ActionEvent evt,
+			JMenuItem jmCloseProject, JMenuItem jmSaveProject,
+			JTextArea jtaLog, final JDesktopPane jdpTIC,
+			final JDesktopPane jdpMS, final JButton jbSaveProject,
+			final JButton jbExportMzMLExcel, final JButton jbExportMGFExcel,
+			final JButton jbExportMzIdentMLExcel,
+			final JButton jbExportMascotXMLExcel,
+			final JButton jbExportPepMZQExcel,
+			final JButton jbExportProtMZQExcel,
+			final JButton jbExportFeatMZQExcel, JComboBox<String> jcbTechnique,
+			JComboBox<String> jcbOutputFormat, final JEditorPane jepMGFView,
+			final JEditorPane jepMZQView, final JEditorPane jepMascotXMLView,
+			final JEditorPane jepMzIDView, final JEditorPane jepMzMLView,
+			JLabel jlFileNameMzQText, JLabel jlIdentFilesStatus,
+			JLabel jlFileNameMzIDText, JLabel jlFileNameMzMLText,
+			JTable jtRawFiles, JTable jtIdentFiles, JTable jtQuantFiles,
+			JTable jtRawData, JTable jtMzML, JTable jtMGF, JTable jtMzId,
+			JTable jtMascotXMLView, JTable jtPeptideQuant,
+			JTable jtProteinQuant, JTable jtFeatureQuant) {
+		// Check if the project needs to be saved
 		if (bProjectModified) {
 			int iOption = JOptionPane
 					.showConfirmDialog(
@@ -4261,81 +4277,63 @@ public class ProteoSuiteView extends JFrame {
 							"Warning", JOptionPane.YES_NO_CANCEL_OPTION,
 							JOptionPane.PLAIN_MESSAGE);
 			if (iOption == JOptionPane.OK_OPTION) {
-				jmSaveProjectActionPerformed(null, jtRawFiles);
-				initProjectValues();
+				jmSaveProjectActionPerformed(jtRawFiles, jcbTechnique,
+						jmSaveProject, jmCloseProject, jbSaveProject,
+						jcbOutputFormat, jtIdentFiles);
+				initProjectValues(jmCloseProject, jmSaveProject, jtaLog,
+						jdpTIC, jdpMS, jbSaveProject, jbExportMzMLExcel,
+						jbExportMGFExcel, jbExportMzIdentMLExcel,
+						jbExportMascotXMLExcel, jbExportPepMZQExcel,
+						jbExportProtMZQExcel, jbExportFeatMZQExcel,
+						jcbTechnique, jepMGFView, jepMZQView, jepMascotXMLView,
+						jepMzIDView, jepMzMLView, jlFileNameMzMLText,
+						jlFileNameMzIDText, jlIdentFilesStatus,
+						jlFileNameMzQText, jtRawFiles, jtIdentFiles,
+						jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
+						jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
+						jtFeatureQuant);
 			} else if (iOption == JOptionPane.NO_OPTION) {
-				initProjectValues();
+				initProjectValues(jmCloseProject, jmSaveProject, jtaLog,
+						jdpTIC, jdpMS, jbSaveProject, jbExportMzMLExcel,
+						jbExportMGFExcel, jbExportMzIdentMLExcel,
+						jbExportMascotXMLExcel, jbExportPepMZQExcel,
+						jbExportProtMZQExcel, jbExportFeatMZQExcel,
+						jcbTechnique, jepMGFView, jepMZQView, jepMascotXMLView,
+						jepMzIDView, jepMzMLView, jlFileNameMzMLText,
+						jlFileNameMzIDText, jlIdentFilesStatus,
+						jlFileNameMzQText, jtRawFiles, jtIdentFiles,
+						jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
+						jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
+						jtFeatureQuant);
 			}
 		} else {
-			initProjectValues();
+			initProjectValues(jmCloseProject, jmSaveProject, jtaLog, jdpTIC,
+					jdpMS, jbSaveProject, jbExportMzMLExcel, jbExportMGFExcel,
+					jbExportMzIdentMLExcel, jbExportMascotXMLExcel,
+					jbExportPepMZQExcel, jbExportProtMZQExcel,
+					jbExportFeatMZQExcel, jcbTechnique, jepMGFView, jepMZQView,
+					jepMascotXMLView, jepMzIDView, jepMzMLView,
+					jlFileNameMzMLText, jlFileNameMzIDText, jlIdentFilesStatus,
+					jlFileNameMzQText, jtRawFiles, jtIdentFiles, jtQuantFiles,
+					jtRawData, jtMzML, jtMGF, jtMzId, jtMascotXMLView,
+					jtPeptideQuant, jtProteinQuant, jtFeatureQuant);
 		}
-	}// GEN-LAST:event_jmCloseProjectActionPerformed
+	}
 
-	private void jmSubmitPRIDEActionPerformed(ActionEvent evt) {// GEN-FIRST:event_jmSubmitPRIDEActionPerformed
-		JOptionPane
-				.showMessageDialog(
-						this,
-						"The module for submitting data into PRIDE is under development.",
-						"Information", JOptionPane.INFORMATION_MESSAGE);
-	}// GEN-LAST:event_jmSubmitPRIDEActionPerformed
-
-	private void jmEditQuantActionPerformed(ActionEvent evt, JTable jtRawFiles) {// GEN-FIRST:event_jmEditQuantActionPerformed
-		if (jcbTechnique.getSelectedItem().equals("Select technique")) {
-			JOptionPane
-					.showMessageDialog(
-							this,
-							"Please specify the technique used in your pipeline (e.g. iTRAQ, TMT, etc.)",
-							"Error", JOptionPane.ERROR_MESSAGE);
-		} else {
-			List<String> alRawFiles = new ArrayList<String>();
-			for (int iI = 0; iI < jtRawFiles.getRowCount(); iI++) {
-				alRawFiles.add((String) jtRawFiles.getValueAt(iI, 0));
-			}
-			QuantParamsView quantParams = new QuantParamsView(alRawFiles,
-					sWorkspace, jcbTechnique.getSelectedItem().toString());
-			final JFrame jfQuantParams = new JFrame(
-					"Edit Quantitation Parameters");
-			jfQuantParams.setResizable(false);
-			jfQuantParams.setSize(638, 585);
-			KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(
-					KeyEvent.VK_ESCAPE, 0, false);
-			final Action escapeAction = new AbstractAction() {
-				public void actionPerformed(ActionEvent e) {
-					jfQuantParams.dispose();
-				}
-			};
-			jfQuantParams.addWindowListener(new WindowAdapter() {
-				@Override
-				public void windowClosing(WindowEvent e) {
-					escapeAction.actionPerformed(null);
-				}
-			});
-
-			jfQuantParams.getRootPane()
-					.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-					.put(escapeKeyStroke, "ESCAPE");
-			jfQuantParams.getRootPane().getActionMap()
-					.put("ESCAPE", escapeAction);
-
-			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-			int x1 = dim.width / 2;
-			int y1 = dim.height / 2;
-			int x2 = jfQuantParams.getSize().width / 2;
-			int y2 = jfQuantParams.getSize().height / 2;
-			jfQuantParams.setLocation(x1 - x2, y1 - y2);
-			Image iconApp = new ImageIcon(getClass().getClassLoader()
-					.getResource("images/icon.gif")).getImage();
-			jfQuantParams.setIconImage(iconApp);
-			jfQuantParams.setAlwaysOnTop(true);
-
-			jfQuantParams.add(quantParams);
-			jfQuantParams.pack();
-			jfQuantParams.setVisible(true);
-		}
-	}// GEN-LAST:event_jmEditQuantActionPerformed
-
-	private void jmRunQuantAnalysisActionPerformed(ActionEvent evt, final JTable jtRawFiles, JTabbedPane jtpLog) {// GEN-FIRST:event_jmRunQuantAnalysisActionPerformed
-		// ... Check if there is a valid workspace ...//
+	private void jmRunQuantAnalysisActionPerformed(JTabbedPane jtpLog,
+			final JMenuItem jmCloseProject, final JMenuItem jmSaveProject,
+			final JTextArea jtaLog, final JTabbedPane jtpProperties,
+			final JTabbedPane jtpMzQuantMLDetail, final JButton jbSaveProject,
+			final JButton jbExportPepMZQExcel,
+			final JButton jbExportProtMZQExcel,
+			final JButton jbExportFeatMZQExcel,
+			final JComboBox<String> jcbTechnique,
+			final JComboBox<String> jcbOutputFormat,
+			final JEditorPane jepMZQView, final JLabel jlFileNameMzQText,
+			final JTable jtFeatureQuant, final JTable jtIdentFiles,
+			final JTable jtPeptideQuant, final JTable jtProteinQuant,
+			final JTable jtQuantFiles, final JTable jtRawFiles) {
+		// Check if there is a valid workspace
 		boolean isOK = getWorkspace();
 		if (isOK) {
 			// ... Validate if we got raw and identification files ...//
@@ -4366,7 +4364,7 @@ public class ProteoSuiteView extends JFrame {
 								"Please specify the output format (e.g. .mzq, .csv, etc.)",
 								"Error", JOptionPane.ERROR_MESSAGE);
 			} else {
-				isOK = checkMapping(jtpLog);
+				isOK = checkMapping(jtpLog, jtaLog, jtIdentFiles);
 				if (isOK) {
 					// ... In this thread, we call xTracker module (parameter
 					// files are generated using proteosuite) ...//
@@ -4463,7 +4461,11 @@ public class ProteoSuiteView extends JFrame {
 									// proteosuite ...//
 									// ... Generate config files for xTracker
 									// ...//
-									isOK = generateFiles(jtRawFiles);
+									isOK = generateFiles(jtRawFiles, jtaLog,
+											jcbTechnique.getSelectedItem()
+													.toString(),
+											jcbOutputFormat, jtIdentFiles,
+											jtQuantFiles);
 									if (isOK) {
 										// ... Run xTracker ...//
 										System.out
@@ -4472,7 +4474,9 @@ public class ProteoSuiteView extends JFrame {
 										jtaLog.append("\n"
 												+ SYS_UTILS.getTime()
 												+ " - ****** Running x-Tracker *****");
-										new xTracker(sWorkspace.replace("\\", "/") + "/" + sProjectName, sWorkspace.replace("\\", "/"));
+										new xTracker(sWorkspace.replace("\\",
+												"/") + "/" + sProjectName,
+												sWorkspace.replace("\\", "/"));
 
 										// ... Load the mzQuantML file into
 										// memory (With results included) ...//
@@ -4486,9 +4490,13 @@ public class ProteoSuiteView extends JFrame {
 										model.addColumn("Type");
 										model.addColumn("Version");
 										try {
-											isOK = Unmarshaller.unmarshalMzQMLFile(model, xmlFile, aMzQUnmarshaller);
+											isOK = Unmarshaller
+													.unmarshalMzQMLFile(model,
+															xmlFile,
+															aMzQUnmarshaller);
 											System.out
-													.println(SYS_UTILS.getTime()
+													.println(SYS_UTILS
+															.getTime()
 															+ " - Displaying mzquantml results...");
 											jtaLog.append("\n"
 													+ SYS_UTILS.getTime()
@@ -4504,9 +4512,18 @@ public class ProteoSuiteView extends JFrame {
 											// loadMzQuantMLView(0,
 											// sProjectName);
 											loadMzQuantMLView(0, sWorkspace
-													+ "/" + sProjectName);
+													+ "/" + sProjectName,
+													jtFeatureQuant, jtaLog,
+													jtpProperties,
+													jtpMzQuantMLDetail,
+													jepMZQView,
+													jlFileNameMzQText,
+													jtPeptideQuant,
+													jtProteinQuant,
+													jtQuantFiles);
 											System.out
-													.println(SYS_UTILS.getTime()
+													.println(SYS_UTILS
+															.getTime()
 															+ " - Execution finished...");
 											jtaLog.append("\n"
 													+ SYS_UTILS.getTime()
@@ -4537,7 +4554,8 @@ public class ProteoSuiteView extends JFrame {
 									progressBarDialog.dispose();
 									updateTitle();
 									bProjectModified = false;
-									updateSaveProjectStatus(jmSaveProject);
+									updateSaveProjectStatus(jmSaveProject,
+											jbSaveProject);
 									updateCloseProjectStatus(jmCloseProject);
 								} else {
 									progressBarDialog.setVisible(false);
@@ -4555,435 +4573,17 @@ public class ProteoSuiteView extends JFrame {
 				}
 			}
 		}
-	}// GEN-LAST:event_jmRunQuantAnalysisActionPerformed
+	}
 
-	private void jbExportMzMLExcelMouseClicked(MouseEvent evt) {// GEN-FIRST:event_jbExportMzMLExcelMouseClicked
-		if (jtMzML.getRowCount() > 0) {
-			try {
-				JFileChooser chooser = new JFileChooser(sPreviousLocation);
-				chooser.setDialogTitle("Please type the file name");
-
-				// ... Applying file extension filters ...//
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel Files (*.xls)", "xls");
-				// ... Filters must be in descending order ...//
-				chooser.addChoosableFileFilter(filter);
-
-				// ... Setting default directory ...//
-				if (sPreviousLocation == null || sPreviousLocation.contains("")) {
-					// If not found it goes to Home, exception not needed
-					chooser.setCurrentDirectory(new File(sWorkspace));
-				} else {
-					// If not found it goes to Home, exception not needed
-					chooser.setCurrentDirectory(new File(sPreviousLocation)); 
-				}
-
-				int returnVal = chooser.showSaveDialog(this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = chooser.getSelectedFile();
-					int mid = 0;
-					mid = file.getName().lastIndexOf(".xls");
-					String fileLocation = "";
-					if (mid <= 0) {
-						fileLocation = file.getPath() + ".xls";
-					} else {
-						fileLocation = file.getPath();
-					}
-					fileLocation.replace("\\", "/");
-
-					// ... Check if file exists ...//
-					boolean exists = (new File(fileLocation).exists());
-					boolean write = true;
-					if (exists) {
-						int n = JOptionPane
-								.showConfirmDialog(
-										null,
-										"The file already exists in this directory, do you want to overwrite it?",
-										"Information",
-										JOptionPane.YES_NO_OPTION);
-						if (n == JOptionPane.NO_OPTION) {
-							write = false;
-						}
-					}
-					if (write) {
-						ExcelExporter exp = new ExcelExporter();
-						exp.fillData(jtMzML, new File(fileLocation), true, 0);
-						JOptionPane.showMessageDialog(this, "Data saved at " + fileLocation, "Information",	JOptionPane.INFORMATION_MESSAGE);
-					}
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} else {
-			JOptionPane.showMessageDialog(this, "No data to export", "Error",
-					JOptionPane.INFORMATION_MESSAGE);
-		}
-	}// GEN-LAST:event_jbExportMzMLExcelMouseClicked
-
-	private void jbExportPepMZQExcelMouseClicked(MouseEvent evt) {// GEN-FIRST:event_jbExportPepMZQExcelMouseClicked
-		if (jtPeptideQuant.getRowCount() > 0) {
-			try {
-				JFileChooser chooser = new JFileChooser(sPreviousLocation);
-				chooser.setDialogTitle("Please type the file name");
-
-				// Applying file extension filters
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("Excel Files (*.xls)", "xls");
-				// Filters must be in descending order
-				chooser.addChoosableFileFilter(filter);
-
-				// Setting default directory
-				if (sPreviousLocation == null || sPreviousLocation.contains("")) {
-					// If not found it goes to Home, exception not needed
-					chooser.setCurrentDirectory(new File(sWorkspace));
-				} else {
-					// If not found it goes to Home, exception not needed
-					chooser.setCurrentDirectory(new File(sPreviousLocation)); 
-				}
-
-				int returnVal = chooser.showSaveDialog(this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = chooser.getSelectedFile();
-					int mid = 0;
-					mid = file.getName().lastIndexOf(".xls");
-					String fileLocation = "";
-					if (mid <= 0) {
-						fileLocation = file.getPath() + ".xls";
-					} else {
-						fileLocation = file.getPath();
-					}
-					fileLocation.replace("\\", "/");
-
-					//Check if file exists
-					boolean exists = (new File(fileLocation).exists());
-					boolean write = true;
-					if (exists) {
-						int n = JOptionPane
-								.showConfirmDialog(
-										null,
-										"The file already exists in this directory, do you want to overwrite it?",
-										"Information",
-										JOptionPane.YES_NO_OPTION);
-						if (n == JOptionPane.NO_OPTION) {
-							write = false;
-						}
-					}
-					if (write) {
-						ExcelExporter exp = new ExcelExporter();
-						exp.fillData(jtPeptideQuant, new File(fileLocation),
-								true, 0);
-						JOptionPane.showMessageDialog(this, "Data saved at "
-								+ fileLocation, "Information",
-								JOptionPane.INFORMATION_MESSAGE);
-					}
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} else {
-			JOptionPane.showMessageDialog(this, "No data to export", "Error",
-					JOptionPane.INFORMATION_MESSAGE);
-		}
-	}// GEN-LAST:event_jbExportPepMZQExcelMouseClicked
-
-	private void jbExportProtMZQExcelMouseClicked(MouseEvent evt) {// GEN-FIRST:event_jbExportProtMZQExcelMouseClicked
-		if (jtProteinQuant.getRowCount() > 0) {
-			try {
-				JFileChooser chooser = new JFileChooser(sPreviousLocation);
-				chooser.setDialogTitle("Please type the file name");
-
-				// Applying file extension filters
-				FileNameExtensionFilter filter = new FileNameExtensionFilter(
-						"Excel Files (*.xls)", "xls");
-				// ... Filters must be in descending order
-				chooser.addChoosableFileFilter(filter);
-
-				// Setting default directory
-				if (sPreviousLocation == null || sPreviousLocation.contains("")) {
-					// If not found it goes to Home, exception not needed
-					chooser.setCurrentDirectory(new File(sWorkspace));
-				} else {
-					// If not found it goes to Home, exception not needed
-					chooser.setCurrentDirectory(new File(sPreviousLocation));
-				}
-
-				int returnVal = chooser.showSaveDialog(this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = chooser.getSelectedFile();
-					int mid = 0;
-					mid = file.getName().lastIndexOf(".xls");
-					String fileLocation = "";
-					if (mid <= 0) {
-						fileLocation = file.getPath() + ".xls";
-					} else {
-						fileLocation = file.getPath();
-					}
-					fileLocation.replace("\\", "/");
-
-					// Check if file exists
-					boolean exists = (new File(fileLocation).exists());
-					boolean write = true;
-					if (exists) {
-						int n = JOptionPane
-								.showConfirmDialog(
-										null,
-										"The file already exists in this directory, do you want to overwrite it?",
-										"Information",
-										JOptionPane.YES_NO_OPTION);
-						if (n == JOptionPane.NO_OPTION) {
-							write = false;
-						}
-					}
-					if (write) {
-						ExcelExporter exp = new ExcelExporter();
-						exp.fillData(jtProteinQuant, new File(fileLocation),
-								true, 0);
-						JOptionPane.showMessageDialog(this, "Data saved at "
-								+ fileLocation, "Information",
-								JOptionPane.INFORMATION_MESSAGE);
-					}
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} else {
-			JOptionPane.showMessageDialog(this, "No data to export", "Error",
-					JOptionPane.INFORMATION_MESSAGE);
-		}
-	}// GEN-LAST:event_jbExportProtMZQExcelMouseClicked
-
-	private void jbExportFeatMZQExcelMouseClicked(MouseEvent evt) {// GEN-FIRST:event_jbExportFeatMZQExcelMouseClicked
-		if (jtFeatureQuant.getRowCount() > 0) {
-			try {
-				JFileChooser chooser = new JFileChooser(sPreviousLocation);
-				chooser.setDialogTitle("Please type the file name");
-
-				// ... Applying file extension filters ...//
-				FileNameExtensionFilter filter = new FileNameExtensionFilter(
-						"Excel Files (*.xls)", "xls");
-				// ... Filters must be in descending order ...//
-				chooser.addChoosableFileFilter(filter);
-
-				// ... Setting default directory ...//
-				if (sPreviousLocation == null || sPreviousLocation.contains("")) {
-					chooser.setCurrentDirectory(new File(sWorkspace)); // ...
-																				// If
-																				// not
-																				// found
-																				// it
-																				// goes
-																				// to
-																				// Home,
-																				// exception
-																				// not
-																				// needed
-																				// ...//
-				} else {
-					chooser.setCurrentDirectory(new File(
-							sPreviousLocation)); // ... If not found it goes to
-													// Home, exception not
-													// needed ...//
-				}
-
-				int returnVal = chooser.showSaveDialog(this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = chooser.getSelectedFile();
-					int mid = 0;
-					mid = file.getName().lastIndexOf(".xls");
-					String fileLocation = "";
-					if (mid <= 0) {
-						fileLocation = file.getPath() + ".xls";
-					} else {
-						fileLocation = file.getPath();
-					}
-					fileLocation.replace("\\", "/");
-
-					// ... Check if file exists ...//
-					boolean exists = (new File(fileLocation).exists());
-					boolean write = true;
-					if (exists) {
-						int n = JOptionPane
-								.showConfirmDialog(
-										null,
-										"The file already exists in this directory, do you want to overwrite it?",
-										"Information",
-										JOptionPane.YES_NO_OPTION);
-						if (n == JOptionPane.NO_OPTION) {
-							write = false;
-						}
-					}
-					if (write) {
-						ExcelExporter exp = new ExcelExporter();
-						exp.fillData(jtFeatureQuant, new File(fileLocation),
-								true, 0);
-						JOptionPane.showMessageDialog(this, "Data saved at "
-								+ fileLocation, "Information",
-								JOptionPane.INFORMATION_MESSAGE);
-					}
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} else {
-			JOptionPane.showMessageDialog(this, "No data to export", "Error",
-					JOptionPane.INFORMATION_MESSAGE);
-		}
-	}// GEN-LAST:event_jbExportFeatMZQExcelMouseClicked
-
-	private void jbExportMGFExcelMouseClicked(MouseEvent evt) {// GEN-FIRST:event_jbExportMGFExcelMouseClicked
-		if (jtMGF.getRowCount() > 0) {
-			try {
-				JFileChooser chooser = new JFileChooser(sPreviousLocation);
-				chooser.setDialogTitle("Please type the file name");
-
-				// ... Applying file extension filters ...//
-				FileNameExtensionFilter filter = new FileNameExtensionFilter(
-						"Excel Files (*.xls)", "xls");
-				// ... Filters must be in descending order ...//
-				chooser.addChoosableFileFilter(filter);
-
-				// ... Setting default directory ...//
-				if (sPreviousLocation == null || sPreviousLocation.contains("")) {
-					chooser.setCurrentDirectory(new java.io.File(sWorkspace)); // ...
-																				// If
-																				// not
-																				// found
-																				// it
-																				// goes
-																				// to
-																				// Home,
-																				// exception
-																				// not
-																				// needed
-																				// ...//
-				} else {
-					chooser.setCurrentDirectory(new java.io.File(
-							sPreviousLocation)); // ... If not found it goes to
-													// Home, exception not
-													// needed ...//
-				}
-
-				int returnVal = chooser.showSaveDialog(this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = chooser.getSelectedFile();
-					int mid = 0;
-					mid = file.getName().lastIndexOf(".xls");
-					String fileLocation = "";
-					if (mid <= 0) {
-						fileLocation = file.getPath() + ".xls";
-					} else {
-						fileLocation = file.getPath();
-					}
-					fileLocation.replace("\\", "/");
-
-					// ... Check if file exists ...//
-					boolean exists = (new File(fileLocation).exists());
-					boolean write = true;
-					if (exists) {
-						int n = JOptionPane
-								.showConfirmDialog(
-										null,
-										"The file already exists in this directory, do you want to overwrite it?",
-										"Information",
-										JOptionPane.YES_NO_OPTION);
-						if (n == JOptionPane.NO_OPTION) {
-							write = false;
-						}
-					}
-					if (write) {
-						ExcelExporter exp = new ExcelExporter();
-						exp.fillData(jtMGF, new File(fileLocation), true, 0);
-						JOptionPane.showMessageDialog(this, "Data saved at "
-								+ fileLocation, "Information",
-								JOptionPane.INFORMATION_MESSAGE);
-					}
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} else {
-			JOptionPane.showMessageDialog(this, "No data to export", "Error",
-					JOptionPane.INFORMATION_MESSAGE);
-		}
-	}// GEN-LAST:event_jbExportMGFExcelMouseClicked
-
-	private void jbExportMzIdentMLExcelMouseClicked(
-			MouseEvent evt) {// GEN-FIRST:event_jbExportMzIdentMLExcelMouseClicked
-		if (jtMzId.getRowCount() > 0) {
-			try {
-				JFileChooser chooser = new JFileChooser(sPreviousLocation);
-				chooser.setDialogTitle("Please type the file name");
-
-				// ... Applying file extension filters ...//
-				FileNameExtensionFilter filter = new FileNameExtensionFilter(
-						"Excel Files (*.xls)", "xls");
-				// ... Filters must be in descending order ...//
-				chooser.addChoosableFileFilter(filter);
-
-				// ... Setting default directory ...//
-				if (sPreviousLocation == null || sPreviousLocation.contains("")) {
-					chooser.setCurrentDirectory(new java.io.File(sWorkspace)); // ...
-																				// If
-																				// not
-																				// found
-																				// it
-																				// goes
-																				// to
-																				// Home,
-																				// exception
-																				// not
-																				// needed
-																				// ...//
-				} else {
-					chooser.setCurrentDirectory(new java.io.File(
-							sPreviousLocation)); // ... If not found it goes to
-													// Home, exception not
-													// needed ...//
-				}
-
-				int returnVal = chooser.showSaveDialog(this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = chooser.getSelectedFile();
-					int mid = 0;
-					mid = file.getName().lastIndexOf(".xls");
-					String fileLocation = "";
-					if (mid <= 0) {
-						fileLocation = file.getPath() + ".xls";
-					} else {
-						fileLocation = file.getPath();
-					}
-					fileLocation.replace("\\", "/");
-
-					// ... Check if file exists ...//
-					boolean exists = (new File(fileLocation).exists());
-					boolean write = true;
-					if (exists) {
-						int n = JOptionPane
-								.showConfirmDialog(
-										null,
-										"The file already exists in this directory, do you want to overwrite it?",
-										"Information",
-										JOptionPane.YES_NO_OPTION);
-						if (n == JOptionPane.NO_OPTION) {
-							write = false;
-						}
-					}
-					if (write) {
-						ExcelExporter exp = new ExcelExporter();
-						exp.fillData(jtMzId, new File(fileLocation), true, 0);
-						JOptionPane.showMessageDialog(this, "Data saved at "
-								+ fileLocation, "Information",
-								JOptionPane.INFORMATION_MESSAGE);
-					}
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} else {
-			JOptionPane.showMessageDialog(this, "No data to export", "Error",
-					JOptionPane.INFORMATION_MESSAGE);
-		}
-	}// GEN-LAST:event_jbExportMzIdentMLExcelMouseClicked
-
-	private void jmRunIdentAnalysisActionPerformed(ActionEvent evt, final JTable jtRawFiles) {
+	private void jmRunIdentAnalysisActionPerformed(ActionEvent evt,
+			final JTable jtRawFiles, final JTable jtMzIDProtGroup,
+			final IdentParamsView identParamsExecute, final JTextArea jtaLog,
+			final JTable jtIdentFiles,
+			final List<MzIdentMLUnmarshaller> aMzIDUnmarshaller,
+			final JLabel jlRawFilesStatus, final JLabel jlIdentFilesStatus,
+			final JTabbedPane jtpProperties, final JComboBox<String> jcbPSM,
+			final JEditorPane jepMzIDView, final JLabel jlFileNameMzIDText,
+			final JTable jtMzId) {
 
 		// Check if there is a valid workspace
 		boolean bRun = false;
@@ -4998,36 +4598,34 @@ public class ProteoSuiteView extends JFrame {
 								"Please select at least one raw file. (Use the import file option in the menu).",
 								"Error", JOptionPane.ERROR_MESSAGE);
 			} else {
-				if (dialogIdentParamsExecute == null) {
-					dialogIdentParamsExecute = new JDialog(this,
-							"Set Identification Parameters",
-							ModalityType.APPLICATION_MODAL);
-					KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(
-							KeyEvent.VK_ESCAPE, 0, false);
-					final Action escapeAction = new AbstractAction() {
-						public void actionPerformed(ActionEvent e) {
-							identParamsExecute.setRun(false);
-							dialogIdentParamsExecute.dispose();
-						}
-					};
-					dialogIdentParamsExecute
-							.addWindowListener(new WindowAdapter() {
-								@Override
-								public void windowClosing(WindowEvent e) {
-									escapeAction.actionPerformed(null);
-								}
-							});
+				final JDialog dialogIdentParamsExecute = new JDialog(this,
+						"Set Identification Parameters",
+						ModalityType.APPLICATION_MODAL);
+				KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(
+						KeyEvent.VK_ESCAPE, 0, false);
+				final Action escapeAction = new AbstractAction() {
+					public void actionPerformed(ActionEvent e) {
+						identParamsExecute.setRun(false);
+						dialogIdentParamsExecute.dispose();
+					}
+				};
+				dialogIdentParamsExecute.addWindowListener(new WindowAdapter() {
+					@Override
+					public void windowClosing(WindowEvent e) {
+						escapeAction.actionPerformed(null);
+					}
+				});
 
-					dialogIdentParamsExecute.getRootPane()
-							.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-							.put(escapeKeyStroke, "ESCAPE");
-					dialogIdentParamsExecute.getRootPane().getActionMap()
-							.put("ESCAPE", escapeAction);
-					dialogIdentParamsExecute.getContentPane().add(
-							identParamsExecute);
-					dialogIdentParamsExecute.pack();
-					dialogIdentParamsExecute.setLocationRelativeTo(null);
-				}
+				dialogIdentParamsExecute.getRootPane()
+						.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+						.put(escapeKeyStroke, "ESCAPE");
+				dialogIdentParamsExecute.getRootPane().getActionMap()
+						.put("ESCAPE", escapeAction);
+				dialogIdentParamsExecute.getContentPane().add(
+						identParamsExecute);
+				dialogIdentParamsExecute.pack();
+				dialogIdentParamsExecute.setLocationRelativeTo(null);
+
 				dialogIdentParamsExecute.setVisible(true);
 
 				// ... Get values from form ...//
@@ -5118,7 +4716,8 @@ public class ProteoSuiteView extends JFrame {
 								}
 								String[] argv = new String[map.size() * 2];
 								int iI = 0;
-								for (Entry<String, String> entry : map.entrySet()) {
+								for (Entry<String, String> entry : map
+										.entrySet()) {
 									argv[iI] = entry.getKey();
 									System.out.print(" " + argv[iI]);
 									argv[iI + 1] = entry.getValue();
@@ -5145,7 +4744,7 @@ public class ProteoSuiteView extends JFrame {
 
 								// ... Running MS-GF+ ...//
 								paramManager.printToolInfo();
-								//MSGFPlus run = new MSGFPlus();
+								// MSGFPlus run = new MSGFPlus();
 								String errorMessage = null;
 								try {
 									errorMessage = MSGFPlus
@@ -5184,12 +4783,14 @@ public class ProteoSuiteView extends JFrame {
 									try {
 										System.out.println(SYS_UTILS.getTime()
 												+ " - Performing FDR");
-										jtaLog.append("\n" + SYS_UTILS.getTime()
+										jtaLog.append("\n"
+												+ SYS_UTILS.getTime()
 												+ " - Performing FDR");
 										mzlib.init(args);
 										System.out.println(SYS_UTILS.getTime()
 												+ " - Setting Threshold");
-										jtaLog.append("\n" + SYS_UTILS.getTime()
+										jtaLog.append("\n"
+												+ SYS_UTILS.getTime()
 												+ " - Setting Threshold");
 										String[] args2 = {
 												"Threshold",
@@ -5209,7 +4810,8 @@ public class ProteoSuiteView extends JFrame {
 										mzlib.init(args2);
 										System.out.println(SYS_UTILS.getTime()
 												+ " - Grouping proteins");
-										jtaLog.append("\n" + SYS_UTILS.getTime()
+										jtaLog.append("\n"
+												+ SYS_UTILS.getTime()
 												+ " - Grouping proteins");
 										sFirstFile = Path.replace(".mzid",
 												"_fdr_thresh_group.mzid");
@@ -5244,10 +4846,15 @@ public class ProteoSuiteView extends JFrame {
 								model.addColumn("Version");
 								model.addColumn("Raw File");
 								File xmlFile = new File(sFirstFile);
-								Unmarshaller.unmarshalMzIDFile(model, xmlFile, "", aMzIDUnmarshaller);
-								loadMzIdentMLView(0, xmlFile.getName());
+								Unmarshaller.unmarshalMzIDFile(model, xmlFile,
+										"", aMzIDUnmarshaller);
+								loadMzIdentMLView(0, xmlFile.getName(),
+										jtMzIDProtGroup, jtpProperties, jcbPSM,
+										jepMzIDView, jlFileNameMzIDText, jtMzId);
 								renderIdentFiles(jtRawFiles, jtIdentFiles);
-								updateStatusPipeline(jlRawFilesStatus, jtRawFiles);
+								updateStatusPipeline(jlRawFilesStatus,
+										jtRawFiles, jlIdentFilesStatus,
+										jtIdentFiles);
 							}
 							progressBarDialog.setVisible(false);
 							progressBarDialog.dispose();
@@ -5256,105 +4863,16 @@ public class ProteoSuiteView extends JFrame {
 				}
 			}
 		}
-	}// GEN-LAST:event_jmRunIdentAnalysisActionPerformed
-
-	private void jbExportMascotXMLExcelMouseClicked(
-			MouseEvent evt) {// GEN-FIRST:event_jbExportMascotXMLExcelMouseClicked
-		if (jtMascotXMLView.getRowCount() > 0) {
-			try {
-				JFileChooser chooser = new JFileChooser(sPreviousLocation);
-				chooser.setDialogTitle("Please type the file name");
-
-				// ... Applying file extension filters ...//
-				FileNameExtensionFilter filter = new FileNameExtensionFilter(
-						"Excel Files (*.xls)", "xls");
-				// ... Filters must be in descending order ...//
-				chooser.addChoosableFileFilter(filter);
-
-				// ... Setting default directory ...//
-				if (sPreviousLocation == null || sPreviousLocation.contains("")) {
-					chooser.setCurrentDirectory(new java.io.File(sWorkspace)); // ...
-																				// If
-																				// not
-																				// found
-																				// it
-																				// goes
-																				// to
-																				// Home,
-																				// exception
-																				// not
-																				// needed
-																				// ...//
-				} else {
-					chooser.setCurrentDirectory(new java.io.File(
-							sPreviousLocation)); // ... If not found it goes to
-													// Home, exception not
-													// needed ...//
-				}
-
-				int returnVal = chooser.showSaveDialog(this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					File file = chooser.getSelectedFile();
-					int mid = 0;
-					mid = file.getName().lastIndexOf(".xls");
-					String fileLocation = "";
-					if (mid <= 0) {
-						fileLocation = file.getPath() + ".xls";
-					} else {
-						fileLocation = file.getPath();
-					}
-					fileLocation.replace("\\", "/");
-
-					// ... Check if file exists ...//
-					boolean exists = (new File(fileLocation).exists());
-					boolean write = true;
-					if (exists) {
-						int n = JOptionPane
-								.showConfirmDialog(
-										null,
-										"The file already exists in this directory, do you want to overwrite it?",
-										"Information",
-										JOptionPane.YES_NO_OPTION);
-						if (n == JOptionPane.NO_OPTION) {
-							write = false;
-						}
-					}
-					if (write) {
-						ExcelExporter exp = new ExcelExporter();
-						exp.fillData(jtMascotXMLView, new File(fileLocation),
-								true, 0);
-						JOptionPane.showMessageDialog(this, "Data saved at "
-								+ fileLocation, "Information",
-								JOptionPane.INFORMATION_MESSAGE);
-					}
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-		} else {
-			JOptionPane.showMessageDialog(this, "No data to export", "Error",
-					JOptionPane.INFORMATION_MESSAGE);
-		}
-	}// GEN-LAST:event_jbExportMascotXMLExcelMouseClicked
-
-	private int getMzMLIndex(String sFileName) {
-		int iIndex = 0;
-		for (int iI = 0; iI < jtIdentFiles.getRowCount(); iI++) {
-			if (jtIdentFiles.getValueAt(iI, 0).toString().equals(sFileName)) {
-				iIndex = iI;
-				break;
-			}
-		}
-		return iIndex;
 	}
 
 	/**
-	 * Mapping identification files with the corresponding raw file 
+	 * Mapping identification files with the corresponding raw file
+	 * 
 	 * @param void
 	 * @return void
 	 */
 	private void renderIdentFiles(JTable jtRawFiles, JTable jtIdentFiles) {
-		// ... Rendering ...//
+		// Rendering
 		JComboBox<String> combo = new JComboBox<String>();
 		for (int iI = 0; iI < jtRawFiles.getRowCount(); iI++) {
 			combo.addItem(jtRawFiles.getValueAt(iI, 0).toString());
@@ -5368,14 +4886,15 @@ public class ProteoSuiteView extends JFrame {
 		model.fireTableDataChanged();
 	}
 
-	/*------------------------------------------------------------------
+	/**
 	 * Check if all identification files are associated to one raw file
+	 * 
 	 * @param void
 	 * @return true/false
-	 -------------------------------------------------------------------*/
-	private boolean checkMapping(JTabbedPane jtpLog) {
-		// ... Check if all identification files have been assigned to one raw
-		// file ...//
+	 */
+	private boolean checkMapping(JTabbedPane jtpLog, JTextArea jtaLog,
+			JTable jtIdentFiles) {
+		// Check if all identification files have been assigned to one rawfile
 		System.out.println(SYS_UTILS.getTime()
 				+ " - Checking identification-spectra mapping");
 		jtaLog.append(SYS_UTILS.getTime()
@@ -5396,20 +4915,23 @@ public class ProteoSuiteView extends JFrame {
 
 	/**
 	 * Update save icon
+	 * 
 	 * @param void
 	 * @return void
 	 */
-	private void updateSaveProjectStatus(JMenuItem jmSaveProject) {
+	private void updateSaveProjectStatus(final JMenuItem jmSaveProject,
+			final JButton jbSaveProject) {
 		jmSaveProject.setEnabled(bProjectModified);
 		jbSaveProject.setEnabled(bProjectModified);
 	}
 
 	/**
 	 * Update close project icon
+	 * 
 	 * @param void
 	 * @return void
 	 */
-	private void updateCloseProjectStatus(JMenuItem jmCloseProject) {
+	private void updateCloseProjectStatus(final JMenuItem jmCloseProject) {
 		if (sProjectName.equals("New")) {
 			jmCloseProject.setEnabled(false);
 		} else {
@@ -5419,10 +4941,15 @@ public class ProteoSuiteView extends JFrame {
 
 	/**
 	 * Save a project using a mzq file
+	 * 
+	 * @param jtIdentFiles
 	 * @param void
 	 * @return true/false
 	 */
-	private boolean saveProject(JTable jtRawFiles) {
+	private boolean saveProject(JTable jtRawFiles,
+			JComboBox<String> jcbTechnique, JMenuItem jmSaveProject,
+			JMenuItem jmCloseProject, JButton jbSaveProject,
+			JComboBox<String> jcbOutputFormat, JTable jtIdentFiles) {
 		if (jtRawFiles.getRowCount() <= 0) {
 			JOptionPane
 					.showMessageDialog(
@@ -5457,30 +4984,11 @@ public class ProteoSuiteView extends JFrame {
 
 		// ... Setting default directory ...//
 		if (sPreviousLocation == null || sPreviousLocation.contains("")) {
-			chooser.setCurrentDirectory(new File(sWorkspace)); // ... If
-																		// not
-																		// found
-																		// it
-																		// goes
-																		// to
-																		// Home,
-																		// exception
-																		// not
-																		// needed
-																		// ...//
+			// If not found it goes to Home, exception not needed
+			chooser.setCurrentDirectory(new File(sWorkspace));
 		} else {
-			chooser.setCurrentDirectory(new File(sPreviousLocation)); // ...
-																				// If
-																				// not
-																				// found
-																				// it
-																				// goes
-																				// to
-																				// Home,
-																				// exception
-																				// not
-																				// needed
-																				// ...//
+			// If not found it goes to Home, exception not needed
+			chooser.setCurrentDirectory(new File(sPreviousLocation));
 		}
 
 		int returnVal = chooser.showSaveDialog(this);
@@ -5513,12 +5021,14 @@ public class ProteoSuiteView extends JFrame {
 				}
 			}
 			System.out.println("Saving mzq file...");
-			boolean bOK = writeMzQuantML(jcbTechnique.getSelectedItem().toString(), file2.getName(), jtRawFiles);
+			boolean bOK = FileFormatMzQuantML.writeMzQuantML(jcbTechnique
+					.getSelectedItem().toString(), file2.getName(), jtRawFiles,
+					jcbOutputFormat, jtIdentFiles);
 			if (bOK) {
 				sProjectName = file2.getName();
 				updateTitle();
 				bProjectModified = false;
-				updateSaveProjectStatus(jmSaveProject);
+				updateSaveProjectStatus(jmSaveProject, jbSaveProject);
 				updateCloseProjectStatus(jmCloseProject);
 			}
 		}
@@ -5528,6 +5038,7 @@ public class ProteoSuiteView extends JFrame {
 
 	/**
 	 * Update window title main project
+	 * 
 	 * @param void
 	 * @return void
 	 */
@@ -5539,21 +5050,25 @@ public class ProteoSuiteView extends JFrame {
 
 	/**
 	 * Update status pipeline
-	 * @param void  
+	 * 
+	 * @param void
 	 * @return void
 	 */
-	private void updateStatusPipeline(JLabel jlRawFilesStatus, JTable jtRawFiles) {
-		Icon loadRawFilesIcon = new ImageIcon(getClass().getClassLoader().getResource("images/fill.gif"));
+	private void updateStatusPipeline(JLabel jlRawFilesStatus,
+			JTable jtRawFiles, JLabel jlIdentFilesStatus, JTable jtIdentFiles) {
+		Icon loadRawFilesIcon = new ImageIcon(getClass().getClassLoader()
+				.getResource("images/fill.gif"));
 
 		if (jtRawFiles.getRowCount() > 0)
 			jlRawFilesStatus.setIcon(loadRawFilesIcon);
-		
+
 		if (jtIdentFiles.getRowCount() > 0)
 			jlIdentFilesStatus.setIcon(loadRawFilesIcon);
 	}
 
 	/**
 	 * Checks if the working space is valid
+	 * 
 	 * @param void
 	 * @return true/false
 	 */
@@ -5607,746 +5122,17 @@ public class ProteoSuiteView extends JFrame {
 		return true;
 	}
 
-	/*--------------------------------------------
-	 * Generate template for Label Free Analysis
-	 * @param scanIndex1 - Scan number e.g. 1671
-	 * @param scanIndex2 - Scan number e.g. 1672
-	 * @param mzStarts - m/z starts from
-	 * @param mzEnds - m/z ends at
-	 * @param resolution - peaks left-right
-	 * @return - void
-	 ---------------------------------------------*/
-	private void generateTemplate(int scanIndex1, int scanIndex2,
-			double mzStarts, double mzEnds, int peaks, JTabbedPane jtpLog) {
-		int iFileIndex = 0; // ... Index to mzML raw data ...//
-		DefaultTableModel model = new DefaultTableModel();
-		DefaultTableModel model2 = new DefaultTableModel();
-		jtTemplate1.setModel(model);
-		jtTemplate2.setModel(model2);
-		model.addColumn("m/z Index");
-		model.addColumn("Scan Index");
-		model.addColumn("Quant");
-		model.addColumn("Template2 Index");
-		model2.addColumn("Template Index");
-		model2.addColumn("x");
-		model2.addColumn("y");
-		model2.addColumn("i");
-
-		System.out.println("Starting label free plugin...");
-
-		// ... 1) Select MS/MS identifications that are specified in the
-		// parameter window (e.g. From scan 1671 to 1672) ...//
-		Map<String, List<String>> hmPeptides = new HashMap<String, List<String>>();
-		int iCountPeptides = 0; // ... Peptide counter ...//
-		boolean blnExists = false;
-		for (int iI = 0; iI < jtMascotXMLView.getRowCount(); iI++) {
-			// ... Range based on scan index window ...//
-			if ((scanIndex1 <= Integer.parseInt(jtMascotXMLView.getValueAt(iI,
-					8).toString()))
-					&& (scanIndex2 >= Integer.parseInt(jtMascotXMLView
-							.getValueAt(iI, 8).toString()))) {
-				List<String> al = new ArrayList<String>();
-				al.add(Integer.toString(iI)); // ... Index in the grid ...//
-				al.add(jtMascotXMLView.getValueAt(iI, 3).toString()); // ... 2)
-																		// Peptide
-																		// molecular
-																		// composition
-																		// which
-																		// was
-																		// calculated
-																		// previously
-																		// ...//
-				al.add(jtMascotXMLView.getValueAt(iI, 8).toString()); // ...
-																		// Scan
-																		// index
-																		// ...//
-				al.add(jtMascotXMLView.getValueAt(iI, 9).toString()); // ...
-																		// Scan
-																		// ID
-																		// (jmzml
-																		// API
-																		// only
-																		// supports
-																		// getElementBy(scanID)
-																		// ...//
-				al.add(jtMascotXMLView.getValueAt(iI, 10).toString()); // ...
-																		// Retention
-																		// time
-																		// ...//
-				// ... Check if peptide has been added previously ...//
-				blnExists = hmPeptides.containsKey(jtMascotXMLView.getValueAt(
-						iI, 2).toString());
-				if (blnExists == false) {
-					hmPeptides.put(
-							jtMascotXMLView.getValueAt(iI, 2).toString(), al); // ...
-																				// This
-																				// eliminates
-																				// peptides
-																				// which
-																				// have
-																				// been
-																				// identified
-																				// more
-																				// than
-																				// once
-																				// (e.g.
-																				// for
-																				// different
-																				// proteins)
-																				// ...//
-					iCountPeptides++; // ... Total peptides (identifications) in
-										// the scan range ...//
-				}
-			}
-		}
-		if (iCountPeptides > 0) {
-			System.out.println("Peptides in range = " + iCountPeptides);
-
-			// ... Determine the length (resolution) of the resampling array.
-			// ...//
-			Map<String, float[][]> hmResamplingArray = new HashMap<String, float[][]>();
-			int mzWindow = (int) (mzEnds - mzStarts);
-			System.out.println("mzWindow=" + mzWindow);
-			float resamplingFactor = 1.0f / 120.0f; // ... e.g. 0.008333334
-													// Daltons ...//
-			System.out.println("Resampling factor=" + resamplingFactor);
-			float lengthArray = NumericalUtils.round(mzWindow / resamplingFactor, 1);
-			System.out.println("length=" + lengthArray);
-			final int MZ_SIZE = (int) lengthArray;
-			System.out.println("SIZE=" + MZ_SIZE);
-			float resolution = (float) NumericalUtils.truncate(
-					(NumericalUtils.round((float) (resamplingFactor), 8)), 8);
-			System.out.println("resolution=" + resolution);
-			float[][] resamplingArray = new float[2][MZ_SIZE];
-			for (int iI = 0; iI < MZ_SIZE; iI++) {
-				resamplingArray[0][iI] = (float) mzStarts + (resolution * iI);
-				resamplingArray[1][iI] = 0;
-			}
-			Number[] mzSyntValues = new Number[MZ_SIZE];
-			for (int iX = 0; iX < resamplingArray[0].length; iX++) {
-				mzSyntValues[iX] = resamplingArray[0][iX];
-			}
-
-			final int PEAKS = peaks; // ... Number of peaks to retrieve (width
-										// of the template, e.g. 4 left, 4
-										// right) ...//
-			final int NUMBER_PEAKS = PEAKS * 2 + 1; // ... Number of peaks for
-													// each isotope ...//
-			int[] aPeakIndexes = new int[PEAKS * 2 + 1];
-
-			System.out.println("PEAKS_PARAM=" + PEAKS);
-			System.out.println("TOTAL_PEAKS=" + NUMBER_PEAKS);
-
-			// .. Define templates (A and C) ...//
-			int iTempAIndex = 0; // ... Index for Template A ...//
-			int iQuantTemplateIndex = 0; // ... Index for Template C ...//
-
-			psTemplate[] templates = new psTemplate[iCountPeptides];
-			psTemplateQuant[] quantTemplate = new psTemplateQuant[iCountPeptides
-					* NUMBER_PEAKS];
-			// psTemplateQuant2[] quantTemplate2 = new
-			// psTemplateQuant2[iCountPeptides*NUMBER_PEAKS]; //... This will be
-			// the final template once the resampling is done ...//
-
-			// ... Initialize arrays via their constructors (TemplateA=templates
-			// and TemplateC=templateQuant) ...//
-			for (int iI = 0; iI < templates.length; iI++) {
-				templates[iI] = new psTemplate();
-			}
-			for (int iI = 0; iI < quantTemplate.length; iI++) {
-				quantTemplate[iI] = new psTemplateQuant();
-			}
-
-			// ... 3) For each peptide, calculate the isotopic pattern
-			// distribution ...//
-			String sScanID = "";
-			int iScanIndex = 0;
-			for (Map.Entry<String, List<String>> entry : hmPeptides
-					.entrySet()) {
-				System.out
-						.println("Calculating the Isotopic Patter Distribution (IPD) for peptide "
-								+ entry.getKey());
-
-				// ... Specify parameters ...//
-				List<String> saParams = entry.getValue();
-				Object saArray[] = saParams.toArray();
-				for (String saParam : saParams)
-				{
-					// ... Show the parameters in the array
-					// list (index, molecular composition,
-					// scanNumber, scanID, rt) ...//
-					System.out.println("Param = " + saParam + "; ");
-				}
-				// ... Using IPC to calculate the isotopic pattern distribution
-				// ...//
-				String[] args = {};
-				String sCharge = jtMascotXMLView.getValueAt(
-						Integer.parseInt(saArray[0].toString()), 6).toString();
-				args = new String[] { "-a", entry.getKey().toString(), "-fc",
-						"-z", sCharge, "-f", "1000", "-r", "10000" };
-				if (args.length == 0) {
-					System.exit(0);
-				}
-				IPC ipc = new IPC();
-				Options options = Options.parseArgs(args);
-				options.setPrintOutput(false);
-				Results res = ipc.execute(options);
-				Object[] objArray = res.getPeaks().toArray();
-				float[] aMz = new float[objArray.length]; // ... There will be
-															// six isotopes
-															// estimated using
-															// the IPC class
-															// ...//
-				float[] aRelIntens = new float[objArray.length];
-				System.out.println("==== IPD ====");
-				for (int iI = 0; iI < objArray.length; iI++) {
-					aMz[iI] = Float.parseFloat(String.format("%.4f", res
-							.getPeaks().first().getMass()));
-					aRelIntens[iI] = Float.parseFloat(String.format("%.4f", res
-							.getPeaks().first().getRelInt() * 100));
-					System.out.println(aMz[iI] + "\t" + aRelIntens[iI]);
-					res.getPeaks().pollFirst();
-				}
-
-				// ... 4) Generate templates for seaMass by getting the m/z
-				// indexes for each isotope ...//
-				MzMLUnmarshaller unmarshaller = aMzMLUnmarshaller
-						.get(iFileIndex);
-				try {
-					// ... 4.1) Get precursor ion (from 1671 would be 1666 on
-					// the CTPAC example) ...//
-					sScanID = saArray[3].toString();
-					iScanIndex = Integer.parseInt(saArray[2].toString());
-					Spectrum spectrum = unmarshaller.getSpectrumById(sScanID);
-					PrecursorList plist = spectrum.getPrecursorList(); // ...
-																		// Get
-																		// precursor
-																		// ion
-																		// ...//
-					if (plist != null) {
-						if (plist.getCount().intValue() == 1) {
-
-							// ... Perform a binary search to find the m/z index
-							// closed to the m/z values estimated from the IPC
-							// ...//
-							int iPos = -1, iPosPrev = -1;
-							iPos = BinaryUtils.binarySearch(mzSyntValues, 0,
-									mzSyntValues.length, aMz[0], true);
-							aPeakIndexes = getPeaks(mzSyntValues, iPos, PEAKS);
-
-							// ... Generate psTemplate (index, {x, y, i}) ...//
-							templates[iTempAIndex].setIndex(iTempAIndex);
-							templates[iTempAIndex].setCoords(0, aRelIntens[0],
-									0); // ... aRelIntens[0] contains the
-										// highest value i.e. 100% ...//
-
-							// ... Generate psTemplateQuant (mzIndex, scanIndex,
-							// quant, temp2Index) ...//
-							for (int iI = 0; iI < NUMBER_PEAKS; iI++) {
-								quantTemplate[iI + iQuantTemplateIndex]
-										.setTemplate(aPeakIndexes[iI], // ...
-																		// mzIndex
-																		// ...//
-												plist.getPrecursor().get(0)
-														.getSpectrumRef()
-														.toString(), // ... scan
-																		// ID
-																		// ...//
-												iScanIndex, // ... scanIndex
-															// ...//
-												1, // ... Initial quant value
-													// ...//
-												iTempAIndex); // ... Index to
-																// template A
-																// ...//
-							}
-							iQuantTemplateIndex += NUMBER_PEAKS; // ... Skip 9
-																	// positions
-																	// (2*4+1)
-																	// ..../
-							iPosPrev = iPos;
-
-							iPos = BinaryUtils.binarySearch(mzSyntValues, 0,
-									mzSyntValues.length, aMz[1], true);
-							aPeakIndexes = getPeaks(mzSyntValues, iPos, PEAKS);
-							templates[iTempAIndex].setCoords(iPos - iPosPrev,
-									aRelIntens[1], 1);
-
-							iPos = BinaryUtils.binarySearch(mzSyntValues, 0,
-									mzSyntValues.length, aMz[2], true);
-							aPeakIndexes = getPeaks(mzSyntValues, iPos, PEAKS);
-							templates[iTempAIndex].setCoords(iPos - iPosPrev,
-									aRelIntens[2], 2);
-
-							iPos = BinaryUtils.binarySearch(mzSyntValues, 0,
-									mzSyntValues.length, aMz[3], true);
-							aPeakIndexes = getPeaks(mzSyntValues, iPos, PEAKS);
-							templates[iTempAIndex].setCoords(iPos - iPosPrev,
-									aRelIntens[3], 3);
-
-							iPos = BinaryUtils.binarySearch(mzSyntValues, 0,
-									mzSyntValues.length, aMz[4], true);
-							aPeakIndexes = getPeaks(mzSyntValues, iPos, PEAKS);
-							templates[iTempAIndex].setCoords(iPos - iPosPrev,
-									aRelIntens[4], 4);
-
-							iPos = BinaryUtils.binarySearch(mzSyntValues, 0,
-									mzSyntValues.length, aMz[5], true);
-							aPeakIndexes = getPeaks(mzSyntValues, iPos, PEAKS);
-							templates[iTempAIndex].setCoords(iPos - iPosPrev,
-									aRelIntens[5], 5);
-							iTempAIndex++;
-						}
-					} // ... If precursor ion ...//
-					jtpLog.setSelectedIndex(2);
-				} catch (MzMLUnmarshallerException e) {
-					System.out.println(e);
-				}
-			} // ... From For ...//
-
-			// ... Perform normalisation ...//
-			float fSum = 0.0f;
-			float fNewValue = 0.0f;
-			for (int iI = 0; iI < templates.length; iI++) {
-				for (int iJ = 0; iJ < templates[iI].getCoords().length; iJ++) {
-					fSum += Math.pow(templates[iI].getCoord(iJ)
-							.getRelIntensity(), 2.0);
-				}
-				for (int iJ = 0; iJ < templates[iI].getCoords().length; iJ++) {
-					fNewValue = templates[iI].getCoord(iJ).getRelIntensity()
-							/ fSum;
-					templates[iI].setCoords(templates[iI].getCoord(iJ).getX(),
-							templates[iI].getCoord(iJ).getY(), fNewValue, iJ);
-				}
-			}
-			System.out.println("Normalisation finished!");
-
-			// ... Populate the Grids ...//
-			System.out.println("Populating grids...");
-			for (int iI = 0; iI < quantTemplate.length; iI++) {
-				model.insertRow(model.getRowCount(),
-						new Object[] { quantTemplate[iI].getMzIndex(),
-								quantTemplate[iI].getScanID(),
-								quantTemplate[iI].getQuantIntensities(),
-								quantTemplate[iI].getTemplate2Index() });
-			}
-			for (int iI = 0; iI < templates.length; iI++) {
-				for (int iJ = 0; iJ < templates[iI].getCoords().length; iJ++) {
-					model2.insertRow(model2.getRowCount(), new Object[] {
-							templates[iI].getIndex(),
-							templates[iI].getCoord(iJ).getX(),
-							templates[iI].getCoord(iJ).getY(),
-							templates[iI].getCoord(iJ).getRelIntensity() });
-				}
-			}
-
-			// ... Generate the synthetic array which will be used by seaMass to
-			// calculate the quantitation values ...//
-			Map<String, float[][]> hmSyntheticArray = new HashMap<String, float[][]>();
-			MzMLUnmarshaller unmarshaller = aMzMLUnmarshaller.get(iFileIndex);
-			String sPrev = "", sNext = "";
-
-			// ... Parse MS1 data ...//
-			System.out.println("Parsing MS1 data ...");
-			List<String[]> array = getMS1DataRefs(unmarshaller);
-			String scanID = "";
-			String[] triplets = new String[] { "", "", "" };
-
-			System.out.println("Generate resampling array ...");
-			for (int iI = 0; iI < quantTemplate.length; iI++) {
-				scanID = quantTemplate[iI].getScanID();
-				blnExists = hmSyntheticArray.containsKey(quantTemplate[iI]
-						.getScanID());
-				if (blnExists == false) {
-					// ... Get Previous and Next MS1 scans ...//
-					sPrev = getPrevScan(array, scanID);
-					sNext = getNextScan(array, scanID);
-					System.out.println("sPrev=" + sPrev);
-					System.out.println("scanID=" + scanID);
-					System.out.println("sNext=" + sNext);
-					triplets[0] = sPrev;
-					triplets[1] = scanID;
-					triplets[2] = sNext;
-
-					for (int iTrip = 0; iTrip < triplets.length; iTrip++) {
-						// ... Go to the raw data and create an resampling array
-						// ...//
-						try {
-							Spectrum spectrum = unmarshaller
-									.getSpectrumById(triplets[iTrip]);
-							List<BinaryDataArray> bdal = spectrum
-									.getBinaryDataArrayList()
-									.getBinaryDataArray();
-
-							Number[] mzNumbers = null;
-							Number[] intenNumbers = null;
-							// ... Reading mz and intensity values ...//
-							for (BinaryDataArray bda : bdal) {
-								List<CVParam> cvpList = bda.getCvParam();
-								for (CVParam cvp : cvpList) {
-									if (cvp.getAccession().equals("MS:1000514")) {
-										mzNumbers = bda
-												.getBinaryDataAsNumberArray();
-									}
-									if (cvp.getAccession().equals("MS:1000515")) {
-										intenNumbers = bda
-												.getBinaryDataAsNumberArray();
-									}
-								}
-							}
-							// ... Create the hashmap for the resampling array
-							// ...//
-							blnExists = hmResamplingArray.containsKey(triplets[iTrip]);
-							if (blnExists == false) {
-								System.out.println("Performing resampling in scan = " + triplets[iTrip]);
-								float[][] resArray = BinaryUtils.binArray(resamplingArray, mzNumbers, intenNumbers, mzWindow, true);
-								hmResamplingArray.put(triplets[iTrip], resArray);
-								hmSyntheticArray.put(triplets[iTrip],
-										resamplingArray); // ... Initalising
-															// synthetic array
-															// ...//
-							}
-						} catch (MzMLUnmarshallerException ume) {
-							System.out.println(ume.getMessage());
-						}
-					}
-				}
-			}
-
-			System.out.println("Creating mapping for scan indexes...");
-
-			// ... Map keys for Scan IDs ...//
-			String[] scanMap = new String[hmResamplingArray.size()];
-			int iMapIndex = 0;
-			for (Entry<String, float[][]> entry : hmResamplingArray
-					.entrySet()) {
-				scanMap[iMapIndex] = entry.getKey();
-				iMapIndex++;
-			}
-			// ... Sort array ...//
-			Arrays.sort(scanMap);
-
-			// ... Populate Arrays ...//
-			DefaultTableModel model3 = new DefaultTableModel();
-			DefaultTableModel model4 = new DefaultTableModel();
-			jTable1.setModel(model3);
-			jTable2.setModel(model4);
-			model3.addColumn("m/z Index");
-			model3.addColumn("m/z Value");
-			model4.addColumn("m/z Index");
-			model4.addColumn("m/z Value");
-
-			// ... Adding column headers ...//
-			for (int iI = 0; iI < scanMap.length; iI++) {
-				model3.addColumn(scanMap[iI]);
-				model4.addColumn(scanMap[iI]);
-			}
-
-			System.out.println("Populating arrays  (inseting rows) ...");
-			if (scanMap.length >= 0) {
-				blnExists = hmResamplingArray.containsKey(scanMap[0]);
-				if (blnExists == true) {
-					float[][] temp = hmResamplingArray.get(scanMap[0]);
-					for (int iI = 0; iI < temp[0].length; iI++) {
-						model3.insertRow(model3.getRowCount(), new Object[] {
-								iI, temp[0][iI], temp[1][iI] });
-						model4.insertRow(model4.getRowCount(), new Object[] {
-								iI, temp[0][iI], temp[1][iI] });
-					}
-				}
-			}
-			System.out
-					.println("Populating arrays  (updating rows from hmSyntheticArray) ...");
-			// ... Now it's time to load the rest of the columns ...//
-			for (int iJ = 1; iJ < scanMap.length; iJ++) {
-				blnExists = hmSyntheticArray.containsKey(scanMap[iJ]);
-				if (blnExists == true) {
-					float[][] temp2 = hmSyntheticArray.get(scanMap[iJ]);
-					for (int iI = 0; iI < temp2[0].length; iI++) {
-						model3.setValueAt(temp2[1][iI], iI, iJ + 2);
-					}
-				}
-			}
-			System.out
-					.println("Populating arrays  (updating rows from hmResamplingArray) ...");
-			// ... Now it's time to load the rest of the columns ...//
-			for (int iJ = 1; iJ < scanMap.length; iJ++) {
-				System.out.println("updating rows for hmsResamplingArray "
-						+ scanMap[iJ]);
-				blnExists = hmResamplingArray.containsKey(scanMap[iJ]);
-				if (blnExists == true) {
-					float[][] temp3 = hmResamplingArray.get(scanMap[iJ]);
-					System.out.println("In_memory2=" + temp3[0][16] + "\tmz="
-							+ temp3[1][16]);
-					for (int iI = 0; iI < temp3[0].length; iI++) {
-						model4.setValueAt(temp3[1][iI], iI, iJ + 2);
-					}
-				}
-			}
-			// //... Update synthetic array and quant templates ...//
-			// System.out.println("Updating synthetic array and quant templates...");
-			// int iTemp1Index = 0, iMzIndexResamplArray = 0;
-			// float quantValue = 0.0f;
-			// int iX=0, iY=0;
-			// float fI=0.0f;
-			// for(int iI=0; iI<quantTemplate.length; iI++){
-			// scanID = quantTemplate[iI].getScanID();
-			// blnExists =
-			// hmSyntheticArray.containsKey(quantTemplate[iI].getScanID());
-			// if (blnExists){
-			// System.out.println("Updating scanID="+scanID);
-			// //... Get previous and next scans (-1, 0 and +1 positions in rt)
-			// ...//
-			// sPrev = getPrevScan(array, scanID);
-			// sNext = getNextScan(array, scanID);
-			//
-			// triplets[0] = sPrev;
-			// triplets[1] = scanID;
-			// triplets[2] = sNext;
-			//
-			// iTemp1Index = quantTemplate[iI].getTemplate2Index();
-			// iMzIndexResamplArray = quantTemplate[iI].getMzIndex(); //... This
-			// will be used to calculate -1, 0, +1 in m/z ...//
-			// quantValue = quantTemplate[iI].getQuantIntensities();
-			//
-			// for(int iZ=0; iZ<templates[iTemp1Index].getCoords().length;
-			// iZ++){ //... 54 positions (9 points x 6 isotopes) ...//
-			// //... Update values using template A ...//
-			// iX = templates[iI].getCoord(iZ).getX();
-			// iY = templates[iI].getCoord(iZ).getY();
-			// fI = templates[iI].getCoord(iZ).getRelIntensity();
-			//
-			// //... Get synthetic array for each scan ...//
-			// float[][] temp = hmSyntheticArray.get(triplets[iY+1]);
-			// temp[1][iTemp1Index+iX] = temp[1][iTemp1Index+iX] + (quantValue *
-			// fI);
-			// hmSyntheticArray.put(triplets[iY+1], temp);
-			// }
-			// }
-			// }
-
-		} // ... From if countPeptides ...//
-	}
-
-	/*----------------------------------------------------------
-	 * Get spectrum IDs and spectrum References across MS1 data
-	 * @param unmarshall - Raw file
-	 * @return - array of strings containing the spectrum IDs
-	 -----------------------------------------------------------*/
-	private List<String[]> getMS1DataRefs(MzMLUnmarshaller unmarshaller) {
-		List<String[]> array = new ArrayList<String[]>();
-		MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller
-				.unmarshalCollectionFromXpath("/run/spectrumList/spectrum",
-						Spectrum.class);
-		while (spectrumIterator.hasNext()) {
-			Spectrum spectrum = spectrumIterator.next();
-
-			// ... Identify MS1 data ...//
-			String mslevel = "";
-			List<CVParam> specParam = spectrum.getCvParam();
-			for(CVParam lCVParam : spectrum.getCvParam())
-			{
-				if (lCVParam.getAccession().equals("MS:1000511")) {
-					mslevel = lCVParam.getValue().trim();
-				}
-			}
-			if (mslevel.equals("1")) {
-				array.add(new String[] { spectrum.getIndex().toString(),
-						spectrum.getId() });
-			}
-		}
-		// ... Sort by spectrum Index ...//
-		Collections.sort(array, new Comparator<String[]>() {
-			public int compare(String[] strings1, String[] strings2) {
-				strings1[0] = String.format("%08d",
-						Integer.parseInt(strings1[0]));
-				strings2[0] = String.format("%08d",
-						Integer.parseInt(strings2[0]));
-				return strings1[0].compareTo(strings2[0]);
-			}
-		});
-		return array;
-	}
-
-	/*----------------------------------------
-	 * Get previous MS1 scan
-	 * @param array - Array with MS1 scan ids
-	 * @param sScanID - Scan ID reference 
-	 -----------------------------------------*/
-	private String getPrevScan(List<String[]> array, String sScanID) {
-		String sPrev = "";
-		//int iJ = 0;
-		for (String[] value : array) {
-			if (value[1].equals(sScanID)) {
-				break;
-			} else {
-				sPrev = value[1];
-			}
-			//iJ++;
-		}
-		return sPrev;
-	}
-
-	/*----------------------------------------
-	 * Get next MS1 scan
-	 * @param array - Array with MS1 scan ids
-	 * @param sScanID - Scan ID reference 
-	 -----------------------------------------*/
-	private String getNextScan(List<String[]> array, String sScanID) {
-		String sNext = "";
-		int iJ = 0;
-		for (String[] value : array) {
-			if (value[1].equals(sScanID)) {
-				if (iJ < array.size()) {
-					sNext = array.get(iJ + 1)[1];
-					break;
-				} else {
-					sNext = value[1];
-				}
-			}
-			iJ++;
-		}
-		return sNext;
-	}
-
 	/**
-	 * Get neighbour peaks from a given mz value 
-	 * @param array - Array with MS data
-	 * @param iIndex - location in the array
-	 * @param iOffset - Number of peaks to cover
-	 * @return array of integers with peak indexes 
-	 */
-	private int[] getPeaks(Number[] nArray, int iIndex, int iOffset) {
-		int[] aPeaks = new int[iOffset * 2 + 1];
-		int iCount = 0;
-		if ((iIndex - iOffset > 0) && (iIndex + iOffset < nArray.length)) {
-			for (int iI = iIndex - iOffset; iI <= iIndex + iOffset; iI++) {
-				aPeaks[iCount] = iI;
-				iCount++;
-				System.out.println("Index=" + iI + "\t"
-						+ nArray[iI].floatValue());
-			}
-		}
-		return aPeaks;
-	}
-
-	/**
-	 * Display MS spectrum 
-	 * @param iIndex - Index to the aMzMLUnmarshaller list
-	 * @param sID - spectrum ID
-	 * @return void
-	 */
-	private void showSpectrum(int iIndex, String sID) {
-		// ... Get index from spectra ...//
-		MzMLUnmarshaller unmarshaller = aMzMLUnmarshaller.get(iIndex);
-		try {
-			Spectrum spectrum = unmarshaller.getSpectrumById(sID);
-
-			// ... Reading CvParam to identify the MS level (1, 2) ...//
-			String mslevel = "";
-			for (CVParam lCVParam : spectrum.getCvParam())
-			{
-				if (lCVParam.getAccession().equals("MS:1000511")) {
-					mslevel = lCVParam.getValue().trim();
-				}
-			}
-			float parIonMz = 0;
-			int parCharge = 0;
-			if (mslevel.toString().indexOf("2") >= 0) {
-				PrecursorList plist = spectrum.getPrecursorList(); // ... Get
-																	// precursor
-																	// ion ...//
-				if (plist != null) {
-					if (plist.getCount().intValue() == 1) {
-						// ... Detect parent ion m/z and charge ...//
-						
-						for (CVParam lCVParam : plist.getPrecursor().get(0).getSelectedIonList().getSelectedIon().get(0).getCvParam())
-						{
-							if (lCVParam.getAccession().equals("MS:1000744")) {
-								parIonMz = Float.parseFloat(lCVParam.getValue()	.trim());
-							}
-							if (lCVParam.getAccession().equals("MS:1000041")) {
-								parCharge = Integer.parseInt(lCVParam.getValue().trim());
-							}
-						}
-					}
-				}
-			}
-
-			Number[] mzNumbers = null;
-			Number[] intenNumbers = null;
-
-			boolean bCompressed = false;
-			// Reading mz Values
-			List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList()
-					.getBinaryDataArray();
-			for (BinaryDataArray bda : bdal) {
-				List<CVParam> cvpList = bda.getCvParam();
-				for (CVParam cvp : cvpList) {
-					if (cvp.getAccession().equals("MS:1000000")) {
-						bCompressed = true;
-					}
-				}
-			}
-
-			// ... Reading mz and intensity values ...//
-			for (BinaryDataArray bda : bdal) {
-				List<CVParam> cvpList = bda.getCvParam();
-				for (CVParam cvp : cvpList) {
-					if (cvp.getAccession().equals("MS:1000514")) {
-						mzNumbers = bda.getBinaryDataAsNumberArray();
-						if (bCompressed) {
-                                                    try {
-                                                        DeltaConversion.fromDeltaNumberFormat(mzNumbers);
-                                                    } catch (DeltaEncodedDataFormatException dex) {
-                                                        System.out.println("Problem converting back from delta m/z format: " + dex.getLocalizedMessage());
-                                                        return;
-                                                    }
-							
-						}
-					}
-					if (cvp.getAccession().equals("MS:1000515")) {
-						intenNumbers = bda.getBinaryDataAsNumberArray();
-					}
-				}
-			}
-
-			double[] mz = new double[mzNumbers.length];
-			for (int iI = 0; iI < mzNumbers.length; iI++) {
-				mz[iI] = mzNumbers[iI].doubleValue();
-			}
-			double[] intensities = new double[intenNumbers.length];
-			for (int iI = 0; iI < intenNumbers.length; iI++) {
-				intensities[iI] = intenNumbers[iI].doubleValue();
-			}
-			// ... Call the spectrum panel from compomics.org ...//
-			jdpMS.removeAll();
-			JInternalFrame jifViewSpectrum = getInternalFrame();
-
-			JPanel specpanel = new SpectrumPanel(mz, intensities, parIonMz,
-					Integer.toString(parCharge), sID, 50, false, true, true,
-					true, Integer.parseInt(mslevel));
-			jifViewSpectrum.setTitle("MS spectrum <ScanID: " + sID + ">");
-			specpanel.setSize(new Dimension(600, 400));
-			specpanel.setPreferredSize(new Dimension(600, 400));
-			jifViewSpectrum.add(specpanel, BorderLayout.CENTER);
-			jifViewSpectrum.setSize(jdpMS.getSize());
-			jdpMS.add(jifViewSpectrum, BorderLayout.CENTER);
-			jdpMS.revalidate();
-			jdpMS.repaint();
-		} catch (MzMLUnmarshallerException ume) {
-			System.out.println(ume.getMessage());
-		}
-	}
-
-	/*-------------------------------------------------------
 	 * Show raw data from a Mascot Generic Format (MGF) file
-	 * @param iIndex - Index to the raw file
-	 * @param sID - Scan title
+	 * 
+	 * @param iIndex
+	 *            - Index to the raw file
+	 * @param sID
+	 *            - Scan title
 	 * @return void
-	 --------------------------------------------------------*/
-	private void showRawDataMGF(int iIndex, String sID, JTable jtRawData, JTable jtRawFiles, JTabbedPane jtpLog) {
-
+	 */
+	private void showRawDataMGF(int iIndex, String sID, JTable jtRawData,
+			JTable jtRawFiles, JTabbedPane jtpLog) {
 		DefaultTableModel model = new DefaultTableModel();
 		jtRawData.setModel(model);
 		model.addColumn("Index");
@@ -6355,7 +5141,8 @@ public class ProteoSuiteView extends JFrame {
 
 		// ... Reading file ...//
 		try {
-			BufferedReader in = new BufferedReader(new FileReader(jtRawFiles.getValueAt(iIndex, 1).toString()));
+			BufferedReader in = new BufferedReader(new FileReader(jtRawFiles
+					.getValueAt(iIndex, 1).toString()));
 			long refLine = Long.parseLong(sID);
 			String string = null;
 
@@ -6391,13 +5178,15 @@ public class ProteoSuiteView extends JFrame {
 		jtpLog.setSelectedIndex(1);
 	}
 
-	/*---------------------------------------------------
+	/**
 	 * Displays raw data
-	 * @iIndex - Index to the aMzMLUnmarshaller arraylist 
+	 * 
+	 * @iIndex - Index to the aMzMLUnmarshaller list
 	 * @sID - scan ID
 	 * @return void
-	 ---------------------------------------------------*/
-	private void showRawData(int iIndex, String sID, final JTable jtRawData, JTabbedPane jtpLog) {
+	 */
+	private void showRawData(int iIndex, String sID, final JTable jtRawData,
+			JTabbedPane jtpLog, List<MzMLUnmarshaller> aMzMLUnmarshaller) {
 		DefaultTableModel model = new DefaultTableModel() {
 			Class<?>[] types = new Class[] { Integer.class, Float.class,
 					Float.class };
@@ -6441,11 +5230,11 @@ public class ProteoSuiteView extends JFrame {
 						mzNumbers = bda.getBinaryDataAsNumberArray();
 						if (bCompressed) {
 							try {
-                                                            DeltaConversion.fromDeltaNumberFormat(mzNumbers);
-                                                        } catch (DeltaEncodedDataFormatException dex) {
-                                                            System.out.println("Problem converting back from delta m/z format: " + dex.getLocalizedMessage());
-                                                            return;
-                                                        }
+                                DeltaConversion.fromDeltaNumberFormat(mzNumbers);
+                            } catch (DeltaEncodedDataFormatException dex) {
+                                System.out.println("Problem converting back from delta m/z format: " + dex.getLocalizedMessage());
+                                return;
+                            }
 						}
 					}
 					if (cvp.getAccession().equals("MS:1000515")) {
@@ -6481,11 +5270,12 @@ public class ProteoSuiteView extends JFrame {
 		}
 	}
 
-	/*---------------------------------------
+	/**
 	 * Get internal frame dimensions
-	 * @param void 
+	 * 
+	 * @param void
 	 * @return JInternalFrame as a container
-	 ----------------------------------------*/
+	 */
 	private JInternalFrame getInternalFrame() {
 		JInternalFrame internalFrame = new JInternalFrame("");
 		Icon icon = new ImageIcon(getClass().getClassLoader().getResource(
@@ -6501,192 +5291,6 @@ public class ProteoSuiteView extends JFrame {
 		internalFrame.setIconifiable(true);
 		internalFrame.setVisible(true);
 		return internalFrame;
-	}
-
-	/*
-	 * --------------------------------------------------------- Display total
-	 * ion chromatogram
-	 * 
-	 * @ iIndex - Index to the aMzMLUnmarshaller arraylist ...//
-	 * 
-	 * @ sTitle - Window title
-	 * 
-	 * @return void ---------------------------------------------------------
-	 */
-	private void showChromatogram(int iIndex, String sTitle) {
-		// ... Get index from spectra ...//
-		MzMLUnmarshaller unmarshaller = aMzMLUnmarshaller.get(iIndex);
-		try {
-			// ... Check if mzML contains MS1 data ...//
-			Set<String> chromats = unmarshaller.getChromatogramIDs();
-			if (!chromats.isEmpty()) {
-				Chromatogram chromatogram = unmarshaller
-						.getChromatogramById("TIC");
-				Number[] rtNumbers = null;
-				Number[] intenNumbers = null;
-				List<BinaryDataArray> bdal = chromatogram
-						.getBinaryDataArrayList().getBinaryDataArray();
-
-				for (BinaryDataArray bda : bdal) {
-					List<CVParam> cvpList = bda.getCvParam();
-					for (CVParam cvp : cvpList) {
-						if (cvp.getAccession().equals("MS:1000595")) {
-							rtNumbers = bda.getBinaryDataAsNumberArray();
-						}
-						if (cvp.getAccession().equals("MS:1000515")) {
-							intenNumbers = bda.getBinaryDataAsNumberArray();
-						}
-					}
-				}
-				// ... Converting numbers to doubles ...//
-				double[] rt = new double[rtNumbers.length];
-				for (int iI = 0; iI < rtNumbers.length; iI++) {
-					rt[iI] = rtNumbers[iI].doubleValue();
-				}
-				double[] intensities = new double[intenNumbers.length];
-				for (int iI = 0; iI < intenNumbers.length; iI++) {
-					intensities[iI] = intenNumbers[iI].doubleValue();
-				}
-				// ... Clear container ...//
-				jdpTIC.removeAll();
-				JInternalFrame jifViewChromatogram = getInternalFrame();
-				// ... Class chromatogram from compomics.org ...//
-				ChromatogramPanel panel = new ChromatogramPanel(rt,
-						intensities, "RT (mins)", "Intensity (counts)");
-				jifViewChromatogram.setTitle("Chromatogram <" + sTitle + ">");
-				panel.setSize(new Dimension(600, 400));
-				panel.setPreferredSize(new Dimension(600, 400));
-				jifViewChromatogram.add(panel);
-				jdpTIC.add(jifViewChromatogram);
-				jdpTIC.revalidate();
-				jdpTIC.repaint();
-			} else {
-				System.out.println(SYS_UTILS.getTime()
-						+ " - This mzML file doesn't contain MS2 raw data.");
-			}
-		} catch (MzMLUnmarshallerException ume) {
-			System.out.println(ume.getMessage());
-		}
-	}
-
-	/**
-	 * Displays the MS1 raw data as 2D plots
-	 * @param iIndex - Index to the aMzMLUnmarshaller list
-	 * @return void
-	 */
-	private void show2DPlot(int iIndex, String sTitle, JPanel jp2D) {
-
-		// CheckMemory chm = new
-		// CheckMemory("Before allocating memory for 2D plot");
-		// ... Display about 27 x 3 = 51 MB maximum for now ...//
-		float[] mz = new float[200000];
-		float[] intensities = new float[200000];
-		float[] art = new float[200000];
-		// CheckMemory chm2 = new
-		// CheckMemory("After allocating memory for 2D plot");
-
-		float rt = 0;
-		int iCounter = 0;
-
-		// ... Get index from spectra ...//
-		MzMLUnmarshaller unmarshaller = aMzMLUnmarshaller.get(iIndex);
-
-		// ... Check if mzML contains MS1 data ...//
-		Set<String> chromats = unmarshaller.getChromatogramIDs();
-		if (!chromats.isEmpty()) {
-			MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller
-					.unmarshalCollectionFromXpath("/run/spectrumList/spectrum",
-							Spectrum.class);
-			int iK = 0;
-			String unitRT = "";
-			// ... Display first 100 scans for now ...//
-			while ((spectrumIterator.hasNext()) && (iK < 100)) {
-				Spectrum spectrumobj = spectrumIterator.next();
-				String spectrumid = spectrumobj.getId();
-
-				// ... Identify MS1 data ...//
-				String mslevel = "";
-				for (CVParam lCVParam : spectrumobj.getCvParam())
-				{
-					if (lCVParam.getAccession().equals("MS:1000511")) {
-						mslevel = lCVParam.getValue().trim();
-					}
-				}
-				if (mslevel.equals("1")) {
-					try {
-						Spectrum spectrum = unmarshaller.getSpectrumById(spectrumid);
-						for (CVParam lCVParam : spectrum.getScanList().getScan().get(0).getCvParam())
-						{
-							if (lCVParam.getAccession().equals("MS:1000016")) { // ...
-																				// Get
-																				// RT
-																				// ...//
-								rt = Float.parseFloat(lCVParam.getValue().trim());
-								unitRT = lCVParam.getUnitAccession().trim();
-								if (unitRT.equals("UO:0000031")) { // ...
-																	// Convert
-																	// RT into
-																	// seconds
-																	// ...//
-									rt = Float.parseFloat(lCVParam.getValue()
-											.trim());
-									rt *= 60;
-								} else {
-									rt = Float.parseFloat(lCVParam.getValue()
-											.trim());
-								}
-							}
-						}
-						Number[] mzNumbers = null;
-						Number[] intenNumbers = null;
-						// ... Reading mz Values ...//
-						List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList().getBinaryDataArray();
-						for (BinaryDataArray bda : bdal) {
-							List<CVParam> cvpList = bda.getCvParam();
-							for (CVParam cvp : cvpList) {
-								if (cvp.getAccession().equals("MS:1000514")) {
-									mzNumbers = bda
-											.getBinaryDataAsNumberArray();
-								}
-								if (cvp.getAccession().equals("MS:1000515")) {
-									intenNumbers = bda
-											.getBinaryDataAsNumberArray();
-								}
-							}
-						}
-						int iI = 0;
-						while (iI < mzNumbers.length) {
-							if (intenNumbers[iI].doubleValue() > 0) { // ...
-																		// Removing
-																		// zero
-																		// values
-																		// ...//
-								if (iCounter < 200000) {
-									mz[iCounter] = mzNumbers[iI].floatValue();
-									intensities[iCounter] = intenNumbers[iI]
-											.floatValue();
-									art[iCounter] = rt;
-									iCounter++;
-								}
-							}
-							iI += 10;
-						}
-					} catch (MzMLUnmarshallerException ume) {
-						System.out.println(ume.getMessage());
-					}
-					iK++;
-				}
-			}
-			System.out.println(SYS_UTILS.getTime() + " - 2D view holding "
-					+ iCounter + " elements.");
-			TwoDPlot jifView2D = new TwoDPlot(sTitle, mz, intensities, art);
-			jp2D.add(jifView2D);
-			jifView2D.pack();
-			jifView2D.setVisible(true);
-		} else {
-			System.out.println(SYS_UTILS.getTime()
-					+ " - This mzML file doesn't contain MS2 raw data.");
-		}
 	}
 
 	/*--------------------------
@@ -6740,14 +5344,24 @@ public class ProteoSuiteView extends JFrame {
 		}
 	}
 
-	/*----------------------------------------------------------
+	/**
 	 * Load MzIdentML viewer
-	 * @param iIndex - Index to the aMzIDUnmarshaller arraylist 
-	 * @param sFileName - File name
+	 * 
+	 * @param iIndex
+	 *            - Index to the aMzIDUnmarshaller list
+	 * @param sFileName
+	 *            - File name
+	 * @param jepMzIDView
+	 * @param jlFileNameMzIDText
+	 * @param jtMzId
 	 * @return void
-	 -----------------------------------------------------------*/
-	private void loadMzIdentMLView(final int iIndex, final String sFileName) {
-		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this, true, "LoadMzIDView");
+	 */
+	private void loadMzIdentMLView(final int iIndex, final String sFileName,
+			JTable jtMzIDProtGroup, final JTabbedPane jtpProperties,
+			JComboBox<String> jcbPSM, JEditorPane jepMzIDView,
+			JLabel jlFileNameMzIDText, JTable jtMzId) {
+		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this,
+				true, "LoadMzIDView");
 		final Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -6758,19 +5372,33 @@ public class ProteoSuiteView extends JFrame {
 			}
 		}, "ProgressBarDialog");
 		thread.start();
-		
-		FileFormatMzIdentML mzIdentML = new FileFormatMzIdentML(jtpProperties, jlFileNameMzIDText, sFileName, 
-			aMzIDUnmarshaller, iIndex, SYS_UTILS, jtMzId, jcbPSM, jtMzIDProtGroup, jepMzIDView, progressBarDialog);
+
+		FileFormatMzIdentML mzIdentML = new FileFormatMzIdentML(jtpProperties,
+				jlFileNameMzIDText, sFileName, aMzIDUnmarshaller, iIndex,
+				SYS_UTILS, jtMzId, jcbPSM, jtMzIDProtGroup, jepMzIDView,
+				progressBarDialog);
 		mzIdentML.start();
 	}
 
-	/*--------------------------------------------------------
+	/**
 	 * Display MZQ data
-	 * @param iIndex - Index to the aMzQUnmarshaller arraylist 
-	 * @param sFile - File name
+	 * 
+	 * @param iIndex
+	 *            - Index to the aMzQUnmarshaller list
+	 * @param sFile
+	 *            - File name
+	 * @param jlFileNameMzQText
+	 * @param jtPeptideQuant
+	 * @param jtProteinQuant
+	 * @param jtQuantFiles
 	 * @return void
-	 ---------------------------------------------------------*/
-	private void loadMzQuantMLView(int iIndex, String sFile) {
+	 */
+	private void loadMzQuantMLView(int iIndex, String sFile,
+			JTable jtFeatureQuant, JTextArea jtaLog,
+			final JTabbedPane jtpProperties,
+			final JTabbedPane jtpMzQuantMLDetail, JEditorPane jepMZQView,
+			JLabel jlFileNameMzQText, JTable jtPeptideQuant,
+			JTable jtProteinQuant, JTable jtQuantFiles) {
 		try {
 			if ((!jtQuantFiles.getValueAt(iIndex, 0).toString()
 					.equals(jlFileNameMzQText.getText()))
@@ -6786,9 +5414,11 @@ public class ProteoSuiteView extends JFrame {
 					}
 				}, "ProgressBarDialog");
 				thread.start();
-				FileFormatMzQuantML mzQuantML = new FileFormatMzQuantML(jtpProperties, iIndex, SYS_UTILS, progressBarDialog, 
-						jtProteinQuant, jtPeptideQuant, jtFeatureQuant, sFile, aMzQUnmarshaller, 
-						jlFileNameMzQText, jepMZQView, jtaLog, jtpMzQuantMLDetail);
+				FileFormatMzQuantML mzQuantML = new FileFormatMzQuantML(
+						jtpProperties, iIndex, SYS_UTILS, progressBarDialog,
+						jtProteinQuant, jtPeptideQuant, jtFeatureQuant, sFile,
+						aMzQUnmarshaller, jlFileNameMzQText, jepMZQView,
+						jtaLog, jtpMzQuantMLDetail);
 				mzQuantML.start();
 			}
 		} catch (Exception e) {
@@ -6800,478 +5430,136 @@ public class ProteoSuiteView extends JFrame {
 
 	/**
 	 * Loading mzML View
-	 * @param iIndex - index for the aMzMLUnmarshaller list
+	 * 
+	 * @param iIndex
+	 *            - index for the aMzMLUnmarshaller list
+	 * @param jepMzMLView
+	 * @param jlFileNameMzMLText
+	 * @param jtMzML
 	 * @return void
 	 */
-	private void loadMzMLView(int iIndex, JTable jtRawFiles) {
-		// ... Check if not previously loaded ...//
-		if (!jtRawFiles.getValueAt(iIndex, 0).toString()
-				.equals(jlFileNameMzMLText.getText())) {
-			final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
-					this, true, "LoadMZMLView");
-			final Thread thread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					// ... Progress Bar ...//
-					progressBarDialog.setTitle("Loading mzML data");
-					progressBarDialog.setTaskName("Please wait while loading the data ...");
-					progressBarDialog.setVisible(true);
-				}
-			}, "ProgressBarDialog");
-			thread.start();
+	private void loadMzMLView(int iIndex, JTable jtRawFiles,
+			final JTabbedPane jtpProperties, JEditorPane jepMzMLView,
+			JLabel jlFileNameMzMLText, JTable jtMzML) {
 
-			FileFormatMzML mzML = new FileFormatMzML(jtMzML, aMzMLUnmarshaller, iIndex, jlFileNameMzMLText,	jepMzMLView, jtpProperties, progressBarDialog);
-			mzML.start();
-		}
+		// Check if not previously loaded
+		if (jtRawFiles.getValueAt(iIndex, 0).toString()
+				.equals(jlFileNameMzMLText.getText()))
+			return;
+
+		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this,
+				true, "LoadMZMLView");
+		final Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// ... Progress Bar ...//
+				progressBarDialog.setTitle("Loading mzML data");
+				progressBarDialog.setTaskName("Please wait while loading the data ...");
+				progressBarDialog.setVisible(true);
+			}
+		}, "ProgressBarDialog");
+		thread.start();
+
+		FileFormatMzML mzML = new FileFormatMzML(jtMzML, aMzMLUnmarshaller,
+				iIndex, jlFileNameMzMLText, jepMzMLView, jtpProperties,
+				progressBarDialog);
+		mzML.start();
 	}
 
 	/**
 	 * Displays MGF raw data
-	 * @param iIndex - index for the array
+	 * 
+	 * @param iIndex
+	 *            - index for the array
+	 * @param jtMGF
 	 * @return void
 	 */
-	private void loadMGFView(int iIndex, JLabel jlFileNameMGFText, JTable jtRawFiles) {
+	private void loadMGFView(int iIndex, JLabel jlFileNameMGFText,
+			JTable jtRawFiles, final JTabbedPane jtpProperties, JTable jtMGF) {
 		// ... Check if not previously loaded
 		if (!jtRawFiles.getValueAt(iIndex, 0).toString()
-				.equals(jlFileNameMGFText.getText())) {
-			final String sFileNameRef = jtRawFiles.getValueAt(iIndex, 0)
-					.toString();
-			final String sFilePathRef = jtRawFiles.getValueAt(iIndex, 1)
-					.toString();
-			final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
-					this, true, "LoadMGF");
-			final Thread thread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					// ... Progress Bar ...//
-					progressBarDialog.setTitle("Loading MGF data");
-					progressBarDialog.setVisible(true);
-				}
-			}, "ProgressBarDialog");
-			thread.start();
-			FileFormatMGF mgf = new FileFormatMGF(jtMGF, jlFileNameMGFText, sFileNameRef, jtpProperties, sFilePathRef,
-					progressBarDialog);
-			mgf.start();
-		}
+				.equals(jlFileNameMGFText.getText()))
+			return;
+
+		final String sFileNameRef = jtRawFiles.getValueAt(iIndex, 0).toString();
+		final String sFilePathRef = jtRawFiles.getValueAt(iIndex, 1).toString();
+		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this,
+				true, "LoadMGF");
+		final Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// ... Progress Bar ...//
+				progressBarDialog.setTitle("Loading MGF data");
+				progressBarDialog.setVisible(true);
+			}
+		}, "ProgressBarDialog");
+		thread.start();
+		FileFormatMGF mgf = new FileFormatMGF(jtMGF, jlFileNameMGFText,
+				sFileNameRef, jtpProperties, sFilePathRef, progressBarDialog);
+		mgf.start();
 	}
+
 
 	/**
-	 * Display Mascot XML files
-	 * @param sFileName - File name
-	 * @param sFilePath - File location
-	 * @return void
-	 */
-	private void loadMascotView(String sFileName, String sFilePath) {
-		DefaultTableModel model = new DefaultTableModel() {
-			Class<?>[] types = new Class[] { Integer.class, String.class,
-					String.class, String.class, Float.class, Float.class,
-					Integer.class, Float.class, Integer.class, String.class,
-					Float.class };
-
-			@Override
-			public Class<?> getColumnClass(int columnIndex) {
-				return types[columnIndex];
-			}
-		};
-		jtMascotXMLView.setModel(model);
-		model.addColumn("Index");
-		model.addColumn("Protein");
-		model.addColumn("Peptide");
-		model.addColumn("Composition");
-		model.addColumn("Exp m/z");
-		model.addColumn("Exp Mr");
-		model.addColumn("Charge");
-		model.addColumn("Score");
-		model.addColumn("Scan");
-		model.addColumn("Scan ID");
-		model.addColumn("RT (sec)");
-
-		jtpProperties.setSelectedIndex(3);
-		JLabel jlFileNameMascotXMLText = new JLabel(sFileName);
-
-		// ... Open mascot file and extract identifications ...//
-		File file = new File(sFilePath);
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		dbf.setNamespaceAware(true);
-		try {
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document doc = db.parse(file);
-			doc.getDocumentElement().normalize();
-			// Reading hits
-			Node nodeLst = doc.getElementsByTagName("hits").item(0);
-			NodeList hitsList = nodeLst.getChildNodes();
-
-			// Initializing proteinId, peptide sequence and other variables
-			Integer iIndex = 0;
-			String proteinId = "";
-			String peptideSeq = "";
-			String peptideCompos = "";
-			float hitScore = 0.0f;
-			float retTime = 0.0f;
-			String idRef = "";
-			int scanNumber = 0;
-			float parIonMz = 0.0f;
-			float parIonMr = 0.0f;
-
-			String[] modification = new String[6];
-			int numMods = 1;
-			boolean isVariableMod = false;
-			int dbCharge = -1;
-			String mascotPos = "";
-			int iProteins = 0;
-			int iPeptides = 0;
-			String sChainToInsert = "";
-
-			for (int iI = 0; iI < hitsList.getLength(); iI++) { // ...
-																// Identifying
-																// all protein
-																// hits from the
-																// search ...//
-				NodeList subHitsList = hitsList.item(iI).getChildNodes();
-				for (int iJ = 0; iJ < subHitsList.getLength(); iJ++) {
-					Node proteinItem = subHitsList.item(iJ);
-					if (proteinItem.getNodeType() == Node.ELEMENT_NODE) {
-						if (proteinItem.getNodeName().equals("protein")) { // ...
-																			// Reading
-																			// the
-																			// protein
-																			// ...//
-							iProteins++;
-							proteinId = proteinItem.getAttributes().item(0)
-									.getTextContent().toString();
-							NodeList subProteinList = proteinItem
-									.getChildNodes(); // ... Protein subnodes
-														// ...//
-							for (int iK = 0; iK < subProteinList.getLength(); iK++) {
-								Node peptideItem = subProteinList.item(iK);
-								if (peptideItem.getNodeType() == Node.ELEMENT_NODE) {
-									if (peptideItem.getNodeName().equals(
-											"peptide")) { // ... Reading
-															// peptides ...//
-										iPeptides++;
-										NodeList peptideDataList = peptideItem
-												.getChildNodes(); // ... Peptide
-																	// subnodes
-																	// ...//
-										// ... Initializing variables ...//
-										for (int iA = 0; iA < 6; iA++) { // ...
-																			// Cleaning
-																			// array
-																			// ...//
-											modification[iA] = null;
-										}
-										int iContMod = 0;
-										isVariableMod = false;
-										numMods = -1;
-										dbCharge = -1;
-										sChainToInsert = "";
-										for (int iL = 0; iL < peptideDataList
-												.getLength(); iL++) {
-											Node peptideElem = peptideDataList
-													.item(iL);
-											if (peptideElem.getNodeType() == Node.ELEMENT_NODE) {
-												if (peptideElem.getNodeName()
-														.equals("pep_seq")) {
-													peptideSeq = peptideElem
-															.getTextContent()
-															.toString();
-													// ... Calculate the residue
-													// composition ...//
-													peptideCompos = Homeless.getResidueComposition(peptideSeq);
-												} else if (peptideElem
-														.getNodeName().equals(
-																"pep_exp_mz")) {
-													parIonMz = Double
-															.valueOf(
-																	peptideElem
-																			.getTextContent()
-																			.toString())
-															.floatValue();
-												} else if (peptideElem
-														.getNodeName().equals(
-																"pep_exp_mr")) {
-													parIonMr = Double
-															.valueOf(
-																	peptideElem
-																			.getTextContent()
-																			.toString())
-															.floatValue();
-												} else if (peptideElem
-														.getNodeName().equals(
-																"pep_exp_z")) {
-													dbCharge = Integer
-															.valueOf(
-																	peptideElem
-																			.getTextContent()
-																			.toString())
-															.intValue();
-												} else if (peptideElem
-														.getNodeName().equals(
-																"pep_score")) {
-													hitScore = Double
-															.valueOf(
-																	peptideElem
-																			.getTextContent()
-																			.toString())
-															.floatValue();
-												} else if (hitScore >= 20) { // ...
-																				// Verify
-																				// if
-																				// hits
-																				// are
-																				// over
-																				// minimum
-																				// threshold
-																				// ...//
-													if (peptideElem
-															.getNodeName()
-															.equals("pep_var_mod")) { // ...
-																						// Modification
-																						// variables
-																						// ...//
-														String sModVariable = peptideElem
-																.getTextContent()
-																.toString();
-
-														String[] differentMods = new String[3];
-														differentMods = sModVariable
-																.split(";"); // ...
-																				// Check
-																				// if
-																				// different
-																				// modifications
-																				// are
-																				// separated
-																				// by
-																				// colons
-																				// ..//
-														if (differentMods[0]
-																.equals("")) { // ...
-																				// Verify
-																				// if
-																				// has
-																				// data
-																				// ...//
-															isVariableMod = false;
-														} else {
-															for (int iDiffMod = 0; iDiffMod < differentMods.length; iDiffMod++) {
-																// ... This code
-																// parses the
-																// number of
-																// modifications
-																// (1, 2, n)
-																// once we have
-																// identified
-																// the different
-																// modif
-																// variables
-																// ...//
-																if (differentMods[iDiffMod]
-																		.startsWith(" ")) {
-																	differentMods[iDiffMod] = differentMods[iDiffMod]
-																			.substring(
-																					1,
-																					differentMods[iDiffMod]
-																							.length());
-																}
-																if (differentMods[iDiffMod]
-																		.length() > 0) {
-																	String[] multipleMods = new String[3]; // ...
-																											// New
-																											// array
-																											// for
-																											// multiple
-																											// modifications
-																											// in
-																											// different
-																											// modifications
-																											// ...//
-																	numMods = 1;
-																	if (differentMods[iDiffMod]
-																			.matches("^\\d+[\\w|\\D|\\S|\\s|\\W]*")) {
-																		multipleMods = differentMods[iDiffMod]
-																				.split(" ");
-																		numMods = Integer
-																				.valueOf(
-																						multipleMods[0])
-																				.intValue();
-																		sChainToInsert = differentMods[iDiffMod]
-																				.replace(
-																						numMods
-																								+ " ",
-																						"");
-																		numMods = 1;
-																	} else {
-																		sChainToInsert = differentMods[iDiffMod];
-																		numMods = 1;
-																	}
-																	for (int iFound = 0; iFound < numMods; iFound++) {
-																		modification[iContMod] = sChainToInsert;
-																		iContMod++;
-																	}
-																}
-															}
-															isVariableMod = true;
-														}
-													} else if (peptideElem
-															.getNodeName()
-															.equals("pep_var_mod_pos")
-															&& isVariableMod) {
-														mascotPos = peptideElem
-																.getTextContent()
-																.toString();
-														mascotPos = mascotPos
-																.replace(".",
-																		"");
-													} else if (peptideElem
-															.getNodeName()
-															.equals("pep_scan_title")) { // ...
-																							// Only
-																							// in
-																							// some
-																							// cases
-																							// the
-																							// rt
-																							// is
-																							// specified
-																							// in
-																							// the
-																							// scan
-																							// title
-																							// ...//
-														if (peptideElem
-																.getTextContent()
-																.toString()
-																.indexOf("rt:") > 0) { // ...
-																						// Option
-																						// 1,
-																						// reading
-																						// on
-																						// scan
-																						// title
-																						// ...//
-															String myTmpString = peptideElem
-																	.getTextContent()
-																	.toString();
-															int ind = 0;
-															int ind1 = 0;
-
-															// ... Get retention
-															// time ...//
-															ind = myTmpString
-																	.indexOf("(rt:");
-															if (ind > 0) {
-																ind1 = myTmpString
-																		.indexOf(")");
-																retTime = Double
-																		.valueOf(
-																				myTmpString
-																						.substring(
-																								ind + 4,
-																								ind1))
-																		.floatValue();
-															} else {
-																retTime = 0;
-															}
-
-															// ... Get ID ref
-															// ...//
-															ind = myTmpString
-																	.indexOf("(id:");
-															if (ind > 0) {
-																ind1 = myTmpString
-																		.lastIndexOf(")");
-																idRef = myTmpString
-																		.substring(
-																				ind + 4,
-																				ind1);
-															} else {
-																idRef = "";
-															}
-
-															// Get scan number
-															ind = myTmpString
-																	.indexOf("Scan:");
-															if (ind > -1) {
-																ind1 = myTmpString
-																		.indexOf(",");
-																scanNumber = Double
-																		.valueOf(
-																				myTmpString
-																						.substring(
-																								ind + 5,
-																								ind1))
-																		.intValue();
-															} else {
-																scanNumber = 0;
-															}
-														} else {
-															// ... Read mzML
-															// file or MGF (TO
-															// DO) ...//
-															retTime = 0;
-														}
-														model.insertRow(
-																model.getRowCount(),
-																new Object[] {
-																		iIndex,
-																		proteinId,
-																		peptideSeq,
-																		peptideCompos,
-																		parIonMz,
-																		parIonMr,
-																		dbCharge,
-																		hitScore,
-																		scanNumber,
-																		idRef,
-																		retTime });
-														iIndex++;
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			jtMascotXMLView.setAutoCreateRowSorter(true);
-		} catch (Exception e) {
-			System.out.println("LoadMascotIdent: Exception while reading "
-					+ file + "\n" + e);
-			System.exit(1);
-		}
-	}
-
-	/*-------------------------------------------
-	 * Initialise project settings (all modules) 
+	 * Initialise project settings (all modules)
+	 * 
+	 * @param jlFileNameMzMLText
+	 * @param jlFileNameMzIDText
+	 * @param jlIdentFilesStatus
+	 * @param jlFileNameMzQText
+	 * @param jtRawData
 	 * @param void
 	 * @return void
-	 --------------------------------------------*/
-	private void initProjectValues() {
-		// ... Loading values from config file ...//
-		initSettings(); // ... From config file (workspace) ...//
-		initProjectStatusIcons(); // ... Project pipeline ...//
+	 */
+	private void initProjectValues(JMenuItem jmCloseProject,
+			JMenuItem jmSaveProject, JTextArea jtaLog,
+			final JDesktopPane jdpTIC, final JDesktopPane jdpMS,
+			final JButton jbSaveProject, final JButton jbExportMzMLExcel,
+			final JButton jbExportMGFExcel,
+			final JButton jbExportMzIdentMLExcel,
+			final JButton jbExportMascotXMLExcel,
+			final JButton jbExportPepMZQExcel,
+			final JButton jbExportProtMZQExcel,
+			final JButton jbExportFeatMZQExcel, JComboBox<String> jcbTechnique,
+			final JEditorPane jepMGFView, final JEditorPane jepMZQView,
+			final JEditorPane jepMascotXMLView, final JEditorPane jepMzIDView,
+			final JEditorPane jepMzMLView, JLabel jlFileNameMzMLText,
+			JLabel jlFileNameMzIDText, JLabel jlIdentFilesStatus,
+			JLabel jlFileNameMzQText, JTable jtRawFiles, JTable jtIdentFiles,
+			JTable jtQuantFiles, JTable jtRawData, JTable jtMzML, JTable jtMGF,
+			JTable jtMzId, JTable jtMascotXMLView, JTable jtPeptideQuant,
+			JTable jtProteinQuant, JTable jtFeatureQuant) {
+		// Loading values from config file
+		// From config file (workspace)
+		initSettings(jmCloseProject, jmSaveProject, jbSaveProject);
+		// Project pipeline
+		initProjectStatusIcons(jcbTechnique, jlIdentFilesStatus);
 
-		// ... Initialising components ...//
-		initTables();
-		initTextAreas();
+		// Initialising components
+		initTables(jtRawFiles, jtIdentFiles, jtQuantFiles, jtRawData, jtMzML,
+				jtMGF, jtMzId, jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
+				jtFeatureQuant);
+		initTextAreas(jtaLog, jepMGFView, jepMZQView, jepMascotXMLView,
+				jepMzIDView, jepMzMLView, jlFileNameMzMLText,
+				jlFileNameMzIDText, jlFileNameMzQText);
 		jdpMS.removeAll();
 		jdpTIC.removeAll();
-		initButtons();
+		initButtons(jbExportMzMLExcel, jbExportMGFExcel,
+				jbExportMzIdentMLExcel, jbExportMascotXMLExcel,
+				jbExportPepMZQExcel, jbExportProtMZQExcel, jbExportFeatMZQExcel);
 
 		// ISO 3166 country code - GB
 		Locale.setDefault(new Locale("en", "GB"));
 	}
 
 	/**
-	 * Initialise project settings (configuration XML file) 
+	 * Initialise project settings (configuration XML file)
+	 * 
 	 * @param void
 	 * @return void
 	 */
-	private void initSettings() {
+	private void initSettings(JMenuItem jmCloseProject,
+			JMenuItem jmSaveProject, final JButton jbSaveProject) {
 		// ... Validate if config file exists ...//
 		boolean exists = (new File("config.xml")).exists();
 		if (exists) {
@@ -7314,21 +5602,24 @@ public class ProteoSuiteView extends JFrame {
 			sMessage = sMessage
 					+ "it is recommended that you copy the file as indicated in the readme.txt file.";
 			JOptionPane.showMessageDialog(this, sMessage, "Warning",
-					JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.WARNING_MESSAGE);
 		}
 		sProjectName = "New";
 		bProjectModified = false;
-		updateSaveProjectStatus(jmSaveProject);
+		updateSaveProjectStatus(jmSaveProject, jbSaveProject);
 		updateCloseProjectStatus(jmCloseProject);
 		updateTitle();
 	}
 
 	/**
 	 * Initialise project status icons
+	 * 
+	 * @param jlIdentFilesStatus
 	 * @param void
 	 * @return void
 	 */
-	private void initProjectStatusIcons() {
+	private void initProjectStatusIcons(JComboBox<String> jcbTechnique,
+			JLabel jlIdentFilesStatus) {
 		// ... Project status pipeline ...//
 		Icon loadRawFilesIcon = new ImageIcon(getClass().getClassLoader()
 				.getResource("images/empty.gif"));
@@ -7337,11 +5628,16 @@ public class ProteoSuiteView extends JFrame {
 	}
 
 	/**
-	 * Initialise table values 
+	 * Initialise table values
+	 * 
+	 * @param jtRawData
 	 * @param void
 	 * @return void
 	 */
-	private void initTables() {
+	private void initTables(JTable jtRawFiles, JTable jtIdentFiles,
+			JTable jtQuantFiles, JTable jtRawData, JTable jtMzML, JTable jtMGF,
+			JTable jtMzId, JTable jtMascotXMLView, JTable jtPeptideQuant,
+			JTable jtProteinQuant, JTable jtFeatureQuant) {
 		DefaultTableModel model = new DefaultTableModel();
 		jtRawFiles.setModel(model);
 		model.addColumn("Name");
@@ -7438,10 +5734,19 @@ public class ProteoSuiteView extends JFrame {
 
 	/**
 	 * Initialise Text Areas
+	 * 
+	 * @param jlFileNameMzMLText
+	 * @param jlFileNameMzIDText
+	 * @param jlFileNameMzQText
 	 * @param void
 	 * @return void
 	 */
-	private void initTextAreas() {
+	private void initTextAreas(final JTextArea jtaLog,
+			final JEditorPane jepMGFView, final JEditorPane jepMZQView,
+			final JEditorPane jepMascotXMLView, final JEditorPane jepMzIDView,
+			final JEditorPane jepMzMLView, final JLabel jlFileNameMzMLText,
+			JLabel jlFileNameMzIDText, JLabel jlFileNameMzQText) {
+
 		jtaLog.setText("");
 		jepMzMLView.setText("");
 		jepMGFView.setText("");
@@ -7454,11 +5759,19 @@ public class ProteoSuiteView extends JFrame {
 	}
 
 	/**
-	 * Initialise project buttons 
+	 * Initialise project buttons
+	 * 
 	 * @param void
 	 * @return void
 	 */
-	private void initButtons() {
+	private void initButtons(final JButton jbExportMzMLExcel,
+			final JButton jbExportMGFExcel,
+			final JButton jbExportMzIdentMLExcel,
+			final JButton jbExportMascotXMLExcel,
+			final JButton jbExportPepMZQExcel,
+			final JButton jbExportProtMZQExcel,
+			final JButton jbExportFeatMZQExcel) {
+
 		// Project buttons
 		jbExportMzMLExcel.setEnabled(false);
 		jbExportMGFExcel.setEnabled(false);
@@ -7471,10 +5784,32 @@ public class ProteoSuiteView extends JFrame {
 
 	/**
 	 * Open the mzq file which will be the PS file project
+	 * 
+	 * @param jepMzMLView
+	 * @param jepMzIDView
+	 * @param jlRawFilesStatus
+	 * @param jlIdentFilesStatus
+	 * @param jlFileNameMzMLText
+	 * @param jlFileNameMzIDText
+	 * @param jtIdentFiles
+	 * @param jtMGF
+	 * @param jtMascotXMLView
+	 * @param jtMzId
+	 * @param jtMzML
+	 * @param jtQuantFiles
 	 * @param void
 	 * @return void
 	 */
-	private void openProject(String sPreviousLocation, String sWorkspace, JTable jtRawFiles) {
+	private void openProject(JTable jtRawFiles, JLabel jlFileNameMGFText,
+			final JTable jtMzIDProtGroup, JMenuItem jmCloseProject,
+			JMenuItem jmSaveProject, final JPanel jp2D, JTextArea jtaLog,
+			final JTabbedPane jtpProperties, final JDesktopPane jdpTIC,
+			final JButton jbSaveProject, JComboBox<String> jcbPSM,
+			JEditorPane jepMzMLView, JEditorPane jepMzIDView,
+			JLabel jlRawFilesStatus, JLabel jlIdentFilesStatus,
+			JLabel jlFileNameMzMLText, JLabel jlFileNameMzIDText,
+			JTable jtIdentFiles, JTable jtMGF, JTable jtMascotXMLView,
+			final JTable jtMzId, JTable jtMzML, final JTable jtQuantFiles) {
 		// Load project settings from a mzq file
 		// Selecting file(s)
 		JFileChooser chooser = new JFileChooser(sPreviousLocation);
@@ -7494,7 +5829,7 @@ public class ProteoSuiteView extends JFrame {
 			chooser.setCurrentDirectory(new File(sWorkspace));
 		} else {
 			// If not found it goes to Home, exception not needed
-			chooser.setCurrentDirectory(new File(sPreviousLocation)); 
+			chooser.setCurrentDirectory(new File(sPreviousLocation));
 		}
 		// ... Retrieving selection from user ...//
 		int returnVal = chooser.showOpenDialog(this);
@@ -7527,7 +5862,8 @@ public class ProteoSuiteView extends JFrame {
 						model.addColumn("Type");
 						model.addColumn("Version");
 						try {
-							isOK = Unmarshaller.unmarshalMzQMLFile(model, file, aMzQUnmarshaller);
+							isOK = Unmarshaller.unmarshalMzQMLFile(model, file,
+									aMzQUnmarshaller);
 						} catch (Exception e) {
 							jtaLog.append("Error reading mzQuantML - the mzQuantML file may be invalid.\nError: ");
 							jtaLog.append(e.getMessage());
@@ -7535,13 +5871,23 @@ public class ProteoSuiteView extends JFrame {
 							isOK = false;
 						}
 						if (isOK) {
-							isOK = loadProjectFromMZQ(0, file, jtRawFiles);
+							isOK = loadProjectFromMZQ(0, file, jtRawFiles,
+									jlFileNameMGFText, jtMzIDProtGroup, jp2D,
+									jtpProperties, jdpTIC, jcbPSM, jepMzMLView,
+									jepMzIDView, jlRawFilesStatus,
+									jlIdentFilesStatus, jlFileNameMzMLText,
+									jlFileNameMzIDText, jtIdentFiles, jtMGF,
+									jtMascotXMLView, jtMzId, jtMzML,
+									jtQuantFiles);
 							if (isOK) {
 								bProjectModified = false;
 
 								sProjectName = file.getName();
-								updateStatusPipeline(jlRawFilesStatus, jtRawFiles);
-								updateSaveProjectStatus(jmSaveProject);
+								updateStatusPipeline(jlRawFilesStatus,
+										jtRawFiles, jlIdentFilesStatus,
+										jtIdentFiles);
+								updateSaveProjectStatus(jmSaveProject,
+										jbSaveProject);
 								updateCloseProjectStatus(jmCloseProject);
 							}
 						} else {
@@ -7558,13 +5904,26 @@ public class ProteoSuiteView extends JFrame {
 		}
 	}
 
-	/*----------------------------------------------
-	 * Load project from mzq 
-	 * @param iIndex - Index to the aMzQUnmarshaller arraylist 
-	 * @param sFile - File name 
+	/**
+	 * Load project from mzq
+	 * 
+	 * @param iIndex
+	 *            - Index to the aMzQUnmarshaller list
+	 * @param sFile
+	 *            - File name
 	 * @boolean Success
-	 ----------------------------------------------*/
-	private boolean loadProjectFromMZQ(int iIndex, File sFile, final JTable jtRawFiles) {
+	 */
+	private boolean loadProjectFromMZQ(int iIndex, File sFile,
+			final JTable jtRawFiles, final JLabel jlFileNameMGFText,
+			final JTable jtMzIDProtGroup, final JPanel jp2D,
+			final JTabbedPane jtpProperties, final JDesktopPane jdpTIC,
+			final JComboBox<String> jcbPSM, final JEditorPane jepMzMLView,
+			final JEditorPane jepMzIDView, final JLabel jlRawFilesStatus,
+			final JLabel jlIdentFilesStatus, final JLabel jlFileNameMzMLText,
+			final JLabel jlFileNameMzIDText, final JTable jtIdentFiles,
+			final JTable jtMGF, final JTable jtMascotXMLView,
+			final JTable jtMzId, final JTable jtMzML, final JTable jtQuantFiles) {
+
 		final DefaultTableModel model = new DefaultTableModel();
 		final DefaultTableModel model2 = new DefaultTableModel();
 		jtRawFiles.setModel(model);
@@ -7581,8 +5940,9 @@ public class ProteoSuiteView extends JFrame {
 		model2.addColumn("Raw File");
 
 		final File sFileRef = sFile;
-		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this,	true, "LoadProjectFromMZQ");
-		
+		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(this,
+				true, "LoadProjectFromMZQ");
+
 		final Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -7592,25 +5952,32 @@ public class ProteoSuiteView extends JFrame {
 			}
 		}, "ProgressBarDialog");
 		thread.start();
-		
+
 		new Thread("LoadProjectFromMZQ") {
 			@Override
 			public void run() {
-				System.out.println(SYS_UTILS.getTime()+ " - (From Project) Loading settings from the mzq file ...");
+				System.out
+						.println(SYS_UTILS.getTime()
+								+ " - (From Project) Loading settings from the mzq file ...");
 				String sGroup = "";
 
 				MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(
 						new File(jtQuantFiles.getValueAt(0, 1).toString()));
 				MzQuantML mzq = unmarshaller.unmarshall();
-				System.out.println(SYS_UTILS.getTime() + " - MzQuantML version="	+ mzq.getVersion());
-				System.out.println(SYS_UTILS.getTime() + " - ID=" + mzq.getId());
-				System.out.println(SYS_UTILS.getTime() + " - Name=" + mzq.getName());
+				System.out.println(SYS_UTILS.getTime()
+						+ " - MzQuantML version=" + mzq.getVersion());
+				System.out
+						.println(SYS_UTILS.getTime() + " - ID=" + mzq.getId());
+				System.out.println(SYS_UTILS.getTime() + " - Name="
+						+ mzq.getName());
 
 				InputFiles inputFiles = mzq.getInputFiles();
 
 				// ... Load raw files ...//
-				List<RawFilesGroup> rawFilesGroup = inputFiles.getRawFilesGroup();
-				System.out.println(SYS_UTILS.getTime() + " - RawFilesGroup=" + rawFilesGroup.size());
+				List<RawFilesGroup> rawFilesGroup = inputFiles
+						.getRawFilesGroup();
+				System.out.println(SYS_UTILS.getTime() + " - RawFilesGroup="
+						+ rawFilesGroup.size());
 				int iMGFRaw = 0, iMzMLRaw = 0;
 				for (RawFilesGroup group : rawFilesGroup) {
 					sGroup = group.getId();
@@ -7647,7 +6014,8 @@ public class ProteoSuiteView extends JFrame {
 								iMGFRaw++;
 							}
 							if (ext.toLowerCase().equals("mzml")) {
-								Unmarshaller.unmarshalMzMLFile(model, file, "", aMzMLUnmarshaller);
+								Unmarshaller.unmarshalMzMLFile(model, file, "",
+										aMzMLUnmarshaller);
 								iMzMLRaw++;
 							}
 						}
@@ -7657,21 +6025,41 @@ public class ProteoSuiteView extends JFrame {
 					System.out.println(SYS_UTILS.getTime()
 							+ " - Loading MGF view ...");
 					if (jtRawFiles.getRowCount() > 0) {
-						loadMGFView(0, jlFileNameMGFText, jtRawFiles);
+						loadMGFView(0, jlFileNameMGFText, jtRawFiles,
+								jtpProperties, jtMGF);
 					}
 				}
 				if (iMzMLRaw > 0) {
 					System.out.println(SYS_UTILS.getTime()
 							+ " - Loading mzML view ...");
-					loadMzMLView(0, jtRawFiles);
+					loadMzMLView(0, jtRawFiles, jtpProperties, jepMzMLView,
+							jlFileNameMzMLText, jtMzML);
 					if (jtRawFiles.getRowCount() > 0) {
 						System.out.println(SYS_UTILS.getTime()
 								+ " - Showing chromatogram ...");
-						showChromatogram(0, jtRawFiles.getValueAt(0, 1)
-								.toString());
+
+						// Clear container
+						jdpTIC.removeAll();
+						JInternalFrame jifViewChromatogram = getInternalFrame();
+						jifViewChromatogram.setTitle("Chromatogram <"
+								+ jtRawFiles.getValueAt(0, 1) + ">");
+						jifViewChromatogram.add(ChartChromatogram
+								.getChromatogram(aMzMLUnmarshaller.get(0)));
+
+						jdpTIC.add(jifViewChromatogram);
+						jdpTIC.revalidate();
+						jdpTIC.repaint();
 						System.out.println(SYS_UTILS.getTime()
 								+ " - Showing 2D plot ...");
-						show2DPlot(0, jtRawFiles.getValueAt(0, 1).toString(), jp2D);
+
+						TwoDPlot jifView2D = ChartPlot2D.get2DPlot(
+								aMzMLUnmarshaller.get(0), jtRawFiles
+										.getValueAt(0, 1).toString());
+						if (jifView2D != null) {
+							jp2D.add(jifView2D);
+							jifView2D.pack();
+							jifView2D.setVisible(true);
+						}
 					}
 				}
 				// ... Load ident files ...//
@@ -7714,22 +6102,25 @@ public class ProteoSuiteView extends JFrame {
 							iXMLIdent++;
 						}
 						if (ext.toLowerCase().equals("mzid")) {
-							Unmarshaller.unmarshalMzIDFile(model2, file, "", aMzIDUnmarshaller);
+							Unmarshaller.unmarshalMzIDFile(model2, file, "",
+									aMzIDUnmarshaller);
 							iMzID++;
 						}
 					}
 				}
 				if (iXMLIdent > 0) {
 					if (jtIdentFiles.getRowCount() > 0) {
-						loadMascotView(
+						FileFormatMascot.loadMascotView(
 								jtIdentFiles.getValueAt(0, 0).toString(),
-								jtIdentFiles.getValueAt(0, 1).toString());
+								jtIdentFiles.getValueAt(0, 1).toString(),
+								jtMascotXMLView, jtpProperties);
 					}
 				}
 				if (iMzID > 0) {
 					if (jtIdentFiles.getRowCount() > 0) {
 						loadMzIdentMLView(0, jtIdentFiles.getValueAt(0, 0)
-								.toString());
+								.toString(), jtMzIDProtGroup, jtpProperties,
+								jcbPSM, jepMzIDView, jlFileNameMzIDText, jtMzId);
 					}
 				}
 				sProjectName = sFileRef.getName();
@@ -7740,7 +6131,8 @@ public class ProteoSuiteView extends JFrame {
 						+ sProjectName);
 				updateTitle();
 				renderIdentFiles(jtRawFiles, jtIdentFiles);
-				updateStatusPipeline(jlRawFilesStatus, jtRawFiles);
+				updateStatusPipeline(jlRawFilesStatus, jtRawFiles,
+						jlIdentFilesStatus, jtIdentFiles);
 				progressBarDialog.setVisible(false);
 				progressBarDialog.dispose();
 
@@ -7751,11 +6143,16 @@ public class ProteoSuiteView extends JFrame {
 	}
 
 	/**
-	 * Generate files (Quant file and xtracker files)    
+	 * Generate files (Quant file and xtracker files)
+	 * 
+	 * @param jtIdentFiles
+	 * @param jtQuantFiles
 	 * @param void
 	 * @return true/false
 	 */
-	private boolean generateFiles(JTable jtRawFiles) {
+	private boolean generateFiles(JTable jtRawFiles, JTextArea jtaLog,
+			String selectedTechnique, JComboBox<String> jcbOutputFormat,
+			JTable jtIdentFiles, JTable jtQuantFiles) {
 		// ... Check project name ...//
 		String sFile = sProjectName;
 		System.out.println(SYS_UTILS.getTime()
@@ -7765,870 +6162,46 @@ public class ProteoSuiteView extends JFrame {
 		if (sFile.equals("New")) {
 			sFile = "test.mzq";
 			String sMessage = "This project has not been saved. Proteosuite will create a test.mzq file \n";
-			sMessage = sMessage + " under " + sWorkspace + " to run the pipeline. \n";
-			JOptionPane.showMessageDialog(this, sMessage, "Information", JOptionPane.INFORMATION_MESSAGE);
+			sMessage = sMessage + " under " + sWorkspace
+					+ " to run the pipeline. \n";
+			JOptionPane.showMessageDialog(this, sMessage, "Information",
+					JOptionPane.INFORMATION_MESSAGE);
 			sProjectName = sFile;
 		}
 
 		// ... Generate mzq file ...//
 		System.out.println(SYS_UTILS.getTime() + " - Generating mzq file ...");
 		jtaLog.append("\n" + SYS_UTILS.getTime() + " - Generating mzq file ...");
-		boolean isOK = writeMzQuantML(jcbTechnique.getSelectedItem().toString(), sFile, jtRawFiles);
+		boolean isOK = FileFormatMzQuantML.writeMzQuantML(selectedTechnique,
+				sFile, jtRawFiles, jcbOutputFormat, jtIdentFiles);
 		if (!isOK)
 			return false;
-		
+
 		// ... Unmarshall mzquantml file ...//
 		Validator validator = XMLparser.getValidator(MZQ_XSD);
 		boolean validFlag = XMLparser.validate(validator,
 				sWorkspace.replace("\\", "/") + "/" + sProjectName);
-		System.out.println(SYS_UTILS.getTime()
-				+ " - Validating mzQuantML ...");
+		System.out.println(SYS_UTILS.getTime() + " - Validating mzQuantML ...");
 		jtaLog.append("\n" + SYS_UTILS.getTime()
 				+ " - Validating mzQuantML ...");
 		if (!validFlag) {
 			JOptionPane.showMessageDialog(this, "Invalid mzQuantML file",
 					"Error", JOptionPane.INFORMATION_MESSAGE);
 		} else {
-			// ... Modify the mzQuantML structure according to the
-			// experiment ...//
-			writeXTrackerFiles(jcbTechnique.getSelectedItem().toString(), jtRawFiles);
+			// Modify the mzQuantML structure according to the experiment
+			XTracker xTracker = new XTracker();
+			xTracker.writeXTrackerFiles(selectedTechnique, jtRawFiles,
+					jcbOutputFormat, jtIdentFiles, jtQuantFiles);
 		}
-		
+
 		return true;
 	}
 
 	/**
-	 * Write mzQuantML file 
-	 * @param sExperiment - Type of experiment 
-	 * @param sFile - File name
-	 * @return true/false
-	 */
-	private boolean writeMzQuantML(String sExperiment, String sFile, JTable jtRawFiles) {
-		boolean ret = true;
-
-		// ... Create object ...//
-		MzQuantML qml = new MzQuantML();
-
-		// ... Set version ...//
-		String Version = "1.0.0";
-		qml.setVersion(Version);
-		Calendar rightNow = Calendar.getInstance();
-		qml.setCreationDate(rightNow);
-		qml.setId(sFile);
-
-		// ----------------------//
-		// ... CREATE CV LIST ...//
-		// ----------------------//
-		CvList cvs = new CvList();
-		List<Cv> cvList = cvs.getCv();
-		Cv cvPSI_MS = new Cv();
-		cvPSI_MS.setId("PSI-MS");
-		cvPSI_MS.setUri("http://psidev.cvs.sourceforge.net/viewvc/*checkout*/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo");
-		cvPSI_MS.setFullName("Proteomics Standards Initiative Mass Spectrometry Vocabulary");
-		cvPSI_MS.setVersion(PSI_MS_VERSION);
-
-		Cv cvUO = new Cv();
-		cvUO.setId("UO");
-		cvUO.setUri("http://obo.cvs.sourceforge.net/*checkout*/obo/obo/ontology/phenotype/unit.obo");
-		cvUO.setFullName("Unit Ontology");
-
-		Cv cvPSI_MOD = new Cv();
-		cvPSI_MOD.setId("PSI-MOD");
-		cvPSI_MOD
-				.setUri("http://psidev.cvs.sourceforge.net/psidev/psi/mod/data/PSI-MOD.obo");
-		cvPSI_MOD
-				.setFullName("Proteomics Standards Initiative Protein Modifications");
-		cvPSI_MOD.setVersion(PSI_MOD_VERSION);
-
-		Cv cvUNI_MOD = new Cv();
-		cvUNI_MOD.setId("UNIMOD");
-		cvUNI_MOD.setUri("http://www.unimod.org/obo/unimod.obo");
-		cvUNI_MOD.setFullName("UNIMOD");
-
-		cvList.add(cvPSI_MS);
-		cvList.add(cvUO);
-		cvList.add(cvPSI_MOD);
-		cvList.add(cvUNI_MOD);
-		qml.setCvList(cvs);
-
-		// -------------------------------//
-		// ... CREATE ANALYSIS SUMMARY ...//
-		// -------------------------------//
-
-		if (sExperiment.contains("iTRAQ")) {
-
-			AnalysisSummary as = new AnalysisSummary();
-			List<CvParam> cvParamList = as.getCvParam();
-
-			// ParamList pl = new ParamList();
-			// List<AbstractParam> cvParamList = pl.getParamGroup();
-			/*
-			 * CvParam cvp = new CvParam(); //cvp.setAccession("MS:1002010");
-			 * cvp.setAccession("MS:1001837"); cvp.setCv(cvPSI_MS);
-			 * //cvp.setName("TMT quantitation analysis");
-			 * cvp.setName("iTRAQ quantitation analysis"); cvParamList.add(cvp);
-			 */
-			// id: MS:1001837
-			// name: iTRAQ quantitation analysis
-
-			CvParam cvp6 = new CvParam();
-			cvp6.setAccession("MS:1002023");
-			cvp6.setCv(cvPSI_MS);
-			cvp6.setName("MS2 tag-based analysis");
-			cvParamList.add(cvp6);
-
-			CvParam cvp2 = new CvParam();
-			cvp2.setAccession("MS:1002024");
-			cvp2.setCv(cvPSI_MS);
-			cvp2.setValue("true");
-			cvp2.setName("MS2 tag-based analysis feature level quantitation");
-			cvParamList.add(cvp2);
-
-			CvParam cvp3 = new CvParam();
-			cvp3.setAccession("MS:1002025");
-			cvp3.setCv(cvPSI_MS);
-			cvp3.setValue("true");
-			cvp3.setName("MS2 tag-based analysis group features by peptide quantitation");
-			cvParamList.add(cvp3);
-
-			CvParam cvp4 = new CvParam();
-			cvp4.setAccession("MS:1002026");
-			cvp4.setCv(cvPSI_MS);
-			cvp4.setValue("true");
-			cvp4.setName("MS2 tag-based analysis protein level quantitation");
-			cvParamList.add(cvp4);
-
-			CvParam cvp5 = new CvParam();
-			cvp5.setAccession("MS:1002027");
-			cvp5.setCv(cvPSI_MS);
-			cvp5.setValue("false");
-			cvp5.setName("MS2 tag-based analysis protein group level quantitation");
-			cvParamList.add(cvp5);
-
-			qml.setAnalysisSummary(as);
-		}
-		if (sExperiment.contains("TMT")) {
-
-			CvParam cvp = new CvParam();
-			cvp.setAccession("MS:1001837");
-			cvp.setCv(cvPSI_MS);
-			cvp.setName("TMT quantitation analysis");
-
-			CvParam cvp6 = new CvParam();
-			cvp6.setAccession("MS:1002023");
-			cvp6.setCv(cvPSI_MS);
-			cvp6.setName("MS2 tag-based analysis");
-
-			CvParam cvp2 = new CvParam();
-			cvp2.setAccession("MS:1002024");
-			cvp2.setCv(cvPSI_MS);
-			cvp2.setValue("true");
-			cvp2.setName("MS2 tag-based analysis feature level quantitation");
-
-			CvParam cvp3 = new CvParam();
-			cvp3.setAccession("MS:1002025");
-			cvp3.setCv(cvPSI_MS);
-			cvp3.setValue("true");
-			cvp3.setName("MS2 tag-based analysis group features by peptide quantitation");
-
-			CvParam cvp4 = new CvParam();
-			cvp4.setAccession("MS:1002026");
-			cvp4.setCv(cvPSI_MS);
-			cvp4.setValue("true");
-			cvp4.setName("MS2 tag-based analysis protein level quantitation");
-
-			CvParam cvp5 = new CvParam();
-			cvp5.setAccession("MS:1002027");
-			cvp5.setCv(cvPSI_MS);
-			cvp5.setValue("false");
-			cvp5.setName("MS2 tag-based analysis protein group level quantitation");
-
-			AnalysisSummary as = new AnalysisSummary();
-			List<CvParam> cvParamList = as.getCvParam();
-
-			cvParamList.add(cvp6);
-			cvParamList.add(cvp2);
-			cvParamList.add(cvp3);
-			cvParamList.add(cvp4);
-			cvParamList.add(cvp5);
-
-			qml.setAnalysisSummary(as);
-		}
-		if (sExperiment.contains("emPAI")) {
-
-			CvParam cvp = new CvParam();
-			cvp.setAccession("MS:1001836");
-			cvp.setCv(cvPSI_MS);
-			cvp.setName("spectral counting quantitation analysis");
-
-			CvParam cvp1 = new CvParam();
-			cvp1.setAccession("MS:1002015");
-			cvp1.setCv(cvPSI_MS);
-			cvp1.setValue("false");
-			cvp1.setName("spectral count peptide level quantitation");
-
-			CvParam cvp2 = new CvParam();
-			cvp2.setAccession("MS:1002016");
-			cvp2.setCv(cvPSI_MS);
-			cvp2.setValue("true");
-			cvp2.setName("spectral count protein level quantitation");
-
-			CvParam cvp3 = new CvParam();
-			cvp3.setAccession("MS:1002017");
-			cvp3.setCv(cvPSI_MS);
-			cvp3.setValue("false");
-			cvp3.setName("spectral count proteingroup level quantitation");
-
-			AnalysisSummary as = new AnalysisSummary();
-			List<CvParam> cvParamList = as.getCvParam();
-
-			cvParamList.add(cvp);
-			cvParamList.add(cvp1);
-			cvParamList.add(cvp2);
-			cvParamList.add(cvp3);
-			qml.setAnalysisSummary(as);
-		}
-
-		// --------------------------//
-		// ... CREATE INPUT FILES ...//
-		// --------------------------//
-		InputFiles inputFiles = new InputFiles();
-
-		// --------------------------//
-		// ... RAW FILES ...//
-		// --------------------------//
-
-		// ... Get raw files ...//
-		List<RawFilesGroup> rawFilesGroupList = inputFiles.getRawFilesGroup();
-		Map<String, List<String[]>> hmRawFiles = new HashMap<String, List<String[]>>();
-
-		boolean bExists = false;
-		// ... Select all raw files from grid ...//
-		for (int iI = 0; iI < jtRawFiles.getRowCount(); iI++) {
-			// ... Check if group has been added previously ...//
-			String sKey = jtRawFiles.getValueAt(iI, 0).toString();
-			bExists = hmRawFiles.containsKey(sKey);
-			if (bExists == false) {
-				List<String[]> al = new ArrayList<String[]>();
-				String[] sTemp = new String[2];
-				sTemp[0] = jtRawFiles.getValueAt(iI, 0).toString();
-				sTemp[1] = jtRawFiles.getValueAt(iI, 1).toString();
-				al.add(sTemp);
-				hmRawFiles.put(sKey, al);
-			} else {
-				List<String[]> al2 = hmRawFiles.get(jtRawFiles.getValueAt(iI, 4)
-						.toString());
-				String[] sTemp = new String[2];
-				sTemp[0] = jtRawFiles.getValueAt(iI, 0).toString();
-				sTemp[1] = jtRawFiles.getValueAt(iI, 1).toString();
-				al2.add(sTemp);
-				hmRawFiles.put(sKey, al2);
-			}
-		}
-		// ... Set raw files groups ...//
-		int iCounter = 0;
-		for (Entry<String, List<String[]>> entry : hmRawFiles
-				.entrySet()) {
-
-			RawFilesGroup rawFilesGroup = new RawFilesGroup();
-			List<RawFile> rawFilesList = rawFilesGroup.getRawFile();
-
-			// String rgId = "raw_"+Integer.toString(iCounter+1);
-			String rgId = jtRawFiles.getValueAt(iCounter, 0).toString();
-			List<String[]> saGroups = entry.getValue();
-			for (String[] slFiles : saGroups)
-			{
-				// ... Identify the corresponding raw files
-				String rawFname = slFiles[0];
-				String rawId = "r" + Integer.toString(iCounter + 1);
-				// ... Raw files ...//
-				RawFile rawFile = new RawFile();
-				rawFile.setName(rawFname);
-				rawFile.setId(rawId);
-				rawFile.setLocation(slFiles[1]);
-				rawFilesList.add(rawFile);
-				iCounter++;
-			}
-			rawFilesGroup.setId(rgId);
-			rawFilesGroupList.add(rawFilesGroup);
-		}
-
-		// -----------------------------//
-		// ... IDENTIFICATION FILES ...//
-		// -----------------------------//
-
-		// ... Define those structures that will be further used (e.g. in
-		// AssayList) ...//
-		Map<String, String> idFileNameIdMap = new HashMap<String, String>();
-
-		// ... Identification file containers ...//
-		IdentificationFiles idFiles = inputFiles.getIdentificationFiles();
-		if (idFiles == null) {
-			idFiles = new IdentificationFiles();
-		}
-		List<IdentificationFile> idFilesList = idFiles.getIdentificationFile();
-
-		// ... Select all raw files from grid ...//
-		for (int iI = 0; iI < jtIdentFiles.getRowCount(); iI++) {
-			// ... Identification files ...//
-			String idFname = jtIdentFiles.getValueAt(iI, 0).toString();
-			String idId = "id_file" + Integer.toString(iI + 1);
-
-			IdentificationFile idFile = new IdentificationFile();
-			idFile.setName(idFname);
-			idFile.setId(idId);
-			idFile.setLocation(jtIdentFiles.getValueAt(iI, 1).toString()
-					.replace("\\", "/"));
-			idFilesList.add(idFile);
-			idFileNameIdMap.put(idFname, idId); // ... Saving hashmap for
-												// AssayList ...//
-		}
-		inputFiles.setIdentificationFiles(idFiles);
-		qml.setInputFiles(inputFiles);
-
-		// ---------------------------//
-		// ... Create SoftwareList ...//
-		// ---------------------------//
-		SoftwareList softwareList = new SoftwareList();
-		Software software = new Software();
-		softwareList.getSoftware().add(software);
-		software.setId("x-Tracker");
-		software.setVersion("2.0-ALPHA");
-		CvParam cvpSW = new CvParam();
-		cvpSW.setAccession("MS:1002123");
-		cvpSW.setCv(cvPSI_MS);
-		cvpSW.setName("x-Tracker");
-		software.getCvParam().add(cvpSW);
-
-		Software software2 = new Software();
-		softwareList.getSoftware().add(software2);
-		software2.setId("ProteoSuite");
-		software2.setVersion(sPS_Version);
-		CvParam cvpSW2 = new CvParam();
-		cvpSW2.setAccession("MS:1002124");
-		cvpSW2.setCv(cvPSI_MS);
-		cvpSW2.setName("ProteoSuite");
-		software2.getCvParam().add(cvpSW2);
-		qml.setSoftwareList(softwareList);
-
-		// ---------------------------------//
-		// ... Create DataProcessingList ...//
-		// ---------------------------------//
-		DataProcessingList dataProcessingList = new DataProcessingList();
-		DataProcessing dataProcessing = new DataProcessing();
-		dataProcessing.setId("DP1");
-		dataProcessing.setSoftware(software);
-		dataProcessing.setOrder(BigInteger.ONE);
-
-		// ... Based on the technique, select the plugins that are available to
-		// perform the quantitation ...//
-		if (sExperiment.contains("iTRAQ")) {
-			String[] sPipeline;
-			sPipeline = new String[4];
-			sPipeline = getPlugins(sExperiment, jtRawFiles);
-
-			// ... Processing methods ...//
-			ProcessingMethod processingMethod = new ProcessingMethod();
-			processingMethod.setOrder(BigInteger.ONE);
-			List<AbstractParam> pmList = processingMethod.getParamGroup();
-			UserParam up1 = new UserParam();
-			up1.setName("Plugin type");
-			up1.setValue("load identification");
-			pmList.add(up1);
-			UserParam up2 = new UserParam();
-			up2.setName("Plugin name");
-			up2.setValue(sPipeline[0]);
-			pmList.add(up2);
-			UserParam up3 = new UserParam();
-			up3.setName("Plugin configuration file");
-			up3.setValue(sWorkspace.replace("\\", "/") + "/xTracker_"
-					+ sPipeline[0] + ".xtp");
-			pmList.add(up3);
-			dataProcessing.getProcessingMethod().add(processingMethod);
-
-			ProcessingMethod processingMethod2 = new ProcessingMethod();
-			processingMethod2.setOrder(BigInteger.valueOf(2));
-			List<AbstractParam> pmList2 = processingMethod2.getParamGroup();
-			UserParam up2_1 = new UserParam();
-			up2_1.setName("Plugin type");
-			up2_1.setValue("load raw spectra");
-			pmList2.add(up2_1);
-			UserParam up2_2 = new UserParam();
-			up2_2.setName("Plugin name");
-			up2_2.setValue(sPipeline[1]);
-			pmList2.add(up2_2);
-			UserParam up2_3 = new UserParam();
-			up2_3.setName("Plugin configuration file");
-			up2_3.setValue(sWorkspace.replace("\\", "/") + "/xTracker_"
-					+ sPipeline[1] + ".xtp");
-			pmList2.add(up2_3);
-			dataProcessing.getProcessingMethod().add(processingMethod2);
-
-			ProcessingMethod processingMethod3 = new ProcessingMethod();
-			processingMethod3.setOrder(BigInteger.valueOf(3));
-			List<AbstractParam> pmList3 = processingMethod3.getParamGroup();
-			UserParam up3_1 = new UserParam();
-			up3_1.setName("Plugin type");
-			up3_1.setValue("feature detection and quantitation");
-			pmList3.add(up3_1);
-			UserParam up3_2 = new UserParam();
-			up3_2.setName("Plugin name");
-			up3_2.setValue(sPipeline[2]);
-			pmList3.add(up3_2);
-			UserParam up3_3 = new UserParam();
-			up3_3.setName("Plugin configuration file");
-			up3_3.setValue(sWorkspace.replace("\\", "/") + "/xTracker_"
-					+ sPipeline[2] + ".xtp");
-			pmList3.add(up3_3);
-			UserParam up3_4 = new UserParam();
-			up3_4.setName("Feature to peptide inference method");
-			up3_4.setValue("mean");
-			pmList3.add(up3_4);
-			UserParam up3_5 = new UserParam();
-			up3_5.setName("Peptide to protein inference method");
-			up3_5.setValue("weightedAverage");
-			pmList3.add(up3_5);
-			UserParam up3_6 = new UserParam();
-			up3_6.setName("Assay to Study Variables inference method");
-			up3_6.setValue("sum");
-			pmList3.add(up3_6);
-			UserParam up3_7 = new UserParam();
-			up3_7.setName("Protein ratio calculation infer from peptide ratio");
-			up3_7.setValue("true");
-			pmList3.add(up3_7);
-			dataProcessing.getProcessingMethod().add(processingMethod3);
-
-			ProcessingMethod processingMethod4 = new ProcessingMethod();
-			processingMethod4.setOrder(BigInteger.valueOf(4));
-			List<AbstractParam> pmList4 = processingMethod4.getParamGroup();
-			UserParam up4_1 = new UserParam();
-			up4_1.setName("Plugin type");
-			up4_1.setValue("Output");
-			pmList4.add(up4_1);
-			UserParam up4_2 = new UserParam();
-			up4_2.setName("Plugin name");
-			up4_2.setValue(sPipeline[3]);
-			pmList4.add(up4_2);
-			UserParam up4_3 = new UserParam();
-			up4_3.setName("Plugin configuration file");
-			up4_3.setValue(sWorkspace.replace("\\", "/") + "/xTracker_"
-					+ sPipeline[3] + ".xtp");
-			pmList4.add(up4_3);
-			dataProcessing.getProcessingMethod().add(processingMethod4);
-		}
-		if (sExperiment.contains("emPAI")) {
-			String[] sPipeline;
-			sPipeline = new String[4];
-			sPipeline = getPlugins(sExperiment, jtRawFiles);
-
-			// ... Processing methods ...//
-			ProcessingMethod processingMethod = new ProcessingMethod();
-			processingMethod.setOrder(BigInteger.ONE);
-			List<AbstractParam> pmList = processingMethod.getParamGroup();
-			UserParam up1 = new UserParam();
-			up1.setName("Plugin type");
-			up1.setValue("load identification");
-			pmList.add(up1);
-			UserParam up2 = new UserParam();
-			up2.setName("Plugin name");
-			up2.setValue(sPipeline[0]);
-			pmList.add(up2);
-			UserParam up3 = new UserParam();
-			up3.setName("Plugin configuration file");
-			up3.setValue(sWorkspace.replace("\\", "/") + "/xTracker_"
-					+ sPipeline[0] + ".xtp");
-			pmList.add(up3);
-			dataProcessing.getProcessingMethod().add(processingMethod);
-
-			ProcessingMethod processingMethod3 = new ProcessingMethod();
-			processingMethod3.setOrder(BigInteger.valueOf(3));
-			List<AbstractParam> pmList3 = processingMethod3.getParamGroup();
-			UserParam up3_1 = new UserParam();
-			up3_1.setName("Plugin type");
-			up3_1.setValue("feature detection and quantitation");
-			pmList3.add(up3_1);
-			UserParam up3_2 = new UserParam();
-			up3_2.setName("Plugin name");
-			up3_2.setValue(sPipeline[2]);
-			pmList3.add(up3_2);
-			UserParam up3_3 = new UserParam();
-			up3_3.setName("Plugin configuration file");
-			up3_3.setValue(sWorkspace.replace("\\", "/") + "/xTracker_"
-					+ sPipeline[2] + ".xtp");
-			pmList3.add(up3_3);
-			dataProcessing.getProcessingMethod().add(processingMethod3);
-
-			ProcessingMethod processingMethod4 = new ProcessingMethod();
-			processingMethod4.setOrder(BigInteger.valueOf(4));
-			List<AbstractParam> pmList4 = processingMethod4.getParamGroup();
-			UserParam up4_1 = new UserParam();
-			up4_1.setName("Plugin type");
-			up4_1.setValue("Output");
-			pmList4.add(up4_1);
-			UserParam up4_2 = new UserParam();
-			up4_2.setName("Plugin name");
-			up4_2.setValue(sPipeline[3]);
-			pmList4.add(up4_2);
-			UserParam up4_3 = new UserParam();
-			up4_3.setName("Plugin configuration file");
-			up4_3.setValue(sWorkspace.replace("\\", "/") + "/xTracker_"
-					+ sPipeline[3] + ".xtp");
-			pmList4.add(up4_3);
-			dataProcessing.getProcessingMethod().add(processingMethod4);
-		}
-		dataProcessingList.getDataProcessing().add(dataProcessing);
-		qml.setDataProcessingList(dataProcessingList);
-
-		// ------------------------//
-		// ... Create AssayList ...//
-		// ------------------------//
-		AssayList assays = new AssayList();
-		assays.setId("AssayList1");
-		List<Assay> assayList = assays.getAssay();
-		// This will be used in StudyVariableList
-		Map<String, List<Assay>> studyVarAssayID = new HashMap<String, List<Assay>>();																										
-
-		if (sExperiment.contains("iTRAQ")) {
-			// ... Assay list will be retrieved from the parameters set up in
-			// the configQuantML file ...//
-			try {
-				DocumentBuilderFactory domFactory = DocumentBuilderFactory
-						.newInstance();
-				domFactory.setNamespaceAware(true);
-				DocumentBuilder builder = domFactory.newDocumentBuilder();
-				Document doc = builder.parse("configQuant.xml");
-				XPath xpath = XPathFactory.newInstance().newXPath();
-
-				// ... Check raw files ...//
-				for (int iJ = 0; iJ < jtRawFiles.getRowCount(); iJ++) {
-					XPathExpression expr = xpath
-							.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='"
-									+ jtRawFiles.getValueAt(iJ, 0) + "']");
-					NodeList nodes = (NodeList) expr.evaluate(doc,
-							XPathConstants.NODESET);
-					if (nodes.getLength() <= 0) {
-						JOptionPane
-								.showMessageDialog(
-										this,
-										"Please specify the parameter settings for each raw file in Project->Set Quantitation Parameters->iTRAQ.",
-										"Error",
-										JOptionPane.INFORMATION_MESSAGE);
-						return false;
-					}
-					// ... Validating files ...//
-					expr = xpath
-							.compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='"
-									+ jtRawFiles.getValueAt(iJ, 0)
-									+ "']/AssayParam");
-					nodes = (NodeList) expr.evaluate(doc,
-							XPathConstants.NODESET);
-					boolean blnExists = false;
-					for (int iI = 0; iI < nodes.getLength(); iI++) {
-						Node node = nodes.item(iI);
-						if (node.getNodeType() == Node.ELEMENT_NODE) {
-							Element element = (Element) node;
-							NodeList nodelist = element
-									.getElementsByTagName("AssayID");
-							Element element2 = (Element) nodelist.item(0);
-							NodeList fstNm1 = element2.getChildNodes();
-							String sAssayID = fstNm1.item(0).getNodeValue()
-									.toString();
-
-							Element element3 = (Element) node;
-							NodeList nodelist2 = element3
-									.getElementsByTagName("AssayName");
-							Element element4 = (Element) nodelist2.item(0);
-							NodeList fstNm2 = element4.getChildNodes();
-							String sAssayName = fstNm2.item(0).getNodeValue()
-									.toString();
-
-							Element element5 = (Element) node;
-							NodeList nodelist3 = element5
-									.getElementsByTagName("mzValue");
-							Element element6 = (Element) nodelist3.item(0);
-							NodeList fstNm3 = element6.getChildNodes();
-							String sMzValue = fstNm3.item(0).getNodeValue()
-									.toString();
-
-							Element element7 = (Element) node;
-							NodeList nodelist4 = element7
-									.getElementsByTagName("StudyVariable");
-							Element element8 = (Element) nodelist4.item(0);
-							NodeList fstNm4 = element8.getChildNodes();
-							String sStudyVariable = fstNm4.item(0)
-									.getNodeValue().toString();
-
-							Assay assay = new Assay();
-							String sRawFile = jtRawFiles.getValueAt(iJ, 0).toString();
-							String assName = sAssayID; // ... e.g. 114 ...//
-							String assId = "i" + (iJ + 1) + "_" + sAssayID;
-							assay.setId(assId);
-							assay.setName(assName);
-
-							// ... Create the study variable tree ...//
-							blnExists = studyVarAssayID.containsKey(sStudyVariable);
-							List<Assay> al;
-							if (!blnExists)
-								al = new ArrayList<Assay>();
-							else
-								al = studyVarAssayID.get(sStudyVariable);
-
-							al.add(assay);
-							studyVarAssayID.put(sStudyVariable, al);
-							
-
-							// ... Check the rawFileGroup associated to that
-							// assay ...//
-							int iK = 0;
-							for (RawFilesGroup rfg : rawFilesGroupList) {
-								String sKey = sRawFile;
-								RawFilesGroup rfGroup = rawFilesGroupList
-										.get(iK);
-								if (rfg.getId().equals(sKey)) {
-									assay.setRawFilesGroup(rfGroup);
-									break;
-								}
-								iK++;
-							}
-							Label label = new Label();
-							CvParam labelCvParam = new CvParam();
-							labelCvParam.setAccession("");
-							labelCvParam.setName(sAssayName);
-							labelCvParam.setValue(sMzValue);
-							labelCvParam.setCv(cvPSI_MOD);
-							List<ModParam> modParams = label.getModification();
-							ModParam modParam = new ModParam();
-							modParam.setCvParam(labelCvParam);
-							modParam.setMassDelta(145.0f);
-							modParams.add(modParam);
-							assay.setLabel(label);
-							assayList.add(assay);
-						}
-					}
-				}
-			} catch (ParserConfigurationException e) {
-				e.printStackTrace();
-			} catch (SAXException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (XPathExpressionException e) {
-				e.printStackTrace();
-			}
-		}
-		if (sExperiment.contains("emPAI")) {
-			// ... Check the rawFileGroup associated to that assay ...//
-			int iK = 0;
-			for (RawFilesGroup rfg : rawFilesGroupList) {
-				Assay assay = new Assay();
-				assay.setId("assay_" + Integer.toString(iK + 1));
-				assay.setName("assay_" + Integer.toString(iK + 1));
-				assay.setRawFilesGroup(rfg);
-				CvParam labelCvParam = new CvParam();
-				labelCvParam.setAccession("MS:1002038");
-				labelCvParam.setName("unlabeled sample");
-				labelCvParam.setCv(cvPSI_MS);
-				Label label = new Label();
-				List<ModParam> modParams = label.getModification();
-				ModParam modParam = new ModParam();
-				modParam.setCvParam(labelCvParam);
-				modParam.setMassDelta(0.0f);
-				modParams.add(modParam);
-				assay.setLabel(label);
-				assayList.add(assay);
-				iK++;
-			}
-		}
-		qml.setAssayList(assays);
-
-		// --------------------------------//
-		// ... Create StudyVariableList ...//
-		// --------------------------------//
-
-		StudyVariableList studyVariables = new StudyVariableList();
-		List<StudyVariable> studyVariableList = studyVariables.getStudyVariable();
-
-		if (sExperiment.contains("iTRAQ")) {			
-			for (Entry<String, List<Assay>> pairs : studyVarAssayID.entrySet())
-			{
-				String group = pairs.getKey();
-				List<Assay> al = pairs.getValue();
-				StudyVariable studyVariable = new StudyVariable();
-				studyVariable.setName(group);
-				studyVariable.setId("SV_" + group);
-				List<String> assayRefList = studyVariable.getAssayRefs();
-				for (Assay assay : al) {
-					assayRefList.add(assay.getId());
-				}
-				CvParam cvp9 = new CvParam();
-				cvp9.setAccession("MS:1001807");
-				cvp9.setCv(cvPSI_MS);
-				cvp9.setValue("1");
-				cvp9.setName("StudyVariable attribute");
-				List<AbstractParam> paramList = studyVariable.getParamGroup();
-				paramList.add(cvp9);
-				studyVariableList.add(studyVariable);
-			}
-		}
-		if (sExperiment.contains("emPAI")) {
-			StudyVariable studyVariable = new StudyVariable();
-			studyVariable.setName("Group");
-			studyVariable.setId("SV_group");
-			List<String> assayRefList = studyVariable.getAssayRefs();
-			assayRefList.add(assayList.get(0).getId());
-			studyVariableList.add(studyVariable);
-		}
-		qml.setStudyVariableList(studyVariables);
-
-		// ... Marshal mzQuantML object ...//
-		MzQuantMLMarshaller marshaller = new MzQuantMLMarshaller(sWorkspace
-				+ "/" + sFile);
-		marshaller.marshall(qml);
-		return ret;
-	}
-
-	/**
-	 * Write xTrackerMain based on the technique 
-	 * @param sExperiment - Pipeline type 
-	 * @return void
-	 **/
-	private void writeXTrackerFiles(String sExperiment, JTable jtRawFiles) {
-		XTracker xTracker = new XTracker();
-		// ... Based on the technique, select the plugins that are available to
-		// perform the quantitation ...//
-		String[] sPipeline = getPlugins(sExperiment, jtRawFiles);
-
-		// ... xTracker consists of 4 main plugins (read more on
-		// www.x-tracker.info) ...//
-		xTracker.writeXTrackerIdent(sExperiment, sPipeline[0], sWorkspace, jtIdentFiles, jtRawFiles);
-		xTracker.writeXTrackerRaw(sPipeline[1], jtRawFiles, sWorkspace);
-		xTracker.writeXTrackerQuant(sPipeline[2], jtRawFiles, sWorkspace);
-		xTracker.writeXTrackerOutput(sPipeline[3], jtQuantFiles, sWorkspace, sProjectName);
-	}
-
-	/**
-	 * This method gets the plugins based on the selected pipeline
-	 * @param sExperiment - Pipeline type 
-	 * @return Returns an array with the different plugins
-	 **/
-	private String[] getPlugins(String sExperiment, JTable jtRawFiles) {
-		final List<List<String>> alPlugins = new ArrayList<List<String>>();
-		String[] sPipeline;
-		sPipeline = new String[5];
-
-		// ... Read files using XML parser (Creates an Array of ArrayList) ...//
-		try {
-			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			Document document = db.parse(new File("config.xml"));
-
-			NodeList nodeList = document
-					.getElementsByTagName("pluginLoadIdentFiles");
-			for (int x = 0, size = nodeList.getLength(); x < size; x++) {
-				alPlugins.add(Arrays.asList(nodeList.item(x).getAttributes()
-						.getNamedItem("type").getNodeValue(), nodeList.item(x)
-						.getAttributes().getNamedItem("id").getNodeValue(),
-						nodeList.item(x).getAttributes().getNamedItem("value")
-								.getNodeValue(), nodeList.item(x)
-								.getAttributes().getNamedItem("desc")
-								.getNodeValue()));
-			}
-			nodeList = document.getElementsByTagName("pluginLoadRawFiles");
-			for (int x = 0, size = nodeList.getLength(); x < size; x++) {
-				alPlugins.add(Arrays.asList(nodeList.item(x).getAttributes()
-						.getNamedItem("type").getNodeValue(), nodeList.item(x)
-						.getAttributes().getNamedItem("id").getNodeValue(),
-						nodeList.item(x).getAttributes().getNamedItem("value")
-								.getNodeValue(), nodeList.item(x)
-								.getAttributes().getNamedItem("desc")
-								.getNodeValue()));
-			}
-			nodeList = document.getElementsByTagName("pluginQuantitation");
-			for (int x = 0, size = nodeList.getLength(); x < size; x++) {
-				alPlugins.add(Arrays.asList(nodeList.item(x).getAttributes()
-						.getNamedItem("type").getNodeValue(), nodeList.item(x)
-						.getAttributes().getNamedItem("id").getNodeValue(),
-						nodeList.item(x).getAttributes().getNamedItem("value")
-								.getNodeValue(), nodeList.item(x)
-								.getAttributes().getNamedItem("desc")
-								.getNodeValue()));
-			}
-			nodeList = document.getElementsByTagName("pluginOutput");
-			for (int x = 0, size = nodeList.getLength(); x < size; x++) {
-				alPlugins.add(Arrays.asList(nodeList.item(x).getAttributes()
-						.getNamedItem("type").getNodeValue(), nodeList.item(x)
-						.getAttributes().getNamedItem("id").getNodeValue(),
-						nodeList.item(x).getAttributes().getNamedItem("value")
-								.getNodeValue(), nodeList.item(x)
-								.getAttributes().getNamedItem("desc")
-								.getNodeValue()));
-			}
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		// ... Using the array list we need to find the pipeline and
-		// corresponding plugins ...//
-
-		// ... Find ident file plugin ...//
-		for (int iI = 0; iI < alPlugins.size(); iI++) {
-			List<String> sublist = alPlugins.get(iI);
-			String[] arrayOfStrings = (String[]) sublist.toArray();
-			if (arrayOfStrings[1]
-					.toString()
-					.toLowerCase()
-					.equals(jtIdentFiles.getValueAt(0, 2).toString()
-							.toLowerCase())) {
-				sPipeline[0] = arrayOfStrings[2].toString();
-				break;
-			}
-		}
-		// ... Find raw file plugin ...//
-		for (int iI = 0; iI < alPlugins.size(); iI++) {
-			List<String> sublist = alPlugins.get(iI);
-			String[] arrayOfStrings = (String[]) sublist.toArray();
-			if (arrayOfStrings[1]
-					.toString()
-					.toLowerCase()
-					.equals(jtRawFiles.getValueAt(0, 2).toString()
-							.toLowerCase())) {
-				sPipeline[1] = arrayOfStrings[2].toString();
-				break;
-			}
-		}
-		// ... Find quant file plugin ...//
-		for (int iI = 0; iI < alPlugins.size(); iI++) {
-			List<String> sublist = alPlugins.get(iI);
-			String[] arrayOfStrings = (String[]) sublist.toArray();
-			if (arrayOfStrings[1].toString().toLowerCase()
-					.equals(sExperiment.toLowerCase())) {
-				sPipeline[2] = arrayOfStrings[2].toString();
-				break;
-			}
-		}
-		// Find output file plugin
-		for (int iI = 0; iI < alPlugins.size(); iI++) {
-			List<String> sublist = alPlugins.get(iI);
-			String[] arrayOfStrings = (String[]) sublist.toArray();
-			if (arrayOfStrings[1]
-					.toString()
-					.toLowerCase()
-					.equals(jcbOutputFormat.getSelectedItem().toString()
-							.toLowerCase())) {
-				sPipeline[3] = arrayOfStrings[2].toString();
-				break;
-			}
-		}
-		return sPipeline;
-	}
-
-	/**
 	 * Main
-	 * @param args the command line arguments (leave empty)
+	 * 
+	 * @param args
+	 *            the command line arguments (leave empty)
 	 * @return void
 	 */
 	public static void main(String args[]) {
@@ -8652,123 +6225,4 @@ public class ProteoSuiteView extends JFrame {
 			}
 		});
 	}
-
-	private final JButton jbExportFeatMZQExcel = new JButton();
-	private final JButton jbExportMGFExcel = new JButton();
-	private final JButton jbExportMascotXMLExcel = new JButton();
-	private final JButton jbExportMzIdentMLExcel = new JButton();
-	private final JButton jbExportMzMLExcel = new JButton();
-	private final JButton jbExportPepMZQExcel = new JButton();
-	private final JButton jbExportProtMZQExcel = new JButton();
-	private final JButton jbSaveProject = new JButton(new ImageIcon(getClass().getClassLoader().getResource("images/save.gif")));
-	private final JComboBox<String> jcbOutputFormat = new JComboBox<String>();
-	private final JComboBox<String> jcbPSM = new JComboBox<String>();
-	private final JComboBox<String> jcbTechnique = new JComboBox<String>();
-	private final JDesktopPane jdpMS = new JDesktopPane();
-	private final JDesktopPane jdpTIC = new JDesktopPane();
-	private final JEditorPane jepMGFView = new JEditorPane();
-	private final JEditorPane jepMZQView = new JEditorPane();
-	private final JEditorPane jepMascotXMLView = new JEditorPane();
-	private final JEditorPane jepMzIDView = new JEditorPane();
-	private final JEditorPane jepMzMLView = new JEditorPane();
-	private final JLabel jlFileNameMGFText = new JLabel();
-	private final JLabel jlFileNameMzIDText = new JLabel();
-	private final JLabel jlFileNameMzMLText = new JLabel();
-	private final JLabel jlFileNameMzQText = new JLabel();
-	private final JLabel jlIdentFilesStatus = new JLabel();
-	private final JLabel jlRawFilesStatus = new JLabel();
-	private final JMenuItem jmCloseProject = new JMenuItem("Close Project");
-	private final JMenuItem jmSaveProject = new JMenuItem("Save Project", new ImageIcon(getClass().getClassLoader().getResource("images/save.gif")));
-	private final JPanel jp2D = new JPanel();
-	private final JPanel jpMainPanelView = new JPanel();
-	private final JPanel jpProjectStatus = new JPanel();
-	private final JPanel jpToolBar = new JPanel();
-	private final JSplitPane jspLeftViewer = new JSplitPane();
-	private final JSplitPane jspLeftViewerDetails = new JSplitPane();
-	private final JSplitPane jspMainPanelView = new JSplitPane();
-	private final JSplitPane jspMzML = new JSplitPane();
-	private final JSplitPane jspProperties = new JSplitPane();
-	private final JSplitPane jspViewerAndProperties = new JSplitPane();	
-	private final JTextArea jtaLog = new JTextArea();
-	private final JTable jTable1 = new JTable();
-	private final JTable jTable2 = new JTable();
-	
-	private final JTable jtFeatureQuant = new JTable() {
-		public boolean isCellEditable(int rowIndex, int colIndex) {
-			return false;
-		}
-	};
-	private final JTable jtIdentFiles = new JTable() {
-		public boolean isCellEditable(int rowIndex, int colIndex) {
-			if (colIndex < 4) {
-				return false;
-			} else {
-				return true;
-			}
-		}
-	};
-	private final JTable jtMGF = new JTable() {
-		public boolean isCellEditable(int rowIndex, int colIndex) {
-			return false;
-		}
-	};
-	private final JTable jtMascotXMLView = new JTable() {
-		public boolean isCellEditable(int rowIndex, int colIndex) {
-			return false;
-		}
-	};
-	private final JTable jtMzIDProtGroup = new JTable();
-	private final JTable jtMzId = new JTable() {
-		public boolean isCellEditable(int rowIndex, int colIndex) {
-			return false;
-		}
-	};
-	private final JTable jtMzML = new JTable() {
-		public boolean isCellEditable(int rowIndex, int colIndex) {
-			return false;
-		}
-	};
-	private final JTable jtPeptideQuant = new JTable() {
-		public boolean isCellEditable(int rowIndex, int colIndex) {
-			return false;
-		}
-	};
-	private final JTable jtProteinQuant = new JTable() {
-		public boolean isCellEditable(int rowIndex, int colIndex) {
-			return false;
-		}
-	};
-	private final JTable jtQuantFiles = new JTable() {
-		public boolean isCellEditable(int rowIndex, int colIndex) {
-			return false;
-		}
-	};
-	private final JTable jtRawData = new JTable() {
-		public boolean isCellEditable(int rowIndex, int colIndex) {
-			return false;
-		}
-	};
-	private final JTable jtRawFiles = new JTable() {
-		public boolean isCellEditable(int rowIndex, int colIndex) {
-			if (colIndex < 4) {
-				return false;
-			} else {
-				return true;
-			}
-		}
-	};
-	private final JTable jtTemplate1 = new JTable() {
-		public boolean isCellEditable(int rowIndex, int colIndex) {
-			return false;
-		}
-	};
-	private final JTable jtTemplate2 = new JTable() {
-		public boolean isCellEditable(int rowIndex, int colIndex) {
-			return false;
-		}
-	};
-	private final JTabbedPane jtpLog = new JTabbedPane();
-	private final JTabbedPane jtpMzQuantMLDetail = new JTabbedPane();
-	private final JTabbedPane jtpProperties = new JTabbedPane();
-	private final JTabbedPane jtpViewer = new JTabbedPane();
 }

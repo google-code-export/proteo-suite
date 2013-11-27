@@ -14,17 +14,15 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
+import org.proteosuite.ProteoSuiteView;
 import org.proteosuite.gui.MzML2MGFView;
 
 public class ActionListenerMzML2MGF implements ActionListener {
 
-	// TODO:
-	private String sWorkspace;
-
 	public void actionPerformed(ActionEvent evt) {
 		// ... Load MzML2MGF GUI ...//
 		final JFrame jfWinParams = new JFrame("Convert mzML files to MGF");
-		MzML2MGFView winParams = new MzML2MGFView(jfWinParams, sWorkspace);
+		MzML2MGFView winParams = new MzML2MGFView(jfWinParams, ProteoSuiteView.sWorkspace);
 		jfWinParams.setResizable(false);
 		jfWinParams.setSize(500, 450);
 		KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,

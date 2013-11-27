@@ -1,6 +1,6 @@
 package org.proteosuite.utils;
 
-public class Homeless {
+public class FileFormatUtils {
 
 
 	/*------------------------------------------------

@@ -14,7 +14,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.proteosuite.utils.SystemUtils;
+import org.proteosuite.ProteoSuiteView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -23,13 +23,10 @@ import org.xml.sax.SAXException;
 
 public class ActionListenerCheckUpdate implements ActionListener {
 
-	private String sPS_Version;
-	private SystemUtils sysutils;
-
 	@Override
 	public void actionPerformed(ActionEvent evt) {// GEN-FIRST:event_jmCheckUpdatesActionPerformed
 		String sURL = "http://www.proteosuite.org/datasets/D-000-PublicFiles/updates.xml";
-		boolean bURL = sysutils.CheckURL(sURL);
+		boolean bURL = ProteoSuiteView.SYS_UTILS.CheckURL(sURL);
 		if (bURL) {
 			// ... Read files using XPath xml parser ...//
 			try {
@@ -61,7 +58,7 @@ public class ActionListenerCheckUpdate implements ActionListener {
 						}
 					}
 				}
-				if (sPS_Version.equals(ver)) {
+				if (ProteoSuiteView.sPS_Version.equals(ver)) {
 					JOptionPane.showMessageDialog(null,
 							"Your ProteoSuite version is up to date!!!",
 							"Information", JOptionPane.INFORMATION_MESSAGE);
