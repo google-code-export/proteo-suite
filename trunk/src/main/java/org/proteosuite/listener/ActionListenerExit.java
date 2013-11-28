@@ -7,6 +7,10 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JOptionPane;
 
+/**
+ * 
+ * @author Andrew Collins
+ */
 public class ActionListenerExit implements ActionListener, WindowListener {
 
 	@Override
@@ -22,42 +26,42 @@ public class ActionListenerExit implements ActionListener, WindowListener {
 	@Override
 	public void windowActivated(WindowEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowClosed(WindowEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowClosing(WindowEvent arg0) {
-		actionPerformed(null);		
+		actionPerformed(null);
 	}
 
 	@Override
 	public void windowDeactivated(WindowEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowIconified(WindowEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void windowOpened(WindowEvent arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

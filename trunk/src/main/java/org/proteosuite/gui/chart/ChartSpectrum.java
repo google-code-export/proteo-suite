@@ -1,16 +1,12 @@
 package org.proteosuite.gui.chart;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.List;
 
-import javax.swing.JDesktopPane;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 
 import org.proteosuite.utils.compression.DeltaConversion;
 import org.proteosuite.utils.compression.DeltaConversion.DeltaEncodedDataFormatException;
-import org.proteosuite.utils.NumericalUtils;
 
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
@@ -30,10 +26,10 @@ public class ChartSpectrum {
 	 *            - Index to the aMzMLUnmarshaller list
 	 * @param sID
 	 *            - spectrum ID
+	 * @return 
 	 * @return void
 	 */
-	public static void getSpectrum(MzMLUnmarshaller unmarshaller, String sID,
-			JDesktopPane jdpMS, JInternalFrame jifViewSpectrum) {
+	public static JPanel getSpectrum(MzMLUnmarshaller unmarshaller, String sID) {
 		try {
 			Spectrum spectrum = unmarshaller.getSpectrumById(sID);
 
@@ -50,7 +46,7 @@ public class ChartSpectrum {
 				// Get precursor ion
 				PrecursorList plist = spectrum.getPrecursorList();
 				if (plist == null || plist.getCount().intValue() != 1)
-					return;
+					return null;
 
 				// Detect parent ion m/z and charge
 				for (CVParam lCVParam : plist.getPrecursor().get(0)
@@ -93,7 +89,7 @@ public class ChartSpectrum {
                                 DeltaConversion.fromDeltaNumberFormat(mzNumbers);
                             } catch (DeltaEncodedDataFormatException dex) {
                                 System.out.println("Problem converting back from delta m/z format: " + dex.getLocalizedMessage());
-                                return;
+                                return null;
                             }
 						}
 					}
@@ -112,24 +108,17 @@ public class ChartSpectrum {
 				intensities[iI] = intenNumbers[iI].doubleValue();
 			}
 			// Call the spectrum panel from compomics.org
-			jdpMS.removeAll();
-
-			JPanel specpanel = new SpectrumPanel(mz, intensities, parIonMz,
+			JPanel spectrumPanel = new SpectrumPanel(mz, intensities, parIonMz,
 					Integer.toString(parCharge), sID, 50, false, true, true,
 					true, Integer.parseInt(mslevel));
-			specpanel.setSize(new Dimension(600, 400));
-			specpanel.setPreferredSize(new Dimension(600, 400));
+			spectrumPanel.setSize(new Dimension(600, 400));
+			spectrumPanel.setPreferredSize(new Dimension(600, 400));
 			
-			
-			jifViewSpectrum.setTitle("MS spectrum <ScanID: " + sID + ">");
-			jifViewSpectrum.add(specpanel, BorderLayout.CENTER);
-			jifViewSpectrum.setSize(jdpMS.getSize());
-			
-			jdpMS.add(jifViewSpectrum, BorderLayout.CENTER);
-			jdpMS.revalidate();
-			jdpMS.repaint();
+			return spectrumPanel;
 		} catch (MzMLUnmarshallerException ume) {
 			System.out.println(ume.getMessage());
 		}
+		
+		return null;
 	}
 }

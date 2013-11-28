@@ -19,7 +19,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.xml.parsers.DocumentBuilder;
@@ -32,6 +31,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.gui.TabbedLog;
 import org.proteosuite.utils.PluginManager;
 import org.proteosuite.utils.ProgressBarDialog;
 import org.proteosuite.utils.SystemUtils;
@@ -91,7 +91,7 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 	private final List<MzQuantMLUnmarshaller> aMzQUnmarshaller;
 	private final JLabel jlFileNameMzQText;
 	private final JEditorPane jepMZQView;
-	private final JTextArea jtaLog;
+	private final TabbedLog jtpLog;
 	private final JTabbedPane jtpMzQuantMLDetail;
 	
 	/**
@@ -112,7 +112,7 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 	 */
 	public FileFormatMzQuantML(JTabbedPane jtpProperties, int iIndexRef, SystemUtils sysutils, ProgressBarDialog progressBarDialog, 
 			JTable jtProteinQuant, JTable jtPeptideQuant, JTable jtFeatureQuant, String sFileRef, List<MzQuantMLUnmarshaller> aMzQUnmarshaller, 
-			JLabel jlFileNameMzQText, JEditorPane jepMZQView, JTextArea jtaLog, JTabbedPane jtpMzQuantMLDetail) {
+			JLabel jlFileNameMzQText, JEditorPane jepMZQView, TabbedLog jtpLog, JTabbedPane jtpMzQuantMLDetail) {
 		super("MzQuantML Loader");
 		
 		this.jtpProperties = jtpProperties;
@@ -126,7 +126,7 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 		this.aMzQUnmarshaller = aMzQUnmarshaller;
 		this.jlFileNameMzQText = jlFileNameMzQText;
 		this.jepMZQView = jepMZQView;
-		this.jtaLog = jtaLog;
+		this.jtpLog = jtpLog;
 		this.jtpMzQuantMLDetail = jtpMzQuantMLDetail;
 	}
 
@@ -509,7 +509,7 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 				 * }
 				 */
 			}
-			jtaLog.setText(sOutput);
+			jtpLog.setLog(sOutput);
 
 			// ... Tooltip for headers ...//
 			jtFeatureQuant.getTableHeader().setDefaultRenderer(
