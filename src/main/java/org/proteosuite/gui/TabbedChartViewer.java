@@ -1,25 +1,41 @@
 package org.proteosuite.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.GroupLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
+
+import org.proteosuite.gui.chart.ChartChromatogram;
+import org.proteosuite.gui.chart.ChartPlot2D;
+import org.proteosuite.gui.chart.ChartSpectrum;
+import org.proteosuite.utils.TwoDPlot;
+
+import com.compomics.util.gui.spectrum.ChromatogramPanel;
+
+import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 /**
  * 
  * @author Andrew Collins
  */
 public class TabbedChartViewer extends JTabbedPane {
-
-	public TabbedChartViewer(final JDesktopPane jdpMS,
-			final JDesktopPane jdpTIC, JPanel jp2D)
+	private final JDesktopPane jdpMS = new JDesktopPane();
+	private final JDesktopPane jdpTIC = new JDesktopPane();
+	private final JPanel jp2D = new JPanel();
+	
+	public TabbedChartViewer()
 	{
+		jdpMS.setBackground(new Color(255, 255, 255));
+		
 		JPanel jpSpectrum = new JPanel();
 		GroupLayout jpSpectrumLayout = new GroupLayout(jpSpectrum);
 		jpSpectrum.setLayout(jpSpectrumLayout);
@@ -117,5 +133,80 @@ public class TabbedChartViewer extends JTabbedPane {
 		setTabComponentAt(3, jlThreeDIcon);
 		
 		setSelectedIndex(0);
+		
+		reset();
+	}
+	
+	public void reset()
+	{
+		jdpMS.removeAll();
+		jdpTIC.removeAll();
+	}
+
+	/**
+	 * Get internal frame dimensions
+	 * 
+	 * @param void
+	 * @return JInternalFrame as a container
+	 */
+	private JInternalFrame getInternalFrame() {
+		JInternalFrame internalFrame = new JInternalFrame("");
+		Icon icon = new ImageIcon(getClass().getClassLoader().getResource(
+				"images/icon.gif"));
+
+		internalFrame.setLocation(0, 0);
+		internalFrame.setSize(new Dimension(620, 420));
+		internalFrame.setPreferredSize(new Dimension(620, 420));
+		internalFrame.setFrameIcon(icon);
+		internalFrame.setResizable(true);
+		internalFrame.setMaximizable(true);
+		internalFrame.setClosable(true);
+		internalFrame.setIconifiable(true);
+		internalFrame.setVisible(true);
+		return internalFrame;
+	}
+
+	public void updateChromatogram(String title, MzMLUnmarshaller mzMLUnmarshaller) {
+		jdpTIC.removeAll();
+		
+		ChromatogramPanel chromatogramPanel = ChartChromatogram.getChromatogram(mzMLUnmarshaller);
+		if (chromatogramPanel != null)
+		{
+			JInternalFrame jifViewChromatogram = getInternalFrame();
+			
+			jifViewChromatogram.setTitle("Chromatogram <" + title + ">");
+			jifViewChromatogram.add(chromatogramPanel);
+			jdpTIC.add(jifViewChromatogram);
+		}
+		
+		jdpTIC.revalidate();
+		jdpTIC.repaint();
+	}
+
+	public void updateSpectrum(String sID, MzMLUnmarshaller unmarshaller) {
+		JPanel spectrumPanel = ChartSpectrum.getSpectrum(unmarshaller, sID);
+		
+		jdpMS.removeAll();
+
+		JInternalFrame jifViewSpectrum = getInternalFrame();
+		
+		jifViewSpectrum.setTitle("MS spectrum <ScanID: " + sID + ">");
+		jifViewSpectrum.add(spectrumPanel, BorderLayout.CENTER);
+		jifViewSpectrum.setSize(jdpMS.getSize());
+		
+		jdpMS.add(jifViewSpectrum, BorderLayout.CENTER);
+		jdpMS.revalidate();
+		jdpMS.repaint();
+	}
+
+	public void update2DPlot(String title, MzMLUnmarshaller unmarshaller) {
+		
+		TwoDPlot jifView2D = ChartPlot2D.get2DPlot(unmarshaller, title);
+		if (jifView2D != null) {
+			jp2D.add(jifView2D);
+			jifView2D.pack();
+			jifView2D.setVisible(true);
+		}
+		
 	}
 }

@@ -16,6 +16,10 @@ import javax.swing.KeyStroke;
 
 import org.proteosuite.gui.About;
 
+/**
+ * 
+ * @author Andrew Collins
+ */
 public class ActionListenerAbout implements ActionListener {
 
 	@Override
