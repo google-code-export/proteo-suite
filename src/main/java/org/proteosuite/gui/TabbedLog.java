@@ -47,6 +47,16 @@ public class TabbedLog extends JTabbedPane {
 		JLabel jlLogIcon = new JLabel("Log  ", logIcon, SwingConstants.RIGHT);
 		jlLogIcon.setIconTextGap(5);
 		setTabComponentAt(0, jlLogIcon);
+		
+		Icon rawDataIcon = new ImageIcon(getClass().getClassLoader()
+				.getResource("images/raw_data.gif"));
+		JLabel jlRawDataIcon = new JLabel("Raw data", rawDataIcon,
+				SwingConstants.RIGHT);
+		jlRawDataIcon.setIconTextGap(5);
+		setTabComponentAt(1, jlRawDataIcon);
+
+		// Setting default selection (Viewers)
+		setSelectedIndex(0);
 	}
 
 	public void reset() {

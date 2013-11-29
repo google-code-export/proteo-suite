@@ -9,14 +9,37 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-public class LeftPanelView extends JSplitPane {
+/**
+ * 
+ * @author Andrew Collins
+ */
+public class LeftPanelView extends JPanel {
 
-	public LeftPanelView()
-	{
-		setDividerLocation(20);
-		setDividerSize(1);
-		setOrientation(JSplitPane.VERTICAL_SPLIT);
-		
+	public LeftPanelView(ProjectDetails proejctDetails) {
+		JSplitPane jspLeftPanelView = getLeftPanelView();
+		jspLeftPanelView.setRightComponent(proejctDetails);
+
+		JPanel jpLeftPanelView = this;
+		jpLeftPanelView.setBackground(new Color(204, 204, 255));
+		GroupLayout jpLeftPanelViewLayout = new GroupLayout(jpLeftPanelView);
+		jpLeftPanelView.setLayout(jpLeftPanelViewLayout);
+		jpLeftPanelViewLayout.setHorizontalGroup(jpLeftPanelViewLayout
+				.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(jspLeftPanelView, GroupLayout.DEFAULT_SIZE, 281,
+						Short.MAX_VALUE));
+		jpLeftPanelViewLayout.setVerticalGroup(jpLeftPanelViewLayout
+				.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(jspLeftPanelView, GroupLayout.DEFAULT_SIZE, 637,
+						Short.MAX_VALUE));
+	}
+
+	private static JSplitPane getLeftPanelView() {
+		JSplitPane jspLeftPanelView = new JSplitPane();
+
+		jspLeftPanelView.setDividerLocation(20);
+		jspLeftPanelView.setDividerSize(1);
+		jspLeftPanelView.setOrientation(JSplitPane.VERTICAL_SPLIT);
+
 		JPanel jpProjectHeader = new JPanel();
 		jpProjectHeader.setMaximumSize(new Dimension(32767, 25));
 		jpProjectHeader.setMinimumSize(new Dimension(279, 25));
@@ -41,6 +64,8 @@ public class LeftPanelView extends JSplitPane {
 								.addComponent(jlFiles)
 								.addContainerGap(7, Short.MAX_VALUE)));
 
-		setTopComponent(jpProjectHeader);
+		jspLeftPanelView.setTopComponent(jpProjectHeader);
+
+		return jspLeftPanelView;
 	}
 }
