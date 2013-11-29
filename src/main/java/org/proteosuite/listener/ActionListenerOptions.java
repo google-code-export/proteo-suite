@@ -17,9 +17,11 @@ import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
 import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.WorkSpace;
 import org.proteosuite.gui.ProjectParamsView;
 
 public class ActionListenerOptions implements ActionListener {
+	private static final WorkSpace WORKSPACE = WorkSpace.getInstance();
 	private final ProteoSuiteView proteoSuiteView;
 	
 	public ActionListenerOptions(ProteoSuiteView proteoSuiteView) {
@@ -38,10 +40,9 @@ public class ActionListenerOptions implements ActionListener {
 		final Action escapeAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				jfWinParams.dispose();
-				boolean isOK = proteoSuiteView.getWorkspace();
-				if (isOK) {
+				boolean isOK = WORKSPACE.isValidWorkSpace();
+				if (isOK)
 					proteoSuiteView.updateTitle();
-				}
 			}
 		};
 		jfWinParams.addWindowListener(new WindowAdapter() {

@@ -6,9 +6,9 @@ import java.util.List;
 
 import javax.swing.JTable;
 
-import org.proteosuite.ProteoSuiteView;
 import org.proteosuite.gui.TabbedChartViewer;
 import org.proteosuite.gui.TabbedLog;
+import org.proteosuite.gui.tables.JTableRawData;
 
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
@@ -19,14 +19,12 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 public class MouseListenerMzMl implements MouseListener {
 
 	private JTable jtRawFiles;
-	private JTable jtRawData;
+	private JTableRawData jtRawData;
 	private TabbedLog jtpLog;
 	private List<MzMLUnmarshaller> aMzMLUnmarshaller;
 	private TabbedChartViewer jtpViewer;
-	private ProteoSuiteView proteoSuiteView;
 
-	public MouseListenerMzMl(ProteoSuiteView proteoSuiteView,
-			JTable jtRawFiles, JTable jtRawData, TabbedLog jtpLog,
+	public MouseListenerMzMl(JTable jtRawFiles, JTableRawData jtRawData, TabbedLog jtpLog,
 			List<MzMLUnmarshaller> aMzMLUnmarshaller,
 			TabbedChartViewer jtpViewer) {
 		this.jtRawFiles = jtRawFiles;
@@ -34,8 +32,6 @@ public class MouseListenerMzMl implements MouseListener {
 		this.jtpLog = jtpLog;
 		this.aMzMLUnmarshaller = aMzMLUnmarshaller;
 		this.jtpViewer = jtpViewer;
-		this.proteoSuiteView = proteoSuiteView;
-
 	}
 
 	@Override
@@ -45,18 +41,23 @@ public class MouseListenerMzMl implements MouseListener {
 		// Right click event for displaying MS raw data and spectrum
 		if (evt.getButton() == 1) {
 			if (jtRawFiles.getSelectedRow() > -1) {
-				proteoSuiteView.showRawData(jtRawFiles.getSelectedRow(), jtMzML
+				// Get index from spectra
+				MzMLUnmarshaller unmarshaller = aMzMLUnmarshaller.get(jtRawFiles.getSelectedRow());
+				
+				jtRawData.showRawData(unmarshaller, jtMzML
 						.getValueAt(jtMzML.getSelectedRow(), 1).toString(),
-						jtRawData, jtpLog, aMzMLUnmarshaller);
+						jtpLog);
 
 				jtpViewer.updateSpectrum(
 						jtMzML.getValueAt(jtMzML.getSelectedRow(), 1)
 								.toString(), aMzMLUnmarshaller.get(0));
 			} else {
-				proteoSuiteView.showRawData(0,
+				// Get index from spectra
+				MzMLUnmarshaller unmarshaller = aMzMLUnmarshaller.get(0);
+				
+				jtRawData.showRawData(unmarshaller,
 						jtMzML.getValueAt(jtMzML.getSelectedRow(), 1)
-								.toString(), jtRawData, jtpLog,
-						aMzMLUnmarshaller);
+								.toString(), jtpLog);
 
 				jtpViewer.updateSpectrum(
 						jtMzML.getValueAt(jtMzML.getSelectedRow(), 1)
