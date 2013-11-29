@@ -53,14 +53,14 @@
     * Notes: For those dependencies that require manual installation, 
              JAR files are located under resources/lib
              
-    =============================================================================
--->  
+        =============================================================================
+    -->  
     <dependencies>
         <dependency>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
-          <version>4.11</version>
-          <scope>test</scope>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>uk.ac.ebi.jmzidml</groupId>
@@ -114,15 +114,15 @@
         </dependency>
     </dependencies>
     
-<!-- 
-    ==============================================================
-    PROJECT REPOSITORIES 
-    ==============================================================
-    * jmzquantml-maven-repo @ Google code (jmzQuantML)
-    * ebi-repo @ EBI (jmzML, jmzIndentML)
-    * genesis-maven2-repository @ Universiteit Gent (compomics) 
-    ==============================================================
--->     
+    <!-- 
+        ==============================================================
+        PROJECT REPOSITORIES 
+        ==============================================================
+        * jmzquantml-maven-repo @ Google code (jmzQuantML)
+        * ebi-repo @ EBI (jmzML, jmzIndentML)
+        * genesis-maven2-repository @ Universiteit Gent (compomics) 
+        ==============================================================
+    -->     
     <repositories>
         <repository>
             <id>maven2-repository.dev.java.net</id>
@@ -147,11 +147,11 @@
         </repository>       
     </repositories>   
     
-<!-- 
-    ==========================================================
-    PROJECT BUILT 
-    ==========================================================
--->      
+    <!-- 
+        ==========================================================
+        PROJECT BUILT 
+        ==========================================================
+    -->      
     <build>
         <plugins>
             <plugin>
@@ -201,6 +201,14 @@
                 <artifactId>wagon-svn</artifactId>
                 <version>1.12</version>
             </extension>
-        </extensions>        
+        </extensions>    
+        <resources>
+            <resource>
+                <directory> src/main/resources/ </directory>
+                <excludes>
+                    <exclude> lib/*.*</exclude>
+                </excludes>
+            </resource>  
+        </resources>  
     </build>    
 </project>
