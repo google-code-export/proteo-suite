@@ -8,6 +8,7 @@ import javax.swing.GroupLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.JTable;
 
 /**
  * 
@@ -15,9 +16,10 @@ import javax.swing.JSplitPane;
  */
 public class LeftPanelView extends JPanel {
 
-	public LeftPanelView(ProjectDetails proejctDetails) {
+	public LeftPanelView(JTable jtQuantFiles, JTable jtIdentFiles, JTable jtRawFiles) {		
 		JSplitPane jspLeftPanelView = getLeftPanelView();
-		jspLeftPanelView.setRightComponent(proejctDetails);
+		jspLeftPanelView.setRightComponent(new ProjectDetails(jtQuantFiles,
+				jtIdentFiles, jtRawFiles));
 
 		JPanel jpLeftPanelView = this;
 		jpLeftPanelView.setBackground(new Color(204, 204, 255));
@@ -33,7 +35,7 @@ public class LeftPanelView extends JPanel {
 						Short.MAX_VALUE));
 	}
 
-	private static JSplitPane getLeftPanelView() {
+	private JSplitPane getLeftPanelView() {
 		JSplitPane jspLeftPanelView = new JSplitPane();
 
 		jspLeftPanelView.setDividerLocation(20);

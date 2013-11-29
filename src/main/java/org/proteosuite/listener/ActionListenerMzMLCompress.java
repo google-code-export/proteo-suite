@@ -15,23 +15,19 @@ import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
 import org.proteosuite.WorkSpace;
-import org.proteosuite.gui.Prog2MZQView;
+import org.proteosuite.gui.MzMLCompressView;
 
-/**
- * 
- * @author Andew Collins
- */
-public class ActionListenerProgenesis2MZQ implements ActionListener {
+public class ActionListenerMzMLCompress implements ActionListener {
 	private static final WorkSpace WORKSPACE = WorkSpace.getInstance();
-	
+
 	@Override
 	public void actionPerformed(ActionEvent evt) {
-		final JFrame jfWinParams = new JFrame(
-				"Convert Progenesis result files to mzQuantML");
-		Prog2MZQView winParams = new Prog2MZQView(jfWinParams,
+		// ... Load MzML2MGF GUI ...//
+		final JFrame jfWinParams = new JFrame("Compress mzML files");
+		MzMLCompressView winParams = new MzMLCompressView(jfWinParams,
 				WORKSPACE.getWorkSpace());
 		jfWinParams.setResizable(false);
-		jfWinParams.setSize(500, 180);
+		jfWinParams.setSize(500, 450);
 		KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(
 				KeyEvent.VK_ESCAPE, 0, false);
 		Action escapeAction = new AbstractAction() {
@@ -60,4 +56,5 @@ public class ActionListenerProgenesis2MZQ implements ActionListener {
 		jfWinParams.pack();
 		jfWinParams.setVisible(true);
 	}
+
 }

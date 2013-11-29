@@ -8,6 +8,7 @@ import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.WorkSpace;
 import org.proteosuite.utils.ExcelExporter;
 
 /**
@@ -15,12 +16,16 @@ import org.proteosuite.utils.ExcelExporter;
  * @author Andrew collins
  */
 public class FileFormatExcel {
-	private void throwError(JTable jTable) {
+	private static final WorkSpace WORKSPACE = WorkSpace.getInstance();
+	
+	private boolean throwError(JTable jTable) {
 		if (jTable.getRowCount() <= 0) {
 			JOptionPane.showMessageDialog(null, "No data to export", "Error",
 					JOptionPane.INFORMATION_MESSAGE);
-			return;
+			return true;
 		}
+		
+		return false;
 	}
 
 	private File ShowFileChooser() {
@@ -34,7 +39,7 @@ public class FileFormatExcel {
 
 		if (ProteoSuiteView.sPreviousLocation == null
 				|| ProteoSuiteView.sPreviousLocation.contains(""))
-			chooser.setCurrentDirectory(new File(ProteoSuiteView.sWorkspace));
+			chooser.setCurrentDirectory(new File(WORKSPACE.getWorkSpace()));
 		else
 			chooser.setCurrentDirectory(new File(
 					ProteoSuiteView.sPreviousLocation));
@@ -86,7 +91,8 @@ public class FileFormatExcel {
 	}
 
 	public void export(final JTable jTable) {
-		throwError(jTable);
+		if (throwError(jTable))
+			return;
 
 		try {
 			File file = ShowFileChooser();

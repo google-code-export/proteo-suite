@@ -20,6 +20,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.WorkSpace;
 import org.proteosuite.utils.PluginManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -27,7 +28,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * 
+ * @author Andrew Collins
+ */
 public class XTracker {
+	private static final WorkSpace WORKSPACE = WorkSpace.getInstance();
 	/**
 	 * Write xTrackerMain based on the technique
 	 * 
@@ -40,16 +46,17 @@ public class XTracker {
 	public void writeXTrackerFiles(String sExperiment, JTable jtRawFiles,
 			JComboBox<String> jcbOutputFormat, JTable jtIdentFiles,
 			JTable jtQuantFiles) {
+		
 		// ... Based on the technique, select the plugins that are available to
 		// perform the quantitation ...//
 		String[] sPipeline = PluginManager.getPlugins(sExperiment, jtRawFiles, jtIdentFiles, jcbOutputFormat.getSelectedItem().toString());
 
 		// ... xTracker consists of 4 main plugins (read more on
 		// www.x-tracker.info) ...//
-		writeXTrackerIdent(sExperiment, sPipeline[0], ProteoSuiteView.sWorkspace, jtIdentFiles, jtRawFiles);
-		writeXTrackerRaw(sPipeline[1], jtRawFiles, ProteoSuiteView.sWorkspace);
-		writeXTrackerQuant(sPipeline[2], jtRawFiles, ProteoSuiteView.sWorkspace);
-		writeXTrackerOutput(sPipeline[3], jtQuantFiles, ProteoSuiteView.sWorkspace, ProteoSuiteView.sProjectName);
+		writeXTrackerIdent(sExperiment, sPipeline[0], WORKSPACE.getWorkSpace(), jtIdentFiles, jtRawFiles);
+		writeXTrackerRaw(sPipeline[1], jtRawFiles, WORKSPACE.getWorkSpace());
+		writeXTrackerQuant(sPipeline[2], jtRawFiles, WORKSPACE.getWorkSpace());
+		writeXTrackerOutput(sPipeline[3], jtQuantFiles, WORKSPACE.getWorkSpace(), ProteoSuiteView.sProjectName);
 	}
 	
 	/**

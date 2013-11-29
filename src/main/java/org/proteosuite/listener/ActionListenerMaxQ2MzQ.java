@@ -15,25 +15,26 @@ import javax.swing.JFrame;
 import javax.swing.KeyStroke;
 
 import org.proteosuite.WorkSpace;
-import org.proteosuite.gui.Prog2MZQView;
+import org.proteosuite.gui.MaxQ2MZQView;
 
 /**
  * 
- * @author Andew Collins
+ * @author Andrew Collins
  */
-public class ActionListenerProgenesis2MZQ implements ActionListener {
+public class ActionListenerMaxQ2MzQ implements ActionListener {
 	private static final WorkSpace WORKSPACE = WorkSpace.getInstance();
-	
+
 	@Override
 	public void actionPerformed(ActionEvent evt) {
+		// ... Load MaxQuant2MZQ GUI ...//
 		final JFrame jfWinParams = new JFrame(
-				"Convert Progenesis result files to mzQuantML");
-		Prog2MZQView winParams = new Prog2MZQView(jfWinParams,
+				"Convert MaxQuant result files to mzQuantML");
+		MaxQ2MZQView winParams = new MaxQ2MZQView(jfWinParams,
 				WORKSPACE.getWorkSpace());
 		jfWinParams.setResizable(false);
-		jfWinParams.setSize(500, 180);
-		KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(
-				KeyEvent.VK_ESCAPE, 0, false);
+		jfWinParams.setSize(500, 150);
+		KeyStroke escapeKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE,
+				0, false);
 		Action escapeAction = new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				jfWinParams.dispose();
@@ -42,8 +43,7 @@ public class ActionListenerProgenesis2MZQ implements ActionListener {
 		jfWinParams.getRootPane()
 				.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
 				.put(escapeKeyStroke, "ESCAPE");
-		jfWinParams.getRootPane().getActionMap()
-				.put("ESCAPE", escapeAction);
+		jfWinParams.getRootPane().getActionMap().put("ESCAPE", escapeAction);
 
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		int x1 = dim.width / 2;
@@ -51,8 +51,8 @@ public class ActionListenerProgenesis2MZQ implements ActionListener {
 		int x2 = jfWinParams.getSize().width / 2;
 		int y2 = jfWinParams.getSize().height / 2;
 		jfWinParams.setLocation(x1 - x2, y1 - y2);
-		Image iconApp = new ImageIcon(getClass().getClassLoader()
-				.getResource("images/icon.gif")).getImage();
+		Image iconApp = new ImageIcon(getClass().getClassLoader().getResource(
+				"images/icon.gif")).getImage();
 		jfWinParams.setIconImage(iconApp);
 		jfWinParams.setAlwaysOnTop(true);
 
