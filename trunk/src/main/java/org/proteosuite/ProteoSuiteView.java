@@ -18,7 +18,6 @@ import edu.ucsd.msjava.params.ParamManager;
 import edu.ucsd.msjava.ui.MSGFPlus;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -29,12 +28,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,7 +62,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
@@ -76,10 +72,7 @@ import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.validation.Validator;
 
 import org.proteosuite.fileformat.FileFormatMGF;
@@ -91,23 +84,14 @@ import org.proteosuite.gui.*;
 import org.proteosuite.gui.tables.*;
 import org.proteosuite.gui.toolbars.*;
 import org.proteosuite.listener.*;
-import org.proteosuite.utils.compression.DeltaConversion;
-import org.proteosuite.utils.compression.DeltaConversion.DeltaEncodedDataFormatException;
 import org.proteosuite.utils.ProgressBarDialog;
 import org.proteosuite.utils.SystemUtils;
 import org.proteosuite.utils.Unmarshaller;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import uk.ac.cranfield.xTracker.*;
 import uk.ac.cranfield.xTracker.utils.XMLparser;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
-import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
-import uk.ac.ebi.jmzml.model.mzml.CVParam;
-import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 import uk.ac.liv.jmzqml.model.mzqml.IdentificationFile;
 import uk.ac.liv.jmzqml.model.mzqml.InputFiles;
 import uk.ac.liv.jmzqml.model.mzqml.MzQuantML;
@@ -127,7 +111,7 @@ public class ProteoSuiteView extends JFrame {
 	public static final String sPS_Version = "0.3.1";
 	public static String sProjectName = "";
 	public static String sPreviousLocation = "user.home";
-	public boolean bProjectModified = false;
+	public boolean isProjectModified = false;
 	public static final String MZQ_XSD = "mzQuantML_1_0_0.xsd";
 	public static final String mzMLVersion = "1.1";
 	public static final String mzIDVersion = "1.1";
@@ -135,8 +119,8 @@ public class ProteoSuiteView extends JFrame {
 	public static final String PSI_MS_VERSION = "3.37.0";
 	public static final String PSI_MOD_VERSION = "1.2";
 	public static final SystemUtils SYS_UTILS = new SystemUtils();
-	
-	private static final WorkSpace workSpace = WorkSpace.getInstance();
+
+	private static final WorkSpace WORKSPACE = WorkSpace.getInstance();
 
 	private IdentParamsView identParamsExecute;
 
@@ -178,7 +162,7 @@ public class ProteoSuiteView extends JFrame {
 		final JLabel jlFileNameMzQText = new JLabel();
 		final JLabel jlIdentFilesStatus = new JLabel();
 
-		final JTable jtRawData = new JTableRawData();
+		final JTableRawData jtRawData = new JTableRawData();
 		final JTable jtFeatureQuant = new JTableFeatureQuant();
 		final JTable jtIdentFiles = new JTableIdentFiles();
 		final JTable jtMGF = new JTableMGF();
@@ -217,7 +201,7 @@ public class ProteoSuiteView extends JFrame {
 				jtFeatureQuant);
 
 		setTitle("ProteoSuite " + sPS_Version + " (Beta Version) - <Project: "
-				+ workSpace.getWorkSpace() + " - " + sProjectName
+				+ WORKSPACE.getWorkSpace() + " - " + sProjectName
 				+ ">         http://www.proteosuite.org");
 
 		// Setting project icons
@@ -260,16 +244,11 @@ public class ProteoSuiteView extends JFrame {
 		jbExportFeatMZQExcel
 				.setToolTipText("Export to Excel Spreadsheet (.xls)");
 
-		// ... Setting Window Height and Width ...//
+		// Setting Window Height and Width
 		setMinimumSize(new Dimension(1024, 768));
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-		// ... Setting dividers ...//
-
-		JSplitPane jspProjectDetails = new JSplitPane();
-		jspProjectDetails.setDividerLocation(200); // ... MzML files ...//
-
-		// ... Configuring exit events...//
+		// Configuring exit events
 		pack();
 	}
 
@@ -289,7 +268,7 @@ public class ProteoSuiteView extends JFrame {
 			final JLabel jlFileNameMzIDText, final JLabel jlIdentFilesStatus,
 			final JLabel jlFileNameMzQText, final JTable jtRawFiles,
 			final JTable jtIdentFiles, final JTable jtQuantFiles,
-			final JTable jtRawData, final JTable jtMzML, final JTable jtMGF,
+			final JTableRawData jtRawData, final JTable jtMzML, final JTable jtMGF,
 			final JTable jtMzId, final JTable jtMascotXMLView,
 			final JTable jtPeptideQuant, final JTable jtProteinQuant,
 			final JTable jtFeatureQuant) {
@@ -298,8 +277,7 @@ public class ProteoSuiteView extends JFrame {
 				"Select technique", "iTRAQ", "TMT", "emPAI" }));
 		jcbTechnique.setToolTipText("Select a technique for the analysis");
 		jcbTechnique.setBorder(BorderFactory.createEtchedBorder());
-		
-		
+
 		final JLabel jlFileNameMGFText = new JLabel();
 		final JTable jtMzIDProtGroup = new JTable();
 		final JComboBox<String> jcbPSM = new JComboBox<String>();
@@ -334,11 +312,13 @@ public class ProteoSuiteView extends JFrame {
 				jtMascotXMLView, jtpProperties, jepMzIDView, jtMzIDProtGroup,
 				jcbPSM, jtMzId, jlFileNameMzIDText));
 
-		jtMzML.addMouseListener(new MouseListenerMzMl(this, jtRawFiles, jtRawData, jtpLog, aMzMLUnmarshaller, jtpViewer));
-		jtMGF.addMouseListener(new MouseListenerMgf(this, jtRawFiles, jtRawData, jtpLog, jtpViewer));
+		jtMzML.addMouseListener(new MouseListenerMzMl(jtRawFiles,
+				jtRawData, jtpLog, aMzMLUnmarshaller, jtpViewer));
+		jtMGF.addMouseListener(new MouseListenerMgf(this, jtRawFiles,
+				jtRawData, jtpLog, jtpViewer));
 		jcbPSM.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				// ... Check file to visualize .../
+				// Check file to visualize
 				if (jlFileNameMzIDText.equals(""))
 					return;
 
@@ -376,15 +356,16 @@ public class ProteoSuiteView extends JFrame {
 		jepMascotXMLView.setFont(new Font("Tahoma", 0, 10)); // NOI18N
 		jepMascotXMLView.setPreferredSize(new Dimension(144, 84));
 
-
-		jtQuantFiles.addMouseListener(new MouseListenerQuantFiles(this, jtFeatureQuant, jtpLog, jtpProperties,
-				jtpMzQuantMLDetail, jepMZQView, jlFileNameMzQText, jtPeptideQuant, jtProteinQuant,
+		jtQuantFiles.addMouseListener(new MouseListenerQuantFiles(this,
+				jtFeatureQuant, jtpLog, jtpProperties, jtpMzQuantMLDetail,
+				jepMZQView, jlFileNameMzQText, jtPeptideQuant, jtProteinQuant,
 				jtQuantFiles));
 
 		jepMZQView.setContentType("text/html");
 		jepMZQView.setPreferredSize(new Dimension(144, 84));
 
-		JPanel jpLeftPanelView = new LeftPanelView(jtQuantFiles, jtIdentFiles, jtRawFiles);
+		JPanel jpLeftPanelView = new LeftPanelView(jtQuantFiles, jtIdentFiles,
+				jtRawFiles);
 		JPanel jpLeftViewer = new LeftViewer(jtpViewer, jtpLog);
 		JPanel jpPropertiesBox = new PropertiesView(jtpProperties);
 		final MainPanel jpMainPanelView = new MainPanel(jpLeftPanelView,
@@ -496,7 +477,7 @@ public class ProteoSuiteView extends JFrame {
 			JTable jtMascotXMLView, JTable jtPeptideQuant,
 			JTable jtProteinQuant, JTable jtFeatureQuant) {
 		// Check if the project needs to be saved
-		if (bProjectModified) {
+		if (isProjectModified) {
 			int iOption = JOptionPane
 					.showConfirmDialog(
 							this,
@@ -581,25 +562,25 @@ public class ProteoSuiteView extends JFrame {
 		chooser.addChoosableFileFilter(new FileNameExtensionFilter(
 				"Raw Files (*.mzML, *.mzML.gz, *.mgf)", "mzML", "gz", "mgf"));
 
-		// ... Enable multiple file selection ...//
+		// Enable multiple file selection
 		chooser.setMultiSelectionEnabled(true);
 
-		// ... Setting default directory ...//
+		// Setting default directory
 		if (sPreviousLocation == null || sPreviousLocation.contains("")) {
 			// If not found it goes to Home, exception not needed
-			chooser.setCurrentDirectory(new File(workSpace.getWorkSpace()));
+			chooser.setCurrentDirectory(new File(WORKSPACE.getWorkSpace()));
 		} else {
 			// If not found it goes to Home, exception not needed
 			chooser.setCurrentDirectory(new File(sPreviousLocation));
 		}
 
-		// ... Retrieving selection from user ...//
+		// Retrieving selection from user
 		int returnVal = chooser.showOpenDialog(this);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			final File[] aFiles = chooser.getSelectedFiles();
 			if (aFiles != null && aFiles.length > 0) {
-				bProjectModified = true;
+				isProjectModified = true;
 				updateSaveProjectStatus(jmSaveProject, jbSaveProject);
 				sPreviousLocation = aFiles[0].getParent();
 				// ---------------//
@@ -610,7 +591,7 @@ public class ProteoSuiteView extends JFrame {
 				if ((aFiles[0].getName().toLowerCase().indexOf(".mzml") > 0)
 						|| (aFiles[0].getName().toLowerCase()
 								.indexOf(".mzml.gz") > 0)) {
-					// ... Fill JTable ...//
+					// Fill JTable
 					final DefaultTableModel model = new DefaultTableModel();
 					jtRawFiles.setModel(model);
 					model.addColumn("Name");
@@ -623,7 +604,7 @@ public class ProteoSuiteView extends JFrame {
 					final Thread thread = new Thread(new Runnable() {
 						@Override
 						public void run() {
-							// ... Progress Bar ...//
+							// Progress Bar
 							progressBarDialog.setTitle("Reading mzML files");
 							progressBarDialog.setVisible(true);
 						}
@@ -636,7 +617,7 @@ public class ProteoSuiteView extends JFrame {
 							String sMessage = "";
 							jtpLog.resetLog();
 
-							// ... Release unmarshallers ...//
+							// Release unmarshallers
 							if (aFiles.length > 0) {
 								sMessage = SYS_UTILS.getTime()
 										+ " - Reading mzML files (Total="
@@ -646,10 +627,9 @@ public class ProteoSuiteView extends JFrame {
 								jtpLog.setLog(sOutput);
 								aMzMLUnmarshaller.clear();
 							}
-							// ... Reading selected files ...//
+							// Reading selected files
 							for (int iI = 0; iI < aFiles.length; iI++) {
-								// ... Validate file extension (mixed files)
-								// ...//
+								// Validate file extension (mixed files)								
 								if ((aFiles[iI].getName().toLowerCase()
 										.indexOf(".mzml") > 0)
 										|| (aFiles[iI].getName().toLowerCase()
@@ -664,7 +644,7 @@ public class ProteoSuiteView extends JFrame {
 													+ xmlFile.getName());
 									progressBarDialog.setVisible(true);
 
-									// ... Uncompress mzML.gz files ...//
+									// Uncompress mzML.gz files
 									if (aFiles[iI].getName().toLowerCase()
 											.indexOf(".mzml.gz") > 0) {
 										try {
@@ -710,8 +690,7 @@ public class ProteoSuiteView extends JFrame {
 															+ ioe);
 										}
 									}
-									// ... Unmarshall data using jzmzML API
-									// ...//
+									// Unmarshall data using jzmzML API									
 									sMessage = SYS_UTILS.getTime()
 											+ " - Unmarshalling "
 											+ xmlFile.getName() + " starts ";
@@ -727,10 +706,10 @@ public class ProteoSuiteView extends JFrame {
 									sOutput = sOutput + sMessage + "\n";
 									jtpLog.setLog(sOutput);
 								}
-							} // ... For files ...//
+							} // For files
 
-							// ... We then display the first mzML element, the
-							// corresponding chromatogram and the 2D plot ...//
+							// We then display the first mzML element, the
+							// corresponding chromatogram and the 2D plot
 							sMessage = SYS_UTILS.getTime()
 									+ " - Loading mzML view ";
 							System.out.println(sMessage);
@@ -770,12 +749,12 @@ public class ProteoSuiteView extends JFrame {
 									jlIdentFilesStatus, jtIdentFiles);
 						}
 					}.start();
-				} // ... From reading mzML files ...//
+				} // From reading mzML files
 					// ---------------//
 					// Read MGF //
 					// ---------------//
 				if (aFiles[0].getName().toLowerCase().indexOf(".mgf") > 0) {
-					// ... Fill JTable ...//
+					// Fill JTable
 					final DefaultTableModel model = new DefaultTableModel();
 					jtRawFiles.setModel(model);
 					model.addColumn("Name");
@@ -783,16 +762,8 @@ public class ProteoSuiteView extends JFrame {
 					model.addColumn("Type");
 					model.addColumn("Version");
 
-					final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
+					final ProgressBarThread thread = new ProgressBarThread("ProgressBarDialog",
 							this, true, "ReadingMGF");
-					final Thread thread = new Thread(new Runnable() {
-						@Override
-						public void run() {
-							// ... Progress Bar ...//
-							progressBarDialog.setTitle("Reading MGF files");
-							progressBarDialog.setVisible(true);
-						}
-					}, "ProgressBarDialog");
 					thread.start();
 					new Thread("ReadingMGF") {
 						@Override
@@ -811,12 +782,12 @@ public class ProteoSuiteView extends JFrame {
 
 							// Reading selected files
 							for (int iI = 0; iI < aFiles.length; iI++) {
-								progressBarDialog
+								thread
 										.setTitle("Reading MGF files ("
 												+ (iI + 1) + "/"
 												+ aFiles.length + ") - "
 												+ aFiles[iI].getName());
-								progressBarDialog.setVisible(true);
+								thread.setVisible(true);
 								// Validate file extension (mixed files)
 								if (aFiles[iI].getName().toLowerCase()
 										.indexOf(".mgf") > 0) {
@@ -829,9 +800,9 @@ public class ProteoSuiteView extends JFrame {
 															.replace("\\", "/"),
 													"MGF", "N/A" });
 								}
-							} // ... For files ...//
+							} // For files
 
-							// ... Display data for the first element ...//
+							// Display data for the first element
 							sMessage = SYS_UTILS.getTime()
 									+ " - Loading MGF view ";
 							System.out.println(sMessage);
@@ -840,8 +811,8 @@ public class ProteoSuiteView extends JFrame {
 							loadMGFView(0, jlFileNameMGFText, jtRawFiles,
 									jtpProperties, jtMGF);
 
-							progressBarDialog.setVisible(false);
-							progressBarDialog.dispose();
+							thread.setVisible(false);
+							thread.dispose();
 							sMessage = SYS_UTILS.getTime()
 									+ " - Raw files imported successfully!";
 							System.out.println(sMessage);
@@ -853,14 +824,14 @@ public class ProteoSuiteView extends JFrame {
 									jlIdentFilesStatus, jtIdentFiles);
 						}
 					}.start();
-				} // ... From reading MGF files ...//
+				} // From reading MGF files
 					// -------------------//
 					// Read mzIdentML //
 					// -------------------//
 				if ((aFiles[0].getName().toLowerCase().indexOf(".mzid") > 0)
 						|| (aFiles[0].getName().toLowerCase()
 								.indexOf(".mzid.gz") > 0)) {
-					// ... Fill JTable ...//
+					// Fill JTable
 					final DefaultTableModel model = new DefaultTableModel();
 					jtIdentFiles.setModel(model);
 					model.addColumn("Name");
@@ -874,7 +845,7 @@ public class ProteoSuiteView extends JFrame {
 					final Thread thread = new Thread(new Runnable() {
 						@Override
 						public void run() {
-							// ... Progress Bar ...//
+							// Progress Bar
 							progressBarDialog.setTitle("Reading mzIdentML files");
 							progressBarDialog.setVisible(true);
 						}
@@ -887,7 +858,7 @@ public class ProteoSuiteView extends JFrame {
 							String sMessage = "";
 							jtpLog.setLog(sOutput);
 
-							// ... Release unmarshallers ...//
+							// Release unmarshallers
 							if (aFiles.length > 0) {
 								sMessage = SYS_UTILS.getTime()
 										+ " - Reading mzML files (Total="
@@ -897,7 +868,7 @@ public class ProteoSuiteView extends JFrame {
 								jtpLog.setLog(sOutput);
 								aMzIDUnmarshaller.clear();
 							}
-							// ... Reading selected files ...//
+							// Reading selected files
 							for (int iI = 0; iI < aFiles.length; iI++) {
 								// Validate file extension (mixed files)
 								if ((aFiles[iI].getName().toLowerCase()
@@ -914,7 +885,7 @@ public class ProteoSuiteView extends JFrame {
 													+ xmlFile.getName());
 									progressBarDialog.setVisible(true);
 
-									// ... Uncompress .gz files ...//
+									// Uncompress .gz files
 									if (aFiles[iI].getName().toLowerCase()
 											.indexOf(".mzid.gz") > 0) {
 										try {
@@ -1243,7 +1214,7 @@ public class ProteoSuiteView extends JFrame {
 			JTable jtMascotXMLView, JTable jtPeptideQuant,
 			JTable jtProteinQuant, JTable jtFeatureQuant) {
 		// Check if the project needs to be saved
-		if (bProjectModified) {
+		if (isProjectModified) {
 			int iOption = JOptionPane
 					.showConfirmDialog(
 							this,
@@ -1308,7 +1279,7 @@ public class ProteoSuiteView extends JFrame {
 			final JTable jtPeptideQuant, final JTable jtProteinQuant,
 			final JTable jtQuantFiles, final JTable jtRawFiles) {
 		// Check if there is a valid workspace
-		boolean isOK = getWorkspace();
+		boolean isOK = WORKSPACE.isValidWorkSpace();
 		if (isOK) {
 			// ... Validate if we got raw and identification files ...//
 			if (jtRawFiles.getRowCount() <= 0) {
@@ -1448,14 +1419,18 @@ public class ProteoSuiteView extends JFrame {
 										jtpLog.appendLog("\n"
 												+ SYS_UTILS.getTime()
 												+ " - ****** Running x-Tracker *****");
-										new xTracker(workSpace.getWorkSpace().replace("\\",
-												"/") + "/" + sProjectName,
-												workSpace.getWorkSpace().replace("\\", "/"));
+										new xTracker(WORKSPACE.getWorkSpace()
+												.replace("\\", "/")
+												+ "/"
+												+ sProjectName, WORKSPACE
+												.getWorkSpace().replace("\\",
+														"/"));
 
 										// ... Load the mzQuantML file into
 										// memory (With results included) ...//
-										File xmlFile = new File(workSpace.getWorkSpace()
-												+ "/" + sProjectName);
+										File xmlFile = new File(
+												WORKSPACE.getWorkSpace() + "/"
+														+ sProjectName);
 										aMzQUnmarshaller.clear();
 										final DefaultTableModel model = new DefaultTableModel();
 										jtQuantFiles.setModel(model);
@@ -1475,18 +1450,21 @@ public class ProteoSuiteView extends JFrame {
 											jtpLog.appendLog("\n"
 													+ SYS_UTILS.getTime()
 													+ " - Displaying mzquantml results...");
-											jlFileNameMzQText
-													.setText(workSpace.getWorkSpace() + "/"
-															+ sProjectName); // ...
-																				// Display
-																				// of
-																				// the
-																				// results
-																				// ...//
+											jlFileNameMzQText.setText(WORKSPACE
+													.getWorkSpace()
+													+ "/"
+													+ sProjectName); // ...
+																		// Display
+																		// of
+																		// the
+																		// results
+																		// ...//
 											// loadMzQuantMLView(0,
 											// sProjectName);
-											loadMzQuantMLView(0, workSpace.getWorkSpace()
-													+ "/" + sProjectName,
+											loadMzQuantMLView(0,
+													WORKSPACE.getWorkSpace()
+															+ "/"
+															+ sProjectName,
 													jtFeatureQuant, jtpLog,
 													jtpProperties,
 													jtpMzQuantMLDetail,
@@ -1527,7 +1505,7 @@ public class ProteoSuiteView extends JFrame {
 									progressBarDialog.setVisible(false);
 									progressBarDialog.dispose();
 									updateTitle();
-									bProjectModified = false;
+									isProjectModified = false;
 									updateSaveProjectStatus(jmSaveProject,
 											jbSaveProject);
 									updateCloseProjectStatus(jmCloseProject);
@@ -1561,7 +1539,7 @@ public class ProteoSuiteView extends JFrame {
 
 		// Check if there is a valid workspace
 		boolean bRun = false;
-		boolean isOK = getWorkspace();
+		boolean isOK = WORKSPACE.isValidWorkSpace();
 		// sWorkspace = "C:/temp/proteosuite";
 
 		if (isOK) {
@@ -1895,8 +1873,8 @@ public class ProteoSuiteView extends JFrame {
 	 */
 	private void updateSaveProjectStatus(final JMenuItem jmSaveProject,
 			final JButton jbSaveProject) {
-		jmSaveProject.setEnabled(bProjectModified);
-		jbSaveProject.setEnabled(bProjectModified);
+		jmSaveProject.setEnabled(isProjectModified);
+		jbSaveProject.setEnabled(isProjectModified);
 	}
 
 	/**
@@ -1906,11 +1884,10 @@ public class ProteoSuiteView extends JFrame {
 	 * @return void
 	 */
 	private void updateCloseProjectStatus(final JMenuItem jmCloseProject) {
-		if (sProjectName.equals("New")) {
+		if (sProjectName.equals("New"))
 			jmCloseProject.setEnabled(false);
-		} else {
+		else
 			jmCloseProject.setEnabled(true);
-		}
 	}
 
 	/**
@@ -1950,16 +1927,16 @@ public class ProteoSuiteView extends JFrame {
 		JFileChooser chooser = new JFileChooser(sPreviousLocation);
 		chooser.setDialogTitle("Please enter the name of your project");
 
-		// ... Applying file extension filters ...//
+		// Applying file extension filters
 		FileNameExtensionFilter filter3 = new FileNameExtensionFilter(
 				"mzQuantML Files (*.mzq)", "mzq");
-		// ... Filters must be in descending order ...//
+		// Filters must be in descending order
 		chooser.addChoosableFileFilter(filter3);
 
-		// ... Setting default directory ...//
+		// Setting default directory
 		if (sPreviousLocation == null || sPreviousLocation.contains("")) {
 			// If not found it goes to Home, exception not needed
-			chooser.setCurrentDirectory(new File(workSpace.getWorkSpace()));
+			chooser.setCurrentDirectory(new File(WORKSPACE.getWorkSpace()));
 		} else {
 			// If not found it goes to Home, exception not needed
 			chooser.setCurrentDirectory(new File(sPreviousLocation));
@@ -1968,7 +1945,7 @@ public class ProteoSuiteView extends JFrame {
 		int returnVal = chooser.showSaveDialog(this);
 		System.out.println(returnVal);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			// ... Check extension ...//
+			// Check extension
 			File file = chooser.getSelectedFile();
 			int mid = 0;
 			mid = file.getName().lastIndexOf(".mzq");
@@ -1982,7 +1959,7 @@ public class ProteoSuiteView extends JFrame {
 			fileLocation.replace("\\", "/");
 			File file2 = new File(fileLocation);
 
-			// ... Check if file exists ...//
+			// Check if file exists
 			boolean exists = (new File(file2.getPath())).exists();
 			if (exists) {
 				int n = JOptionPane
@@ -2001,7 +1978,7 @@ public class ProteoSuiteView extends JFrame {
 			if (bOK) {
 				sProjectName = file2.getName();
 				updateTitle();
-				bProjectModified = false;
+				isProjectModified = false;
 				updateSaveProjectStatus(jmSaveProject, jbSaveProject);
 				updateCloseProjectStatus(jmCloseProject);
 			}
@@ -2018,7 +1995,7 @@ public class ProteoSuiteView extends JFrame {
 	 */
 	public void updateTitle() {
 		setTitle("ProteoSuite " + sPS_Version + " (Beta Version) - <Project: "
-				+ workSpace.getWorkSpace() + " - " + sProjectName
+				+ WORKSPACE.getWorkSpace() + " - " + sProjectName
 				+ ">         http://www.proteosuite.org");
 	}
 
@@ -2041,62 +2018,6 @@ public class ProteoSuiteView extends JFrame {
 	}
 
 	/**
-	 * Checks if the working space is valid
-	 * 
-	 * @param void
-	 * @return true/false
-	 */
-	public boolean getWorkspace() {
-		// ... Validate if config file exists ...//
-		boolean exists = (new File("config.xml")).exists();
-		if (exists) {
-			// ... Read files using SAX (get workspace) ...//
-			try {
-				SAXParserFactory factory = SAXParserFactory.newInstance();
-				SAXParser saxParser = factory.newSAXParser();
-
-				DefaultHandler handler = new DefaultHandler() {
-					boolean bWorkspace = false;
-
-					@Override
-					public void startElement(String uri, String localName,
-							String qName, Attributes attributes)
-							throws SAXException {
-						if (qName.equalsIgnoreCase("workspace")) {
-							bWorkspace = true;
-						}
-					}
-
-					@Override
-					public void characters(char ch[], int start, int length)
-							throws SAXException {
-						if (bWorkspace) {
-							bWorkspace = false;
-							workSpace.setWorkSpace(new String(ch, start, length));
-						}
-					}
-				};
-				saxParser.parse("config.xml", handler);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			// ... Check if default workspace is valid ...//
-			exists = (new File(workSpace.getWorkSpace())).exists();
-			if (!exists) {
-				JOptionPane
-						.showMessageDialog(
-								this,
-								"The default \"workspace\" does not exist. Please set up your directory in \"Tools\"->\"Options\" ",
-								"Error", JOptionPane.INFORMATION_MESSAGE);
-				return false;
-			}
-		} else {
-			return false;
-		}
-		return true;
-	}
-
-	/**
 	 * Show raw data from a Mascot Generic Format (MGF) file
 	 * 
 	 * @param iIndex
@@ -2113,7 +2034,7 @@ public class ProteoSuiteView extends JFrame {
 		model.addColumn("m/z");
 		model.addColumn("Intensity");
 
-		// ... Reading file ...//
+		// Reading file
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(jtRawFiles
 					.getValueAt(iIndex, 1).toString()));
@@ -2153,160 +2074,12 @@ public class ProteoSuiteView extends JFrame {
 	}
 
 	/**
-	 * Displays raw data
-	 * 
-	 * @iIndex - Index to the aMzMLUnmarshaller list
-	 * @sID - scan ID
-	 * @return void
-	 */
-	public void showRawData(int iIndex, String sID, final JTable jtRawData,
-			JTabbedPane jtpLog, List<MzMLUnmarshaller> aMzMLUnmarshaller) {
-
-		DefaultTableModel model = new DefaultTableModel() {
-			Class<?>[] types = new Class[] { Integer.class, Float.class,
-					Float.class };
-
-			@Override
-			public Class<?> getColumnClass(int columnIndex) {
-				return types[columnIndex];
-			}
-		};
-
-		jtRawData.setModel(model);
-		model.addColumn("Index");
-		model.addColumn("m/z");
-		model.addColumn("Intensity");
-		jtpLog.setSelectedIndex(1);
-
-		// ... Get index from spectra ...//
-		MzMLUnmarshaller unmarshaller = aMzMLUnmarshaller.get(iIndex);
-		try {
-			Spectrum spectrum = unmarshaller.getSpectrumById(sID);
-			Number[] mzNumbers = null;
-			Number[] intenNumbers = null;
-
-			boolean bCompressed = false;
-			// ... Reading mz Values ...//
-			List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList()
-					.getBinaryDataArray();
-			for (BinaryDataArray bda : bdal) {
-				List<CVParam> cvpList = bda.getCvParam();
-				for (CVParam cvp : cvpList) {
-					if (cvp.getAccession().equals("MS:1000000")) {
-						bCompressed = true;
-					}
-				}
-			}
-
-			// ... Reading mz and intensity values ...//
-			for (BinaryDataArray bda : bdal) {
-				List<CVParam> cvpList = bda.getCvParam();
-				for (CVParam cvp : cvpList) {
-					if (cvp.getAccession().equals("MS:1000514")) {
-						mzNumbers = bda.getBinaryDataAsNumberArray();
-						if (bCompressed) {
-							try {
-								DeltaConversion
-										.fromDeltaNumberFormat(mzNumbers);
-							} catch (DeltaEncodedDataFormatException dex) {
-								System.out
-										.println("Problem converting back from delta m/z format: "
-												+ dex.getLocalizedMessage());
-								return;
-							}
-						}
-					}
-					if (cvp.getAccession().equals("MS:1000515")) {
-						intenNumbers = bda.getBinaryDataAsNumberArray();
-					}
-				}
-			}
-			for (int iI = 0; iI < mzNumbers.length; iI++) {
-				model.insertRow(model.getRowCount(),
-						new Object[] { iI, mzNumbers[iI].doubleValue(),
-								intenNumbers[iI].doubleValue() });
-			}
-			jtRawData.getTableHeader().setDefaultRenderer(
-					new TableCellRenderer() {
-						final TableCellRenderer defaultRenderer = jtRawData
-								.getTableHeader().getDefaultRenderer();
-
-						public Component getTableCellRendererComponent(
-								JTable table, Object value, boolean isSelected,
-								boolean hasFocus, int row, int column) {
-							JComponent component = (JComponent) defaultRenderer
-									.getTableCellRendererComponent(table,
-											value, isSelected, hasFocus, row,
-											column);
-							component.setToolTipText(""
-									+ jtRawData.getColumnName(column));
-							return component;
-						}
-					});
-			jtRawData.setAutoCreateRowSorter(true);
-		} catch (MzMLUnmarshallerException ume) {
-			System.out.println(ume.getMessage());
-		}
-	}
-
-	/*--------------------------
-	 * TO DO
-	 ---------------------------*/
-	private void writeConfigFile(String sFileName, JTable jtRawFiles) {
-		if (sFileName.indexOf(".psx") <= 0) {
-			sFileName = sFileName + ".psx";
-		}
-		try {
-
-			FileWriter fstream = new FileWriter(sFileName);
-			BufferedWriter out = new BufferedWriter(fstream);
-			out.write("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-			out.newLine();
-			out.write("<ProteoSuiteProject xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ");
-			out.write("xsi:schemaLocation=\"ProteoSuite.xsd\" name=\""
-					+ sProjectName + "\" workspace=\"" + workSpace.getWorkSpace() + "\">");
-			out.newLine();
-			out.write(" <configSettings>");
-			out.newLine();
-			out.write("     <rawDataSettings>");
-			out.newLine();
-			for (int iI = 0; iI < jtRawFiles.getRowCount(); iI++) {
-				out.write("         <rawFile ");
-				out.write(" name=\"" + jtRawFiles.getValueAt(iI, 0) + "\"");
-				out.write(" path=\"" + jtRawFiles.getValueAt(iI, 1) + "\"");
-				out.write(" type=\"" + jtRawFiles.getValueAt(iI, 2) + "\"");
-				out.write(" version=\"" + jtRawFiles.getValueAt(iI, 3) + "\"");
-				out.write(" scans=\"" + jtRawFiles.getValueAt(iI, 4) + "\" >");
-				out.newLine();
-				out.write("         </rawFile>");
-				out.newLine();
-			}
-			out.write("     </rawDataSettings>");
-			out.newLine();
-			out.write("     <identDataSettings>");
-			out.newLine();
-			out.write("     </identDataSettings>");
-			out.newLine();
-			out.write("     <quantDataSettings>");
-			out.newLine();
-			out.write("     </quantDataSettings>");
-			out.newLine();
-			out.write(" </configSettings>");
-			out.newLine();
-			out.write("</ProteoSuiteProject>");
-			out.close();
-		} catch (Exception e) {
-			System.err.println("Error: " + e.getMessage());
-		}
-	}
-
-	/**
 	 * Load MzIdentML viewer
 	 * 
 	 * @param iIndex
-	 *            - Index to the aMzIDUnmarshaller list
+	 *            Index to the aMzIDUnmarshaller list
 	 * @param sFileName
-	 *            - File name
+	 *            File name
 	 * @param jepMzIDView
 	 * @param jlFileNameMzIDText
 	 * @param jtMzId
@@ -2530,50 +2303,15 @@ public class ProteoSuiteView extends JFrame {
 	private void initSettings(JMenuItem jmCloseProject,
 			JMenuItem jmSaveProject, final JButton jbSaveProject) {
 		// ... Validate if config file exists ...//
-		boolean exists = (new File("config.xml")).exists();
-		if (exists) {
-			// ... Read files using SAX (get workspace) ...//
-			try {
-				SAXParserFactory factory = SAXParserFactory.newInstance();
-				SAXParser saxParser = factory.newSAXParser();
-
-				DefaultHandler handler = new DefaultHandler() {
-					boolean bWorkspace = false;
-
-					@Override
-					public void startElement(String uri, String localName,
-							String qName, Attributes attributes)
-							throws SAXException {
-						if (qName.equalsIgnoreCase("workspace")) {
-							bWorkspace = true;
-						}
-					}
-
-					@Override
-					public void characters(char ch[], int start, int length)
-							throws SAXException {
-						if (bWorkspace) {
-							bWorkspace = false;
-							workSpace.setWorkSpace(new String(ch, start, length));
-						}
-					}
-				};
-				saxParser.parse("config.xml", handler);
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
+		if (!WORKSPACE.isValidConfigFile()) {
 			String sMessage = "The config.xml file was not found, please make sure that this file exists \n";
-			sMessage = sMessage
-					+ "under your installation directory. ProteoSuite will continue launching, however \n";
-			sMessage = sMessage
-					+ "it is recommended that you copy the file as indicated in the readme.txt file.";
+			sMessage += "under your installation directory. ProteoSuite will continue launching, however \n";
+			sMessage += "it is recommended that you copy the file as indicated in the readme.txt file.";
 			JOptionPane.showMessageDialog(this, sMessage, "Warning",
 					JOptionPane.WARNING_MESSAGE);
 		}
 		sProjectName = "New";
-		bProjectModified = false;
+		isProjectModified = false;
 		updateSaveProjectStatus(jmSaveProject, jbSaveProject);
 		updateCloseProjectStatus(jmCloseProject);
 		updateTitle();
@@ -2666,7 +2404,7 @@ public class ProteoSuiteView extends JFrame {
 		// Setting default directory
 		if (sPreviousLocation == null || sPreviousLocation.contains("")) {
 			// If not found it goes to Home, exception not needed
-			chooser.setCurrentDirectory(new File(workSpace.getWorkSpace()));
+			chooser.setCurrentDirectory(new File(WORKSPACE.getWorkSpace()));
 		} else {
 			// If not found it goes to Home, exception not needed
 			chooser.setCurrentDirectory(new File(sPreviousLocation));
@@ -2720,7 +2458,7 @@ public class ProteoSuiteView extends JFrame {
 									jtMascotXMLView, jtMzId, jtMzML,
 									jtQuantFiles);
 							if (isOK) {
-								bProjectModified = false;
+								isProjectModified = false;
 
 								sProjectName = file.getName();
 								updateStatusPipeline(jlRawFilesStatus,
@@ -2813,7 +2551,7 @@ public class ProteoSuiteView extends JFrame {
 
 				InputFiles inputFiles = mzq.getInputFiles();
 
-				// ... Load raw files ...//
+				// Load raw files
 				List<RawFilesGroup> rawFilesGroup = inputFiles
 						.getRawFilesGroup();
 				System.out.println(SYS_UTILS.getTime() + " - RawFilesGroup="
@@ -2823,7 +2561,7 @@ public class ProteoSuiteView extends JFrame {
 					sGroup = group.getId();
 					List<RawFile> rawFileList = group.getRawFile();
 					for (RawFile rawFile : rawFileList) {
-						// ... Validate type of file ...//
+						// Validate type of file
 						File file = new File(rawFile.getLocation());
 						if (!file.exists()) {
 							JOptionPane
@@ -2889,14 +2627,14 @@ public class ProteoSuiteView extends JFrame {
 								.toString(), aMzMLUnmarshaller.get(0));
 					}
 				}
-				// ... Load ident files ...//
+				// Load ident files
 				List<IdentificationFile> idFilesList = inputFiles
 						.getIdentificationFiles().getIdentificationFile();
 				System.out.println(SYS_UTILS.getTime()
 						+ " - Loading identification files");
 				int iXMLIdent = 0, iMzID = 0;
 				for (IdentificationFile idFile : idFilesList) {
-					// ... Validate type of file ...//
+					// Validate type of file
 					File file = new File(idFile.getLocation());
 					if (!file.exists()) {
 						JOptionPane
@@ -2951,11 +2689,12 @@ public class ProteoSuiteView extends JFrame {
 					}
 				}
 				sProjectName = sFileRef.getName();
-				workSpace.setWorkSpace(sFileRef.getParent());
-				workSpace.setWorkSpace(workSpace.getWorkSpace().replace("\\", "/"));
+				WORKSPACE.setWorkSpace(sFileRef.getParent());
+				WORKSPACE.setWorkSpace(WORKSPACE.getWorkSpace().replace("\\",
+						"/"));
 				System.out.println(SYS_UTILS.getTime()
-						+ " - Project has been set up to: " + workSpace.getWorkSpace() + ", "
-						+ sProjectName);
+						+ " - Project has been set up to: "
+						+ WORKSPACE.getWorkSpace() + ", " + sProjectName);
 				updateTitle();
 				renderIdentFiles(jtRawFiles, jtIdentFiles);
 				updateStatusPipeline(jlRawFilesStatus, jtRawFiles,
@@ -2980,7 +2719,7 @@ public class ProteoSuiteView extends JFrame {
 	private boolean generateFiles(JTable jtRawFiles, TabbedLog jtpLog,
 			String selectedTechnique, JComboBox<String> jcbOutputFormat,
 			JTable jtIdentFiles, JTable jtQuantFiles) {
-		// ... Check project name ...//
+		// Check project name
 		String sFile = sProjectName;
 		System.out.println(SYS_UTILS.getTime()
 				+ " - Generating files for the pipeline ...");
@@ -2989,14 +2728,13 @@ public class ProteoSuiteView extends JFrame {
 		if (sFile.equals("New")) {
 			sFile = "test.mzq";
 			String sMessage = "This project has not been saved. Proteosuite will create a test.mzq file \n";
-			sMessage = sMessage + " under " + workSpace.getWorkSpace()
-					+ " to run the pipeline. \n";
+			sMessage += " under " + WORKSPACE.getWorkSpace() + " to run the pipeline. \n";
 			JOptionPane.showMessageDialog(this, sMessage, "Information",
 					JOptionPane.INFORMATION_MESSAGE);
 			sProjectName = sFile;
 		}
 
-		// ... Generate mzq file ...//
+		// Generate mzq file
 		System.out.println(SYS_UTILS.getTime() + " - Generating mzq file ...");
 		jtpLog.appendLog("\n" + SYS_UTILS.getTime()
 				+ " - Generating mzq file ...");
@@ -3005,10 +2743,10 @@ public class ProteoSuiteView extends JFrame {
 		if (!isOK)
 			return false;
 
-		// ... Unmarshall mzquantml file ...//
+		// Unmarshall mzquantml file
 		Validator validator = XMLparser.getValidator(MZQ_XSD);
-		boolean validFlag = XMLparser.validate(validator,
-				workSpace.getWorkSpace().replace("\\", "/") + "/" + sProjectName);
+		boolean validFlag = XMLparser.validate(validator, WORKSPACE
+				.getWorkSpace().replace("\\", "/") + "/" + sProjectName);
 		System.out.println(SYS_UTILS.getTime() + " - Validating mzQuantML ...");
 		jtpLog.appendLog("\n" + SYS_UTILS.getTime()
 				+ " - Validating mzQuantML ...");
