@@ -31,6 +31,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.WorkSpace;
 import org.proteosuite.gui.TabbedLog;
 import org.proteosuite.utils.PluginManager;
 import org.proteosuite.utils.ProgressBarDialog;
@@ -80,6 +81,7 @@ import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
  * @author Andrew Collins
  */
 public class FileFormatMzQuantML extends Thread implements Runnable {
+	private static final WorkSpace WORKSPACE = WorkSpace.getInstance();
 	private final JTabbedPane jtpProperties;
 	private final int iIndexRef;
 	private final SystemUtils sysutils;
@@ -893,7 +895,7 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 			pmList.add(up2);
 			UserParam up3 = new UserParam();
 			up3.setName("Plugin configuration file");
-			up3.setValue(ProteoSuiteView.sWorkspace.replace("\\", "/") + "/xTracker_"
+			up3.setValue(WORKSPACE.getWorkSpace().replace("\\", "/") + "/xTracker_"
 					+ sPipeline[0] + ".xtp");
 			pmList.add(up3);
 			dataProcessing.getProcessingMethod().add(processingMethod);
@@ -911,7 +913,7 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 			pmList2.add(up2_2);
 			UserParam up2_3 = new UserParam();
 			up2_3.setName("Plugin configuration file");
-			up2_3.setValue(ProteoSuiteView.sWorkspace.replace("\\", "/") + "/xTracker_"
+			up2_3.setValue(WORKSPACE.getWorkSpace().replace("\\", "/") + "/xTracker_"
 					+ sPipeline[1] + ".xtp");
 			pmList2.add(up2_3);
 			dataProcessing.getProcessingMethod().add(processingMethod2);
@@ -929,7 +931,7 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 			pmList3.add(up3_2);
 			UserParam up3_3 = new UserParam();
 			up3_3.setName("Plugin configuration file");
-			up3_3.setValue(ProteoSuiteView.sWorkspace.replace("\\", "/") + "/xTracker_"
+			up3_3.setValue(WORKSPACE.getWorkSpace().replace("\\", "/") + "/xTracker_"
 					+ sPipeline[2] + ".xtp");
 			pmList3.add(up3_3);
 			UserParam up3_4 = new UserParam();
@@ -963,7 +965,7 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 			pmList4.add(up4_2);
 			UserParam up4_3 = new UserParam();
 			up4_3.setName("Plugin configuration file");
-			up4_3.setValue(ProteoSuiteView.sWorkspace.replace("\\", "/") + "/xTracker_"
+			up4_3.setValue(WORKSPACE.getWorkSpace().replace("\\", "/") + "/xTracker_"
 					+ sPipeline[3] + ".xtp");
 			pmList4.add(up4_3);
 			dataProcessing.getProcessingMethod().add(processingMethod4);
@@ -986,7 +988,7 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 			pmList.add(up2);
 			UserParam up3 = new UserParam();
 			up3.setName("Plugin configuration file");
-			up3.setValue(ProteoSuiteView.sWorkspace.replace("\\", "/") + "/xTracker_"
+			up3.setValue(WORKSPACE.getWorkSpace().replace("\\", "/") + "/xTracker_"
 					+ sPipeline[0] + ".xtp");
 			pmList.add(up3);
 			dataProcessing.getProcessingMethod().add(processingMethod);
@@ -1004,7 +1006,7 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 			pmList3.add(up3_2);
 			UserParam up3_3 = new UserParam();
 			up3_3.setName("Plugin configuration file");
-			up3_3.setValue(ProteoSuiteView.sWorkspace.replace("\\", "/") + "/xTracker_"
+			up3_3.setValue(WORKSPACE.getWorkSpace().replace("\\", "/") + "/xTracker_"
 					+ sPipeline[2] + ".xtp");
 			pmList3.add(up3_3);
 			dataProcessing.getProcessingMethod().add(processingMethod3);
@@ -1022,7 +1024,7 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 			pmList4.add(up4_2);
 			UserParam up4_3 = new UserParam();
 			up4_3.setName("Plugin configuration file");
-			up4_3.setValue(ProteoSuiteView.sWorkspace.replace("\\", "/") + "/xTracker_"
+			up4_3.setValue(WORKSPACE.getWorkSpace().replace("\\", "/") + "/xTracker_"
 					+ sPipeline[3] + ".xtp");
 			pmList4.add(up4_3);
 			dataProcessing.getProcessingMethod().add(processingMethod4);
@@ -1234,7 +1236,7 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 		qml.setStudyVariableList(studyVariables);
 
 		// ... Marshal mzQuantML object ...//
-		MzQuantMLMarshaller marshaller = new MzQuantMLMarshaller(ProteoSuiteView.sWorkspace
+		MzQuantMLMarshaller marshaller = new MzQuantMLMarshaller(WORKSPACE.getWorkSpace()
 				+ "/" + sFile);
 		marshaller.marshall(qml);
 		return ret;

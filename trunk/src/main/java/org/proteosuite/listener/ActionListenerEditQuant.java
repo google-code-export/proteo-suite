@@ -21,10 +21,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 
-import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.WorkSpace;
 import org.proteosuite.gui.QuantParamsView;
 
 public class ActionListenerEditQuant implements ActionListener {
+	private static final WorkSpace WORKSPACE = WorkSpace.getInstance();
+	
 	private final JTable jtRawFiles;
 	private final JComboBox<String> jcbTechnique;
 
@@ -48,7 +50,7 @@ public class ActionListenerEditQuant implements ActionListener {
 				alRawFiles.add((String) jtRawFiles.getValueAt(iI, 0));
 			}
 			QuantParamsView quantParams = new QuantParamsView(alRawFiles,
-					ProteoSuiteView.sWorkspace, jcbTechnique.getSelectedItem().toString());
+					WORKSPACE.getWorkSpace(), jcbTechnique.getSelectedItem().toString());
 			final JFrame jfQuantParams = new JFrame(
 					"Edit Quantitation Parameters");
 			jfQuantParams.setResizable(false);

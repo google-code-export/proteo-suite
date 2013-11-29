@@ -1,4 +1,4 @@
-package org.proteosuite;
+package org.proteosuite.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -8,10 +8,6 @@ import javax.swing.GroupLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-
-import org.proteosuite.gui.TabbedChartViewer;
-import org.proteosuite.gui.TabbedLog;
-
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;

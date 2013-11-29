@@ -31,6 +31,7 @@ import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.proteosuite.WorkSpace;
 import org.proteosuite.utils.Unimod2MSGPlus;
 
 /**
@@ -39,9 +40,9 @@ import org.proteosuite.utils.Unimod2MSGPlus;
  * @param sMode type of entry (edit|execute)
  * @author fgonzalez
  */
-public class IdentParamsView extends javax.swing.JPanel {
-
-    private String sWorkspace = "";    
+public class IdentParamsView extends JPanel {
+	private static final WorkSpace workSpace = WorkSpace.getInstance();
+ 
     private String sMode = "";
     private String sRegex = "";
     private Map<String, String> hmParams = new HashMap<String, String>();
@@ -50,17 +51,13 @@ public class IdentParamsView extends javax.swing.JPanel {
     private boolean bRun = false;
     private boolean bProteinInference = false;
     
-    public IdentParamsView(String sWorkspace, String sMode) {
-        
-        this.sWorkspace = sWorkspace;
+    public IdentParamsView(String sMode) {
         this.sMode = sMode;
         initComponents();
         initMods();
         initValues();
     }
-    public void setWorkspace(String sWorkspace){
-        this.sWorkspace = sWorkspace;
-    }
+
     //... Initialise modifications from Unimod ...//
     public void initMods(){
         Unimod2MSGPlus getMods = new Unimod2MSGPlus();
@@ -582,7 +579,7 @@ public class IdentParamsView extends javax.swing.JPanel {
 
     private void jbAddDatabaseFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddDatabaseFileActionPerformed
         //... Adding files ...//
-        JFileChooser chooser = new JFileChooser(sWorkspace);
+        JFileChooser chooser = new JFileChooser(workSpace.getWorkSpace());
         chooser.setDialogTitle("Select the database file");        
 
         //... Applying file extension filters ...//
