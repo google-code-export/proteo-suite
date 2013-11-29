@@ -248,13 +248,6 @@ public class ProteoSuiteView extends JFrame {
 
 		// ... Tabsheet and other shortcut icons ...//
 
-		Icon rawDataIcon = new ImageIcon(getClass().getClassLoader()
-				.getResource("images/raw_data.gif"));
-		JLabel jlRawDataIcon = new JLabel("Raw data", rawDataIcon,
-				SwingConstants.RIGHT);
-		jlRawDataIcon.setIconTextGap(5);
-		jtpLog.setTabComponentAt(1, jlRawDataIcon);
-
 		Icon propertiesMzMLIcon = new ImageIcon(getClass().getClassLoader()
 				.getResource("images/properties.gif"));
 		JLabel jlPropertiesMzMLIcon = new JLabel("mzML View",
@@ -321,9 +314,7 @@ public class ProteoSuiteView extends JFrame {
 
 		JSplitPane jspProjectDetails = new JSplitPane();
 		jspProjectDetails.setDividerLocation(200); // ... MzML files ...//
-
-		// ... Setting default selection (Viewers) ...//
-		jtpLog.setSelectedIndex(0);
+		
 		jtpProperties.setSelectedIndex(0);
 
 		// ... Configuring exit events...//
@@ -417,119 +408,7 @@ public class ProteoSuiteView extends JFrame {
 			}
 		});
 
-		JSplitPane jspLeftPanelView = new LeftPanelView();
-		jspLeftPanelView.setRightComponent(new ProjectDetails(jtQuantFiles,
-				jtIdentFiles, jtRawFiles));
-		JPanel jpLeftPanelView = getLeftPanelView(jspLeftPanelView);
 
-
-		JPanel jspLeftViewerHeader = new JPanel();
-		jspLeftViewerHeader.setMaximumSize(new Dimension(32767, 25));
-		jspLeftViewerHeader.setMinimumSize(new Dimension(380, 25));
-		jspLeftViewerHeader.setPreferredSize(new Dimension(380, 25));
-
-		JLabel jlViewer = new JLabel("Viewer");
-		jlViewer.setBackground(new Color(255, 255, 255));
-		jlViewer.setFont(new Font("Verdana", 1, 14)); // NOI18N
-		jlViewer.setForeground(new Color(102, 102, 102));
-
-		GroupLayout jspLeftViewerHeaderLayout = new GroupLayout(
-				jspLeftViewerHeader);
-		jspLeftViewerHeader.setLayout(jspLeftViewerHeaderLayout);
-		jspLeftViewerHeaderLayout.setHorizontalGroup(jspLeftViewerHeaderLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-						jspLeftViewerHeaderLayout.createSequentialGroup()
-								.addContainerGap().addComponent(jlViewer)
-								.addContainerGap(316, Short.MAX_VALUE)));
-		jspLeftViewerHeaderLayout.setVerticalGroup(jspLeftViewerHeaderLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-						jspLeftViewerHeaderLayout.createSequentialGroup()
-								.addComponent(jlViewer)
-								.addContainerGap(7, Short.MAX_VALUE)));
-
-		final JSplitPane jspLeftViewer = new JSplitPane();
-		jspLeftViewer.setDividerLocation(20);
-		jspLeftViewer.setDividerSize(1);
-		jspLeftViewer.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jspLeftViewer.setTopComponent(jspLeftViewerHeader);
-
-		JPanel jpLeftViewerBottom = new JPanel();
-		GroupLayout jpLeftViewerBottomLayout = new GroupLayout(
-				jpLeftViewerBottom);
-		jpLeftViewerBottom.setLayout(jpLeftViewerBottomLayout);
-		jpLeftViewerBottomLayout.setHorizontalGroup(jpLeftViewerBottomLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jtpLog));
-		jpLeftViewerBottomLayout.setVerticalGroup(jpLeftViewerBottomLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jtpLog));
-
-		final JSplitPane jspLeftViewerDetails = new JSplitPane();
-		jspLeftViewerDetails.setDividerLocation(350);
-		jspLeftViewerDetails.setDividerSize(2);
-		jspLeftViewerDetails.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jspLeftViewerDetails.setRightComponent(jpLeftViewerBottom);
-		jspLeftViewerDetails.setTopComponent(jtpViewer);
-
-		JPanel jpLeftViewerDetails = new JPanel();
-		jpLeftViewerDetails.setBackground(new Color(255, 255, 255));
-		GroupLayout jpLeftViewerDetailsLayout = new GroupLayout(
-				jpLeftViewerDetails);
-		jpLeftViewerDetails.setLayout(jpLeftViewerDetailsLayout);
-		jpLeftViewerDetailsLayout.setHorizontalGroup(jpLeftViewerDetailsLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspLeftViewerDetails));
-		jpLeftViewerDetailsLayout.setVerticalGroup(jpLeftViewerDetailsLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspLeftViewerDetails));
-
-		jspLeftViewer.setRightComponent(jpLeftViewerDetails);
-
-		JPanel jpLeftViewer = new JPanel();
-		GroupLayout jpLeftViewerLayout = new GroupLayout(jpLeftViewer);
-		jpLeftViewer.setLayout(jpLeftViewerLayout);
-		jpLeftViewerLayout.setHorizontalGroup(jpLeftViewerLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspLeftViewer));
-		jpLeftViewerLayout.setVerticalGroup(jpLeftViewerLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspLeftViewer, GroupLayout.DEFAULT_SIZE, 635,
-						Short.MAX_VALUE));
-
-		final JSplitPane jspViewerAndProperties = new JSplitPane();
-		jspViewerAndProperties.setDividerLocation(380);
-		jspViewerAndProperties.setDividerSize(3);
-		jspViewerAndProperties.setLeftComponent(jpLeftViewer);
-
-		final JSplitPane jspProperties = new JSplitPane();
-		jspProperties.setDividerLocation(20);
-		jspProperties.setDividerSize(1);
-		jspProperties.setOrientation(JSplitPane.VERTICAL_SPLIT);
-
-		JPanel jpProperties = new JPanel();
-		jpProperties.setMaximumSize(new Dimension(32767, 25));
-		jpProperties.setMinimumSize(new Dimension(302, 25));
-		jpProperties.setPreferredSize(new Dimension(313, 25));
-
-		JLabel jlProperties = new JLabel("Data and Metadata");
-		jlProperties.setBackground(new Color(255, 255, 255));
-		jlProperties.setFont(new Font("Verdana", 1, 14)); // NOI18N
-		jlProperties.setForeground(new Color(102, 102, 102));
-
-		GroupLayout jpPropertiesLayout = new GroupLayout(jpProperties);
-		jpProperties.setLayout(jpPropertiesLayout);
-		jpPropertiesLayout.setHorizontalGroup(jpPropertiesLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-						jpPropertiesLayout.createSequentialGroup()
-								.addContainerGap().addComponent(jlProperties)
-								.addContainerGap(417, Short.MAX_VALUE)));
-		jpPropertiesLayout.setVerticalGroup(jpPropertiesLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-						jpPropertiesLayout.createSequentialGroup()
-								.addComponent(jlProperties)
-								.addContainerGap(7, Short.MAX_VALUE)));
-
-		jspProperties.setTopComponent(jpProperties);
 
 		JSplitPane jspMzMLDetail = new JSplitPane();
 		jspMzMLDetail.setDividerLocation(90);
@@ -1701,71 +1580,17 @@ public class ProteoSuiteView extends JFrame {
 
 		jtpProperties.addTab("mzQuantML View", jpMzQuantML);
 
-		JPanel jpPropetiesTab = new JPanel();
-		jpPropetiesTab.setBackground(new Color(255, 255, 255));
-		jpPropetiesTab.setForeground(new Color(153, 153, 255));
-		GroupLayout jpPropetiesTabLayout = new GroupLayout(jpPropetiesTab);
-		jpPropetiesTab.setLayout(jpPropetiesTabLayout);
-		jpPropetiesTabLayout.setHorizontalGroup(jpPropetiesTabLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jtpProperties));
-		jpPropetiesTabLayout.setVerticalGroup(jpPropetiesTabLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jtpProperties));
 
-		jspProperties.setRightComponent(jpPropetiesTab);
-
-		JPanel jpPropertiesBox = new JPanel();
-		GroupLayout jpPropertiesBoxLayout = new GroupLayout(jpPropertiesBox);
-		jpPropertiesBox.setLayout(jpPropertiesBoxLayout);
-		jpPropertiesBoxLayout.setHorizontalGroup(jpPropertiesBoxLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspProperties));
-		jpPropertiesBoxLayout.setVerticalGroup(jpPropertiesBoxLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspProperties, GroupLayout.DEFAULT_SIZE, 635,
-						Short.MAX_VALUE));
-
-		jspViewerAndProperties.setRightComponent(jpPropertiesBox);
-
-		JPanel jpViewerAndProperties = new JPanel();
-		jpViewerAndProperties.setBackground(new Color(204, 204, 255));
-		GroupLayout jpViewerAndPropertiesLayout = new GroupLayout(
-				jpViewerAndProperties);
-		jpViewerAndProperties.setLayout(jpViewerAndPropertiesLayout);
-		jpViewerAndPropertiesLayout
-				.setHorizontalGroup(jpViewerAndPropertiesLayout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(jspViewerAndProperties,
-								GroupLayout.DEFAULT_SIZE, 958, Short.MAX_VALUE));
-		jpViewerAndPropertiesLayout
-				.setVerticalGroup(jpViewerAndPropertiesLayout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addComponent(jspViewerAndProperties));
-
-		final JSplitPane jspMainPanelView = new JSplitPane();
-		jspMainPanelView.setDividerLocation(280);
-		jspMainPanelView.setDividerSize(3);
-		jspMainPanelView.setLeftComponent(jpLeftPanelView);
-		jspMainPanelView.setRightComponent(jpViewerAndProperties);
-
-		final JPanel jpMainPanelView = new JPanel();
-		GroupLayout jpMainPanelViewLayout = new GroupLayout(jpMainPanelView);
-		jpMainPanelView.setLayout(jpMainPanelViewLayout);
-
-		jpMainPanelViewLayout.setHorizontalGroup(jpMainPanelViewLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspMainPanelView, GroupLayout.DEFAULT_SIZE, 1242,
-						Short.MAX_VALUE));
-		jpMainPanelViewLayout.setVerticalGroup(jpMainPanelViewLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspMainPanelView));
+		ProjectDetails projectDetails = new ProjectDetails(jtQuantFiles, jtIdentFiles, jtRawFiles);
+		JPanel jpLeftPanelView = new LeftPanelView(projectDetails);
+		JPanel jpLeftViewer = new LeftViewer(jtpViewer, jtpLog);
+		JPanel jpPropertiesBox = new PropertiesView(jtpProperties);
+		final MainPanel jpMainPanelView = new MainPanel(jpLeftPanelView, jpLeftViewer, jpPropertiesBox);
 
 		JLabel jlRawFiles = new JLabel("1) Raw Files:");
 		JLabel jlIdentFiles = new JLabel("2) Identification Files:");
 		JLabel jlTechnique = new JLabel("3) Technique:");
 		JLabel jlQuantFiles = new JLabel("4) Quant Files:");
-
 		jlQuantFiles.setBackground(new Color(255, 255, 255));
 
 		jlIdentFilesStatus.setFont(new Font("Tahoma", 1, 11)); // NOI18N
@@ -2042,13 +1867,13 @@ public class ProteoSuiteView extends JFrame {
 						.getClassLoader().getResource("images/thick.gif")));
 		jmShowProjectFiles.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				if (jspMainPanelView.getDividerLocation() <= 5) {
-					jspMainPanelView.setDividerLocation(250);
+				if (jpMainPanelView.getMainPanelView().getDividerLocation() <= 5) {
+					jpMainPanelView.getMainPanelView().setDividerLocation(250);
 					Icon thick = new ImageIcon(getClass().getClassLoader()
 							.getResource("images/thick.gif"));
 					jmShowProjectFiles.setIcon(thick);
 				} else {
-					jspMainPanelView.setDividerLocation(0);
+					jpMainPanelView.getMainPanelView().setDividerLocation(0);
 					jmShowProjectFiles.setIcon(null);
 				}
 			}
@@ -2062,12 +1887,12 @@ public class ProteoSuiteView extends JFrame {
 						"images/thick.gif")));
 		jmShowViewer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				if (jspViewerAndProperties.getDividerLocation() <= 5) {
-					jspViewerAndProperties.setDividerLocation(600);
+				if (jpMainPanelView.getViewerAndProperties().getDividerLocation() <= 5) {
+					jpMainPanelView.getViewerAndProperties().setDividerLocation(600);
 					jmShowViewer.setIcon(new ImageIcon(getClass()
 							.getClassLoader().getResource("images/thick.gif")));
 				} else {
-					jspViewerAndProperties.setDividerLocation(0);
+					jpMainPanelView.getViewerAndProperties().setDividerLocation(0);
 					jmShowViewer.setIcon(null);
 				}
 			}
@@ -2453,30 +2278,7 @@ public class ProteoSuiteView extends JFrame {
 
 		// MzML data
 		jspMzML.setDividerLocation(100);
-		// Viewer Height (Viewer)
-		jspLeftViewerDetails.setDividerLocation(480);
-		// Left Menu (Files)
-		jspMainPanelView.setDividerLocation(250);
-		// Viewer Width (Viewer)
-		jspViewerAndProperties.setDividerLocation(600);
 		pack();
-	}
-
-
-	private JPanel getLeftPanelView(JSplitPane jspLeftPanelView) {
-		JPanel jpLeftPanelView = new JPanel();
-		jpLeftPanelView.setBackground(new Color(204, 204, 255));
-		GroupLayout jpLeftPanelViewLayout = new GroupLayout(jpLeftPanelView);
-		jpLeftPanelView.setLayout(jpLeftPanelViewLayout);
-		jpLeftPanelViewLayout.setHorizontalGroup(jpLeftPanelViewLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspLeftPanelView, GroupLayout.DEFAULT_SIZE, 281,
-						Short.MAX_VALUE));
-		jpLeftPanelViewLayout.setVerticalGroup(jpLeftPanelViewLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspLeftPanelView, GroupLayout.DEFAULT_SIZE, 637,
-						Short.MAX_VALUE));
-		return jpLeftPanelView;
 	}
 
 	public void jmNewProjectActionPerformed(JComboBox<String> jcbTechnique,
