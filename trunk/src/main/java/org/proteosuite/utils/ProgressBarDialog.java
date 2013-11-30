@@ -14,9 +14,12 @@
 package org.proteosuite.utils;
 
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Set;
 
 import javax.swing.*;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 /**
  * Progress bar used for long procedures (tasks).
@@ -24,94 +27,98 @@ import javax.swing.*;
  * @param parent JFrame which will be used to plot the progress bar.
  * @param modal Access to super class.
  */
-public class ProgressBarDialog extends javax.swing.JDialog {
+public class ProgressBarDialog extends JDialog {
 
+    private JButton jbCancel;
+    private JLabel jlExecuting;
+    private JProgressBar jpbStatusBar;
     private String sThread = "";
-    private SystemUtils SysUtils = new SystemUtils();
+    private static final SystemUtils SYS_UTILS = new SystemUtils();
     
-    //... Creates new form ProgressBarDialog ...//
+    /**
+     * Creates new form ProgressBarDialog
+     * @param parent
+     * @param modal
+     * @param sThread
+     */
     public ProgressBarDialog(Frame parent, boolean modal, String sThread) {
         super(parent, modal);        
         initComponents();
         setLocationRelativeTo(parent);
         this.sThread = sThread;
         this.jlExecuting.setText("");
-        this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setResizable(false);
     }
     public void setTaskName(String sExecutingTask){
-        this.jlExecuting.setText(sExecutingTask);
+        jlExecuting.setText(sExecutingTask);
     }
 
     /** 
      * This method is called from within the constructor to initialise the form.
      */
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jpbStatusBar = new javax.swing.JProgressBar();
-        jbCancel = new javax.swing.JButton();
-        jlExecuting = new javax.swing.JLabel();
+        jpbStatusBar = new JProgressBar();
+        jbCancel = new JButton();
+        jlExecuting = new JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
         jpbStatusBar.setIndeterminate(true);
 
         jbCancel.setText("Cancel");
-        jbCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jbCancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 jbCancelActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jpbStatusBar, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jpbStatusBar, GroupLayout.PREFERRED_SIZE, 348, GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(143, 143, 143)
-                        .addComponent(jbCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jbCancel, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jlExecuting, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)))
+                        .addComponent(jlExecuting, GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jpbStatusBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jlExecuting, javax.swing.GroupLayout.DEFAULT_SIZE, 11, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jpbStatusBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(ComponentPlacement.UNRELATED)
+                .addComponent(jlExecuting, GroupLayout.DEFAULT_SIZE, 11, Short.MAX_VALUE)
+                .addPreferredGap(ComponentPlacement.UNRELATED)
                 .addComponent(jbCancel)
                 .addContainerGap())
         );
 
         pack();
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
-    private void jbCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCancelActionPerformed
-        //... Stop thread ...//        
+    /**
+     * 
+     * @param actionEvent
+     */
+    private void jbCancelActionPerformed(ActionEvent actionEvent) {       
         
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
         for (Thread thread : threadSet){
             if(thread.getName().equals(sThread)){
                  thread.interrupt();
-                 System.out.println(SysUtils.getTime()+" - Thread "+thread.getName()+" stopped");
+                 System.out.println(SYS_UTILS.getTime()+" - Thread " + thread.getName() + " stopped");
             }
         }
         this.dispose();
-    }//GEN-LAST:event_jbCancelActionPerformed
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private JButton jbCancel;
-    private JLabel jlExecuting;
-    private JProgressBar jpbStatusBar;
-    // End of variables declaration//GEN-END:variables
-
+    }
 }

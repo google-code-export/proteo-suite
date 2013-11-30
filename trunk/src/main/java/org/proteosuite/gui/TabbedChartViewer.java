@@ -1,6 +1,5 @@
 package org.proteosuite.gui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -17,7 +16,6 @@ import javax.swing.SwingConstants;
 import org.proteosuite.gui.chart.ChartChromatogram;
 import org.proteosuite.gui.chart.ChartPlot2D;
 import org.proteosuite.gui.chart.ChartSpectrum;
-import org.proteosuite.utils.TwoDPlot;
 
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
 
@@ -149,6 +147,7 @@ public class TabbedChartViewer extends JTabbedPane {
 	 * @param void
 	 * @return JInternalFrame as a container
 	 */
+	@Deprecated
 	private JInternalFrame getInternalFrame() {
 		JInternalFrame internalFrame = new JInternalFrame("");
 		Icon icon = new ImageIcon(getClass().getClassLoader().getResource(
@@ -171,42 +170,32 @@ public class TabbedChartViewer extends JTabbedPane {
 		
 		ChromatogramPanel chromatogramPanel = ChartChromatogram.getChromatogram(mzMLUnmarshaller);
 		if (chromatogramPanel != null)
-		{
-			JInternalFrame jifViewChromatogram = getInternalFrame();
-			
-			jifViewChromatogram.setTitle("Chromatogram <" + title + ">");
-			jifViewChromatogram.add(chromatogramPanel);
-			jdpTIC.add(jifViewChromatogram);
-		}
+			jdpTIC.add(chromatogramPanel);
 		
 		jdpTIC.revalidate();
 		jdpTIC.repaint();
 	}
 
 	public void updateSpectrum(String sID, MzMLUnmarshaller unmarshaller) {
+		jdpMS.removeAll();
+		
 		JPanel spectrumPanel = ChartSpectrum.getSpectrum(unmarshaller, sID);
 		
-		jdpMS.removeAll();
-
-		JInternalFrame jifViewSpectrum = getInternalFrame();
-		
-		jifViewSpectrum.setTitle("MS spectrum <ScanID: " + sID + ">");
-		jifViewSpectrum.add(spectrumPanel, BorderLayout.CENTER);
-		jifViewSpectrum.setSize(jdpMS.getSize());
-		
-		jdpMS.add(jifViewSpectrum, BorderLayout.CENTER);
+		jdpMS.add(spectrumPanel);
 		jdpMS.revalidate();
 		jdpMS.repaint();
 	}
 
 	public void update2DPlot(String title, MzMLUnmarshaller unmarshaller) {
+		jp2D.removeAll();
 		
-		TwoDPlot jifView2D = ChartPlot2D.get2DPlot(unmarshaller, title);
+		JInternalFrame jifView2D = ChartPlot2D.get2DPlot(unmarshaller, title);		
 		if (jifView2D != null) {
 			jp2D.add(jifView2D);
 			jifView2D.pack();
 			jifView2D.setVisible(true);
 		}
-		
+		jp2D.revalidate();
+		jp2D.repaint();
 	}
 }
