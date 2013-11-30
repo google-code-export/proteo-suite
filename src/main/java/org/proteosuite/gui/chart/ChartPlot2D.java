@@ -3,6 +3,8 @@ package org.proteosuite.gui.chart;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JInternalFrame;
+
 import org.proteosuite.ProteoSuiteView;
 import org.proteosuite.utils.TwoDPlot;
 
@@ -25,7 +27,7 @@ public class ChartPlot2D {
 	 * @param sTitle
 	 * @return
 	 */
-	public static TwoDPlot get2DPlot(MzMLUnmarshaller unmarshaller, String sTitle) {
+	public static JInternalFrame get2DPlot(MzMLUnmarshaller unmarshaller, String sTitle) {
 		// CheckMemory chm = new
 		// CheckMemory("Before allocating memory for 2D plot");
 		// Display about 27 x 3 = 51 MB maximum for now
