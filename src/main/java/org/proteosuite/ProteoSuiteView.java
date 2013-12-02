@@ -724,8 +724,7 @@ public class ProteoSuiteView extends JFrame {
 							jtpLog.setLog(sOutput);
 
 							// Clear container
-							jtpViewer.updateChromatogram(aFiles[0].getPath(),
-									aMzMLUnmarshaller.get(0));
+							jtpViewer.updateChromatogram(aMzMLUnmarshaller.get(0));
 
 							sMessage = SYS_UTILS.getTime()
 									+ " - Displaying 2D Plot";
@@ -733,8 +732,7 @@ public class ProteoSuiteView extends JFrame {
 							sOutput = sOutput + sMessage + "\n";
 							jtpLog.setLog(sOutput);
 
-							jtpViewer.update2DPlot(aFiles[0].getPath(),
-									aMzMLUnmarshaller.get(0));
+							jtpViewer.update2DPlot(aMzMLUnmarshaller.get(0));
 
 							progressBarDialog.setVisible(false);
 							progressBarDialog.dispose();
@@ -2617,14 +2615,11 @@ public class ProteoSuiteView extends JFrame {
 								+ " - Showing chromatogram ...");
 
 						// Clear container
-						jtpViewer.updateChromatogram(
-								(String) jtRawFiles.getValueAt(0, 1),
-								aMzMLUnmarshaller.get(0));
+						jtpViewer.updateChromatogram(aMzMLUnmarshaller.get(0));
 						System.out.println(SYS_UTILS.getTime()
 								+ " - Showing 2D plot ...");
 
-						jtpViewer.update2DPlot(jtRawFiles.getValueAt(0, 1)
-								.toString(), aMzMLUnmarshaller.get(0));
+						jtpViewer.update2DPlot(aMzMLUnmarshaller.get(0));
 					}
 				}
 				// Load ident files
