@@ -856,7 +856,7 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 		Software software2 = new Software();
 		softwareList.getSoftware().add(software2);
 		software2.setId("ProteoSuite");
-		software2.setVersion(ProteoSuiteView.sPS_Version);
+		software2.setVersion(ProteoSuiteView.PROTEOSUITE_VERSION);
 		CvParam cvpSW2 = new CvParam();
 		cvpSW2.setAccession("MS:1002124");
 		cvpSW2.setCv(cvPSI_MS);
