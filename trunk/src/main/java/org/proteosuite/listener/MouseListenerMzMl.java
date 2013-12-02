@@ -24,8 +24,8 @@ public class MouseListenerMzMl implements MouseListener {
 	private List<MzMLUnmarshaller> aMzMLUnmarshaller;
 	private TabbedChartViewer jtpViewer;
 
-	public MouseListenerMzMl(JTable jtRawFiles, JTableRawData jtRawData, TabbedLog jtpLog,
-			List<MzMLUnmarshaller> aMzMLUnmarshaller,
+	public MouseListenerMzMl(JTable jtRawFiles, JTableRawData jtRawData,
+			TabbedLog jtpLog, List<MzMLUnmarshaller> aMzMLUnmarshaller,
 			TabbedChartViewer jtpViewer) {
 		this.jtRawFiles = jtRawFiles;
 		this.jtRawData = jtRawData;
@@ -42,26 +42,25 @@ public class MouseListenerMzMl implements MouseListener {
 		if (evt.getButton() == 1) {
 			if (jtRawFiles.getSelectedRow() > -1) {
 				// Get index from spectra
-				MzMLUnmarshaller unmarshaller = aMzMLUnmarshaller.get(jtRawFiles.getSelectedRow());
-				
-				jtRawData.showRawData(unmarshaller, jtMzML
-						.getValueAt(jtMzML.getSelectedRow(), 1).toString(),
-						jtpLog);
+				MzMLUnmarshaller unmarshaller = aMzMLUnmarshaller
+						.get(jtRawFiles.getSelectedRow());
 
-				jtpViewer.updateSpectrum(
-						jtMzML.getValueAt(jtMzML.getSelectedRow(), 1)
-								.toString(), aMzMLUnmarshaller.get(0));
-			} else {
-				// Get index from spectra
-				MzMLUnmarshaller unmarshaller = aMzMLUnmarshaller.get(0);
-				
 				jtRawData.showRawData(unmarshaller,
 						jtMzML.getValueAt(jtMzML.getSelectedRow(), 1)
 								.toString(), jtpLog);
 
-				jtpViewer.updateSpectrum(
+				jtpViewer.updateSpectrum(aMzMLUnmarshaller.get(0), jtMzML
+						.getValueAt(jtMzML.getSelectedRow(), 1).toString());
+			} else {
+				// Get index from spectra
+				MzMLUnmarshaller unmarshaller = aMzMLUnmarshaller.get(0);
+
+				jtRawData.showRawData(unmarshaller,
 						jtMzML.getValueAt(jtMzML.getSelectedRow(), 1)
-								.toString(), aMzMLUnmarshaller.get(0));
+								.toString(), jtpLog);
+
+				jtpViewer.updateSpectrum(aMzMLUnmarshaller.get(0), jtMzML
+						.getValueAt(jtMzML.getSelectedRow(), 1).toString());
 			}
 			jtpViewer.setSelectedIndex(0);
 		}

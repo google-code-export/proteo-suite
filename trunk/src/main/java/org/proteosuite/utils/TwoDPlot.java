@@ -18,12 +18,13 @@ package org.proteosuite.utils;
  * @author fgonzalez
  */
 import java.awt.Color;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
+import java.awt.Dimension;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+
 import javax.swing.JInternalFrame;
+
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
@@ -39,21 +40,14 @@ import org.jfree.chart.plot.FastScatterPlot;
  */
 public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
 
-    private float[][] data = new float[2][1000000];
+    private static float[][] data = new float[2][1000000];
     //private float[] mz;
     //private float[] intens;
     //private float[] art;
 
     //... Generate chart from raw data ...//
-    public TwoDPlot(final String title, float[] mz, float[] intens, float[] art) {            
+    public static ChartPanel getTwoDPlot(float[] mz, float[] intens, float[] art) {            
         //... Windows default settings ...//
-        super("2D View <" + title + "> - MS1");
-        Icon icon = new ImageIcon(getClass().getResource("/images/icon.gif"));
-        setFrameIcon(icon);
-        setResizable(true);
-        setMaximizable(true);
-        setClosable(true);
-        setIconifiable(true);
         //this.mz = mz;
         //this.intens = intens;
         //this.art = art;
@@ -70,7 +64,7 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
         yAxis.setAutoRangeIncludesZero(true);
 
         //... Graph and values ...//
-        final FastScatterPlot plot = new FastScatterPlot(this.data, yAxis, xAxis);
+        final FastScatterPlot plot = new FastScatterPlot(data, yAxis, xAxis);
 
         plot.setDomainGridlinesVisible(false);
         plot.setRangeGridlinesVisible(false);
@@ -82,7 +76,7 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
         chart.getRenderingHints().put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         
         final ChartPanel panel = new ChartPanel(chart, true);
-        panel.setPreferredSize(new java.awt.Dimension(500, 400));
+        panel.setPreferredSize(new Dimension(500, 400));
         panel.setMinimumDrawHeight(10);
         panel.setMaximumDrawHeight(2000);
         panel.setMinimumDrawWidth(20);
@@ -92,7 +86,8 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
         panel.setZoomOutlinePaint(new Color(216,240,223));
         panel.setMouseWheelEnabled(true);
         panel.setDisplayToolTips(true);
-        add(panel);
+        
+        return panel;
     }
     /**---------------------------------
      * Populate array
@@ -100,11 +95,11 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
      * @param intens - intensity values 
      * @param art - RT values 
      ----------------------------------*/
-    private void populateData(float[] mz, float[] intens, float[] art) {
+    private static void populateData(float[] mz, float[] intens, float[] art) {
         int iCounter = 0;
         for (int iI = 0; iI < mz.length; iI++) {
-            this.data[1][iCounter] = (float) art[iI];
-            this.data[0][iCounter] = (float) mz[iI];
+            data[1][iCounter] = art[iI];
+            data[0][iCounter] = mz[iI];
             iCounter++;
         }
     }

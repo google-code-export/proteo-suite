@@ -57,10 +57,7 @@ public class MouseListenerRawFiles implements MouseListener {
 					jtMzML);
 
 			// Clear container
-			jtpViewer.updateChromatogram(
-					(String) jtRawFiles.getValueAt(
-							jtRawFiles.getSelectedRow(), 1),
-					aMzMLUnmarshaller.get(jtRawFiles.getSelectedRow()));
+			jtpViewer.updateChromatogram(aMzMLUnmarshaller.get(jtRawFiles.getSelectedRow()));
 		}
 		// ... Right click event for displaying MGF data ...//
 		if ((evt.getButton() == 1)
