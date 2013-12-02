@@ -10,7 +10,6 @@ import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
@@ -26,12 +25,6 @@ public class ProjectToolBar extends JToolBar {
 			final JMenuItem jmSaveProject,
 			final TabbedProperties jtpProperties, final TabbedLog jtpLog,
 			final TabbedChartViewer jtpViewer, 
-			final JButton jbExportPepMZQExcel,
-			final JButton jbExportProtMZQExcel,
-			final JButton jbExportFeatMZQExcel,
-			final JButton jbExportMascotXMLExcel,
-			final JButton jbExportMzIdentMLExcel,
-			final JButton jbExportMGFExcel, final JButton jbExportMzMLExcel,
 			final JButton jbSaveProject, final JComboBox<String> jcbTechnique,
 			final JEditorPane jepMGFView, final JEditorPane jepMZQView,
 			final JEditorPane jepMascotXMLView, final JEditorPane jepMzIDView,
@@ -43,9 +36,10 @@ public class ProjectToolBar extends JToolBar {
 			final JTable jtMzId, final JTable jtMascotXMLView,
 			final JTable jtPeptideQuant, final JTable jtProteinQuant,
 			final JTable jtFeatureQuant, final JComboBox<String> jcbOutputFormat, 
-			final JLabel jlFileNameMGFText, final JTable jtMzIDProtGroup, final JTabbedPane jtpMzQuantMLDetail, 
+			final JLabel jlFileNameMGFText, final JTable jtMzIDProtGroup,
 			final JComboBox<String> jcbPSM, final JLabel jlRawFilesStatus)
 	{
+		setFloatable(false);
 		JButton jbNewProject = new JButton(new ImageIcon(getClass()
 				.getClassLoader().getResource("images/new.gif")));
 		jbNewProject.setToolTipText("New Project (Ctrl + N)");
@@ -56,16 +50,13 @@ public class ProjectToolBar extends JToolBar {
 			public void mouseClicked(MouseEvent evt) {
 				proteoSuiteView.jmNewProjectActionPerformed(jcbTechnique, jmSaveProject,
 						jmCloseProject, jtpLog, jtpViewer, jbSaveProject,
-						jbExportMzMLExcel, jbExportMGFExcel,
-						jbExportMzIdentMLExcel, jbExportMascotXMLExcel,
-						jbExportPepMZQExcel, jbExportProtMZQExcel,
-						jbExportFeatMZQExcel, jcbOutputFormat, jepMGFView,
+						jcbOutputFormat, jepMGFView,
 						jepMZQView, jepMascotXMLView, jepMzIDView, jepMzMLView,
 						jlFileNameMzMLText, jlFileNameMzIDText,
 						jlIdentFilesStatus, jlFileNameMzQText, jtRawFiles,
 						jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF,
 						jtMzId, jtMascotXMLView, jtPeptideQuant,
-						jtProteinQuant, jtFeatureQuant);
+						jtProteinQuant, jtFeatureQuant, jtpProperties);
 			}
 		});
 
@@ -84,11 +75,8 @@ public class ProjectToolBar extends JToolBar {
 			public void mouseClicked(MouseEvent evt) {
 				proteoSuiteView.jmImportFileActionPerformed(jtRawFiles, jlFileNameMGFText,
 						jtFeatureQuant, jtMzIDProtGroup, jmSaveProject,
-						jtpLog, jtpProperties, jtpMzQuantMLDetail, jtpViewer,
-						jbExportPepMZQExcel, jbExportProtMZQExcel,
-						jbExportFeatMZQExcel, jbExportMascotXMLExcel,
-						jbExportMzIdentMLExcel, jbExportMGFExcel,
-						jbExportMzMLExcel, jbSaveProject, jcbPSM, jepMZQView,
+						jtpLog, jtpProperties, jtpViewer,
+						jbSaveProject, jcbPSM, jepMZQView,
 						jepMzIDView, jepMzMLView, jlFileNameMzQText,
 						jlRawFilesStatus, jlIdentFilesStatus,
 						jlFileNameMzIDText, jlFileNameMzMLText, jtIdentFiles,

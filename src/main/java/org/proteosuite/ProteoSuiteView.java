@@ -141,14 +141,7 @@ public class ProteoSuiteView extends JFrame {
 		final JMenuItem jmSaveProject = new JMenuItem("Save Project",
 				new ImageIcon(getClass().getClassLoader().getResource(
 						"images/save.gif")));
-
-		final JButton jbExportFeatMZQExcel = new JButton();
-		final JButton jbExportMGFExcel = new JButton();
-		final JButton jbExportMascotXMLExcel = new JButton();
-		final JButton jbExportMzIdentMLExcel = new JButton();
-		final JButton jbExportMzMLExcel = new JButton();
-		final JButton jbExportPepMZQExcel = new JButton();
-		final JButton jbExportProtMZQExcel = new JButton();
+		
 		final JButton jbSaveProject = new JButton(new ImageIcon(getClass()
 				.getClassLoader().getResource("images/save.gif")));
 		final JComboBox<String> jcbTechnique = new JComboBox<String>();
@@ -177,28 +170,37 @@ public class ProteoSuiteView extends JFrame {
 		final TabbedChartViewer jtpViewer = new TabbedChartViewer();
 		final TabbedLog jtpLog = new TabbedLog(jtRawData);
 
+
+		final JLabel jlFileNameMGFText = new JLabel();
+		final JTable jtMzIDProtGroup = new JTable();
+		final JComboBox<String> jcbPSM = new JComboBox<String>();
+		jcbPSM.setModel(new DefaultComboBoxModel<String>(new String[] { "<=1",
+				"<=2", "<=3", "All" }));
+		
+		final TabbedProperties jtpProperties = new TabbedProperties(
+				jlFileNameMzMLText, jepMzMLView, jtMzML, jlFileNameMGFText, 
+				jepMGFView, jtMGF, jtMzId,
+				jlFileNameMzIDText, jcbPSM,
+				jtMzIDProtGroup, jepMzIDView, jepMascotXMLView,
+				jtMascotXMLView, jlFileNameMzQText, jepMZQView,
+				jtPeptideQuant, jtProteinQuant, jtFeatureQuant);
+		
 		initComponents(jmCloseProject, jmSaveProject, jtpLog, jtpViewer,
-				jbExportPepMZQExcel, jbExportProtMZQExcel,
-				jbExportFeatMZQExcel, jbExportMascotXMLExcel,
-				jbExportMzIdentMLExcel, jbExportMGFExcel, jbExportMzMLExcel,
 				jbSaveProject, jcbTechnique, jepMGFView, jepMZQView,
 				jepMascotXMLView, jepMzIDView, jepMzMLView, jlFileNameMzMLText,
 				jlFileNameMzIDText, jlIdentFilesStatus, jlFileNameMzQText,
 				jtRawFiles, jtIdentFiles, jtQuantFiles, jtRawData, jtMzML,
 				jtMGF, jtMzId, jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
-				jtFeatureQuant);
+				jtFeatureQuant, jtpProperties, jlFileNameMGFText, jtMzIDProtGroup, jcbPSM);
 
 		// Project default settings
 		initProjectValues(jmCloseProject, jmSaveProject, jtpLog, jtpViewer,
-				jbSaveProject, jbExportMzMLExcel, jbExportMGFExcel,
-				jbExportMzIdentMLExcel, jbExportMascotXMLExcel,
-				jbExportPepMZQExcel, jbExportProtMZQExcel,
-				jbExportFeatMZQExcel, jcbTechnique, jepMGFView, jepMZQView,
+				jbSaveProject, jcbTechnique, jepMGFView, jepMZQView,
 				jepMascotXMLView, jepMzIDView, jepMzMLView, jlFileNameMzMLText,
 				jlFileNameMzIDText, jlIdentFilesStatus, jlFileNameMzQText,
 				jtRawFiles, jtIdentFiles, jtQuantFiles, jtRawData, jtMzML,
 				jtMGF, jtMzId, jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
-				jtFeatureQuant);
+				jtFeatureQuant, jtpProperties);
 
 		setTitle("ProteoSuite " + sPS_Version + " (Beta Version) - <Project: "
 				+ WORKSPACE.getWorkSpace() + " - " + sProjectName
@@ -221,29 +223,6 @@ public class ProteoSuiteView extends JFrame {
 				+ System.getProperty("java.class.path"));
 		System.out.println("****************************************");
 
-		// Buttons
-		Icon iconExcel = new ImageIcon(getClass().getClassLoader().getResource(
-				"images/xls.gif"));
-		jbExportMzMLExcel.setIcon(iconExcel);
-		jbExportMzMLExcel.setToolTipText("Export to Excel Spreadsheet (.xls)");
-		jbExportMGFExcel.setIcon(iconExcel);
-		jbExportMGFExcel.setToolTipText("Export to Excel Spreadsheet (.xls)");
-		jbExportMzIdentMLExcel.setIcon(iconExcel);
-		jbExportMzIdentMLExcel
-				.setToolTipText("Export to Excel Spreadsheet (.xls)");
-		jbExportMascotXMLExcel.setIcon(iconExcel);
-		jbExportMascotXMLExcel
-				.setToolTipText("Export to Excel Spreadsheet (.xls)");
-		jbExportPepMZQExcel.setIcon(iconExcel);
-		jbExportPepMZQExcel
-				.setToolTipText("Export to Excel Spreadsheet (.xls)");
-		jbExportProtMZQExcel.setIcon(iconExcel);
-		jbExportProtMZQExcel
-				.setToolTipText("Export to Excel Spreadsheet (.xls)");
-		jbExportFeatMZQExcel.setIcon(iconExcel);
-		jbExportFeatMZQExcel
-				.setToolTipText("Export to Excel Spreadsheet (.xls)");
-
 		// Setting Window Height and Width
 		setMinimumSize(new Dimension(1024, 768));
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -255,12 +234,6 @@ public class ProteoSuiteView extends JFrame {
 	private void initComponents(final JMenuItem jmCloseProject,
 			final JMenuItem jmSaveProject, final TabbedLog jtpLog,
 			final TabbedChartViewer jtpViewer,
-			final JButton jbExportPepMZQExcel,
-			final JButton jbExportProtMZQExcel,
-			final JButton jbExportFeatMZQExcel,
-			final JButton jbExportMascotXMLExcel,
-			final JButton jbExportMzIdentMLExcel,
-			final JButton jbExportMGFExcel, final JButton jbExportMzMLExcel,
 			final JButton jbSaveProject, final JComboBox<String> jcbTechnique,
 			final JEditorPane jepMGFView, final JEditorPane jepMZQView,
 			final JEditorPane jepMascotXMLView, final JEditorPane jepMzIDView,
@@ -271,18 +244,13 @@ public class ProteoSuiteView extends JFrame {
 			final JTableRawData jtRawData, final JTable jtMzML, final JTable jtMGF,
 			final JTable jtMzId, final JTable jtMascotXMLView,
 			final JTable jtPeptideQuant, final JTable jtProteinQuant,
-			final JTable jtFeatureQuant) {
+			final JTable jtFeatureQuant, final TabbedProperties jtpProperties, 
+			final JLabel jlFileNameMGFText, final JTable jtMzIDProtGroup, final JComboBox<String> jcbPSM) {
 
 		jcbTechnique.setModel(new DefaultComboBoxModel<String>(new String[] {
 				"Select technique", "iTRAQ", "TMT", "emPAI" }));
 		jcbTechnique.setToolTipText("Select a technique for the analysis");
 		jcbTechnique.setBorder(BorderFactory.createEtchedBorder());
-
-		final JLabel jlFileNameMGFText = new JLabel();
-		final JTable jtMzIDProtGroup = new JTable();
-		final JComboBox<String> jcbPSM = new JComboBox<String>();
-		jcbPSM.setModel(new DefaultComboBoxModel<String>(new String[] { "<=1",
-				"<=2", "<=3", "All" }));
 
 		jepMzMLView.setContentType("text/html");
 		jepMzMLView.setFont(new Font("Tahoma", 0, 10)); // NOI18N
@@ -291,18 +259,6 @@ public class ProteoSuiteView extends JFrame {
 		jepMGFView.setContentType("text/html");
 		jepMGFView.setFont(new Font("Tahoma", 0, 10)); // NOI18N
 		jepMGFView.setPreferredSize(new Dimension(144, 84));
-
-		final JTabbedPane jtpMzQuantMLDetail = new TabbedMzQuantMLDetail(
-				jtPeptideQuant, jtProteinQuant, jtFeatureQuant,
-				jbExportPepMZQExcel, jbExportProtMZQExcel, jbExportFeatMZQExcel);
-
-		final TabbedProperties jtpProperties = new TabbedProperties(
-				jlFileNameMzMLText, jepMzMLView, jtMzML, jbExportMzMLExcel,
-				jlFileNameMGFText, jepMGFView, jtMGF, jbExportMGFExcel, jtMzId,
-				jbExportMzIdentMLExcel, jlFileNameMzIDText, jcbPSM,
-				jtMzIDProtGroup, jepMzIDView, jepMascotXMLView,
-				jbExportMascotXMLExcel, jtMascotXMLView, jtpMzQuantMLDetail,
-				jlFileNameMzQText, jepMZQView);
 
 		jtRawFiles.addMouseListener(new MouseListenerRawFiles(this,
 				jtpProperties, jepMzMLView, jlFileNameMzMLText, jtMzML,
@@ -357,7 +313,7 @@ public class ProteoSuiteView extends JFrame {
 		jepMascotXMLView.setPreferredSize(new Dimension(144, 84));
 
 		jtQuantFiles.addMouseListener(new MouseListenerQuantFiles(this,
-				jtFeatureQuant, jtpLog, jtpProperties, jtpMzQuantMLDetail,
+				jtFeatureQuant, jtpLog, jtpProperties,
 				jepMZQView, jlFileNameMzQText, jtPeptideQuant, jtProteinQuant,
 				jtQuantFiles));
 
@@ -385,31 +341,25 @@ public class ProteoSuiteView extends JFrame {
 		jlIdentFilesStatus.setForeground(new Color(51, 102, 0));
 
 		setJMenuBar(new MenuBar(this, jcbTechnique, jmSaveProject,
-				jmCloseProject, jtpLog, jtpViewer, jbSaveProject,
-				jbExportMzMLExcel, jbExportMGFExcel, jbExportMzIdentMLExcel,
-				jbExportMascotXMLExcel, jbExportPepMZQExcel,
-				jbExportProtMZQExcel, jbExportFeatMZQExcel, jcbOutputFormat,
+				jmCloseProject, jtpLog, jtpViewer, jbSaveProject, jcbOutputFormat,
 				jepMGFView, jepMZQView, jepMascotXMLView, jepMzIDView,
 				jepMzMLView, jlFileNameMzMLText, jlFileNameMzIDText,
 				jlIdentFilesStatus, jlFileNameMzQText, jtRawFiles,
 				jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
 				jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
 				jtFeatureQuant, jlFileNameMGFText, jtMzIDProtGroup,
-				jtpProperties, jtpMzQuantMLDetail, jcbPSM, jlRawFilesStatus,
+				jtpProperties, jcbPSM, jlRawFilesStatus,
 				jpMainPanelView, identParamsExecute, aMzIDUnmarshaller));
 
 		final JPanel jpToolBar = new MasterToolBar(this, jmCloseProject,
 				jmSaveProject, jtpProperties, jtpLog, jtpViewer,
-				jbExportPepMZQExcel, jbExportProtMZQExcel,
-				jbExportFeatMZQExcel, jbExportMascotXMLExcel,
-				jbExportMzIdentMLExcel, jbExportMGFExcel, jbExportMzMLExcel,
 				jbSaveProject, jcbTechnique, jepMGFView, jepMZQView,
 				jepMascotXMLView, jepMzIDView, jepMzMLView, jlFileNameMzMLText,
 				jlFileNameMzIDText, jlIdentFilesStatus, jlFileNameMzQText,
 				jtRawFiles, jtIdentFiles, jtQuantFiles, jtRawData, jtMzML,
 				jtMGF, jtMzId, jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
 				jtFeatureQuant, jcbOutputFormat, jlFileNameMGFText,
-				jtMzIDProtGroup, jtpMzQuantMLDetail, jcbPSM, jlRawFilesStatus,
+				jtMzIDProtGroup, jcbPSM, jlRawFilesStatus,
 				identParamsExecute, aMzIDUnmarshaller);
 
 		final JPanel jpProjectStatus = new ProjectStatus(jcbTechnique,
@@ -460,13 +410,7 @@ public class ProteoSuiteView extends JFrame {
 	public void jmNewProjectActionPerformed(JComboBox<String> jcbTechnique,
 			JMenuItem jmSaveProject, JMenuItem jmCloseProject,
 			TabbedLog jtpLog, final TabbedChartViewer jtpViewer,
-			final JButton jbSaveProject, final JButton jbExportMzMLExcel,
-			final JButton jbExportMGFExcel,
-			final JButton jbExportMzIdentMLExcel,
-			final JButton jbExportMascotXMLExcel,
-			final JButton jbExportPepMZQExcel,
-			final JButton jbExportProtMZQExcel,
-			final JButton jbExportFeatMZQExcel,
+			final JButton jbSaveProject, 
 			JComboBox<String> jcbOutputFormat, final JEditorPane jepMGFView,
 			final JEditorPane jepMZQView, final JEditorPane jepMascotXMLView,
 			final JEditorPane jepMzIDView, final JEditorPane jepMzMLView,
@@ -475,7 +419,7 @@ public class ProteoSuiteView extends JFrame {
 			JTable jtRawFiles, JTable jtIdentFiles, JTable jtQuantFiles,
 			JTable jtRawData, JTable jtMzML, JTable jtMGF, JTable jtMzId,
 			JTable jtMascotXMLView, JTable jtPeptideQuant,
-			JTable jtProteinQuant, JTable jtFeatureQuant) {
+			JTable jtProteinQuant, JTable jtFeatureQuant, TabbedProperties jtpProperties) {
 		// Check if the project needs to be saved
 		if (isProjectModified) {
 			int iOption = JOptionPane
@@ -489,57 +433,41 @@ public class ProteoSuiteView extends JFrame {
 						jmSaveProject, jmCloseProject, jbSaveProject,
 						jcbOutputFormat, jtIdentFiles);
 				initProjectValues(jmCloseProject, jmSaveProject, jtpLog,
-						jtpViewer, jbSaveProject, jbExportMzMLExcel,
-						jbExportMGFExcel, jbExportMzIdentMLExcel,
-						jbExportMascotXMLExcel, jbExportPepMZQExcel,
-						jbExportProtMZQExcel, jbExportFeatMZQExcel,
-						jcbTechnique, jepMGFView, jepMZQView, jepMascotXMLView,
+						jtpViewer, jbSaveProject, jcbTechnique, jepMGFView, 
+						jepMZQView, jepMascotXMLView,
 						jepMzIDView, jepMzMLView, jlFileNameMzMLText,
 						jlFileNameMzIDText, jlIdentFilesStatus,
 						jlFileNameMzQText, jtRawFiles, jtIdentFiles,
 						jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
 						jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
-						jtFeatureQuant);
+						jtFeatureQuant, jtpProperties);
 			} else if (iOption == JOptionPane.NO_OPTION) {
 				initProjectValues(jmCloseProject, jmSaveProject, jtpLog,
-						jtpViewer, jbSaveProject, jbExportMzMLExcel,
-						jbExportMGFExcel, jbExportMzIdentMLExcel,
-						jbExportMascotXMLExcel, jbExportPepMZQExcel,
-						jbExportProtMZQExcel, jbExportFeatMZQExcel,
+						jtpViewer, jbSaveProject, 
 						jcbTechnique, jepMGFView, jepMZQView, jepMascotXMLView,
 						jepMzIDView, jepMzMLView, jlFileNameMzMLText,
 						jlFileNameMzIDText, jlIdentFilesStatus,
 						jlFileNameMzQText, jtRawFiles, jtIdentFiles,
 						jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
 						jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
-						jtFeatureQuant);
+						jtFeatureQuant, jtpProperties);
 			}
 		} else {
 			initProjectValues(jmCloseProject, jmSaveProject, jtpLog, jtpViewer,
-					jbSaveProject, jbExportMzMLExcel, jbExportMGFExcel,
-					jbExportMzIdentMLExcel, jbExportMascotXMLExcel,
-					jbExportPepMZQExcel, jbExportProtMZQExcel,
-					jbExportFeatMZQExcel, jcbTechnique, jepMGFView, jepMZQView,
+					jbSaveProject, jcbTechnique, jepMGFView, jepMZQView,
 					jepMascotXMLView, jepMzIDView, jepMzMLView,
 					jlFileNameMzMLText, jlFileNameMzIDText, jlIdentFilesStatus,
 					jlFileNameMzQText, jtRawFiles, jtIdentFiles, jtQuantFiles,
 					jtRawData, jtMzML, jtMGF, jtMzId, jtMascotXMLView,
-					jtPeptideQuant, jtProteinQuant, jtFeatureQuant);
+					jtPeptideQuant, jtProteinQuant, jtFeatureQuant, jtpProperties);
 		}
 	}
 
 	public void jmImportFileActionPerformed(final JTable jtRawFiles,
 			final JLabel jlFileNameMGFText, final JTable jtFeatureQuant,
 			final JTable jtMzIDProtGroup, JMenuItem jmSaveProject,
-			final TabbedLog jtpLog, final JTabbedPane jtpProperties,
-			final JTabbedPane jtpMzQuantMLDetail,
+			final TabbedLog jtpLog, final TabbedProperties jtpProperties,
 			final TabbedChartViewer jtpViewer,
-			final JButton jbExportPepMZQExcel,
-			final JButton jbExportProtMZQExcel,
-			final JButton jbExportFeatMZQExcel,
-			final JButton jbExportMascotXMLExcel,
-			final JButton jbExportMzIdentMLExcel,
-			final JButton jbExportMGFExcel, final JButton jbExportMzMLExcel,
 			final JButton jbSaveProject, final JComboBox<String> jcbPSM,
 			final JEditorPane jepMZQView, final JEditorPane jepMzIDView,
 			final JEditorPane jepMzMLView, final JLabel jlFileNameMzQText,
@@ -741,7 +669,8 @@ public class ProteoSuiteView extends JFrame {
 							System.out.println(sMessage);
 							sOutput = sOutput + sMessage + "\n";
 							jtpLog.setLog(sOutput);
-							jbExportMzMLExcel.setEnabled(true);
+
+							jtpProperties.setExportMzMLExcel(true);
 							renderIdentFiles(jtRawFiles, jtIdentFiles);
 							updateStatusPipeline(jlRawFilesStatus, jtRawFiles,
 									jlIdentFilesStatus, jtIdentFiles);
@@ -816,7 +745,8 @@ public class ProteoSuiteView extends JFrame {
 							System.out.println(sMessage);
 							sOutput = sOutput + sMessage + "\n";
 							jtpLog.setLog(sOutput);
-							jbExportMGFExcel.setEnabled(true);
+
+							jtpProperties.setExportMGFExcel(true);
 							renderIdentFiles(jtRawFiles, jtIdentFiles);
 							updateStatusPipeline(jlRawFilesStatus, jtRawFiles,
 									jlIdentFilesStatus, jtIdentFiles);
@@ -961,7 +891,8 @@ public class ProteoSuiteView extends JFrame {
 							System.out.println(sMessage);
 							sOutput = sOutput + sMessage + "\n";
 							jtpLog.setLog(sOutput);
-							jbExportMzIdentMLExcel.setEnabled(true);
+
+							jtpProperties.setExportMzIdentMLExcel(true);
 							renderIdentFiles(jtRawFiles, jtIdentFiles);
 							updateStatusPipeline(jlRawFilesStatus, jtRawFiles,
 									jlIdentFilesStatus, jtIdentFiles);
@@ -1049,7 +980,8 @@ public class ProteoSuiteView extends JFrame {
 							System.out.println(sMessage);
 							sOutput = sOutput + sMessage + "\n";
 							jtpLog.setLog(sOutput);
-							jbExportMascotXMLExcel.setEnabled(true);
+
+							jtpProperties.setExportMascotXMLExcel(true);
 							renderIdentFiles(jtRawFiles, jtIdentFiles);
 							updateStatusPipeline(jlRawFilesStatus, jtRawFiles,
 									jlIdentFilesStatus, jtIdentFiles);
@@ -1157,7 +1089,7 @@ public class ProteoSuiteView extends JFrame {
 								loadMzQuantMLView(0,
 										aFiles[0].getAbsolutePath(),
 										jtFeatureQuant, jtpLog, jtpProperties,
-										jtpMzQuantMLDetail, jepMZQView,
+										jepMZQView,
 										jlFileNameMzQText, jtPeptideQuant,
 										jtProteinQuant, jtQuantFiles);
 
@@ -1167,9 +1099,10 @@ public class ProteoSuiteView extends JFrame {
 								sOutput = sOutput + sMessage + "\n";
 								jtpLog.setLog(sOutput);
 							}
-							jbExportPepMZQExcel.setEnabled(true);
-							jbExportProtMZQExcel.setEnabled(true);
-							jbExportFeatMZQExcel.setEnabled(true);
+
+							jtpProperties.setExportPepMZQExcel(true);
+							jtpProperties.setExportProtMZQExcel(true);
+							jtpProperties.setExportFeatMZQExcel(true);
 							progressBarDialog.setVisible(false);
 							progressBarDialog.dispose();
 						}
@@ -1196,12 +1129,7 @@ public class ProteoSuiteView extends JFrame {
 	public void jmCloseProjectActionPerformed(JMenuItem jmCloseProject,
 			JMenuItem jmSaveProject, TabbedLog jtpLog,
 			final TabbedChartViewer jtpViewer, final JButton jbSaveProject,
-			final JButton jbExportMzMLExcel, final JButton jbExportMGFExcel,
-			final JButton jbExportMzIdentMLExcel,
-			final JButton jbExportMascotXMLExcel,
-			final JButton jbExportPepMZQExcel,
-			final JButton jbExportProtMZQExcel,
-			final JButton jbExportFeatMZQExcel, JComboBox<String> jcbTechnique,
+			JComboBox<String> jcbTechnique,
 			JComboBox<String> jcbOutputFormat, final JEditorPane jepMGFView,
 			final JEditorPane jepMZQView, final JEditorPane jepMascotXMLView,
 			final JEditorPane jepMzIDView, final JEditorPane jepMzMLView,
@@ -1210,7 +1138,7 @@ public class ProteoSuiteView extends JFrame {
 			JTable jtRawFiles, JTable jtIdentFiles, JTable jtQuantFiles,
 			JTable jtRawData, JTable jtMzML, JTable jtMGF, JTable jtMzId,
 			JTable jtMascotXMLView, JTable jtPeptideQuant,
-			JTable jtProteinQuant, JTable jtFeatureQuant) {
+			JTable jtProteinQuant, JTable jtFeatureQuant, TabbedProperties jtpProperties) {
 		// Check if the project needs to be saved
 		if (isProjectModified) {
 			int iOption = JOptionPane
@@ -1224,52 +1152,40 @@ public class ProteoSuiteView extends JFrame {
 						jmSaveProject, jmCloseProject, jbSaveProject,
 						jcbOutputFormat, jtIdentFiles);
 				initProjectValues(jmCloseProject, jmSaveProject, jtpLog,
-						jtpViewer, jbSaveProject, jbExportMzMLExcel,
-						jbExportMGFExcel, jbExportMzIdentMLExcel,
-						jbExportMascotXMLExcel, jbExportPepMZQExcel,
-						jbExportProtMZQExcel, jbExportFeatMZQExcel,
+						jtpViewer, jbSaveProject, 
 						jcbTechnique, jepMGFView, jepMZQView, jepMascotXMLView,
 						jepMzIDView, jepMzMLView, jlFileNameMzMLText,
 						jlFileNameMzIDText, jlIdentFilesStatus,
 						jlFileNameMzQText, jtRawFiles, jtIdentFiles,
 						jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
 						jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
-						jtFeatureQuant);
+						jtFeatureQuant, jtpProperties);
 			} else if (iOption == JOptionPane.NO_OPTION) {
 				initProjectValues(jmCloseProject, jmSaveProject, jtpLog,
-						jtpViewer, jbSaveProject, jbExportMzMLExcel,
-						jbExportMGFExcel, jbExportMzIdentMLExcel,
-						jbExportMascotXMLExcel, jbExportPepMZQExcel,
-						jbExportProtMZQExcel, jbExportFeatMZQExcel,
+						jtpViewer, jbSaveProject, 
 						jcbTechnique, jepMGFView, jepMZQView, jepMascotXMLView,
 						jepMzIDView, jepMzMLView, jlFileNameMzMLText,
 						jlFileNameMzIDText, jlIdentFilesStatus,
 						jlFileNameMzQText, jtRawFiles, jtIdentFiles,
 						jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
 						jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
-						jtFeatureQuant);
+						jtFeatureQuant, jtpProperties);
 			}
 		} else {
 			initProjectValues(jmCloseProject, jmSaveProject, jtpLog, jtpViewer,
-					jbSaveProject, jbExportMzMLExcel, jbExportMGFExcel,
-					jbExportMzIdentMLExcel, jbExportMascotXMLExcel,
-					jbExportPepMZQExcel, jbExportProtMZQExcel,
-					jbExportFeatMZQExcel, jcbTechnique, jepMGFView, jepMZQView,
+					jbSaveProject, jcbTechnique, jepMGFView, jepMZQView,
 					jepMascotXMLView, jepMzIDView, jepMzMLView,
 					jlFileNameMzMLText, jlFileNameMzIDText, jlIdentFilesStatus,
 					jlFileNameMzQText, jtRawFiles, jtIdentFiles, jtQuantFiles,
 					jtRawData, jtMzML, jtMGF, jtMzId, jtMascotXMLView,
-					jtPeptideQuant, jtProteinQuant, jtFeatureQuant);
+					jtPeptideQuant, jtProteinQuant, jtFeatureQuant, jtpProperties);
 		}
 	}
 
 	public void jmRunQuantAnalysisActionPerformed(final TabbedLog jtpLog,
 			final JMenuItem jmCloseProject, final JMenuItem jmSaveProject,
-			final JTabbedPane jtpProperties,
-			final JTabbedPane jtpMzQuantMLDetail, final JButton jbSaveProject,
-			final JButton jbExportPepMZQExcel,
-			final JButton jbExportProtMZQExcel,
-			final JButton jbExportFeatMZQExcel,
+			final TabbedProperties jtpProperties,
+			final JButton jbSaveProject,
 			final JComboBox<String> jcbTechnique,
 			final JComboBox<String> jcbOutputFormat,
 			final JEditorPane jepMZQView, final JLabel jlFileNameMzQText,
@@ -1465,7 +1381,6 @@ public class ProteoSuiteView extends JFrame {
 															+ sProjectName,
 													jtFeatureQuant, jtpLog,
 													jtpProperties,
-													jtpMzQuantMLDetail,
 													jepMZQView,
 													jlFileNameMzQText,
 													jtPeptideQuant,
@@ -1479,12 +1394,12 @@ public class ProteoSuiteView extends JFrame {
 													+ SYS_UTILS.getTime()
 													+ " - Execution finished...");
 
-											jbExportPepMZQExcel
-													.setEnabled(true);
-											jbExportProtMZQExcel
-													.setEnabled(true);
-											jbExportFeatMZQExcel
-													.setEnabled(true);
+											jtpProperties.setExportPepMZQExcel
+													(true);
+											jtpProperties.setExportProtMZQExcel
+													(true);
+											jtpProperties.setExportFeatMZQExcel
+													(true);
 
 											JOptionPane
 													.showMessageDialog(
@@ -2122,8 +2037,8 @@ public class ProteoSuiteView extends JFrame {
 	 */
 	public void loadMzQuantMLView(int iIndex, String sFile,
 			JTable jtFeatureQuant, TabbedLog jtpLog,
-			final JTabbedPane jtpProperties,
-			final JTabbedPane jtpMzQuantMLDetail, JEditorPane jepMZQView,
+			final TabbedProperties jtpProperties,
+			JEditorPane jepMZQView,
 			JLabel jlFileNameMzQText, JTable jtPeptideQuant,
 			JTable jtProteinQuant, JTable jtQuantFiles) {
 		try {
@@ -2145,7 +2060,7 @@ public class ProteoSuiteView extends JFrame {
 						jtpProperties, iIndex, SYS_UTILS, progressBarDialog,
 						jtProteinQuant, jtPeptideQuant, jtFeatureQuant, sFile,
 						aMzQUnmarshaller, jlFileNameMzQText, jepMZQView,
-						jtpLog, jtpMzQuantMLDetail);
+						jtpLog);
 				mzQuantML.start();
 			}
 		} catch (Exception e) {
@@ -2235,18 +2150,14 @@ public class ProteoSuiteView extends JFrame {
 	 * @param jlIdentFilesStatus
 	 * @param jlFileNameMzQText
 	 * @param jtRawData
+	 * @param jtpProperties 
 	 * @param void
 	 * @return void
 	 */
 	private void initProjectValues(JMenuItem jmCloseProject,
 			JMenuItem jmSaveProject, TabbedLog jtpLog,
 			final TabbedChartViewer jtpViewer, final JButton jbSaveProject,
-			final JButton jbExportMzMLExcel, final JButton jbExportMGFExcel,
-			final JButton jbExportMzIdentMLExcel,
-			final JButton jbExportMascotXMLExcel,
-			final JButton jbExportPepMZQExcel,
-			final JButton jbExportProtMZQExcel,
-			final JButton jbExportFeatMZQExcel, JComboBox<String> jcbTechnique,
+			JComboBox<String> jcbTechnique,
 			final JEditorPane jepMGFView, final JEditorPane jepMZQView,
 			final JEditorPane jepMascotXMLView, final JEditorPane jepMzIDView,
 			final JEditorPane jepMzMLView, JLabel jlFileNameMzMLText,
@@ -2254,7 +2165,7 @@ public class ProteoSuiteView extends JFrame {
 			JLabel jlFileNameMzQText, JTable jtRawFiles, JTable jtIdentFiles,
 			JTable jtQuantFiles, JTable jtRawData, JTable jtMzML, JTable jtMGF,
 			JTable jtMzId, JTable jtMascotXMLView, JTable jtPeptideQuant,
-			JTable jtProteinQuant, JTable jtFeatureQuant) {
+			JTable jtProteinQuant, JTable jtFeatureQuant, TabbedProperties jtpProperties) {
 		// Loading values from config file
 		// From config file (workspace)
 		initSettings(jmCloseProject, jmSaveProject, jbSaveProject);
@@ -2280,13 +2191,13 @@ public class ProteoSuiteView extends JFrame {
 		jtpViewer.reset();
 
 		// Project buttons
-		jbExportMzMLExcel.setEnabled(false);
-		jbExportMGFExcel.setEnabled(false);
-		jbExportMzIdentMLExcel.setEnabled(false);
-		jbExportMascotXMLExcel.setEnabled(false);
-		jbExportPepMZQExcel.setEnabled(false);
-		jbExportProtMZQExcel.setEnabled(false);
-		jbExportFeatMZQExcel.setEnabled(false);
+		jtpProperties.setExportMzMLExcel(false);
+		jtpProperties.setExportMGFExcel(false);
+		jtpProperties.setExportMzIdentMLExcel(false);
+		jtpProperties.setExportMascotXMLExcel(false);
+		jtpProperties.setExportPepMZQExcel(false);
+		jtpProperties.setExportProtMZQExcel(false);
+		jtpProperties.setExportFeatMZQExcel(false);
 
 		// ISO 3166 country code - GB
 		Locale.setDefault(new Locale("en", "GB"));

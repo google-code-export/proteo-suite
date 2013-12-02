@@ -1,8 +1,8 @@
 package org.proteosuite.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 
-import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,16 +25,8 @@ public class ProjectDetails extends JPanel {
 				jtIdentFiles);
 
 		JPanel jpLeftMenuBottom = new JPanel();
-		GroupLayout jpLeftMenuBottomLayout = new GroupLayout(jpLeftMenuBottom);
-		jpLeftMenuBottom.setLayout(jpLeftMenuBottomLayout);
-		jpLeftMenuBottomLayout.setHorizontalGroup(jpLeftMenuBottomLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspLeftMenuBottom, GroupLayout.DEFAULT_SIZE, 277,
-						Short.MAX_VALUE));
-		jpLeftMenuBottomLayout.setVerticalGroup(jpLeftMenuBottomLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspLeftMenuBottom, GroupLayout.DEFAULT_SIZE, 483,
-						Short.MAX_VALUE));
+		jpLeftMenuBottom.setLayout(new BorderLayout());
+		jpLeftMenuBottom.add(jspLeftMenuBottom);
 
 		JSplitPane jspProjectDetails = new JSplitPane();
 		jspProjectDetails.setBackground(new Color(255, 255, 255));
@@ -46,15 +38,8 @@ public class ProjectDetails extends JPanel {
 
 		setBackground(new Color(255, 255, 255));
 
-		GroupLayout jpProjectDetailsLayout = new GroupLayout(this);
-		setLayout(jpProjectDetailsLayout);
-		jpProjectDetailsLayout.setHorizontalGroup(jpProjectDetailsLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspProjectDetails));
-		jpProjectDetailsLayout
-				.setVerticalGroup(jpProjectDetailsLayout.createParallelGroup(
-						GroupLayout.Alignment.LEADING).addComponent(
-						jspProjectDetails, GroupLayout.Alignment.TRAILING));
+		setLayout(new BorderLayout());
+		add(jspProjectDetails);
 	}
 
 	private JSplitPane getLeftMenuBottom(JTable jtQuantFiles,
@@ -102,16 +87,8 @@ public class ProjectDetails extends JPanel {
 		jtpQuantFiles.setTabComponentAt(0, jlQuantFilesIcon);
 
 		JPanel jpQuantFiles = new JPanel();
-		GroupLayout jpQuantFilesLayout = new GroupLayout(jpQuantFiles);
-		jpQuantFiles.setLayout(jpQuantFilesLayout);
-		jpQuantFilesLayout.setHorizontalGroup(jpQuantFilesLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jtpQuantFiles, GroupLayout.DEFAULT_SIZE, 275,
-						Short.MAX_VALUE));
-		jpQuantFilesLayout.setVerticalGroup(jpQuantFilesLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jtpQuantFiles, GroupLayout.DEFAULT_SIZE, 281,
-						Short.MAX_VALUE));
+		jpQuantFiles.setLayout(new BorderLayout());
+		jpQuantFiles.add(jtpQuantFiles);
 
 		return jpQuantFiles;
 	}
@@ -133,27 +110,9 @@ public class ProjectDetails extends JPanel {
 		jtpRawFiles.setTabComponentAt(0, jlRawFilesIcon);
 
 		JPanel jpLeftMenuTop = new JPanel();
-		GroupLayout jpLeftMenuTopLayout = new GroupLayout(jpLeftMenuTop);
-		jpLeftMenuTop.setLayout(jpLeftMenuTopLayout);
-		jpLeftMenuTopLayout.setHorizontalGroup(jpLeftMenuTopLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addGap(0, 277, Short.MAX_VALUE)
-				.addGroup(
-						jpLeftMenuTopLayout.createParallelGroup(
-								GroupLayout.Alignment.LEADING).addComponent(
-								jtpRawFiles, GroupLayout.DEFAULT_SIZE, 277,
-								Short.MAX_VALUE)));
-		jpLeftMenuTopLayout
-				.setVerticalGroup(jpLeftMenuTopLayout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGap(0, 129, Short.MAX_VALUE)
-						.addGroup(
-								jpLeftMenuTopLayout.createParallelGroup(
-										GroupLayout.Alignment.LEADING)
-										.addComponent(jtpRawFiles,
-												GroupLayout.Alignment.TRAILING,
-												GroupLayout.DEFAULT_SIZE, 129,
-												Short.MAX_VALUE)));
+		jpLeftMenuTop.setLayout(new BorderLayout());
+		jpLeftMenuTop.add(jtpRawFiles);
+		
 
 		return jpLeftMenuTop;
 	}

@@ -9,6 +9,8 @@ public class ManipulationToolBar extends JToolBar {
 
 	public ManipulationToolBar()
 	{
+		setFloatable(false);
+		
 		JButton jbCut = new JButton(new ImageIcon(getClass().getClassLoader()
 				.getResource("images/cut.gif")));
 		jbCut.setToolTipText("Cut (Ctrl + X)");

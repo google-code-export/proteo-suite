@@ -5,7 +5,6 @@ import java.awt.event.MouseListener;
 
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 
 import org.proteosuite.ProteoSuiteView;
@@ -21,7 +20,6 @@ public class MouseListenerQuantFiles implements MouseListener {
 	private JTable jtFeatureQuant;
 	private TabbedLog jtpLog;
 	private TabbedProperties jtpProperties;
-	private JTabbedPane jtpMzQuantMLDetail;
 	private JEditorPane jepMZQView;
 	private JLabel jlFileNameMzQText;
 	private JTable jtPeptideQuant;
@@ -30,14 +28,12 @@ public class MouseListenerQuantFiles implements MouseListener {
 
 	public MouseListenerQuantFiles(ProteoSuiteView proteoSuiteView,
 			JTable jtFeatureQuant, TabbedLog jtpLog,
-			TabbedProperties jtpProperties, JTabbedPane jtpMzQuantMLDetail,
-			JEditorPane jepMZQView, JLabel jlFileNameMzQText,
+			TabbedProperties jtpProperties, JEditorPane jepMZQView, JLabel jlFileNameMzQText,
 			JTable jtPeptideQuant, JTable jtProteinQuant, JTable jtQuantFiles) {
 
 		this.jtFeatureQuant = jtFeatureQuant;
 		this.jtpLog = jtpLog;
 		this.jtpProperties = jtpProperties;
-		this.jtpMzQuantMLDetail = jtpMzQuantMLDetail;
 		this.jepMZQView = jepMZQView;
 		this.jlFileNameMzQText = jlFileNameMzQText;
 		this.jtPeptideQuant = jtPeptideQuant;
@@ -59,7 +55,7 @@ public class MouseListenerQuantFiles implements MouseListener {
 					jtQuantFiles.getValueAt(
 							jtQuantFiles.getSelectedRow(), 1)
 							.toString(), jtFeatureQuant, jtpLog,
-					jtpProperties, jtpMzQuantMLDetail, jepMZQView,
+					jtpProperties, jepMZQView,
 					jlFileNameMzQText, jtPeptideQuant, jtProteinQuant,
 					jtQuantFiles);
 		}

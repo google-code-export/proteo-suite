@@ -11,7 +11,6 @@ import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
@@ -28,9 +27,6 @@ public class AnalysisToolBar extends JToolBar {
 	public AnalysisToolBar(final ProteoSuiteView proteoSuiteView, final JMenuItem jmCloseProject,
 			final JMenuItem jmSaveProject,
 			final TabbedProperties jtpProperties, final TabbedLog jtpLog,
-			final JButton jbExportPepMZQExcel,
-			final JButton jbExportProtMZQExcel,
-			final JButton jbExportFeatMZQExcel,
 			final JButton jbSaveProject, final JComboBox<String> jcbTechnique,
 			final JEditorPane jepMZQView,
 			final JEditorPane jepMzIDView,
@@ -40,12 +36,12 @@ public class AnalysisToolBar extends JToolBar {
 			final JTable jtMzId,
 			final JTable jtPeptideQuant, final JTable jtProteinQuant,
 			final JTable jtFeatureQuant, final JComboBox<String> jcbOutputFormat, 
-			final JTable jtMzIDProtGroup, final JTabbedPane jtpMzQuantMLDetail, 
-			final JComboBox<String> jcbPSM, final JLabel jlRawFilesStatus, final IdentParamsView identParamsExecute, 
+			final JTable jtMzIDProtGroup, final JComboBox<String> jcbPSM, final JLabel jlRawFilesStatus, final IdentParamsView identParamsExecute, 
 			final List<MzIdentMLUnmarshaller> aMzIDUnmarshaller)
 	{
 		setMaximumSize(new Dimension(34, 9));
 		setMinimumSize(new Dimension(34, 9));
+		setFloatable(false);
 		
 
 
@@ -77,9 +73,7 @@ public class AnalysisToolBar extends JToolBar {
 			public void mouseClicked(MouseEvent evt) {
 				proteoSuiteView.jmRunQuantAnalysisActionPerformed(jtpLog, jmCloseProject,
 						jmSaveProject, jtpProperties,
-						jtpMzQuantMLDetail, jbSaveProject, jbExportPepMZQExcel,
-						jbExportProtMZQExcel, jbExportFeatMZQExcel,
-						jcbTechnique, jcbOutputFormat, jepMZQView,
+						jbSaveProject, jcbTechnique, jcbOutputFormat, jepMZQView,
 						jlFileNameMzQText, jtFeatureQuant, jtIdentFiles,
 						jtPeptideQuant, jtProteinQuant, jtQuantFiles,
 						jtRawFiles);

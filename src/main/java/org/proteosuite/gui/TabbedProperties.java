@@ -30,42 +30,70 @@ import org.proteosuite.listener.MouseListenerExcelExport;
  * @author Andrew Collins
  */
 public class TabbedProperties extends JTabbedPane {
+	final JButton jbExportFeatMZQExcel = new JButton();
+	final JButton jbExportMGFExcel = new JButton();
+	final JButton jbExportMascotXMLExcel = new JButton();
+	final JButton jbExportMzIdentMLExcel = new JButton();
+	final JButton jbExportMzMLExcel = new JButton();
+	final JButton jbExportPepMZQExcel = new JButton();
+	final JButton jbExportProtMZQExcel = new JButton();
+	final JTabbedPane jtpMzQuantMLDetail;
 
 	public TabbedProperties(JLabel jlFileNameMzMLText, JEditorPane jepMzMLView,
-			JTable jtMzML, JButton jbExportMzMLExcel, JLabel jlFileNameMGFText,
-			JEditorPane jepMGFView, JTable jtMGF, JButton jbExportMGFExcel,
-			JTable jtMzId, JButton jbExportMzIdentMLExcel,
+			JTable jtMzML, JLabel jlFileNameMGFText,
+			JEditorPane jepMGFView, JTable jtMGF, JTable jtMzId, 
 			JLabel jlFileNameMzIDText, JComboBox<String> jcbPSM,
 			JTable jtMzIDProtGroup, JEditorPane jepMzIDView,
-			JEditorPane jepMascotXMLView, JButton jbExportMascotXMLExcel,
-			JTable jtMascotXMLView, JTabbedPane jtpMzQuantMLDetail,
-			JLabel jlFileNameMzQText, JEditorPane jepMZQView) {
+			JEditorPane jepMascotXMLView, JTable jtMascotXMLView, 
+			JLabel jlFileNameMzQText, JEditorPane jepMZQView,
+			JTable jtPeptideQuant, JTable jtProteinQuant, JTable jtFeatureQuant) {
 
+		jtpMzQuantMLDetail = new TabbedMzQuantMLDetail(
+				jtPeptideQuant, jtProteinQuant, jtFeatureQuant, jbExportPepMZQExcel, jbExportProtMZQExcel, jbExportFeatMZQExcel);
+		
+		// Buttons
+		Icon iconExcel = new ImageIcon(getClass().getClassLoader().getResource(
+				"images/xls.gif"));
+		jbExportMzMLExcel.setIcon(iconExcel);
+		jbExportMzMLExcel.setToolTipText("Export to Excel Spreadsheet (.xls)");
+		jbExportMGFExcel.setIcon(iconExcel);
+		jbExportMGFExcel.setToolTipText("Export to Excel Spreadsheet (.xls)");
+		jbExportMzIdentMLExcel.setIcon(iconExcel);
+		jbExportMzIdentMLExcel
+				.setToolTipText("Export to Excel Spreadsheet (.xls)");
+		jbExportMascotXMLExcel.setIcon(iconExcel);
+		jbExportMascotXMLExcel
+				.setToolTipText("Export to Excel Spreadsheet (.xls)");
+		jbExportPepMZQExcel.setIcon(iconExcel);
+		jbExportPepMZQExcel
+				.setToolTipText("Export to Excel Spreadsheet (.xls)");
+		jbExportProtMZQExcel.setIcon(iconExcel);
+		jbExportProtMZQExcel
+				.setToolTipText("Export to Excel Spreadsheet (.xls)");
+		jbExportFeatMZQExcel.setIcon(iconExcel);
+		jbExportFeatMZQExcel
+				.setToolTipText("Export to Excel Spreadsheet (.xls)");
+		
+		
 		JTabbedPane jtpProperties = this;
 		jtpProperties.addTab(
 				"mzML View",
-				getMzMLPanel(jlFileNameMzMLText, jepMzMLView, jtMzML,
-						jbExportMzMLExcel));
+				getMzMLPanel(jlFileNameMzMLText, jepMzMLView, jtMzML));
 
 		jtpProperties.addTab(
 				"MGF View",
-				getMgfPanel(jlFileNameMGFText, jepMGFView, jtMGF,
-						jbExportMGFExcel));
+				getMgfPanel(jlFileNameMGFText, jepMGFView, jtMGF));
 		jtpProperties.addTab(
 				"mzIdentML View",
-				getMzIdPanel(jtMzId, jbExportMzIdentMLExcel,
-						jlFileNameMzIDText, jcbPSM, jtMzIDProtGroup,
+				getMzIdPanel(jtMzId, jlFileNameMzIDText, jcbPSM, jtMzIDProtGroup,
 						jepMzIDView));
 		jtpProperties.addTab(
 				"Mascot XML View",
-				getMascotXML(jepMascotXMLView, jbExportMascotXMLExcel,
-						jtMascotXMLView));
+				getMascotXML(jepMascotXMLView, jtMascotXMLView));
 		jtpProperties.addTab(
 				"mzQuantML View",
 				getMzQuantMLPanel(jtpMzQuantMLDetail, jlFileNameMzQText,
 						jepMZQView));
-
-		setBackground(new Color(255, 255, 255));
 
 		Icon propertiesMzMLIcon = new ImageIcon(getClass().getClassLoader()
 				.getResource("images/properties.gif"));
@@ -106,7 +134,7 @@ public class TabbedProperties extends JTabbedPane {
 	}
 
 	private JPanel getMzMLPanel(JLabel jlFileNameMzMLText,
-			JEditorPane jepMzMLView, JTable jtMzML, JButton jbExportMzMLExcel) {
+			JEditorPane jepMzMLView, JTable jtMzML) {
 		JLabel jlRT = new JLabel("RT (sec):");
 		final JTextField jtRT = new JTextField();
 
@@ -339,7 +367,7 @@ public class TabbedProperties extends JTabbedPane {
 	}
 
 	private JPanel getMgfPanel(JLabel jlFileNameMGFText,
-			JEditorPane jepMGFView, JTable jtMGF, JButton jbExportMGFExcel) {
+			JEditorPane jepMGFView, JTable jtMGF) {
 		JLabel jlSearchMGF = new JLabel("Search:");
 		jlSearchMGF.setFont(new Font("Tahoma", 1, 11)); // NOI18N
 
@@ -548,8 +576,7 @@ public class TabbedProperties extends JTabbedPane {
 		return jpMGF;
 	}
 
-	private JPanel getMzIdPanel(JTable jtMzId, JButton jbExportMzIdentMLExcel,
-			JLabel jlFileNameMzIDText, JComboBox<String> jcbPSM,
+	private JPanel getMzIdPanel(JTable jtMzId, 	JLabel jlFileNameMzIDText, JComboBox<String> jcbPSM,
 			JTable jtMzIDProtGroup, JEditorPane jepMzIDView) {
 		JLabel jlPeptideSpectrumMatches = new JLabel(
 				"Peptide-Spectrum matches with rank:");
@@ -829,7 +856,7 @@ public class TabbedProperties extends JTabbedPane {
 	}
 
 	private JPanel getMascotXML(JEditorPane jepMascotXMLView,
-			JButton jbExportMascotXMLExcel, JTable jtMascotXMLView) {
+			JTable jtMascotXMLView) {
 
 		JToolBar jtbMzIdentMLOptions1 = new JToolBar();
 		jtbMzIdentMLOptions1.setBorder(BorderFactory.createEtchedBorder());
@@ -1154,5 +1181,39 @@ public class TabbedProperties extends JTabbedPane {
 				.addComponent(jspMzQuantML));
 
 		return jpMzQuantML;
+	}
+
+	public void setMzQuantMLDetailIndex(int index) {
+		jtpMzQuantMLDetail.setSelectedIndex(index);
+	}
+
+	public void setExportMGFExcel(boolean state) {
+		jbExportMGFExcel.setEnabled(state);
+	}
+
+	public void setExportMzIdentMLExcel(boolean state) {
+		jbExportMzIdentMLExcel.setEnabled(state);
+	}
+
+	public void setExportMascotXMLExcel(boolean state) {
+		jbExportMascotXMLExcel.setEnabled(state);
+		
+	}
+
+	public void setExportPepMZQExcel(boolean state) {
+		jbExportPepMZQExcel.setEnabled(state);
+	}
+
+	public void setExportProtMZQExcel(boolean state) {
+		jbExportProtMZQExcel.setEnabled(state);
+	}
+
+	public void setExportFeatMZQExcel(boolean state) {
+		jbExportFeatMZQExcel.setEnabled(state);
+		
+	}
+
+	public void setExportMzMLExcel(boolean state) {
+		jbExportMzMLExcel.setEnabled(state);
 	}
 }
