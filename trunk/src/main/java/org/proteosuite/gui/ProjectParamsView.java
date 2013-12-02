@@ -16,12 +16,15 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.proteosuite.WorkSpace;
 import org.proteosuite.utils.OpenURL;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
@@ -44,7 +47,7 @@ public class ProjectParamsView extends javax.swing.JPanel {
     private void initValues()
     {       
         //... Validate if config file exists ...//
-        boolean exists = (new File("config.xml")).exists();
+        boolean exists = new File("config.xml").exists();
         if (exists)
         {
             readConfigFile();
@@ -210,6 +213,7 @@ public class ProjectParamsView extends javax.swing.JPanel {
             out.write("</ProteoSuiteApplication>");
             out.close();
             JOptionPane.showMessageDialog(this, "Changes updated successfully!", "ProteoSuite", JOptionPane.INFORMATION_MESSAGE);
+            
         }
         catch (Exception e)
         {
@@ -437,7 +441,9 @@ public class ProjectParamsView extends javax.swing.JPanel {
 
     private void jbSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSaveActionPerformed
         //... Save changes ...//
-        saveConfigFile();        
+        saveConfigFile();
+        WorkSpace workSpace = WorkSpace.getInstance();
+        workSpace.setWorkSpace(jtWorkspace.getText());
     }//GEN-LAST:event_jbSaveActionPerformed
 
     private void jbAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbAddActionPerformed

@@ -17,7 +17,6 @@ import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -33,6 +32,7 @@ import javax.xml.xpath.XPathFactory;
 import org.proteosuite.ProteoSuiteView;
 import org.proteosuite.WorkSpace;
 import org.proteosuite.gui.TabbedLog;
+import org.proteosuite.gui.TabbedProperties;
 import org.proteosuite.utils.PluginManager;
 import org.proteosuite.utils.ProgressBarDialog;
 import org.proteosuite.utils.SystemUtils;
@@ -82,7 +82,7 @@ import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
  */
 public class FileFormatMzQuantML extends Thread implements Runnable {
 	private static final WorkSpace WORKSPACE = WorkSpace.getInstance();
-	private final JTabbedPane jtpProperties;
+	private final TabbedProperties jtpProperties;
 	private final int iIndexRef;
 	private final SystemUtils sysutils;
 	private final ProgressBarDialog progressBarDialog;
@@ -94,7 +94,6 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 	private final JLabel jlFileNameMzQText;
 	private final JEditorPane jepMZQView;
 	private final TabbedLog jtpLog;
-	private final JTabbedPane jtpMzQuantMLDetail;
 	
 	/**
 	 * 
@@ -112,9 +111,9 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 	 * @param jtaLog
 	 * @param jtpMzQuantMLDetail
 	 */
-	public FileFormatMzQuantML(JTabbedPane jtpProperties, int iIndexRef, SystemUtils sysutils, ProgressBarDialog progressBarDialog, 
+	public FileFormatMzQuantML(TabbedProperties jtpProperties, int iIndexRef, SystemUtils sysutils, ProgressBarDialog progressBarDialog, 
 			JTable jtProteinQuant, JTable jtPeptideQuant, JTable jtFeatureQuant, String sFileRef, List<MzQuantMLUnmarshaller> aMzQUnmarshaller, 
-			JLabel jlFileNameMzQText, JEditorPane jepMZQView, TabbedLog jtpLog, JTabbedPane jtpMzQuantMLDetail) {
+			JLabel jlFileNameMzQText, JEditorPane jepMZQView, TabbedLog jtpLog) {
 		super("MzQuantML Loader");
 		
 		this.jtpProperties = jtpProperties;
@@ -129,7 +128,6 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 		this.jlFileNameMzQText = jlFileNameMzQText;
 		this.jepMZQView = jepMZQView;
 		this.jtpLog = jtpLog;
-		this.jtpMzQuantMLDetail = jtpMzQuantMLDetail;
 	}
 
 	@Override
@@ -540,7 +538,7 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 			jtFeatureQuant.setAutoCreateRowSorter(true);
 		}
 		jtpProperties.setSelectedIndex(4);
-		jtpMzQuantMLDetail.setSelectedIndex(1);
+		jtpProperties.setMzQuantMLDetailIndex(1);
 
 		progressBarDialog.setVisible(false);
 		progressBarDialog.dispose();

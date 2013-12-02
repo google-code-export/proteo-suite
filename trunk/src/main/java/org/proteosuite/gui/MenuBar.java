@@ -48,13 +48,7 @@ public class MenuBar extends JMenuBar {
 			final JComboBox<String> jcbTechnique,
 			final JMenuItem jmSaveProject, final JMenuItem jmCloseProject,
 			final TabbedLog jtpLog, final TabbedChartViewer jtpViewer,
-			final JButton jbSaveProject, final JButton jbExportMzMLExcel,
-			final JButton jbExportMGFExcel,
-			final JButton jbExportMzIdentMLExcel,
-			final JButton jbExportMascotXMLExcel,
-			final JButton jbExportPepMZQExcel,
-			final JButton jbExportProtMZQExcel,
-			final JButton jbExportFeatMZQExcel,
+			final JButton jbSaveProject, 
 			final JComboBox<String> jcbOutputFormat,
 			final JEditorPane jepMGFView, final JEditorPane jepMZQView,
 			final JEditorPane jepMascotXMLView, final JEditorPane jepMzIDView,
@@ -66,37 +60,32 @@ public class MenuBar extends JMenuBar {
 			final JTable jtMzId, final JTable jtMascotXMLView,
 			final JTable jtPeptideQuant, final JTable jtProteinQuant,
 			final JTable jtFeatureQuant, final JLabel jlFileNameMGFText,
-			final JTable jtMzIDProtGroup, final JTabbedPane jtpProperties,
-			final JTabbedPane jtpMzQuantMLDetail,
+			final JTable jtMzIDProtGroup, final TabbedProperties jtpProperties,
 			final JComboBox<String> jcbPSM, final JLabel jlRawFilesStatus,
 			MainPanel jpMainPanelView, IdentParamsView identParamsExecute,
 			List<MzIdentMLUnmarshaller> aMzIDUnmarshaller) {
 		JMenuBar jmMain = this;
 
 		jmMain.add(getFileMenu(proteoSuiteView, jcbTechnique, jmSaveProject,
-				jmCloseProject, jtpLog, jtpViewer, jbSaveProject,
-				jbExportMzMLExcel, jbExportMGFExcel, jbExportMzIdentMLExcel,
-				jbExportMascotXMLExcel, jbExportPepMZQExcel,
-				jbExportProtMZQExcel, jbExportFeatMZQExcel, jcbOutputFormat,
+				jmCloseProject, jtpLog, jtpViewer, jbSaveProject, jcbOutputFormat,
 				jepMGFView, jepMZQView, jepMascotXMLView, jepMzIDView,
 				jepMzMLView, jlFileNameMzMLText, jlFileNameMzIDText,
 				jlIdentFilesStatus, jlFileNameMzQText, jtRawFiles,
 				jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
 				jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
 				jtFeatureQuant, jlFileNameMGFText, jtMzIDProtGroup,
-				jtpProperties, jtpMzQuantMLDetail, jcbPSM, jlRawFilesStatus));
+				jtpProperties, jcbPSM, jlRawFilesStatus));
 
 		jmMain.add(getEditMenu());
 		jmMain.add(getViewMenu(jpMainPanelView));
 		jmMain.add(getProjectMenu(jtRawFiles, jcbTechnique));
 		jmMain.add(getAnalyzeMenu(proteoSuiteView, jcbTechnique, jmSaveProject,
-				jmCloseProject, jtpLog, jbSaveProject, jbExportPepMZQExcel,
-				jbExportProtMZQExcel, jbExportFeatMZQExcel, jcbOutputFormat,
+				jmCloseProject, jtpLog, jbSaveProject, jcbOutputFormat,
 				jepMZQView, jepMzIDView, jlFileNameMzIDText,
 				jlIdentFilesStatus, jlFileNameMzQText, jtRawFiles,
 				jtIdentFiles, jtQuantFiles, jtMzML, jtMGF, jtMzId,
 				jtPeptideQuant, jtProteinQuant, jtFeatureQuant,
-				jtMzIDProtGroup, jtpProperties, jtpMzQuantMLDetail, jcbPSM,
+				jtMzIDProtGroup, jtpProperties, jcbPSM,
 				jlRawFilesStatus, identParamsExecute, aMzIDUnmarshaller));
 
 		jmMain.add(getToolsMenu(proteoSuiteView));
@@ -112,13 +101,7 @@ public class MenuBar extends JMenuBar {
 			final JComboBox<String> jcbTechnique,
 			final JMenuItem jmSaveProject, final JMenuItem jmCloseProject,
 			final TabbedLog jtpLog, final TabbedChartViewer jtpViewer,
-			final JButton jbSaveProject, final JButton jbExportMzMLExcel,
-			final JButton jbExportMGFExcel,
-			final JButton jbExportMzIdentMLExcel,
-			final JButton jbExportMascotXMLExcel,
-			final JButton jbExportPepMZQExcel,
-			final JButton jbExportProtMZQExcel,
-			final JButton jbExportFeatMZQExcel,
+			final JButton jbSaveProject,
 			final JComboBox<String> jcbOutputFormat,
 			final JEditorPane jepMGFView, final JEditorPane jepMZQView,
 			final JEditorPane jepMascotXMLView, final JEditorPane jepMzIDView,
@@ -130,8 +113,7 @@ public class MenuBar extends JMenuBar {
 			final JTable jtMzId, final JTable jtMascotXMLView,
 			final JTable jtPeptideQuant, final JTable jtProteinQuant,
 			final JTable jtFeatureQuant, final JLabel jlFileNameMGFText,
-			final JTable jtMzIDProtGroup, final JTabbedPane jtpProperties,
-			final JTabbedPane jtpMzQuantMLDetail,
+			final JTable jtMzIDProtGroup, final TabbedProperties jtpProperties,
 			final JComboBox<String> jcbPSM, final JLabel jlRawFilesStatus) {
 		JMenuItem jmNewProject = new JMenuItem("New Project", new ImageIcon(
 				getClass().getClassLoader().getResource("images/new.gif")));
@@ -141,16 +123,13 @@ public class MenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent evt) {
 				proteoSuiteView.jmNewProjectActionPerformed(jcbTechnique,
 						jmSaveProject, jmCloseProject, jtpLog, jtpViewer,
-						jbSaveProject, jbExportMzMLExcel, jbExportMGFExcel,
-						jbExportMzIdentMLExcel, jbExportMascotXMLExcel,
-						jbExportPepMZQExcel, jbExportProtMZQExcel,
-						jbExportFeatMZQExcel, jcbOutputFormat, jepMGFView,
+						jbSaveProject, jcbOutputFormat, jepMGFView,
 						jepMZQView, jepMascotXMLView, jepMzIDView, jepMzMLView,
 						jlFileNameMzMLText, jlFileNameMzIDText,
 						jlIdentFilesStatus, jlFileNameMzQText, jtRawFiles,
 						jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF,
 						jtMzId, jtMascotXMLView, jtPeptideQuant,
-						jtProteinQuant, jtFeatureQuant);
+						jtProteinQuant, jtFeatureQuant, jtpProperties);
 			}
 		});
 
@@ -163,10 +142,7 @@ public class MenuBar extends JMenuBar {
 				proteoSuiteView.jmImportFileActionPerformed(jtRawFiles,
 						jlFileNameMGFText, jtFeatureQuant, jtMzIDProtGroup,
 						jmSaveProject, jtpLog, jtpProperties,
-						jtpMzQuantMLDetail, jtpViewer, jbExportPepMZQExcel,
-						jbExportProtMZQExcel, jbExportFeatMZQExcel,
-						jbExportMascotXMLExcel, jbExportMzIdentMLExcel,
-						jbExportMGFExcel, jbExportMzMLExcel, jbSaveProject,
+						jtpViewer, jbSaveProject,
 						jcbPSM, jepMZQView, jepMzIDView, jepMzMLView,
 						jlFileNameMzQText, jlRawFilesStatus,
 						jlIdentFilesStatus, jlFileNameMzIDText,
@@ -200,16 +176,13 @@ public class MenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent evt) {
 				proteoSuiteView.jmCloseProjectActionPerformed(jmCloseProject,
 						jmSaveProject, jtpLog, jtpViewer, jbSaveProject,
-						jbExportMzMLExcel, jbExportMGFExcel,
-						jbExportMzIdentMLExcel, jbExportMascotXMLExcel,
-						jbExportPepMZQExcel, jbExportProtMZQExcel,
-						jbExportFeatMZQExcel, jcbTechnique, jcbOutputFormat,
+						jcbTechnique, jcbOutputFormat,
 						jepMGFView, jepMZQView, jepMascotXMLView, jepMzIDView,
 						jepMzMLView, jlFileNameMzQText, jlIdentFilesStatus,
 						jlFileNameMzIDText, jlFileNameMzMLText, jtRawFiles,
 						jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF,
 						jtMzId, jtMascotXMLView, jtPeptideQuant,
-						jtProteinQuant, jtFeatureQuant);
+						jtProteinQuant, jtFeatureQuant, jtpProperties);
 			}
 		});
 
@@ -357,9 +330,6 @@ public class MenuBar extends JMenuBar {
 			final JComboBox<String> jcbTechnique,
 			final JMenuItem jmSaveProject, final JMenuItem jmCloseProject,
 			final TabbedLog jtpLog, final JButton jbSaveProject,
-			final JButton jbExportPepMZQExcel,
-			final JButton jbExportProtMZQExcel,
-			final JButton jbExportFeatMZQExcel,
 			final JComboBox<String> jcbOutputFormat,
 			final JEditorPane jepMZQView, final JEditorPane jepMzIDView,
 			final JLabel jlFileNameMzIDText, final JLabel jlIdentFilesStatus,
@@ -368,8 +338,7 @@ public class MenuBar extends JMenuBar {
 			final JTable jtMzML, final JTable jtMGF, final JTable jtMzId,
 			final JTable jtPeptideQuant, final JTable jtProteinQuant,
 			final JTable jtFeatureQuant, final JTable jtMzIDProtGroup,
-			final JTabbedPane jtpProperties,
-			final JTabbedPane jtpMzQuantMLDetail,
+			final TabbedProperties jtpProperties,
 			final JComboBox<String> jcbPSM, final JLabel jlRawFilesStatus,
 			final IdentParamsView identParamsExecute,
 			final List<MzIdentMLUnmarshaller> aMzIDUnmarshaller) {
@@ -400,9 +369,7 @@ public class MenuBar extends JMenuBar {
 			public void actionPerformed(ActionEvent evt) {
 				proteoSuiteView.jmRunQuantAnalysisActionPerformed(jtpLog,
 						jmCloseProject, jmSaveProject, jtpProperties,
-						jtpMzQuantMLDetail, jbSaveProject, jbExportPepMZQExcel,
-						jbExportProtMZQExcel, jbExportFeatMZQExcel,
-						jcbTechnique, jcbOutputFormat, jepMZQView,
+						jbSaveProject, jcbTechnique, jcbOutputFormat, jepMZQView,
 						jlFileNameMzQText, jtFeatureQuant, jtIdentFiles,
 						jtPeptideQuant, jtProteinQuant, jtQuantFiles,
 						jtRawFiles);
@@ -465,7 +432,7 @@ public class MenuBar extends JMenuBar {
 	}
 
 	private JMenu getWindowMenu(JTabbedPane jtpViewer,
-			JTabbedPane jtpProperties, JTabbedPane jtpLog) {
+			TabbedProperties jtpProperties, JTabbedPane jtpLog) {
 		JMenu jmWindow = new JMenu("Window");
 		final JMenuItem jm2DView = new JMenuItem("2D View");
 		final JMenuItem jm3DView = new JMenuItem("3D View");
