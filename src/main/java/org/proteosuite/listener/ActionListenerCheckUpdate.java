@@ -58,7 +58,7 @@ public class ActionListenerCheckUpdate implements ActionListener {
 						}
 					}
 				}
-				if (ProteoSuiteView.sPS_Version.equals(ver)) {
+				if (ProteoSuiteView.PROTEOSUITE_VERSION.equals(ver)) {
 					JOptionPane.showMessageDialog(null,
 							"Your ProteoSuite version is up to date!!!",
 							"Information", JOptionPane.INFORMATION_MESSAGE);

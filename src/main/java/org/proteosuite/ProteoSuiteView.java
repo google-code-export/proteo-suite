@@ -108,7 +108,7 @@ import uk.ac.liv.mzidlib.MzIdentMLLib;
  */
 public class ProteoSuiteView extends JFrame {
 	// Project settings
-	public static final String sPS_Version = "0.3.1";
+	public static final String PROTEOSUITE_VERSION = "0.3.2";
 	public static String sProjectName = "";
 	public static String sPreviousLocation = "user.home";
 	public boolean isProjectModified = false;
@@ -202,9 +202,7 @@ public class ProteoSuiteView extends JFrame {
 				jtMGF, jtMzId, jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
 				jtFeatureQuant, jtpProperties);
 
-		setTitle("ProteoSuite " + sPS_Version + " (Beta Version) - <Project: "
-				+ WORKSPACE.getWorkSpace() + " - " + sProjectName
-				+ ">         http://www.proteosuite.org");
+		updateTitle();
 
 		// Setting project icons
 		setIconImage(new ImageIcon(getClass().getClassLoader().getResource(
@@ -1907,7 +1905,7 @@ public class ProteoSuiteView extends JFrame {
 	 * @return void
 	 */
 	public void updateTitle() {
-		setTitle("ProteoSuite " + sPS_Version + " (Beta Version) - <Project: "
+		setTitle("ProteoSuite " + PROTEOSUITE_VERSION + " (Beta Version) - <Project: "
 				+ WORKSPACE.getWorkSpace() + " - " + sProjectName
 				+ ">         http://www.proteosuite.org");
 	}

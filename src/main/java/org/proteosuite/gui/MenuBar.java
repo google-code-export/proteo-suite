@@ -386,6 +386,7 @@ public class MenuBar extends JMenuBar {
 
 		JMenuItem jmMzML2MGF = new JMenuItem("mzML to MGF");
 		jmMzML2MGF.addActionListener(new ActionListenerMzML2MGF());
+		jmMzML2MGF.setVisible(false);
 		jmConverters.add(jmMzML2MGF);
 
 		JMenuItem jmMaxQ2MZQ = new JMenuItem("MaxQuant to mzQuantML");
@@ -400,6 +401,7 @@ public class MenuBar extends JMenuBar {
 
 		final JMenuItem jMzMLCompressed = new JMenuItem("Compress MzML file");
 		jMzMLCompressed.addActionListener(new ActionListenerMzMLCompress());
+		jMzMLCompressed.setVisible(false);
 		jmTools.add(jMzMLCompressed);
 
 		JMenuItem jmCustomize = new JMenuItem("Customize");

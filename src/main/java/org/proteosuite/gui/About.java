@@ -24,6 +24,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 
+import org.proteosuite.ProteoSuiteView;
 import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.SystemUtils;
 
@@ -79,9 +80,9 @@ public class About extends JPanel {
 			}
 		});
 
-		jlCopyright.setText("Copyright Â© ProteoSuite 2011-2013 ");
+		jlCopyright.setText("Copyright © ProteoSuite 2011-2013");
 
-		jlVersion.setText("Version 0.3.0 April 2013");
+		jlVersion.setText("Version " + ProteoSuiteView.PROTEOSUITE_VERSION + " December 2013");
 
 		jbSystemInfo.setText("System Info");
 		jbSystemInfo.addActionListener(new ActionListener() {
