@@ -1905,9 +1905,9 @@ public class ProteoSuiteView extends JFrame {
 	 * @return void
 	 */
 	public void updateTitle() {
-		setTitle("ProteoSuite " + PROTEOSUITE_VERSION + " (Beta Version) - <Project: "
+		setTitle("ProteoSuite " + PROTEOSUITE_VERSION + " - <Project: "
 				+ WORKSPACE.getWorkSpace() + " - " + sProjectName
-				+ ">         http://www.proteosuite.org");
+				+ ">      http://www.proteosuite.org");
 	}
 
 	/**
