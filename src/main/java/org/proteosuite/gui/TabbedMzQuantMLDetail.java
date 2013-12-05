@@ -1,16 +1,16 @@
 package org.proteosuite.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -37,7 +37,7 @@ public class TabbedMzQuantMLDetail extends JTabbedPane {
 				getFeatureQuantPanel(jtFeatureQuant, jbExportFeatMZQExcel));
 	}
 
-	private Component getFeatureQuantPanel(JTable jtFeatureQuant,
+	private JPanel getFeatureQuantPanel(JTable jtFeatureQuant,
 			JButton jbExportFeatMZQExcel) {
 
 		JToolBar jtbFeatMZQ = new JToolBar();
@@ -56,7 +56,7 @@ public class TabbedMzQuantMLDetail extends JTabbedPane {
 				jtFeatureQuant));
 		jtbFeatMZQ.add(jbExportFeatMZQExcel);
 
-		final JTextField jtFeatureMZQ = new JTextField();
+		final JTextField jtFeatureMZQ = new JTextField(20);
 		jtFeatureMZQ.setToolTipText("Enter the scan number");
 		jtFeatureMZQ.addKeyListener(new KeyListenerSearch(0, jtFeatureQuant,
 				false));
@@ -64,83 +64,24 @@ public class TabbedMzQuantMLDetail extends JTabbedPane {
 		JLabel jlSearchMzQFeat = new JLabel("Search:");
 		jlSearchMzQFeat.setFont(new Font("Tahoma", 1, 11)); // NOI18N
 
-		JLabel jlFeatureMZQ = new JLabel("Feature:");
-
 		JPanel jpFeatureQuantHeader = new JPanel();
-		GroupLayout jpFeatureQuantHeaderLayout = new GroupLayout(
-				jpFeatureQuantHeader);
-		jpFeatureQuantHeader.setLayout(jpFeatureQuantHeaderLayout);
-		jpFeatureQuantHeaderLayout
-				.setHorizontalGroup(jpFeatureQuantHeaderLayout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(
-								jpFeatureQuantHeaderLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addComponent(jlSearchMzQFeat)
-										.addGap(18, 18, 18)
-										.addComponent(jlFeatureMZQ)
-										.addGap(18, 18, 18)
-										.addComponent(jtFeatureMZQ,
-												GroupLayout.PREFERRED_SIZE,
-												209, GroupLayout.PREFERRED_SIZE)
-										.addGap(18, 18, 18)
-										.addComponent(jtbFeatMZQ,
-												GroupLayout.DEFAULT_SIZE, 191,
-												Short.MAX_VALUE)
-										.addContainerGap()));
-		jpFeatureQuantHeaderLayout
-				.setVerticalGroup(jpFeatureQuantHeaderLayout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(
-								jpFeatureQuantHeaderLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												jpFeatureQuantHeaderLayout
-														.createParallelGroup(
-																GroupLayout.Alignment.LEADING)
-														.addComponent(
-																jtbFeatMZQ,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																Short.MAX_VALUE)
-														.addGroup(
-																jpFeatureQuantHeaderLayout
-																		.createParallelGroup(
-																				GroupLayout.Alignment.BASELINE)
-																		.addComponent(
-																				jlSearchMzQFeat)
-																		.addComponent(
-																				jlFeatureMZQ)
-																		.addComponent(
-																				jtFeatureMZQ,
-																				GroupLayout.PREFERRED_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.PREFERRED_SIZE)))
-										.addContainerGap()));
+
+		jpFeatureQuantHeader.setLayout(new FlowLayout(FlowLayout.LEFT));
+		jpFeatureQuantHeader.add(jlSearchMzQFeat);
+		jpFeatureQuantHeader.add(new JLabel("Feature:"));
+		jpFeatureQuantHeader.add(jtFeatureMZQ);
+		jpFeatureQuantHeader.add(jtbFeatMZQ);
 
 		JScrollPane jspFeatureQuantDetail = new JScrollPane();
 		jspFeatureQuantDetail.setViewportView(jtFeatureQuant);
 
-		JSplitPane jspFeatureQuant = new JSplitPane();
-		jspFeatureQuant.setDividerLocation(40);
-		jspFeatureQuant.setDividerSize(1);
-		jspFeatureQuant.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jspFeatureQuant.setTopComponent(jpFeatureQuantHeader);
-		jspFeatureQuant.setRightComponent(jspFeatureQuantDetail);
-
-		final JPanel FeatureQuant = new JPanel();
-		GroupLayout FeatureQuantLayout = new GroupLayout(FeatureQuant);
-		FeatureQuant.setLayout(FeatureQuantLayout);
-		FeatureQuantLayout.setHorizontalGroup(FeatureQuantLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspFeatureQuant, GroupLayout.Alignment.TRAILING));
-		FeatureQuantLayout.setVerticalGroup(FeatureQuantLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspFeatureQuant, GroupLayout.DEFAULT_SIZE, 445,
-						Short.MAX_VALUE));
-		return null;
+		JPanel jpFeatureQuant = new JPanel();
+		jpFeatureQuant.setLayout(new BorderLayout());
+		jpFeatureQuant.add(jpFeatureQuantHeader, BorderLayout.PAGE_START);
+		jpFeatureQuant.add(jspFeatureQuantDetail, BorderLayout.CENTER);
+		
+		
+		return jpFeatureQuant;
 	}
 
 	private JPanel getJPanelQuant(JTable jtPeptideQuant,
@@ -161,7 +102,7 @@ public class TabbedMzQuantMLDetail extends JTabbedPane {
 		jtbPepMZQ.setPreferredSize(new Dimension(100, 23));
 		jtbPepMZQ.add(jbExportPepMZQExcel);
 
-		final JTextField jtPeptideMZQ = new JTextField();
+		final JTextField jtPeptideMZQ = new JTextField(20);
 		jtPeptideMZQ.setToolTipText("Enter the scan number");
 		jtPeptideMZQ.addKeyListener(new KeyListenerSearch(0, jtPeptideQuant,
 				false));
@@ -169,88 +110,26 @@ public class TabbedMzQuantMLDetail extends JTabbedPane {
 		JLabel jlSearchMzQPep = new JLabel("Search:");
 		jlSearchMzQPep.setFont(new Font("Tahoma", 1, 11)); // NOI18N
 
-		JLabel jlPeptideMZQ = new JLabel("Peptide:");
-
 		JPanel jpPeptideQuantHeader = new JPanel();
-		GroupLayout jpPeptideQuantHeaderLayout = new GroupLayout(
-				jpPeptideQuantHeader);
-		jpPeptideQuantHeader.setLayout(jpPeptideQuantHeaderLayout);
-		jpPeptideQuantHeaderLayout
-				.setHorizontalGroup(jpPeptideQuantHeaderLayout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(
-								jpPeptideQuantHeaderLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addComponent(jlSearchMzQPep)
-										.addGap(18, 18, 18)
-										.addComponent(jlPeptideMZQ)
-										.addGap(18, 18, 18)
-										.addComponent(jtPeptideMZQ,
-												GroupLayout.PREFERRED_SIZE,
-												209, GroupLayout.PREFERRED_SIZE)
-										.addGap(18, 18, 18)
-										.addComponent(jtbPepMZQ,
-												GroupLayout.DEFAULT_SIZE, 193,
-												Short.MAX_VALUE)
-										.addContainerGap()));
-		jpPeptideQuantHeaderLayout
-				.setVerticalGroup(jpPeptideQuantHeaderLayout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(
-								jpPeptideQuantHeaderLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												jpPeptideQuantHeaderLayout
-														.createParallelGroup(
-																GroupLayout.Alignment.LEADING)
-														.addComponent(
-																jtbPepMZQ,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																Short.MAX_VALUE)
-														.addGroup(
-																jpPeptideQuantHeaderLayout
-																		.createParallelGroup(
-																				GroupLayout.Alignment.BASELINE)
-																		.addComponent(
-																				jlSearchMzQPep)
-																		.addComponent(
-																				jlPeptideMZQ)
-																		.addComponent(
-																				jtPeptideMZQ,
-																				GroupLayout.PREFERRED_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.PREFERRED_SIZE)))
-										.addContainerGap()));
+
+		jpPeptideQuantHeader.setLayout(new FlowLayout(FlowLayout.LEFT));
+		jpPeptideQuantHeader.add(jlSearchMzQPep);
+		jpPeptideQuantHeader.add(new JLabel("Peptide:"));
+		jpPeptideQuantHeader.add(jtPeptideMZQ);
+		jpPeptideQuantHeader.add(jtbPepMZQ);
 
 		JScrollPane jspPeptideQuantDetail = new JScrollPane();
 		jspPeptideQuantDetail.setViewportView(jtPeptideQuant);
 
-		JSplitPane jspPeptideQuant = new JSplitPane();
-		jspPeptideQuant.setDividerLocation(40);
-		jspPeptideQuant.setDividerSize(1);
-		jspPeptideQuant.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jspPeptideQuant.setTopComponent(jpPeptideQuantHeader);
-		jspPeptideQuant.setRightComponent(jspPeptideQuantDetail);
-
 		JPanel jpPeptideQuant = new JPanel();
-
-		GroupLayout jpPeptideQuantLayout = new GroupLayout(jpPeptideQuant);
-		jpPeptideQuant.setLayout(jpPeptideQuantLayout);
-		jpPeptideQuantLayout.setHorizontalGroup(jpPeptideQuantLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspPeptideQuant));
-		jpPeptideQuantLayout.setVerticalGroup(jpPeptideQuantLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspPeptideQuant, GroupLayout.DEFAULT_SIZE, 445,
-						Short.MAX_VALUE));
-
+		jpPeptideQuant.setLayout(new BorderLayout());
+		jpPeptideQuant.add(jpPeptideQuantHeader, BorderLayout.PAGE_START);
+		jpPeptideQuant.add(jspPeptideQuantDetail, BorderLayout.CENTER);
+		
 		return jpPeptideQuant;
 	}
 
-	private JPanel getJPanelProteinQuant(JTable jtProteinQuant,
+	private Component getJPanelProteinQuant(JTable jtProteinQuant,
 			JButton jbExportProtMZQExcel) {
 		jbExportProtMZQExcel.setIconTextGap(1);
 		jbExportProtMZQExcel.setMaximumSize(new Dimension(26, 20));
@@ -268,90 +147,29 @@ public class TabbedMzQuantMLDetail extends JTabbedPane {
 		jtbProtMZQ.setPreferredSize(new Dimension(100, 23));
 		jtbProtMZQ.add(jbExportProtMZQExcel);
 
-		final JTextField jtProteinMZQ = new JTextField();
+		final JTextField jtProteinMZQ = new JTextField(20);
 		jtProteinMZQ.setToolTipText("Enter the scan number");
 		jtProteinMZQ.addKeyListener(new KeyListenerSearch(0, jtProteinQuant,
 				false));
 
-		JLabel jlProteinMZQ = new JLabel("Protein:");
 		JLabel jlSearchMzQProt = new JLabel("Search:");
 		jlSearchMzQProt.setFont(new Font("Tahoma", 1, 11)); // NOI18N
 
 		JPanel jpProteinQuantHeader = new JPanel();
-		GroupLayout jpProteinQuantHeaderLayout = new GroupLayout(
-				jpProteinQuantHeader);
-		jpProteinQuantHeader.setLayout(jpProteinQuantHeaderLayout);
-		jpProteinQuantHeaderLayout
-				.setHorizontalGroup(jpProteinQuantHeaderLayout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(
-								jpProteinQuantHeaderLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addComponent(jlSearchMzQProt)
-										.addGap(18, 18, 18)
-										.addComponent(jlProteinMZQ)
-										.addGap(18, 18, 18)
-										.addComponent(jtProteinMZQ,
-												GroupLayout.PREFERRED_SIZE,
-												209, GroupLayout.PREFERRED_SIZE)
-										.addGap(18, 18, 18)
-										.addComponent(jtbProtMZQ,
-												GroupLayout.DEFAULT_SIZE, 195,
-												Short.MAX_VALUE)
-										.addContainerGap()));
-		jpProteinQuantHeaderLayout
-				.setVerticalGroup(jpProteinQuantHeaderLayout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(
-								jpProteinQuantHeaderLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												jpProteinQuantHeaderLayout
-														.createParallelGroup(
-																GroupLayout.Alignment.LEADING)
-														.addComponent(
-																jtbProtMZQ,
-																GroupLayout.DEFAULT_SIZE,
-																GroupLayout.DEFAULT_SIZE,
-																Short.MAX_VALUE)
-														.addGroup(
-																jpProteinQuantHeaderLayout
-																		.createParallelGroup(
-																				GroupLayout.Alignment.BASELINE)
-																		.addComponent(
-																				jlSearchMzQProt)
-																		.addComponent(
-																				jlProteinMZQ)
-																		.addComponent(
-																				jtProteinMZQ,
-																				GroupLayout.PREFERRED_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.PREFERRED_SIZE)))
-										.addContainerGap()));
-
-		JSplitPane jspProteinQuant = new JSplitPane();
-		jspProteinQuant.setDividerLocation(40);
-		jspProteinQuant.setDividerSize(1);
-		jspProteinQuant.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jspProteinQuant.setTopComponent(jpProteinQuantHeader);
+		jpProteinQuantHeader.setLayout(new FlowLayout(FlowLayout.LEFT));
+		jpProteinQuantHeader.add(jlSearchMzQProt);
+		jpProteinQuantHeader.add(new JLabel("Protein:"));
+		jpProteinQuantHeader.add(jtProteinMZQ);
+		jpProteinQuantHeader.add(jtbProtMZQ);
 
 		JScrollPane jspProteinQuantDetail = new JScrollPane();
 		jspProteinQuantDetail.setViewportView(jtProteinQuant);
-		jspProteinQuant.setRightComponent(jspProteinQuantDetail);
 
-		JPanel jpProteinQuant = new JPanel();
-		GroupLayout jpProteinQuantLayout = new GroupLayout(jpProteinQuant);
-		jpProteinQuant.setLayout(jpProteinQuantLayout);
-		jpProteinQuantLayout.setHorizontalGroup(jpProteinQuantLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspProteinQuant));
-		jpProteinQuantLayout.setVerticalGroup(jpProteinQuantLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jspProteinQuant, GroupLayout.DEFAULT_SIZE, 445,
-						Short.MAX_VALUE));
+		JPanel jspProteinQuant = new JPanel();
+		jspProteinQuant.setLayout(new BorderLayout());
+		jspProteinQuant.add(jpProteinQuantHeader, BorderLayout.PAGE_START);
+		jspProteinQuant.add(jspProteinQuantDetail, BorderLayout.CENTER);
 
-		return jpProteinQuant;
+		return jspProteinQuant;
 	}
 }

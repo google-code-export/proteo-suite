@@ -17,10 +17,13 @@ import edu.ucsd.msjava.mzml.MzMLAdapter;
 import edu.ucsd.msjava.params.ParamManager;
 import edu.ucsd.msjava.ui.MSGFPlus;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,9 +49,9 @@ import java.util.zip.GZIPInputStream;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.GroupLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -65,8 +68,8 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
-import javax.swing.LayoutStyle;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -317,9 +320,6 @@ public class ProteoSuiteView extends JFrame {
 
 		jepMZQView.setContentType("text/html");
 		jepMZQView.setPreferredSize(new Dimension(144, 84));
-		
-		final MainPanel jpMainPanelView = new MainPanel(jtQuantFiles, jtIdentFiles, jtRawFiles, jtpViewer, 
-				jtpLog, jtpProperties);
 
 		final JComboBox<String> jcbOutputFormat = new JComboBox<String>();
 		jcbOutputFormat.setModel(new DefaultComboBoxModel<String>(new String[] {
@@ -334,6 +334,9 @@ public class ProteoSuiteView extends JFrame {
 		jlIdentFilesStatus.setFont(new Font("Tahoma", 1, 11)); // NOI18N
 		jlIdentFilesStatus.setForeground(new Color(51, 102, 0));
 
+		final MainPanel jpMainPanelView = new MainPanel(jtQuantFiles, jtIdentFiles, jtRawFiles, jtpViewer, 
+				jtpLog, jtpProperties);
+		
 		setJMenuBar(new MenuBar(this, jcbTechnique, jmSaveProject,
 				jmCloseProject, jtpLog, jtpViewer, jbSaveProject, jcbOutputFormat,
 				jepMGFView, jepMZQView, jepMascotXMLView, jepMzIDView,
@@ -344,8 +347,8 @@ public class ProteoSuiteView extends JFrame {
 				jtFeatureQuant, jlFileNameMGFText, jtMzIDProtGroup,
 				jtpProperties, jcbPSM, jlRawFilesStatus,
 				jpMainPanelView, identParamsExecute, aMzIDUnmarshaller));
-
-		final JPanel jpToolBar = new MasterToolBar(this, jmCloseProject,
+		
+		add(new HeaderPanel(this, jmCloseProject,
 				jmSaveProject, jtpProperties, jtpLog, jtpViewer,
 				jbSaveProject, jcbTechnique, jepMGFView, jepMZQView,
 				jepMascotXMLView, jepMzIDView, jepMzMLView, jlFileNameMzMLText,
@@ -354,50 +357,10 @@ public class ProteoSuiteView extends JFrame {
 				jtMGF, jtMzId, jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
 				jtFeatureQuant, jcbOutputFormat, jlFileNameMGFText,
 				jtMzIDProtGroup, jcbPSM, jlRawFilesStatus,
-				identParamsExecute, aMzIDUnmarshaller);
-
-		final JPanel jpProjectStatus = new ProjectStatus(jcbTechnique,
-				jcbOutputFormat, jlRawFilesStatus, jlIdentFilesStatus);
-
-		GroupLayout layout = new GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jpMainPanelView, GroupLayout.DEFAULT_SIZE,
-						GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-				.addGroup(
-						GroupLayout.Alignment.TRAILING,
-						layout.createSequentialGroup()
-								.addGroup(
-										layout.createParallelGroup(
-												GroupLayout.Alignment.TRAILING)
-												.addComponent(
-														jpProjectStatus,
-														GroupLayout.Alignment.LEADING,
-														GroupLayout.DEFAULT_SIZE,
-														1232, Short.MAX_VALUE)
-												.addComponent(
-														jpToolBar,
-														GroupLayout.DEFAULT_SIZE,
-														1232, Short.MAX_VALUE))
-								.addContainerGap()));
-		layout.setVerticalGroup(layout.createParallelGroup(
-				GroupLayout.Alignment.LEADING)
-				.addGroup(
-						layout.createSequentialGroup()
-								.addComponent(jpToolBar,
-										GroupLayout.PREFERRED_SIZE, 40,
-										GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(
-										LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(jpProjectStatus,
-										GroupLayout.PREFERRED_SIZE, 37,
-										GroupLayout.PREFERRED_SIZE)
-								.addGap(23, 23, 23)
-								.addComponent(jpMainPanelView,
-										GroupLayout.DEFAULT_SIZE,
-										GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE)));
+				identParamsExecute, aMzIDUnmarshaller), BorderLayout.PAGE_START);
+		
+		add(jpMainPanelView, BorderLayout.CENTER);
+		
 		pack();
 	}
 
@@ -2674,6 +2637,13 @@ public class ProteoSuiteView extends JFrame {
 		// Setting standard look and feel
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		        if ("Nimbus".equals(info.getName())) {
+		            //UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
 		} catch (ClassNotFoundException exception) {
 			exception.printStackTrace();
 		} catch (InstantiationException exception) {
