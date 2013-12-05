@@ -15,19 +15,17 @@ import javax.swing.border.EmptyBorder;
  * @author Andrew Collins
  */
 public class MainPanel extends JPanel {
-	private JSplitPane jspMainPanelView = new JSplitPane();
-	private JSplitPane jspViewerAndProperties = new JSplitPane();
+	private final JSplitPane jspMainPanelView = new JSplitPane();
+	private final JSplitPane jspViewerAndProperties = new JSplitPane();
 
 	public MainPanel(JTable jtQuantFiles, JTable jtIdentFiles,
 			JTable jtRawFiles, TabbedChartViewer jtpViewer, TabbedLog jtpLog,
 			TabbedProperties jtpProperties) {
-		jspViewerAndProperties.setDividerLocation(380);
 		jspViewerAndProperties.setDividerSize(5);
 		jspViewerAndProperties.setLeftComponent(getLeftViewer(jtpViewer, jtpLog));
 		jspViewerAndProperties.setRightComponent(getPropertiesView(jtpProperties));
 		jspViewerAndProperties.setBorder(null);
 
-		jspMainPanelView.setDividerLocation(280);
 		jspMainPanelView.setDividerSize(5);
 		jspMainPanelView.setLeftComponent(new LeftPanelView(jtQuantFiles, jtIdentFiles,
 				jtRawFiles));
