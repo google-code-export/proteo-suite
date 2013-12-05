@@ -317,13 +317,9 @@ public class ProteoSuiteView extends JFrame {
 
 		jepMZQView.setContentType("text/html");
 		jepMZQView.setPreferredSize(new Dimension(144, 84));
-
-		JPanel jpLeftPanelView = new LeftPanelView(jtQuantFiles, jtIdentFiles,
-				jtRawFiles);
-		JPanel jpLeftViewer = new LeftViewer(jtpViewer, jtpLog);
-		JPanel jpPropertiesBox = new PropertiesView(jtpProperties);
-		final MainPanel jpMainPanelView = new MainPanel(jpLeftPanelView,
-				jpLeftViewer, jpPropertiesBox);
+		
+		final MainPanel jpMainPanelView = new MainPanel(jtQuantFiles, jtIdentFiles, jtRawFiles, jtpViewer, 
+				jtpLog, jtpProperties);
 
 		final JComboBox<String> jcbOutputFormat = new JComboBox<String>();
 		jcbOutputFormat.setModel(new DefaultComboBoxModel<String>(new String[] {
