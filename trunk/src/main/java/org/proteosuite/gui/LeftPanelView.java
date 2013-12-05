@@ -37,11 +37,12 @@ public class LeftPanelView extends JPanel {
 		// Ident and Quantitation separator
 		JSplitPane jspProjectDetails = new JSplitPane();
 		jspProjectDetails.setDividerLocation(130);
-		jspProjectDetails.setDividerSize(1);
+		jspProjectDetails.setDividerSize(5);
 		jspProjectDetails.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jspProjectDetails.setTopComponent(getLeftMenuTopPanel(jtRawFiles));
+		jspProjectDetails.setTopComponent(getRawFiles(jtRawFiles));
 		jspProjectDetails.setRightComponent(getLeftMenuBottom(jtQuantFiles,
 				jtIdentFiles));
+		jspProjectDetails.setBorder(null);
 
 		return jspProjectDetails;
 	}
@@ -50,15 +51,16 @@ public class LeftPanelView extends JPanel {
 			JTable jtIdentFiles) {
 		JSplitPane jspLeftMenuBottom = new JSplitPane();
 		jspLeftMenuBottom.setDividerLocation(200);
-		jspLeftMenuBottom.setDividerSize(1);
+		jspLeftMenuBottom.setDividerSize(5);
 		jspLeftMenuBottom.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jspLeftMenuBottom.setRightComponent(getQuantFilesPanel(jtQuantFiles));
-		jspLeftMenuBottom.setTopComponent(getIdentFilesPanel(jtIdentFiles));
+		jspLeftMenuBottom.setRightComponent(getQuantFiles(jtQuantFiles));
+		jspLeftMenuBottom.setTopComponent(getIdentFiles(jtIdentFiles));
+		jspLeftMenuBottom.setBorder(null);
 
 		return jspLeftMenuBottom;
 	}
 
-	private JTabbedPane getIdentFilesPanel(JTable jtIdentFiles) {
+	private JTabbedPane getIdentFiles(JTable jtIdentFiles) {
 		JScrollPane jspIdentFiles = new JScrollPane();
 		jspIdentFiles.setViewportView(jtIdentFiles);
 
@@ -70,7 +72,7 @@ public class LeftPanelView extends JPanel {
 		return jtpIdentFiles;
 	}
 
-	private JTabbedPane getQuantFilesPanel(JTable jtQuantFiles) {
+	private JTabbedPane getQuantFiles(JTable jtQuantFiles) {
 		JScrollPane jspQuantFiles = new JScrollPane();
 		jspQuantFiles.setViewportView(jtQuantFiles);
 
@@ -82,7 +84,7 @@ public class LeftPanelView extends JPanel {
 		return jtpQuantFiles;
 	}
 
-	private JTabbedPane getLeftMenuTopPanel(JTable jtRawFiles) {
+	private JTabbedPane getRawFiles(JTable jtRawFiles) {
 		JScrollPane jspRawFiles = new JScrollPane();
 		jspRawFiles.setViewportView(jtRawFiles);
 

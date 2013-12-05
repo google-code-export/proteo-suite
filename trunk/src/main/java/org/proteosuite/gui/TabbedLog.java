@@ -5,17 +5,14 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import org.proteosuite.listener.KeyListenerSearch;
@@ -35,28 +32,14 @@ public class TabbedLog extends JTabbedPane {
 		JScrollPane jspLog = new JScrollPane();
 		jspLog.setViewportView(jtaLog);
 
-		addTab("Log", jspLog);
-		addTab("Raw Data", getRawDataValuesPanel(jtRawData));
+		addTab("Log", new ImageIcon(getClass().getClassLoader().getResource(
+				"images/log.gif")), jspLog);
+		addTab("Raw Data", new ImageIcon(getClass().getClassLoader()
+				.getResource("images/raw_data.gif")), getRawDataValuesPanel(jtRawData));
 		addTab("Template 1", getTemplate1());
 		addTab("Template 2", getTemplate2());
 		addTab("Synth Array", getSynthArrayPanel());
 		addTab("Resamp Array", getResampleArray());
-
-		Icon logIcon = new ImageIcon(getClass().getClassLoader().getResource(
-				"images/log.gif"));
-		JLabel jlLogIcon = new JLabel("Log  ", logIcon, SwingConstants.RIGHT);
-		jlLogIcon.setIconTextGap(5);
-		setTabComponentAt(0, jlLogIcon);
-		
-		Icon rawDataIcon = new ImageIcon(getClass().getClassLoader()
-				.getResource("images/raw_data.gif"));
-		JLabel jlRawDataIcon = new JLabel("Raw data", rawDataIcon,
-				SwingConstants.RIGHT);
-		jlRawDataIcon.setIconTextGap(5);
-		setTabComponentAt(1, jlRawDataIcon);
-
-		// Setting default selection (Viewers)
-		setSelectedIndex(0);
 	}
 
 	public void reset() {
@@ -86,37 +69,29 @@ public class TabbedLog extends JTabbedPane {
 
 		final JLabel lblSearch = new JLabel("Search:");
 		lblSearch.setFont(new Font("Tahoma", 1, 11)); // NOI18N
-		JLabel lblIndex = new JLabel("Index:");
-		JLabel lblMassCharge = new JLabel("m/z:");
 
 		JPanel jpRawDataValuesMenu = new JPanel();
 		jpRawDataValuesMenu.setMinimumSize(new Dimension(0, 50));
 		jpRawDataValuesMenu.setPreferredSize(new Dimension(462, 50));
 		jpRawDataValuesMenu.setLayout(new FlowLayout(FlowLayout.LEFT));
 		jpRawDataValuesMenu.add(lblSearch);
-		jpRawDataValuesMenu.add(lblIndex);
+		jpRawDataValuesMenu.add(new JLabel("Index:"));
 		jpRawDataValuesMenu.add(txtMSIndex);
-		jpRawDataValuesMenu.add(lblMassCharge);
+		jpRawDataValuesMenu.add(new JLabel("m/z:"));
 		jpRawDataValuesMenu.add(txtMSMz);
-		
-		JSplitPane jspRawDataValues = new JSplitPane();
-		jspRawDataValues.setDividerLocation(40);
-		jspRawDataValues.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jspRawDataValues.setLeftComponent(jpRawDataValuesMenu);
 
 		JScrollPane jspRawData = new JScrollPane();
 		jspRawData.setViewportView(jtRawData);
 
-		jspRawDataValues.setBottomComponent(jspRawData);
-
 		JPanel jpRawDataValues = new JPanel();
 		jpRawDataValues.setLayout(new BorderLayout());
-		jpRawDataValues.add(jspRawDataValues);
+		jpRawDataValues.add(jpRawDataValuesMenu, BorderLayout.PAGE_START);
+		jpRawDataValues.add(jspRawData, BorderLayout.CENTER);
 
 		return jpRawDataValues;
 	}
 
-	private JPanel getTemplate1() {
+	private JScrollPane getTemplate1() {
 		final JTable jtTemplate1 = new JTable() {
 			public boolean isCellEditable(int rowIndex, int colIndex) {
 				return false;
@@ -130,15 +105,10 @@ public class TabbedLog extends JTabbedPane {
 		JScrollPane jScrollPane1 = new JScrollPane();
 		jScrollPane1.setViewportView(jtTemplate1);
 
-		JPanel jPanel1 = new JPanel();
-
-		jPanel1.setLayout(new BorderLayout());
-		jPanel1.add(jScrollPane1);
-
-		return jPanel1;
+		return jScrollPane1;
 	}
 
-	private JPanel getTemplate2() {
+	private JScrollPane getTemplate2() {
 		final JTable jtTemplate2 = new JTable() {
 			public boolean isCellEditable(int rowIndex, int colIndex) {
 				return false;
@@ -150,16 +120,10 @@ public class TabbedLog extends JTabbedPane {
 		JScrollPane jScrollPane2 = new JScrollPane();
 		jScrollPane2.setViewportView(jtTemplate2);
 
-		JPanel jPanel2 = new JPanel();
-		jPanel2.setLayout(new BorderLayout());
-		jPanel2.add(jScrollPane2);
-
-		return jPanel2;
+		return jScrollPane2;
 	}
 
-	private JPanel getSynthArrayPanel() {
-		JPanel jPanel3 = new JPanel();
-
+	private JScrollPane getSynthArrayPanel() {
 		final JTable jTable1 = new JTable();
 		jTable1.setModel(new DefaultTableModel(new String[][] {
 
@@ -167,14 +131,10 @@ public class TabbedLog extends JTabbedPane {
 		JScrollPane jScrollPane3 = new JScrollPane();
 		jScrollPane3.setViewportView(jTable1);
 
-		jPanel3.setLayout(new BorderLayout());
-		jPanel3.add(jScrollPane3);
-
-		return jPanel3;
+		return jScrollPane3;
 	}
 
-	private JPanel getResampleArray() {
-
+	private JScrollPane getResampleArray() {
 		final JTable jTable2 = new JTable();
 		jTable2.setModel(new DefaultTableModel(new String[][] {
 
@@ -182,11 +142,6 @@ public class TabbedLog extends JTabbedPane {
 		JScrollPane jScrollPane7 = new JScrollPane();
 		jScrollPane7.setViewportView(jTable2);
 
-		JPanel jpPanel4 = new JPanel();
-		jpPanel4.setLayout(new BorderLayout());
-		jpPanel4.add(jScrollPane7);
-		
-
-		return jpPanel4;
+		return jScrollPane7;
 	}
 }

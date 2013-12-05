@@ -19,11 +19,9 @@ import edu.ucsd.msjava.ui.MSGFPlus;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,7 +47,6 @@ import java.util.zip.GZIPInputStream;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
@@ -64,7 +61,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
@@ -85,7 +81,6 @@ import org.proteosuite.fileformat.FileFormatMzML;
 import org.proteosuite.fileformat.FileFormatMzQuantML;
 import org.proteosuite.gui.*;
 import org.proteosuite.gui.tables.*;
-import org.proteosuite.gui.toolbars.*;
 import org.proteosuite.listener.*;
 import org.proteosuite.utils.ProgressBarDialog;
 import org.proteosuite.utils.SystemUtils;
@@ -111,7 +106,7 @@ import uk.ac.liv.mzidlib.MzIdentMLLib;
  */
 public class ProteoSuiteView extends JFrame {
 	// Project settings
-	public static final String PROTEOSUITE_VERSION = "0.3.2";
+	public static final String PROTEOSUITE_VERSION = "0.3.3 ALPHA";
 	public static String sProjectName = "";
 	public static String sPreviousLocation = "user.home";
 	public boolean isProjectModified = false;
@@ -172,7 +167,6 @@ public class ProteoSuiteView extends JFrame {
 
 		final TabbedChartViewer jtpViewer = new TabbedChartViewer();
 		final TabbedLog jtpLog = new TabbedLog(jtRawData);
-
 
 		final JLabel jlFileNameMGFText = new JLabel();
 		final JTable jtMzIDProtGroup = new JTable();
