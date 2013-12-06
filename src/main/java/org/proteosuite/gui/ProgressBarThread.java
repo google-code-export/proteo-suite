@@ -10,18 +10,22 @@ import org.proteosuite.utils.ProgressBarDialog;
  */
 public class ProgressBarThread extends Thread implements Runnable {
 
-	final ProgressBarDialog progressBarDialog;
+	ProgressBarDialog progressBarDialog;
+	private Frame parent;
+	private boolean modal;
+	private String threadName;
 
-	public ProgressBarThread(String threadName, Frame parent, boolean modal,
-			String sThread) {
+	public ProgressBarThread(Frame parent, boolean modal, String threadName) {
 		super(threadName);
-		progressBarDialog = new ProgressBarDialog(parent, modal, sThread);
+		this.parent = parent;
+		this.modal = modal;
+		this.threadName = threadName;
 	}
 
 	@Override
 	public void run() {
 		// Progress Bar
-		progressBarDialog.setTitle("Reading MGF files");
+		progressBarDialog = new ProgressBarDialog(parent, modal, threadName);
 		progressBarDialog.setVisible(true);
 	}
 

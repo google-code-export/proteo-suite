@@ -35,8 +35,11 @@ import org.proteosuite.listener.ActionListenerOptions;
 import org.proteosuite.listener.ActionListenerProgenesis2MZQ;
 import org.proteosuite.listener.ActionListenerViewerChanged;
 import org.proteosuite.listener.ActionListenerViewerExtraChanged;
+import org.proteosuite.utils.ImportFile;
 
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
+import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
+import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 
 /**
  * 
@@ -63,7 +66,9 @@ public class MenuBar extends JMenuBar {
 			final JTable jtMzIDProtGroup, final TabbedProperties jtpProperties,
 			final JComboBox<String> jcbPSM, final JLabel jlRawFilesStatus,
 			MainPanel jpMainPanelView, IdentParamsView identParamsExecute,
-			List<MzIdentMLUnmarshaller> aMzIDUnmarshaller) {
+			final List<MzMLUnmarshaller> aMzMLUnmarshaller,
+			final List<MzIdentMLUnmarshaller> aMzIDUnmarshaller,
+			final List<MzQuantMLUnmarshaller> aMzQUnmarshaller) {
 		JMenuBar jmMain = this;
 
 		jmMain.add(getFileMenu(proteoSuiteView, jcbTechnique, jmSaveProject,
@@ -74,7 +79,10 @@ public class MenuBar extends JMenuBar {
 				jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
 				jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
 				jtFeatureQuant, jlFileNameMGFText, jtMzIDProtGroup,
-				jtpProperties, jcbPSM, jlRawFilesStatus));
+				jtpProperties, jcbPSM, jlRawFilesStatus,
+				aMzMLUnmarshaller,
+				aMzIDUnmarshaller,
+				aMzQUnmarshaller));
 
 		jmMain.add(getEditMenu());
 		jmMain.add(getViewMenu(jpMainPanelView));
@@ -114,7 +122,10 @@ public class MenuBar extends JMenuBar {
 			final JTable jtPeptideQuant, final JTable jtProteinQuant,
 			final JTable jtFeatureQuant, final JLabel jlFileNameMGFText,
 			final JTable jtMzIDProtGroup, final TabbedProperties jtpProperties,
-			final JComboBox<String> jcbPSM, final JLabel jlRawFilesStatus) {
+			final JComboBox<String> jcbPSM, final JLabel jlRawFilesStatus,
+			final List<MzMLUnmarshaller> aMzMLUnmarshaller,
+			final List<MzIdentMLUnmarshaller> aMzIDUnmarshaller,
+			final List<MzQuantMLUnmarshaller> aMzQUnmarshaller) {
 		JMenuItem jmNewProject = new JMenuItem("New Project", new ImageIcon(
 				getClass().getClassLoader().getResource("images/new.gif")));
 		jmNewProject.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N,
@@ -139,7 +150,7 @@ public class MenuBar extends JMenuBar {
 				InputEvent.CTRL_MASK));
 		jmImportFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				proteoSuiteView.jmImportFileActionPerformed(jtRawFiles,
+				new ImportFile().jmImportFileActionPerformed(proteoSuiteView, jtRawFiles,
 						jlFileNameMGFText, jtFeatureQuant, jtMzIDProtGroup,
 						jmSaveProject, jtpLog, jtpProperties,
 						jtpViewer, jbSaveProject,
@@ -148,7 +159,10 @@ public class MenuBar extends JMenuBar {
 						jlIdentFilesStatus, jlFileNameMzIDText,
 						jlFileNameMzMLText, jtIdentFiles, jtMGF,
 						jtMascotXMLView, jtMzId, jtMzML, jtPeptideQuant,
-						jtProteinQuant, jtQuantFiles);
+						jtProteinQuant, jtQuantFiles,
+						aMzMLUnmarshaller,
+						aMzIDUnmarshaller,
+						aMzQUnmarshaller);
 			}
 		});
 
@@ -265,13 +279,13 @@ public class MenuBar extends JMenuBar {
 						.getClassLoader().getResource("images/thick.gif")));
 		jmShowProjectFiles.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				if (jpMainPanelView.getMainPanelView().getDividerLocation() <= 5) {
-					jpMainPanelView.getMainPanelView().setDividerLocation(250);
+				if (jpMainPanelView.getDividerLocation() <= 5) {
+					jpMainPanelView.setDividerLocation(250);
 					Icon thick = new ImageIcon(getClass().getClassLoader()
 							.getResource("images/thick.gif"));
 					jmShowProjectFiles.setIcon(thick);
 				} else {
-					jpMainPanelView.getMainPanelView().setDividerLocation(0);
+					jpMainPanelView.setDividerLocation(0);
 					jmShowProjectFiles.setIcon(null);
 				}
 			}

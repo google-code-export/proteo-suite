@@ -14,42 +14,34 @@ import javax.swing.border.EmptyBorder;
  * 
  * @author Andrew Collins
  */
-public class MainPanel extends JPanel {
-	private final JSplitPane jspMainPanelView = new JSplitPane();
+public class MainPanel extends JSplitPane {
 	private final JSplitPane jspViewerAndProperties = new JSplitPane();
 
 	public MainPanel(JTable jtQuantFiles, JTable jtIdentFiles,
 			JTable jtRawFiles, TabbedChartViewer jtpViewer, TabbedLog jtpLog,
 			TabbedProperties jtpProperties) {
 		jspViewerAndProperties.setDividerSize(5);
-		jspViewerAndProperties.setLeftComponent(getLeftViewer(jtpViewer, jtpLog));
+		jspViewerAndProperties.setLeftComponent(getCentralPanel(jtpViewer, jtpLog));
 		jspViewerAndProperties.setRightComponent(getPropertiesView(jtpProperties));
 		jspViewerAndProperties.setBorder(null);
 
-		jspMainPanelView.setDividerSize(5);
-		jspMainPanelView.setLeftComponent(new LeftPanelView(jtQuantFiles, jtIdentFiles,
+		setDividerSize(5);
+		setLeftComponent(new LeftPanelView(jtQuantFiles, jtIdentFiles,
 				jtRawFiles));
-		jspMainPanelView.setRightComponent(jspViewerAndProperties);
-		jspMainPanelView.setBorder(null);
+		setRightComponent(jspViewerAndProperties);
+		setBorder(null);
 
 		// Viewer Width (Viewer)
 		jspViewerAndProperties.setDividerLocation(600);
 		// Left Menu (Files)
-		jspMainPanelView.setDividerLocation(250);
-
-		setLayout(new BorderLayout());
-		add(jspMainPanelView);
-	}
-
-	public JSplitPane getMainPanelView() {
-		return jspMainPanelView;
+		setDividerLocation(250);
 	}
 
 	public JSplitPane getViewerAndProperties() {
 		return jspViewerAndProperties;
 	}
 
-	public JPanel getLeftViewer(TabbedChartViewer jtpViewer, TabbedLog jtpLog) {
+	public JPanel getCentralPanel(TabbedChartViewer jtpViewer, TabbedLog jtpLog) {
 		JLabel jlViewer = new JLabel("Viewer");
 		jlViewer.setFont(new Font("Verdana", 1, 14)); // NOI18N
 		jlViewer.setForeground(new Color(102, 102, 102));
@@ -58,17 +50,16 @@ public class MainPanel extends JPanel {
 		JPanel jPanel = new JPanel();
 		jPanel.setLayout(new BorderLayout());
 		jPanel.add(jlViewer, BorderLayout.PAGE_START);
-		jPanel.add(getLeftViewerDetails(jtpViewer, jtpLog), BorderLayout.CENTER);
+		jPanel.add(getCentralComponents(jtpViewer, jtpLog), BorderLayout.CENTER);
 
 		return jPanel;
 	}
 
-	private JSplitPane getLeftViewerDetails(TabbedChartViewer jtpViewer,
+	private JSplitPane getCentralComponents(TabbedChartViewer jtpViewer,
 			TabbedLog jtpLog) {
 
 		final JSplitPane jspLeftViewerDetails = new JSplitPane();
-		jspLeftViewerDetails.setDividerLocation(350);
-		jspLeftViewerDetails.setDividerSize(2);
+		jspLeftViewerDetails.setDividerSize(5);
 		jspLeftViewerDetails.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jspLeftViewerDetails.setTopComponent(jtpViewer);
 		jspLeftViewerDetails.setRightComponent(jtpLog);

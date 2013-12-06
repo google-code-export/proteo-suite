@@ -80,7 +80,7 @@ import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
  * 
  * @author Andrew Collins
  */
-public class FileFormatMzQuantML extends Thread implements Runnable {
+public class FileFormatMzQuantML {
 	private static final WorkSpace WORKSPACE = WorkSpace.getInstance();
 	private final TabbedProperties jtpProperties;
 	private final int iIndexRef;
@@ -114,8 +114,6 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 	public FileFormatMzQuantML(TabbedProperties jtpProperties, int iIndexRef, SystemUtils sysutils, ProgressBarDialog progressBarDialog, 
 			JTable jtProteinQuant, JTable jtPeptideQuant, JTable jtFeatureQuant, String sFileRef, List<MzQuantMLUnmarshaller> aMzQUnmarshaller, 
 			JLabel jlFileNameMzQText, JEditorPane jepMZQView, TabbedLog jtpLog) {
-		super("MzQuantML Loader");
-		
 		this.jtpProperties = jtpProperties;
 		this.iIndexRef = iIndexRef;
 		this.sysutils = sysutils;
@@ -130,7 +128,6 @@ public class FileFormatMzQuantML extends Thread implements Runnable {
 		this.jtpLog = jtpLog;
 	}
 
-	@Override
 	public void run() {
 		jtpProperties.setSelectedIndex(4);
 		DefaultTableModel model = new DefaultTableModel();

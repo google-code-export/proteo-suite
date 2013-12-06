@@ -16,12 +16,16 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import org.proteosuite.listener.KeyListenerSearch;
+import org.proteosuite.utils.SystemUtils;
 
 /**
  * 
  * @author Andrew Collins
  */
 public class TabbedLog extends JTabbedPane {
+
+	private static final SystemUtils SYS_UTILS = new SystemUtils();
+	
 	private JTextArea jtaLog = new JTextArea();
 
 	public TabbedLog(JTable jtRawData) {
@@ -46,7 +50,10 @@ public class TabbedLog extends JTabbedPane {
 		resetLog();
 	}
 
+	
 	public void appendLog(String entry) {
+		entry = SYS_UTILS.getTime() + " - " + entry + "\n";
+		System.out.print(entry);
 		jtaLog.append(entry);
 	}
 
@@ -54,6 +61,7 @@ public class TabbedLog extends JTabbedPane {
 		jtaLog.setText("");
 	}
 
+	@Deprecated
 	public void setLog(String entry) {
 		jtaLog.setText(entry);
 	}

@@ -22,7 +22,7 @@ import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
-public class FileFormatMzML extends Thread implements Runnable {
+public class FileFormatMzML {
 	
 	private JTable jtMzML;
 	private List<MzMLUnmarshaller> aMzMLUnmarshaller;
@@ -34,9 +34,7 @@ public class FileFormatMzML extends Thread implements Runnable {
 	
 	
 	public FileFormatMzML(JTable jtMzML, List<MzMLUnmarshaller> aMzMLUnmarshaller, int iIndexRef, JLabel jlFileNameMzMLText,
-			JEditorPane jepMzMLView,	JTabbedPane jtpProperties, ProgressBarDialog progressBarDialog) {
-		super("MzML Loader");
-
+			JEditorPane jepMzMLView, JTabbedPane jtpProperties, ProgressBarDialog progressBarDialog) {
 		this.jtMzML = jtMzML;
 		this.aMzMLUnmarshaller = aMzMLUnmarshaller;
 		this.iIndexRef = iIndexRef;
@@ -46,9 +44,8 @@ public class FileFormatMzML extends Thread implements Runnable {
 		this.progressBarDialog = progressBarDialog;
 	}
 	
-	@Override
 	public void run() {
-		// ... Loading table ...//
+		// Loading table
 		DefaultTableModel model = new DefaultTableModel() {
 			Class<?>[] types = new Class[] { Integer.class,
 					String.class, String.class, Float.class,

@@ -3,6 +3,7 @@ package org.proteosuite.gui.toolbars;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -18,7 +19,16 @@ import org.proteosuite.ProteoSuiteView;
 import org.proteosuite.gui.TabbedChartViewer;
 import org.proteosuite.gui.TabbedLog;
 import org.proteosuite.gui.TabbedProperties;
+import org.proteosuite.utils.ImportFile;
 
+import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
+import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
+import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
+
+/**
+ * 
+ * @author Andew Collins
+ */
 public class ProjectToolBar extends JToolBar {
 
 	public ProjectToolBar(final ProteoSuiteView proteoSuiteView, final JMenuItem jmCloseProject,
@@ -37,7 +47,10 @@ public class ProjectToolBar extends JToolBar {
 			final JTable jtPeptideQuant, final JTable jtProteinQuant,
 			final JTable jtFeatureQuant, final JComboBox<String> jcbOutputFormat, 
 			final JLabel jlFileNameMGFText, final JTable jtMzIDProtGroup,
-			final JComboBox<String> jcbPSM, final JLabel jlRawFilesStatus)
+			final JComboBox<String> jcbPSM, final JLabel jlRawFilesStatus,
+			final List<MzMLUnmarshaller> aMzMLUnmarshaller,
+			final List<MzIdentMLUnmarshaller> aMzIDUnmarshaller,
+			final List<MzQuantMLUnmarshaller> aMzQUnmarshaller)
 	{
 		setFloatable(false);
 		JButton jbNewProject = new JButton(new ImageIcon(getClass()
@@ -73,15 +86,19 @@ public class ProjectToolBar extends JToolBar {
 		jbImportFile.setVerticalTextPosition(SwingConstants.BOTTOM);
 		jbImportFile.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
-				proteoSuiteView.jmImportFileActionPerformed(jtRawFiles, jlFileNameMGFText,
-						jtFeatureQuant, jtMzIDProtGroup, jmSaveProject,
-						jtpLog, jtpProperties, jtpViewer,
-						jbSaveProject, jcbPSM, jepMZQView,
-						jepMzIDView, jepMzMLView, jlFileNameMzQText,
-						jlRawFilesStatus, jlIdentFilesStatus,
-						jlFileNameMzIDText, jlFileNameMzMLText, jtIdentFiles,
-						jtMGF, jtMascotXMLView, jtMzId, jtMzML, jtPeptideQuant,
-						jtProteinQuant, jtQuantFiles);
+				new ImportFile().jmImportFileActionPerformed(proteoSuiteView, jtRawFiles,
+						jlFileNameMGFText, jtFeatureQuant, jtMzIDProtGroup,
+						jmSaveProject, jtpLog, jtpProperties,
+						jtpViewer, jbSaveProject,
+						jcbPSM, jepMZQView, jepMzIDView, jepMzMLView,
+						jlFileNameMzQText, jlRawFilesStatus,
+						jlIdentFilesStatus, jlFileNameMzIDText,
+						jlFileNameMzMLText, jtIdentFiles, jtMGF,
+						jtMascotXMLView, jtMzId, jtMzML, jtPeptideQuant,
+						jtProteinQuant, jtQuantFiles,
+						aMzMLUnmarshaller,
+						aMzIDUnmarshaller,
+						aMzQUnmarshaller);
 			}
 		});
 		add(jbImportFile);
