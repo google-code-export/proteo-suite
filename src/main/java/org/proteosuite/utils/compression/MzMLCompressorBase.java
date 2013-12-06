@@ -11,11 +11,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArrayList;
+import uk.ac.ebi.jmzml.model.mzml.CV;
 import uk.ac.ebi.jmzml.model.mzml.CVList;
-import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.ChromatogramList;
 import uk.ac.ebi.jmzml.model.mzml.FileDescription;
 import uk.ac.ebi.jmzml.model.mzml.InstrumentConfigurationList;
@@ -40,29 +38,45 @@ public abstract class MzMLCompressorBase implements MzMLCompressor {
         decompressionResult = new DecompressionResult();
     }
     
-    public void stampStart() {
-        compressionResult.setStart(System.nanoTime());
+    public void stampStart(boolean doingCompression) {
+        if (doingCompression) {
+            compressionResult.setStart(System.nanoTime());
+        } else {
+            decompressionResult.setStart(System.nanoTime());
+        }
     }
     
-    public void stampStop() {
-        compressionResult.setStop(System.nanoTime());        
-    }
+    public void stampStop(boolean doingCompression) {
+        if (doingCompression) {
+            compressionResult.setStop(System.nanoTime());
+        } else {
+            decompressionResult.setStop(System.nanoTime());
+        }
+    }  
     
-    public static void staticDecompress(File xmlFile, String outputDirectory) {
-    
-    }
-    
-    public DecompressionResult decompress(File xmlFile, String outputDirectory) {
+    public DecompressionResult decompress(File xmlFile, final String outputDirectory) throws IOException {
+        decompressionResult.setCompressedSize(xmlFile.length());
+        stampStart(false);
+        doCompressionOrDecompression(xmlFile, outputDirectory, false);
+        stampStop(false);
+        decompressionResult.setDecompressedSize(new File(outputDirectory + xmlFile.getName().replace(getCompressorSpecificSuffix() + ".mzML", ".mzML")).length());
         return decompressionResult;
     }
     
-    public CompressionResult compress(File xmlFile, String outputDirectory) throws IOException {
+    public CompressionResult compress(File xmlFile, final String outputDirectory) throws IOException {
         compressionResult.setNonCompressedSize(xmlFile.length());
-        stampStart();
-        doCompression(xmlFile, outputDirectory);
-        stampStop();
+        stampStart(true);
+        doCompressionOrDecompression(xmlFile, outputDirectory, true);
+        stampStop(true);
         compressionResult.setCompressedSize(new File(outputDirectory + xmlFile.getName().replace(".mzML", getCompressorSpecificSuffix() + ".mzML")).length());
         return compressionResult;
+    }
+    
+    public CV getCV() {
+        CV cv = new CV();
+        cv.setFullName("PSI-MS");
+        cv.setId("MS");
+        return cv;
     }
     
     private static void copyNonSpectraData(MzMLUnmarshaller source, MzML destination) {
@@ -107,7 +121,7 @@ public abstract class MzMLCompressorBase implements MzMLCompressor {
         return run;
     }
     
-    protected void doCompression(File xmlFile, String sPath) throws IOException {
+    protected void doCompressionOrDecompression(File xmlFile, String outputDirectory, boolean doingCompression) throws IOException {
         MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
         MzML mzml = new MzML();
         copyNonSpectraData(unmarshaller, mzml);
@@ -123,6 +137,10 @@ public abstract class MzMLCompressorBase implements MzMLCompressor {
         MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
         int iSpectrum = 0;
         while (spectrumIterator.hasNext()) {
+            if (iSpectrum == 87) {
+                System.out.println("Hello!");
+            }
+            
             Spectrum spectrum = spectrumIterator.next();
 
             //System.out.println(spectrum.getId());
@@ -134,11 +152,7 @@ public abstract class MzMLCompressorBase implements MzMLCompressor {
             spectrumW.setId(spectrum.getId());
 
             //... cvParams ...//
-            List<CVParam> specParam = spectrum.getCvParam();
-            for (Iterator<CVParam> lCVParamIterator = specParam.iterator(); lCVParamIterator.hasNext();) {
-                CVParam lCVParam = lCVParamIterator.next();
-                spectrumW.getCvParam().add(lCVParam);
-            }
+            spectrumW.getCvParam().addAll(spectrum.getCvParam());
 
             //... Scan List ...//
             spectrumW.setScanList(spectrum.getScanList());
@@ -147,7 +161,13 @@ public abstract class MzMLCompressorBase implements MzMLCompressor {
             spectrumW.setPrecursorList(spectrum.getPrecursorList());
             
             BinaryDataArrayList binaryListForNewData = new BinaryDataArrayList();
-            compressBinaryDataArrayList(spectrum.getBinaryDataArrayList(), binaryListForNewData);          
+            if (doingCompression) {
+                compressBinaryDataArrayList(spectrum.getBinaryDataArrayList(), binaryListForNewData);
+            } else {
+                System.out.println("Decoding spectrum " + iSpectrum);
+                decompressBinaryDataArrayList(spectrum.getBinaryDataArrayList(), binaryListForNewData);
+            }
+            
             spectrumW.setBinaryDataArrayList(binaryListForNewData);
             specListW.getSpectrum().add(spectrumW);
 
@@ -167,14 +187,16 @@ public abstract class MzMLCompressorBase implements MzMLCompressor {
         mzml.setId(xmlFile.getName());
         mzml.setRun(runToWrite);
         MzMLMarshaller marshaller = new MzMLMarshaller();
-        Writer writer = new FileWriter(sPath + "\\" + xmlFile.getName().replace(".mzML", getCompressorSpecificSuffix() + ".mzML"));
+        Writer writer;
+        if (doingCompression) {        
+            writer = new FileWriter(outputDirectory + "\\" + xmlFile.getName().replace(".mzML", getCompressorSpecificSuffix() + ".mzML"));
+        } else {
+            writer = new FileWriter(outputDirectory + "\\" + xmlFile.getName().replace(getCompressorSpecificSuffix() + ".mzML", ".mzML"));
+        }
+        
         marshaller.marshall(mzml, writer);
         writer.close();
-    }
-    
-    protected void doDecompression(File xmlFile, String outputDirectory) {
-    
-    }
+    }   
     
     protected abstract void compressBinaryDataArrayList(BinaryDataArrayList source, BinaryDataArrayList destination);
     protected abstract void decompressBinaryDataArrayList(BinaryDataArrayList source, BinaryDataArrayList destination);

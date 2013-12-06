@@ -16,11 +16,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.proteosuite.utils.compression.DeltaConversion.DeltaEncodedDataFormatException;
 import org.proteosuite.utils.compression.DeltaConversion.DeltaSourceDataFormatException;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray.Precision;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArrayList;
-import uk.ac.ebi.jmzml.model.mzml.CV;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.params.BinaryDataArrayCVParam;
 
@@ -32,7 +32,10 @@ import uk.ac.ebi.jmzml.model.mzml.params.BinaryDataArrayCVParam;
  * @author fgonzalez
  */
 public class MzMLCompress extends MzMLCompressorBase implements MzMLCompressor {
-    private boolean trimZeros = false;
+    private final String DELTA_MZ_ACCESSION = "MS:7002312";
+    private final String MZ_DATA_ACCESSION = "MS:1000514";
+    private final String INTENSITY_DATA_ACCESSION = "MS:1000515";
+    private boolean trimZeros = true;
 
     public MzMLCompress() {
         super();
@@ -69,13 +72,15 @@ public class MzMLCompress extends MzMLCompressorBase implements MzMLCompressor {
         for (BinaryDataArray bda : source.getBinaryDataArray()) {
             List<CVParam> cvpList = bda.getCvParam();
             for (CVParam cvp : cvpList) {
-                if (cvp.getAccession().equals("MS:1000514")) {
+                if (cvp.getAccession().equals(MZ_DATA_ACCESSION)) {
                     if (bda.getEncodedLength() > 0) {
                         mzNumbers = bda.getBinaryDataAsNumberArray();
+                        break;
                     }
-                } else if (cvp.getAccession().equals("MS:1000515")) {
+                } else if (cvp.getAccession().equals(INTENSITY_DATA_ACCESSION)) {
                     if (bda.getEncodedLength() > 0) {
                         intenNumbers = bda.getBinaryDataAsNumberArray();
+                        break;
                     }
                 }
             }
@@ -97,21 +102,21 @@ public class MzMLCompress extends MzMLCompressorBase implements MzMLCompressor {
                 System.out.println("Terminating compression due to issue with MZ data: " + d.getLocalizedMessage());
                 return;
             }
+        } else {
+            destination.setCount(0);
+            return;
         }
 
         //... Transforming data into Binary ...//
         BinaryDataArray bdaW = new BinaryDataArray();
         BinaryDataArray bda2W = new BinaryDataArray();
 
-        if (mzNumbers != null && mzNumbers.length > 0 && intenNumbers != null && intenNumbers.length == mzNumbers.length) {
-            CV cv = new CV();
-            cv.setFullName("PSI-MS");
-            cv.setId("MS");
+        if (mzNumbers != null && mzNumbers.length > 0 && intenNumbers != null && intenNumbers.length == mzNumbers.length) {         
 
             if (mzNumbers[0] instanceof Double) {
-                bdaW.setNumberArrayAsBinaryData(mzNumbers, Precision.FLOAT64BIT, true, cv);
+                bdaW.setNumberArrayAsBinaryData(mzNumbers, Precision.FLOAT64BIT, true, getCV());
             } else if (mzNumbers[0] instanceof Float) {
-                bdaW.setNumberArrayAsBinaryData(mzNumbers, Precision.FLOAT32BIT, true, cv);
+                bdaW.setNumberArrayAsBinaryData(mzNumbers, Precision.FLOAT32BIT, true, getCV());
             }
 
             CVParam cvParam1 = new BinaryDataArrayCVParam();
@@ -124,11 +129,11 @@ public class MzMLCompress extends MzMLCompressorBase implements MzMLCompressor {
             bdaW.getCvParam().add(cvParam1);
 
             CVParam cvParam1_2 = new BinaryDataArrayCVParam();
-            cvParam1_2.setAccession("MS:1000000");
-            cvParam1_2.setName("deltas_zeros");
+            cvParam1_2.setAccession(DELTA_MZ_ACCESSION);
+            cvParam1_2.setName("delta_mz_data");
             cvParam1_2.setCvRef("MS");
             bdaW.getCvParam().add(cvParam1_2);
-            bdaW.setEncodedLength(bdaW.getArrayLength());
+            bdaW.setEncodedLength(mzNumbers.length);
 
             CVParam zeroesRemovedParam = null;
 
@@ -143,11 +148,11 @@ public class MzMLCompress extends MzMLCompressorBase implements MzMLCompressor {
                      // Set intensity array as array of integers if all values appear to be integers.
             // Otherwise set as array of doubles or floats.
             if (isArrayOfIntegers(intenNumbers)) {
-                bda2W.setNumberArrayAsBinaryData(intenNumbers, Precision.INT32BIT, true, cv);
+                bda2W.setNumberArrayAsBinaryData(intenNumbers, Precision.INT32BIT, true, getCV());
             } else if (intenNumbers[0] instanceof Double) {
-                bda2W.setNumberArrayAsBinaryData(intenNumbers, Precision.FLOAT64BIT, true, cv);
+                bda2W.setNumberArrayAsBinaryData(intenNumbers, Precision.FLOAT64BIT, true, getCV());
             } else if (intenNumbers[0] instanceof Float) {
-                bda2W.setNumberArrayAsBinaryData(intenNumbers, Precision.FLOAT32BIT, true, cv);
+                bda2W.setNumberArrayAsBinaryData(intenNumbers, Precision.FLOAT32BIT, true, getCV());
             }
 
             CVParam cvParam2 = new BinaryDataArrayCVParam();
@@ -157,26 +162,60 @@ public class MzMLCompress extends MzMLCompressorBase implements MzMLCompressor {
             cvParam2.setName("intensity array");
             cvParam2.setAccession("MS:1000515");
             cvParam2.setCvRef("MS");
-            bda2W.getCvParam().add(cvParam2);
-            bda2W.getCvParam().add(cvParam1_2);
+            bda2W.getCvParam().add(cvParam2);            
             if (trimZeros) {
                 bda2W.getCvParam().add(zeroesRemovedParam);
             }
 
-            bda2W.setEncodedLength(bda2W.getArrayLength());
+            bda2W.setEncodedLength(intenNumbers.length);
         }
 
         destination.getBinaryDataArray().add(bdaW);
         destination.getBinaryDataArray().add(bda2W);
         destination.setCount(2);
-
     }
     
     @Override
     protected void decompressBinaryDataArrayList(BinaryDataArrayList source, BinaryDataArrayList destination) {
+        for (BinaryDataArray dataArray : source.getBinaryDataArray()) {
+            List<CVParam> paramList = dataArray.getCvParam();    
+            Number[] numberArray = dataArray.getBinaryDataAsNumberArray();
+            BinaryDataArray outDataArray = new BinaryDataArray();
+            for (CVParam param : paramList) {
+                try{
+                    if (param.getAccession().equals(DELTA_MZ_ACCESSION)) {
+                        DeltaConversion.fromDeltaNumberFormat(numberArray);                                                                   
+                        paramList.remove(param);
+                        break;
+                    }                                      
+                } catch (DeltaEncodedDataFormatException d) {
+                    System.out.println("Problem decoding delta data. Data has not been decoded.");                    
+                }              
+            }
+            
+            outDataArray.setNumberArrayAsBinaryData(numberArray, dataArray.getPrecision(), true, getCV());
+            outDataArray.setEncodedLength(numberArray.length);
+            stripOutAutomatedCVTerms(paramList);
+            outDataArray.getCvParam().addAll(paramList);
+            destination.getBinaryDataArray().add(outDataArray);
+        }
         
+        destination.setCount(destination.getBinaryDataArray().size());
     }
 
+    private void stripOutAutomatedCVTerms(List<CVParam> paramList) {
+        for (int i = 0; i < paramList.size(); i++) {
+            CVParam param = paramList.get(i);
+            if (param.getName().contains("zlib")) {
+                paramList.remove(i);
+                i--;
+            } else if (param.getName().contains("-bit")) {
+                paramList.remove(i);
+                i--;
+            }
+        }
+    }
+    
     /**
      * Checks whether the supplied Number array is an array of integers.
      * @param numbers Number array.
