@@ -32,9 +32,7 @@
     PROJECT DEPENDENCIES 
     =============================================================================   
     Manual Dependencies:
-    * jcommon           1.0.16  Utilities from jfree.org                Manual installation
-    * jfreechart        1.0.13  Utilities from jfree.org                Manual installation
-    * jexcelapi         2.6.12  Utilities from jexcelapi.org            Manual installation
+    
     * MSGFPlus          1.0     MSGFPlus from proteomics.ucsd.edu       Manual installation
     * mzidentml-lib     1.1     Utilities for jmzidenml                 Manual installation
     * utilities         3.0.16  Utilities for MS visualisation          Manual installation
@@ -42,7 +40,10 @@
     
     Automatic downloaded dependencies:
     * jmzml             1.6.7   mzML API                                Automatic installation via maven    
-    * jmzidentml        1.1.3   mzIdentML API                           Automatic installation via maven 
+    * jmzidentml        1.1.3   mzIdentML API                           Automatic installation via maven
+    * jcommon           1.0.16  Utilities from jfree.org                Automatic installation via maven
+    * jfreechart        1.0.13  Utilities from jfree.org                Automatic installation via maven
+    * jexcelapi         2.6.12  Utilities from jexcelapi.org            Automatic installation via maven 
     
     Ongoing developments:
     * mxq2mzq           0.1     Module to convert Maxquant to mzq       Manual installation
@@ -66,21 +67,11 @@
             <groupId>uk.ac.ebi.jmzidml</groupId>
             <artifactId>jmzidentml</artifactId>
             <version>1.1.3</version>
-        </dependency>
-        <dependency>
-            <groupId>uk.ac.ebi.jmzml</groupId>
-            <artifactId>jmzml</artifactId>
-            <version>1.6.7</version>
         </dependency>        
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>utilities</artifactId>
             <version>3.0.16</version>
-        </dependency>
-        <dependency>
-            <groupId>edu.ucsd.msjava</groupId>
-            <artifactId>MSGFPlus</artifactId>
-            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>uk.ac.liv</groupId>
@@ -91,12 +82,7 @@
             <groupId>jfree</groupId>
             <artifactId>jcommon</artifactId>
             <version>1.0.16</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.1</version>
-        </dependency>
+        </dependency>        
         <dependency>
             <groupId>net.sourceforge.jexcelapi</groupId>
             <artifactId>jxl</artifactId>
@@ -106,6 +92,11 @@
             <groupId>jfree</groupId>
             <artifactId>jfreechart</artifactId>
             <version>1.0.13</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.ucsd.msjava</groupId>
+            <artifactId>MSGFPlus</artifactId>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>uk.ac.cranfield</groupId>
