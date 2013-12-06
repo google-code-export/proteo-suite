@@ -33,7 +33,7 @@ import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationList;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 
-public class FileFormatMzIdentML extends Thread implements Runnable {
+public class FileFormatMzIdentML {
 	private final JTabbedPane jtpProperties;
 	private final JLabel jlFileNameMzIDText;
 	private final String filename;
@@ -50,8 +50,6 @@ public class FileFormatMzIdentML extends Thread implements Runnable {
 	public FileFormatMzIdentML(JTabbedPane jtpProperties, JLabel jlFileNameMzIDText, String filename, 
 			List<MzIdentMLUnmarshaller> aMzIDUnmarshaller, int iIndexRef, SystemUtils sysutils, JTable jtMzId, 
 			JComboBox<String> jcbPSM, JTable jtMzIDProtGroup, JEditorPane jepMzIDView, ProgressBarDialog progressBarDialog) {
-		super("MzIdentML Loader");
-		
 		this.jtpProperties = jtpProperties;
 		this.jlFileNameMzIDText = jlFileNameMzIDText;
 		this.filename = filename;
@@ -66,13 +64,12 @@ public class FileFormatMzIdentML extends Thread implements Runnable {
 	}
 
 
-	/*----------------------------------------------------------
+	/**
 	 * Load MzIdentML viewer
 	 * @param iIndex - Index to the aMzIDUnmarshaller list 
 	 * @param sFileName - File name
 	 * @return void
-	 -----------------------------------------------------------*/
-	@Override
+	 */
 	public void run() {
 		String sOutput = "";
 		jtpProperties.setSelectedIndex(2);

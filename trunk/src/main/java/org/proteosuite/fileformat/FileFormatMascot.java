@@ -14,7 +14,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class FileFormatMascot extends Thread implements Runnable {
+public class FileFormatMascot {
 
 	/**
 	 * Display Mascot XML files

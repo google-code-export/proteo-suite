@@ -30,10 +30,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +39,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.GZIPInputStream;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -139,7 +135,7 @@ public class ProteoSuiteView extends JFrame {
 		final JMenuItem jmSaveProject = new JMenuItem("Save Project",
 				new ImageIcon(getClass().getClassLoader().getResource(
 						"images/save.gif")));
-		
+
 		final JButton jbSaveProject = new JButton(new ImageIcon(getClass()
 				.getClassLoader().getResource("images/save.gif")));
 		final JComboBox<String> jcbTechnique = new JComboBox<String>();
@@ -173,22 +169,22 @@ public class ProteoSuiteView extends JFrame {
 		final JComboBox<String> jcbPSM = new JComboBox<String>();
 		jcbPSM.setModel(new DefaultComboBoxModel<String>(new String[] { "<=1",
 				"<=2", "<=3", "All" }));
-		
+
 		final TabbedProperties jtpProperties = new TabbedProperties(
-				jlFileNameMzMLText, jepMzMLView, jtMzML, jlFileNameMGFText, 
-				jepMGFView, jtMGF, jtMzId,
-				jlFileNameMzIDText, jcbPSM,
+				jlFileNameMzMLText, jepMzMLView, jtMzML, jlFileNameMGFText,
+				jepMGFView, jtMGF, jtMzId, jlFileNameMzIDText, jcbPSM,
 				jtMzIDProtGroup, jepMzIDView, jepMascotXMLView,
-				jtMascotXMLView, jlFileNameMzQText, jepMZQView,
-				jtPeptideQuant, jtProteinQuant, jtFeatureQuant);
-		
+				jtMascotXMLView, jlFileNameMzQText, jepMZQView, jtPeptideQuant,
+				jtProteinQuant, jtFeatureQuant);
+
 		initComponents(jmCloseProject, jmSaveProject, jtpLog, jtpViewer,
 				jbSaveProject, jcbTechnique, jepMGFView, jepMZQView,
 				jepMascotXMLView, jepMzIDView, jepMzMLView, jlFileNameMzMLText,
 				jlFileNameMzIDText, jlIdentFilesStatus, jlFileNameMzQText,
 				jtRawFiles, jtIdentFiles, jtQuantFiles, jtRawData, jtMzML,
 				jtMGF, jtMzId, jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
-				jtFeatureQuant, jtpProperties, jlFileNameMGFText, jtMzIDProtGroup, jcbPSM);
+				jtFeatureQuant, jtpProperties, jlFileNameMGFText,
+				jtMzIDProtGroup, jcbPSM);
 
 		// Project default settings
 		initProjectValues(jmCloseProject, jmSaveProject, jtpLog, jtpViewer,
@@ -228,19 +224,20 @@ public class ProteoSuiteView extends JFrame {
 
 	private void initComponents(final JMenuItem jmCloseProject,
 			final JMenuItem jmSaveProject, final TabbedLog jtpLog,
-			final TabbedChartViewer jtpViewer,
-			final JButton jbSaveProject, final JComboBox<String> jcbTechnique,
-			final JEditorPane jepMGFView, final JEditorPane jepMZQView,
-			final JEditorPane jepMascotXMLView, final JEditorPane jepMzIDView,
-			final JEditorPane jepMzMLView, final JLabel jlFileNameMzMLText,
-			final JLabel jlFileNameMzIDText, final JLabel jlIdentFilesStatus,
-			final JLabel jlFileNameMzQText, final JTable jtRawFiles,
-			final JTable jtIdentFiles, final JTable jtQuantFiles,
-			final JTableRawData jtRawData, final JTable jtMzML, final JTable jtMGF,
-			final JTable jtMzId, final JTable jtMascotXMLView,
-			final JTable jtPeptideQuant, final JTable jtProteinQuant,
-			final JTable jtFeatureQuant, final TabbedProperties jtpProperties, 
-			final JLabel jlFileNameMGFText, final JTable jtMzIDProtGroup, final JComboBox<String> jcbPSM) {
+			final TabbedChartViewer jtpViewer, final JButton jbSaveProject,
+			final JComboBox<String> jcbTechnique, final JEditorPane jepMGFView,
+			final JEditorPane jepMZQView, final JEditorPane jepMascotXMLView,
+			final JEditorPane jepMzIDView, final JEditorPane jepMzMLView,
+			final JLabel jlFileNameMzMLText, final JLabel jlFileNameMzIDText,
+			final JLabel jlIdentFilesStatus, final JLabel jlFileNameMzQText,
+			final JTable jtRawFiles, final JTable jtIdentFiles,
+			final JTable jtQuantFiles, final JTableRawData jtRawData,
+			final JTable jtMzML, final JTable jtMGF, final JTable jtMzId,
+			final JTable jtMascotXMLView, final JTable jtPeptideQuant,
+			final JTable jtProteinQuant, final JTable jtFeatureQuant,
+			final TabbedProperties jtpProperties,
+			final JLabel jlFileNameMGFText, final JTable jtMzIDProtGroup,
+			final JComboBox<String> jcbPSM) {
 
 		jcbTechnique.setModel(new DefaultComboBoxModel<String>(new String[] {
 				"Select technique", "iTRAQ", "TMT", "emPAI" }));
@@ -263,8 +260,8 @@ public class ProteoSuiteView extends JFrame {
 				jtMascotXMLView, jtpProperties, jepMzIDView, jtMzIDProtGroup,
 				jcbPSM, jtMzId, jlFileNameMzIDText));
 
-		jtMzML.addMouseListener(new MouseListenerMzMl(jtRawFiles,
-				jtRawData, jtpLog, aMzMLUnmarshaller, jtpViewer));
+		jtMzML.addMouseListener(new MouseListenerMzMl(jtRawFiles, jtRawData,
+				jtpLog, aMzMLUnmarshaller, jtpViewer));
 		jtMGF.addMouseListener(new MouseListenerMgf(this, jtRawFiles,
 				jtRawData, jtpLog, jtpViewer));
 		jcbPSM.addActionListener(new ActionListener() {
@@ -307,10 +304,11 @@ public class ProteoSuiteView extends JFrame {
 		jepMascotXMLView.setFont(new Font("Tahoma", 0, 10)); // NOI18N
 		jepMascotXMLView.setPreferredSize(new Dimension(144, 84));
 
-		jtQuantFiles.addMouseListener(new MouseListenerQuantFiles(this,
-				jtFeatureQuant, jtpLog, jtpProperties,
-				jepMZQView, jlFileNameMzQText, jtPeptideQuant, jtProteinQuant,
-				jtQuantFiles));
+		jtQuantFiles
+				.addMouseListener(new MouseListenerQuantFiles(this,
+						jtFeatureQuant, jtpLog, jtpProperties, jepMZQView,
+						jlFileNameMzQText, jtPeptideQuant, jtProteinQuant,
+						jtQuantFiles));
 
 		jepMZQView.setContentType("text/html");
 		jepMZQView.setPreferredSize(new Dimension(144, 84));
@@ -328,49 +326,50 @@ public class ProteoSuiteView extends JFrame {
 		jlIdentFilesStatus.setFont(new Font("Tahoma", 1, 11)); // NOI18N
 		jlIdentFilesStatus.setForeground(new Color(51, 102, 0));
 
-		final MainPanel jpMainPanelView = new MainPanel(jtQuantFiles, jtIdentFiles, jtRawFiles, jtpViewer, 
-				jtpLog, jtpProperties);
-		
+		final MainPanel jpMainPanelView = new MainPanel(jtQuantFiles,
+				jtIdentFiles, jtRawFiles, jtpViewer, jtpLog, jtpProperties);
+
 		setJMenuBar(new MenuBar(this, jcbTechnique, jmSaveProject,
-				jmCloseProject, jtpLog, jtpViewer, jbSaveProject, jcbOutputFormat,
-				jepMGFView, jepMZQView, jepMascotXMLView, jepMzIDView,
-				jepMzMLView, jlFileNameMzMLText, jlFileNameMzIDText,
-				jlIdentFilesStatus, jlFileNameMzQText, jtRawFiles,
-				jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
-				jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
-				jtFeatureQuant, jlFileNameMGFText, jtMzIDProtGroup,
-				jtpProperties, jcbPSM, jlRawFilesStatus,
-				jpMainPanelView, identParamsExecute, aMzIDUnmarshaller));
-		
-		add(new HeaderPanel(this, jmCloseProject,
-				jmSaveProject, jtpProperties, jtpLog, jtpViewer,
-				jbSaveProject, jcbTechnique, jepMGFView, jepMZQView,
-				jepMascotXMLView, jepMzIDView, jepMzMLView, jlFileNameMzMLText,
+				jmCloseProject, jtpLog, jtpViewer, jbSaveProject,
+				jcbOutputFormat, jepMGFView, jepMZQView, jepMascotXMLView,
+				jepMzIDView, jepMzMLView, jlFileNameMzMLText,
 				jlFileNameMzIDText, jlIdentFilesStatus, jlFileNameMzQText,
 				jtRawFiles, jtIdentFiles, jtQuantFiles, jtRawData, jtMzML,
 				jtMGF, jtMzId, jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
-				jtFeatureQuant, jcbOutputFormat, jlFileNameMGFText,
-				jtMzIDProtGroup, jcbPSM, jlRawFilesStatus,
-				identParamsExecute, aMzIDUnmarshaller), BorderLayout.PAGE_START);
-		
+				jtFeatureQuant, jlFileNameMGFText, jtMzIDProtGroup,
+				jtpProperties, jcbPSM, jlRawFilesStatus, jpMainPanelView,
+				identParamsExecute, aMzMLUnmarshaller, aMzIDUnmarshaller,
+				aMzQUnmarshaller));
+
+		add(new HeaderPanel(this, jmCloseProject, jmSaveProject, jtpProperties,
+				jtpLog, jtpViewer, jbSaveProject, jcbTechnique, jepMGFView,
+				jepMZQView, jepMascotXMLView, jepMzIDView, jepMzMLView,
+				jlFileNameMzMLText, jlFileNameMzIDText, jlIdentFilesStatus,
+				jlFileNameMzQText, jtRawFiles, jtIdentFiles, jtQuantFiles,
+				jtRawData, jtMzML, jtMGF, jtMzId, jtMascotXMLView,
+				jtPeptideQuant, jtProteinQuant, jtFeatureQuant,
+				jcbOutputFormat, jlFileNameMGFText, jtMzIDProtGroup, jcbPSM,
+				jlRawFilesStatus, identParamsExecute, aMzMLUnmarshaller,
+				aMzIDUnmarshaller, aMzQUnmarshaller), BorderLayout.PAGE_START);
+
 		add(jpMainPanelView, BorderLayout.CENTER);
-		
+
 		pack();
 	}
 
 	public void jmNewProjectActionPerformed(JComboBox<String> jcbTechnique,
 			JMenuItem jmSaveProject, JMenuItem jmCloseProject,
 			TabbedLog jtpLog, final TabbedChartViewer jtpViewer,
-			final JButton jbSaveProject, 
-			JComboBox<String> jcbOutputFormat, final JEditorPane jepMGFView,
-			final JEditorPane jepMZQView, final JEditorPane jepMascotXMLView,
-			final JEditorPane jepMzIDView, final JEditorPane jepMzMLView,
-			JLabel jlFileNameMzMLText, JLabel jlFileNameMzIDText,
-			JLabel jlIdentFilesStatus, JLabel jlFileNameMzQText,
-			JTable jtRawFiles, JTable jtIdentFiles, JTable jtQuantFiles,
-			JTable jtRawData, JTable jtMzML, JTable jtMGF, JTable jtMzId,
-			JTable jtMascotXMLView, JTable jtPeptideQuant,
-			JTable jtProteinQuant, JTable jtFeatureQuant, TabbedProperties jtpProperties) {
+			final JButton jbSaveProject, JComboBox<String> jcbOutputFormat,
+			final JEditorPane jepMGFView, final JEditorPane jepMZQView,
+			final JEditorPane jepMascotXMLView, final JEditorPane jepMzIDView,
+			final JEditorPane jepMzMLView, JLabel jlFileNameMzMLText,
+			JLabel jlFileNameMzIDText, JLabel jlIdentFilesStatus,
+			JLabel jlFileNameMzQText, JTable jtRawFiles, JTable jtIdentFiles,
+			JTable jtQuantFiles, JTable jtRawData, JTable jtMzML, JTable jtMGF,
+			JTable jtMzId, JTable jtMascotXMLView, JTable jtPeptideQuant,
+			JTable jtProteinQuant, JTable jtFeatureQuant,
+			TabbedProperties jtpProperties) {
 		// Check if the project needs to be saved
 		if (isProjectModified) {
 			int iOption = JOptionPane
@@ -384,24 +383,22 @@ public class ProteoSuiteView extends JFrame {
 						jmSaveProject, jmCloseProject, jbSaveProject,
 						jcbOutputFormat, jtIdentFiles);
 				initProjectValues(jmCloseProject, jmSaveProject, jtpLog,
-						jtpViewer, jbSaveProject, jcbTechnique, jepMGFView, 
-						jepMZQView, jepMascotXMLView,
-						jepMzIDView, jepMzMLView, jlFileNameMzMLText,
-						jlFileNameMzIDText, jlIdentFilesStatus,
-						jlFileNameMzQText, jtRawFiles, jtIdentFiles,
-						jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
-						jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
-						jtFeatureQuant, jtpProperties);
+						jtpViewer, jbSaveProject, jcbTechnique, jepMGFView,
+						jepMZQView, jepMascotXMLView, jepMzIDView, jepMzMLView,
+						jlFileNameMzMLText, jlFileNameMzIDText,
+						jlIdentFilesStatus, jlFileNameMzQText, jtRawFiles,
+						jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF,
+						jtMzId, jtMascotXMLView, jtPeptideQuant,
+						jtProteinQuant, jtFeatureQuant, jtpProperties);
 			} else if (iOption == JOptionPane.NO_OPTION) {
 				initProjectValues(jmCloseProject, jmSaveProject, jtpLog,
-						jtpViewer, jbSaveProject, 
-						jcbTechnique, jepMGFView, jepMZQView, jepMascotXMLView,
-						jepMzIDView, jepMzMLView, jlFileNameMzMLText,
-						jlFileNameMzIDText, jlIdentFilesStatus,
-						jlFileNameMzQText, jtRawFiles, jtIdentFiles,
-						jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
-						jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
-						jtFeatureQuant, jtpProperties);
+						jtpViewer, jbSaveProject, jcbTechnique, jepMGFView,
+						jepMZQView, jepMascotXMLView, jepMzIDView, jepMzMLView,
+						jlFileNameMzMLText, jlFileNameMzIDText,
+						jlIdentFilesStatus, jlFileNameMzQText, jtRawFiles,
+						jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF,
+						jtMzId, jtMascotXMLView, jtPeptideQuant,
+						jtProteinQuant, jtFeatureQuant, jtpProperties);
 			}
 		} else {
 			initProjectValues(jmCloseProject, jmSaveProject, jtpLog, jtpViewer,
@@ -410,657 +407,9 @@ public class ProteoSuiteView extends JFrame {
 					jlFileNameMzMLText, jlFileNameMzIDText, jlIdentFilesStatus,
 					jlFileNameMzQText, jtRawFiles, jtIdentFiles, jtQuantFiles,
 					jtRawData, jtMzML, jtMGF, jtMzId, jtMascotXMLView,
-					jtPeptideQuant, jtProteinQuant, jtFeatureQuant, jtpProperties);
+					jtPeptideQuant, jtProteinQuant, jtFeatureQuant,
+					jtpProperties);
 		}
-	}
-
-	public void jmImportFileActionPerformed(final JTable jtRawFiles,
-			final JLabel jlFileNameMGFText, final JTable jtFeatureQuant,
-			final JTable jtMzIDProtGroup, JMenuItem jmSaveProject,
-			final TabbedLog jtpLog, final TabbedProperties jtpProperties,
-			final TabbedChartViewer jtpViewer,
-			final JButton jbSaveProject, final JComboBox<String> jcbPSM,
-			final JEditorPane jepMZQView, final JEditorPane jepMzIDView,
-			final JEditorPane jepMzMLView, final JLabel jlFileNameMzQText,
-			final JLabel jlRawFilesStatus, final JLabel jlIdentFilesStatus,
-			final JLabel jlFileNameMzIDText, final JLabel jlFileNameMzMLText,
-			final JTable jtIdentFiles, final JTable jtMGF,
-			final JTable jtMascotXMLView, final JTable jtMzId,
-			final JTable jtMzML, final JTable jtPeptideQuant,
-			final JTable jtProteinQuant, final JTable jtQuantFiles) {
-		// Selecting file(s)
-		JFileChooser chooser = new JFileChooser(sPreviousLocation);
-		chooser.setDialogTitle("Select the file(s) to analyze");
-
-		// ... Filters must be in descending order ...//
-		chooser.addChoosableFileFilter(new FileNameExtensionFilter(
-				"mzQuantML Files (*.mzq, *.mzq.gz)", "mzq"));
-		chooser.addChoosableFileFilter(new FileNameExtensionFilter(
-				"Identification Files (*.mzid, *.mzid.gz, *.xml)", "mzid",
-				"gz", "xml"));
-		chooser.addChoosableFileFilter(new FileNameExtensionFilter(
-				"Raw Files (*.mzML, *.mzML.gz, *.mgf)", "mzML", "gz", "mgf"));
-
-		// Enable multiple file selection
-		chooser.setMultiSelectionEnabled(true);
-
-		// Setting default directory
-		if (sPreviousLocation == null || sPreviousLocation.contains("")) {
-			// If not found it goes to Home, exception not needed
-			chooser.setCurrentDirectory(new File(WORKSPACE.getWorkSpace()));
-		} else {
-			// If not found it goes to Home, exception not needed
-			chooser.setCurrentDirectory(new File(sPreviousLocation));
-		}
-
-		// Retrieving selection from user
-		int returnVal = chooser.showOpenDialog(this);
-
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			final File[] aFiles = chooser.getSelectedFiles();
-			if (aFiles != null && aFiles.length > 0) {
-				isProjectModified = true;
-				updateSaveProjectStatus(jmSaveProject, jbSaveProject);
-				sPreviousLocation = aFiles[0].getParent();
-				// ---------------//
-				// Read mzML //
-				// ---------------//
-				// Usually, the first element will contain the type of
-				// files, but we can also expect mixed entries
-				if ((aFiles[0].getName().toLowerCase().indexOf(".mzml") > 0)
-						|| (aFiles[0].getName().toLowerCase()
-								.indexOf(".mzml.gz") > 0)) {
-					// Fill JTable
-					final DefaultTableModel model = new DefaultTableModel();
-					jtRawFiles.setModel(model);
-					model.addColumn("Name");
-					model.addColumn("Path");
-					model.addColumn("Type");
-					model.addColumn("Version");
-
-					final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
-							this, true, "ReadingMzML");
-					final Thread thread = new Thread(new Runnable() {
-						@Override
-						public void run() {
-							// Progress Bar
-							progressBarDialog.setTitle("Reading mzML files");
-							progressBarDialog.setVisible(true);
-						}
-					}, "ProgressBarDialog");
-					thread.start();
-					new Thread("ReadingMzML") {
-						@Override
-						public void run() {
-							String sOutput = "";
-							String sMessage = "";
-							jtpLog.resetLog();
-
-							// Release unmarshallers
-							if (aFiles.length > 0) {
-								sMessage = SYS_UTILS.getTime()
-										+ " - Reading mzML files (Total="
-										+ aFiles.length + ")";
-								System.out.println(sMessage);
-								sOutput = sOutput + sMessage + "\n";
-								jtpLog.setLog(sOutput);
-								aMzMLUnmarshaller.clear();
-							}
-							// Reading selected files
-							for (int iI = 0; iI < aFiles.length; iI++) {
-								// Validate file extension (mixed files)								
-								if ((aFiles[iI].getName().toLowerCase()
-										.indexOf(".mzml") > 0)
-										|| (aFiles[iI].getName().toLowerCase()
-												.indexOf(".mzml.gz") > 0)) {
-									File xmlFile = new File(
-											aFiles[iI].getPath());
-
-									progressBarDialog
-											.setTitle("Reading mzml files ("
-													+ (iI + 1) + "/"
-													+ aFiles.length + ") - "
-													+ xmlFile.getName());
-									progressBarDialog.setVisible(true);
-
-									// Uncompress mzML.gz files
-									if (aFiles[iI].getName().toLowerCase()
-											.indexOf(".mzml.gz") > 0) {
-										try {
-											sMessage = SYS_UTILS.getTime()
-													+ " - Uncompressing "
-													+ xmlFile.getName();
-											progressBarDialog
-													.setTitle("Uncompressing "
-															+ xmlFile.getName());
-											progressBarDialog.setVisible(true);
-
-											System.out.println(sMessage);
-											sOutput = sOutput + sMessage + "\n";
-											jtpLog.setLog(sOutput);
-
-											File outFile = null;
-											FileOutputStream fos = null;
-
-											GZIPInputStream gin = new GZIPInputStream(
-													new FileInputStream(xmlFile));
-											outFile = new File(
-													aFiles[0].getParent(),
-													aFiles[0].getName()
-															.replaceAll(
-																	"\\.gz$",
-																	""));
-											fos = new FileOutputStream(outFile);
-											byte[] buf = new byte[100000];
-											int len;
-											while ((len = gin.read(buf)) > 0) {
-												fos.write(buf, 0, len);
-											}
-											gin.close();
-											fos.close();
-											xmlFile = outFile;
-											sMessage = SYS_UTILS.getTime()
-													+ " - Uncompressing ends ";
-											System.out.println(sMessage);
-											sOutput = sOutput + sMessage + "\n";
-										} catch (IOException ioe) {
-											System.out
-													.println("Exception has been thrown"
-															+ ioe);
-										}
-									}
-									// Unmarshall data using jzmzML API									
-									sMessage = SYS_UTILS.getTime()
-											+ " - Unmarshalling "
-											+ xmlFile.getName() + " starts ";
-									System.out.println(sMessage);
-									sOutput = sOutput + sMessage + "\n";
-									jtpLog.setLog(sOutput);
-									Unmarshaller.unmarshalMzMLFile(model,
-											xmlFile, "", aMzMLUnmarshaller);
-
-									sMessage = SYS_UTILS.getTime()
-											+ " - Unmarshalling ends ";
-									System.out.println(sMessage);
-									sOutput = sOutput + sMessage + "\n";
-									jtpLog.setLog(sOutput);
-								}
-							} // For files
-
-							// We then display the first mzML element, the
-							// corresponding chromatogram and the 2D plot
-							sMessage = SYS_UTILS.getTime()
-									+ " - Loading mzML view ";
-							System.out.println(sMessage);
-							sOutput = sOutput + sMessage + "\n";
-							jtpLog.setLog(sOutput);
-							loadMzMLView(0, jtRawFiles, jtpProperties,
-									jepMzMLView, jlFileNameMzMLText, jtMzML);
-							sMessage = SYS_UTILS.getTime()
-									+ " - Displaying chromatogram ";
-							System.out.println(sMessage);
-							sOutput = sOutput + sMessage + "\n";
-							jtpLog.setLog(sOutput);
-
-							// Clear container
-							jtpViewer.updateChromatogram(aMzMLUnmarshaller.get(0));
-
-							sMessage = SYS_UTILS.getTime()
-									+ " - Displaying 2D Plot";
-							System.out.println(sMessage);
-							sOutput = sOutput + sMessage + "\n";
-							jtpLog.setLog(sOutput);
-
-							jtpViewer.update2DPlot(aMzMLUnmarshaller.get(0));
-
-							progressBarDialog.setVisible(false);
-							progressBarDialog.dispose();
-							sMessage = SYS_UTILS.getTime()
-									+ " - Raw files imported successfully!";
-							System.out.println(sMessage);
-							sOutput = sOutput + sMessage + "\n";
-							jtpLog.setLog(sOutput);
-
-							jtpProperties.setExportMzMLExcel(true);
-							renderIdentFiles(jtRawFiles, jtIdentFiles);
-							updateStatusPipeline(jlRawFilesStatus, jtRawFiles,
-									jlIdentFilesStatus, jtIdentFiles);
-						}
-					}.start();
-				} // From reading mzML files
-					// ---------------//
-					// Read MGF //
-					// ---------------//
-				if (aFiles[0].getName().toLowerCase().indexOf(".mgf") > 0) {
-					// Fill JTable
-					final DefaultTableModel model = new DefaultTableModel();
-					jtRawFiles.setModel(model);
-					model.addColumn("Name");
-					model.addColumn("Path");
-					model.addColumn("Type");
-					model.addColumn("Version");
-
-					final ProgressBarThread thread = new ProgressBarThread("ProgressBarDialog",
-							this, true, "ReadingMGF");
-					thread.start();
-					new Thread("ReadingMGF") {
-						@Override
-						public void run() {
-							String sMessage = "";
-							String sOutput = "";
-							jtpLog.setLog(sOutput);
-							if (aFiles.length > 0) {
-								sMessage = SYS_UTILS.getTime()
-										+ " - Reading MGF files (Total="
-										+ aFiles.length + ")";
-								System.out.println(sMessage);
-								sOutput = sOutput + sMessage + "\n";
-								jtpLog.setLog(sOutput);
-							}
-
-							// Reading selected files
-							for (int iI = 0; iI < aFiles.length; iI++) {
-								thread
-										.setTitle("Reading MGF files ("
-												+ (iI + 1) + "/"
-												+ aFiles.length + ") - "
-												+ aFiles[iI].getName());
-								thread.setVisible(true);
-								// Validate file extension (mixed files)
-								if (aFiles[iI].getName().toLowerCase()
-										.indexOf(".mgf") > 0) {
-									model.insertRow(
-											model.getRowCount(),
-											new String[] {
-													aFiles[iI].getName(),
-													aFiles[iI].getPath()
-															.toString()
-															.replace("\\", "/"),
-													"MGF", "N/A" });
-								}
-							} // For files
-
-							// Display data for the first element
-							sMessage = SYS_UTILS.getTime()
-									+ " - Loading MGF view ";
-							System.out.println(sMessage);
-							sOutput = sOutput + sMessage + "\n";
-							jtpLog.setLog(sOutput);
-							loadMGFView(0, jlFileNameMGFText, jtRawFiles,
-									jtpProperties, jtMGF);
-
-							thread.setVisible(false);
-							thread.dispose();
-							sMessage = SYS_UTILS.getTime()
-									+ " - Raw files imported successfully!";
-							System.out.println(sMessage);
-							sOutput = sOutput + sMessage + "\n";
-							jtpLog.setLog(sOutput);
-
-							jtpProperties.setExportMGFExcel(true);
-							renderIdentFiles(jtRawFiles, jtIdentFiles);
-							updateStatusPipeline(jlRawFilesStatus, jtRawFiles,
-									jlIdentFilesStatus, jtIdentFiles);
-						}
-					}.start();
-				} // From reading MGF files
-					// -------------------//
-					// Read mzIdentML //
-					// -------------------//
-				if ((aFiles[0].getName().toLowerCase().indexOf(".mzid") > 0)
-						|| (aFiles[0].getName().toLowerCase()
-								.indexOf(".mzid.gz") > 0)) {
-					// Fill JTable
-					final DefaultTableModel model = new DefaultTableModel();
-					jtIdentFiles.setModel(model);
-					model.addColumn("Name");
-					model.addColumn("Path");
-					model.addColumn("Type");
-					model.addColumn("Version");
-					model.addColumn("Raw File");
-
-					final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
-							this, true, "ReadingMzID");
-					final Thread thread = new Thread(new Runnable() {
-						@Override
-						public void run() {
-							// Progress Bar
-							progressBarDialog.setTitle("Reading mzIdentML files");
-							progressBarDialog.setVisible(true);
-						}
-					}, "ProgressBarDialog");
-					thread.start();
-					new Thread("ReadingMzID") {
-						@Override
-						public void run() {
-							String sOutput = "";
-							String sMessage = "";
-							jtpLog.setLog(sOutput);
-
-							// Release unmarshallers
-							if (aFiles.length > 0) {
-								sMessage = SYS_UTILS.getTime()
-										+ " - Reading mzML files (Total="
-										+ aFiles.length + ")";
-								System.out.println(sMessage);
-								sOutput = sOutput + sMessage + "\n";
-								jtpLog.setLog(sOutput);
-								aMzIDUnmarshaller.clear();
-							}
-							// Reading selected files
-							for (int iI = 0; iI < aFiles.length; iI++) {
-								// Validate file extension (mixed files)
-								if ((aFiles[iI].getName().toLowerCase()
-										.indexOf(".mzid") > 0)
-										|| (aFiles[iI].getName().toLowerCase()
-												.indexOf(".mzid.gz") > 0)) {
-									File xmlFile = new File(
-											aFiles[iI].getPath());
-
-									progressBarDialog
-											.setTitle("Reading mzid Files ("
-													+ (iI + 1) + "/"
-													+ aFiles.length + ") - "
-													+ xmlFile.getName());
-									progressBarDialog.setVisible(true);
-
-									// Uncompress .gz files
-									if (aFiles[iI].getName().toLowerCase()
-											.indexOf(".mzid.gz") > 0) {
-										try {
-											sMessage = SYS_UTILS.getTime()
-													+ " - Uncompressing "
-													+ xmlFile.getName();
-											progressBarDialog
-													.setTitle("Uncompressing "
-															+ xmlFile.getName());
-											progressBarDialog.setVisible(true);
-
-											File outFile = null;
-											FileOutputStream fos = null;
-
-											GZIPInputStream gin = new GZIPInputStream(
-													new FileInputStream(xmlFile));
-											outFile = new File(
-													aFiles[0].getParent(),
-													aFiles[0].getName()
-															.replaceAll(
-																	"\\.gz$",
-																	""));
-											fos = new FileOutputStream(outFile);
-											byte[] buf = new byte[100000];
-											int len;
-											while ((len = gin.read(buf)) > 0) {
-												fos.write(buf, 0, len);
-											}
-											gin.close();
-											fos.close();
-											xmlFile = outFile;
-											sMessage = SYS_UTILS.getTime()
-													+ " - Uncompressing ends ";
-											System.out.println(sMessage);
-											sOutput = sOutput + sMessage + "\n";
-											jtpLog.setLog(sOutput);
-										} catch (IOException ioe) {
-											System.out
-													.println("Exception has been thrown"
-															+ ioe);
-										}
-									}
-									// Unmarshall data using jmzIdentML API
-									sMessage = SYS_UTILS.getTime()
-											+ " - Unmarshalling "
-											+ xmlFile.getName() + " starts ";
-									System.out.println(sMessage);
-									sOutput = sOutput + sMessage + "\n";
-									jtpLog.setLog(sOutput);
-									Unmarshaller.unmarshalMzIDFile(model,
-											xmlFile, "", aMzIDUnmarshaller);
-									sMessage = SYS_UTILS.getTime()
-											+ " - Unmarshalling ends ";
-									System.out.println(sMessage);
-									sOutput = sOutput + sMessage + "\n";
-									jtpLog.setLog(sOutput);
-								}
-							} // ... For files ...//
-
-							// ... Display first element ...//
-							sMessage = SYS_UTILS.getTime()
-									+ " - Loading mzIdentML view ";
-							System.out.println(sMessage);
-							sOutput = sOutput + sMessage + "\n";
-							jtpLog.setLog(sOutput);
-							loadMzIdentMLView(0, aFiles[0].getName(),
-									jtMzIDProtGroup, jtpProperties, jcbPSM,
-									jepMzIDView, jlFileNameMzIDText, jtMzId);
-
-							progressBarDialog.setVisible(false);
-							progressBarDialog.dispose();
-
-							sMessage = SYS_UTILS.getTime()
-									+ " - Identification files imported successfully!";
-							System.out.println(sMessage);
-							sOutput = sOutput + sMessage + "\n";
-							jtpLog.setLog(sOutput);
-
-							jtpProperties.setExportMzIdentMLExcel(true);
-							renderIdentFiles(jtRawFiles, jtIdentFiles);
-							updateStatusPipeline(jlRawFilesStatus, jtRawFiles,
-									jlIdentFilesStatus, jtIdentFiles);
-						}
-					}.start();
-				}
-				// -------------------//
-				// Read Mascot XML //
-				// -------------------//
-				if (aFiles[0].getName().toLowerCase().indexOf(".xml") > 0) {
-					// ... Fill JTable ...//
-					final DefaultTableModel model = new DefaultTableModel();
-					jtIdentFiles.setModel(model);
-					model.addColumn("Name");
-					model.addColumn("Path");
-					model.addColumn("Type");
-					model.addColumn("Version");
-					model.addColumn("Raw File");
-
-					final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
-							this, true, "ReadingMascot");
-					final Thread thread = new Thread(new Runnable() {
-						@Override
-						public void run() {
-							// ... Progress Bar ...//
-							progressBarDialog.setTitle("Reading Mascot XML files");
-							progressBarDialog.setVisible(true);
-						}
-					}, "ProgressBarDialog");
-					thread.start();
-
-					new Thread("ReadingMascot") {
-						@Override
-						public void run() {
-							String sMessage = "";
-							String sOutput = "";
-							jtpLog.setLog(sOutput);
-							if (aFiles.length > 0) {
-								sMessage = SYS_UTILS.getTime()
-										+ " - Reading Mascot XML files (Total="
-										+ aFiles.length + ")";
-								System.out.println(sMessage);
-								sOutput = sOutput + sMessage + "\n";
-								jtpLog.setLog(sOutput);
-							}
-
-							// ... Reading selected files ...//
-							for (int iI = 0; iI < aFiles.length; iI++) {
-								progressBarDialog
-										.setTitle("Reading Mascot XML files ("
-												+ (iI + 1) + "/"
-												+ aFiles.length + ") - "
-												+ aFiles[iI].getName());
-								progressBarDialog.setVisible(true);
-
-								// Validate file extension (mixed files)
-								if (aFiles[iI].getName().toLowerCase()
-										.indexOf(".xml") > 0) {
-									model.insertRow(
-											model.getRowCount(),
-											new String[] {
-													aFiles[iI].getName(),
-													aFiles[iI].getPath()
-															.toString()
-															.replace("\\", "/"),
-													"mascot_xml", "N/A", "" });
-								}
-							} // ... For files ...//
-
-							// ... Display data for the first element ...//
-							sMessage = SYS_UTILS.getTime()
-									+ " - Loading Mascot XML view ";
-							System.out.println(sMessage);
-							sOutput = sOutput + sMessage + "\n";
-							jtpLog.setLog(sOutput);
-							FileFormatMascot.loadMascotView(
-									aFiles[0].getName(), aFiles[0].getPath()
-											.toString().replace("\\", "/"),
-									jtMascotXMLView, jtpProperties);
-
-							progressBarDialog.setVisible(false);
-							progressBarDialog.dispose();
-							sMessage = SYS_UTILS.getTime()
-									+ " - Identifiation files imported successfully!";
-							System.out.println(sMessage);
-							sOutput = sOutput + sMessage + "\n";
-							jtpLog.setLog(sOutput);
-
-							jtpProperties.setExportMascotXMLExcel(true);
-							renderIdentFiles(jtRawFiles, jtIdentFiles);
-							updateStatusPipeline(jlRawFilesStatus, jtRawFiles,
-									jlIdentFilesStatus, jtIdentFiles);
-
-						}
-					}.start();
-				}
-				// -------------------//
-				// Read mzQuantML //
-				// -------------------//
-				if (aFiles[0].getName().toLowerCase().indexOf(".mzq") > 0) {
-					// ... Fill JTable ...//
-					final DefaultTableModel model = new DefaultTableModel();
-					jtQuantFiles.setModel(model);
-					model.addColumn("Name");
-					model.addColumn("Path");
-					model.addColumn("Type");
-					model.addColumn("Version");
-
-					final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
-							this, true, "ReadingMZQ");
-					final Thread thread = new Thread(new Runnable() {
-						@Override
-						public void run() {
-							// ... Progress Bar ...//
-							progressBarDialog.setTitle("Reading mzQuantML files");
-							progressBarDialog.setVisible(true);
-						}
-					}, "ProgressBarDialog");
-					thread.start();
-					new Thread("ReadingMZQ") {
-						@Override
-						public void run() {
-							String sOutput = "";
-							String sMessage = "";
-							jtpLog.setLog(sOutput);
-
-							// ... Release unmarshallers ...//
-							if (aFiles.length > 0) {
-								sMessage = SYS_UTILS.getTime()
-										+ " - Reading mzQuantML files (Total="
-										+ aFiles.length + ")";
-								System.out.println(sMessage);
-								sOutput = sOutput + sMessage + "\n";
-								jtpLog.setLog(sOutput);
-								aMzQUnmarshaller.clear();
-							}
-
-							// Reading selected files
-							boolean isOK = true;
-							for (int iI = 0; iI < aFiles.length; iI++) {
-								// Validate file extension (mixed files)
-								//
-								if (aFiles[iI].getName().toLowerCase()
-										.indexOf(".mzq") > 0) {
-									File xmlFile = new File(
-											aFiles[iI].getPath());
-									progressBarDialog
-											.setTitle("Reading mzq Files ("
-													+ (iI + 1) + "/"
-													+ aFiles.length + ") - "
-													+ xmlFile.getName());
-									progressBarDialog.setVisible(true);
-
-									// Unmarshall data using jmzIdentML API
-									sMessage = SYS_UTILS.getTime()
-											+ " - Unmarshalling "
-											+ xmlFile.getName() + " starts ";
-									System.out.println(sMessage);
-									sOutput = sOutput + sMessage + "\n";
-									jtpLog.setLog(sOutput);
-
-									try {
-										isOK = Unmarshaller.unmarshalMzQMLFile(
-												model, xmlFile,
-												aMzQUnmarshaller);
-										// Invalid mzq file
-										if (!isOK) {
-											break;
-										}
-
-										sMessage = SYS_UTILS.getTime()
-												+ " - Unmarshalling ends ";
-										System.out.println(sMessage);
-										sOutput = sOutput + sMessage + "\n";
-										jtpLog.setLog(sOutput);
-									} catch (Exception e) {
-										jtpLog.appendLog("Error reading mzQuantML - the mzQuantML file may be invalid.\nError: ");
-										jtpLog.appendLog(e.getMessage());
-										e.printStackTrace();
-										isOK = false;
-									}
-
-								}
-							}
-							// For files
-							if (isOK) {
-								// Display first element
-								sMessage = SYS_UTILS.getTime()
-										+ " - Loading mzQuantML view ";
-								System.out.println(sMessage);
-								sOutput = sOutput + sMessage + "\n";
-								jtpLog.setLog(sOutput);
-								// loadMzQuantMLView(0, aFiles[0].getName());
-								loadMzQuantMLView(0,
-										aFiles[0].getAbsolutePath(),
-										jtFeatureQuant, jtpLog, jtpProperties,
-										jepMZQView,
-										jlFileNameMzQText, jtPeptideQuant,
-										jtProteinQuant, jtQuantFiles);
-
-								sMessage = SYS_UTILS.getTime()
-										+ " - Quantification files imported successfully!";
-								System.out.println(sMessage);
-								sOutput = sOutput + sMessage + "\n";
-								jtpLog.setLog(sOutput);
-							}
-
-							jtpProperties.setExportPepMZQExcel(true);
-							jtpProperties.setExportProtMZQExcel(true);
-							jtpProperties.setExportFeatMZQExcel(true);
-							progressBarDialog.setVisible(false);
-							progressBarDialog.dispose();
-						}
-					}.start();
-				}
-			} // ... From Files
-		} // ... From If
 	}
 
 	public void jmSaveProjectActionPerformed(JTable jtRawFiles,
@@ -1080,16 +429,16 @@ public class ProteoSuiteView extends JFrame {
 	public void jmCloseProjectActionPerformed(JMenuItem jmCloseProject,
 			JMenuItem jmSaveProject, TabbedLog jtpLog,
 			final TabbedChartViewer jtpViewer, final JButton jbSaveProject,
-			JComboBox<String> jcbTechnique,
-			JComboBox<String> jcbOutputFormat, final JEditorPane jepMGFView,
-			final JEditorPane jepMZQView, final JEditorPane jepMascotXMLView,
-			final JEditorPane jepMzIDView, final JEditorPane jepMzMLView,
-			JLabel jlFileNameMzQText, JLabel jlIdentFilesStatus,
-			JLabel jlFileNameMzIDText, JLabel jlFileNameMzMLText,
-			JTable jtRawFiles, JTable jtIdentFiles, JTable jtQuantFiles,
-			JTable jtRawData, JTable jtMzML, JTable jtMGF, JTable jtMzId,
-			JTable jtMascotXMLView, JTable jtPeptideQuant,
-			JTable jtProteinQuant, JTable jtFeatureQuant, TabbedProperties jtpProperties) {
+			JComboBox<String> jcbTechnique, JComboBox<String> jcbOutputFormat,
+			final JEditorPane jepMGFView, final JEditorPane jepMZQView,
+			final JEditorPane jepMascotXMLView, final JEditorPane jepMzIDView,
+			final JEditorPane jepMzMLView, JLabel jlFileNameMzQText,
+			JLabel jlIdentFilesStatus, JLabel jlFileNameMzIDText,
+			JLabel jlFileNameMzMLText, JTable jtRawFiles, JTable jtIdentFiles,
+			JTable jtQuantFiles, JTable jtRawData, JTable jtMzML, JTable jtMGF,
+			JTable jtMzId, JTable jtMascotXMLView, JTable jtPeptideQuant,
+			JTable jtProteinQuant, JTable jtFeatureQuant,
+			TabbedProperties jtpProperties) {
 		// Check if the project needs to be saved
 		if (isProjectModified) {
 			int iOption = JOptionPane
@@ -1103,24 +452,22 @@ public class ProteoSuiteView extends JFrame {
 						jmSaveProject, jmCloseProject, jbSaveProject,
 						jcbOutputFormat, jtIdentFiles);
 				initProjectValues(jmCloseProject, jmSaveProject, jtpLog,
-						jtpViewer, jbSaveProject, 
-						jcbTechnique, jepMGFView, jepMZQView, jepMascotXMLView,
-						jepMzIDView, jepMzMLView, jlFileNameMzMLText,
-						jlFileNameMzIDText, jlIdentFilesStatus,
-						jlFileNameMzQText, jtRawFiles, jtIdentFiles,
-						jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
-						jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
-						jtFeatureQuant, jtpProperties);
+						jtpViewer, jbSaveProject, jcbTechnique, jepMGFView,
+						jepMZQView, jepMascotXMLView, jepMzIDView, jepMzMLView,
+						jlFileNameMzMLText, jlFileNameMzIDText,
+						jlIdentFilesStatus, jlFileNameMzQText, jtRawFiles,
+						jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF,
+						jtMzId, jtMascotXMLView, jtPeptideQuant,
+						jtProteinQuant, jtFeatureQuant, jtpProperties);
 			} else if (iOption == JOptionPane.NO_OPTION) {
 				initProjectValues(jmCloseProject, jmSaveProject, jtpLog,
-						jtpViewer, jbSaveProject, 
-						jcbTechnique, jepMGFView, jepMZQView, jepMascotXMLView,
-						jepMzIDView, jepMzMLView, jlFileNameMzMLText,
-						jlFileNameMzIDText, jlIdentFilesStatus,
-						jlFileNameMzQText, jtRawFiles, jtIdentFiles,
-						jtQuantFiles, jtRawData, jtMzML, jtMGF, jtMzId,
-						jtMascotXMLView, jtPeptideQuant, jtProteinQuant,
-						jtFeatureQuant, jtpProperties);
+						jtpViewer, jbSaveProject, jcbTechnique, jepMGFView,
+						jepMZQView, jepMascotXMLView, jepMzIDView, jepMzMLView,
+						jlFileNameMzMLText, jlFileNameMzIDText,
+						jlIdentFilesStatus, jlFileNameMzQText, jtRawFiles,
+						jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF,
+						jtMzId, jtMascotXMLView, jtPeptideQuant,
+						jtProteinQuant, jtFeatureQuant, jtpProperties);
 			}
 		} else {
 			initProjectValues(jmCloseProject, jmSaveProject, jtpLog, jtpViewer,
@@ -1129,14 +476,14 @@ public class ProteoSuiteView extends JFrame {
 					jlFileNameMzMLText, jlFileNameMzIDText, jlIdentFilesStatus,
 					jlFileNameMzQText, jtRawFiles, jtIdentFiles, jtQuantFiles,
 					jtRawData, jtMzML, jtMGF, jtMzId, jtMascotXMLView,
-					jtPeptideQuant, jtProteinQuant, jtFeatureQuant, jtpProperties);
+					jtPeptideQuant, jtProteinQuant, jtFeatureQuant,
+					jtpProperties);
 		}
 	}
 
 	public void jmRunQuantAnalysisActionPerformed(final TabbedLog jtpLog,
 			final JMenuItem jmCloseProject, final JMenuItem jmSaveProject,
-			final TabbedProperties jtpProperties,
-			final JButton jbSaveProject,
+			final TabbedProperties jtpProperties, final JButton jbSaveProject,
 			final JComboBox<String> jcbTechnique,
 			final JComboBox<String> jcbOutputFormat,
 			final JEditorPane jepMZQView, final JLabel jlFileNameMzQText,
@@ -1200,11 +547,8 @@ public class ProteoSuiteView extends JFrame {
 						public void run() {
 							boolean isOK = false;
 							if (jcbTechnique.getSelectedItem().toString()
-									.equals("Label free")) { // ... Label free
-																// will be
-																// performed in
-																// proteosuite
-																// ...//
+									.equals("Label free")) {
+								// Label free will be performed in proteosuite
 
 								progressBarDialog.setVisible(false);
 								progressBarDialog.dispose();
@@ -1214,52 +558,6 @@ public class ProteoSuiteView extends JFrame {
 												"SILAC, Label Free and 15N are under development. Please stay tuned for new releases.",
 												"Information",
 												JOptionPane.INFORMATION_MESSAGE);
-
-								// final JPanel run = new JPanel();
-								// JLabel jLabel1 = new
-								// JLabel("Please specify the parameters to perform the label free method.");
-								// JLabel jLabel2 = new JLabel("Scan Window:");
-								// JLabel jLabel3 = new JLabel("To:");
-								// JLabel jLabel4 = new JLabel("m/z Window:");
-								// JLabel jLabel5 = new JLabel("To:");
-								// JLabel jLabel6 = new
-								// JLabel("Peaks left-right:");
-								// JTextField jTextField1 = new
-								// JTextField("1671");
-								// JTextField jTextField2 = new
-								// JTextField("1672");
-								// JTextField jTextField3 = new
-								// JTextField("300.00");
-								// JTextField jTextField4 = new
-								// JTextField("1000.00");
-								// JTextField jTextField5 = new JTextField("4");
-								// GridLayout layout=new GridLayout(11,1);
-								// jTextField1.requestFocusInWindow();
-								// run.setLayout(layout);
-								// run.add(jLabel1);
-								// run.add(jLabel2);
-								// run.add(jTextField1);
-								// run.add(jLabel3);
-								// run.add(jTextField2);
-								// run.add(jLabel4);
-								// run.add(jTextField3);
-								// run.add(jLabel5);
-								// run.add(jTextField4);
-								// run.add(jLabel6);
-								// run.add(jTextField5);
-								// int iOption =
-								// JOptionPane.showConfirmDialog(null, run,
-								// "Edit Quantitation Parameters",
-								// JOptionPane.OK_CANCEL_OPTION,
-								// JOptionPane.PLAIN_MESSAGE);
-								// if (iOption == JOptionPane.OK_OPTION) {
-								// generateTemplate(Integer.parseInt(jTextField1.getText()),
-								// Integer.parseInt(jTextField2.getText()),
-								// Double.parseDouble(jTextField3.getText()),
-								// Double.parseDouble(jTextField4.getText()),
-								// Integer.parseInt(jTextField5.getText())
-								// );
-								// }
 							} else {
 								if ((jcbTechnique.getSelectedItem().toString()
 										.equals("iTRAQ"))
@@ -1304,10 +602,9 @@ public class ProteoSuiteView extends JFrame {
 										model.addColumn("Type");
 										model.addColumn("Version");
 										try {
-											isOK = Unmarshaller
+											aMzQUnmarshaller.add(Unmarshaller
 													.unmarshalMzQMLFile(model,
-															xmlFile,
-															aMzQUnmarshaller);
+															xmlFile));
 											System.out
 													.println(SYS_UTILS
 															.getTime()
@@ -1331,8 +628,7 @@ public class ProteoSuiteView extends JFrame {
 															+ "/"
 															+ sProjectName,
 													jtFeatureQuant, jtpLog,
-													jtpProperties,
-													jepMZQView,
+													jtpProperties, jepMZQView,
 													jlFileNameMzQText,
 													jtPeptideQuant,
 													jtProteinQuant,
@@ -1345,12 +641,12 @@ public class ProteoSuiteView extends JFrame {
 													+ SYS_UTILS.getTime()
 													+ " - Execution finished...");
 
-											jtpProperties.setExportPepMZQExcel
-													(true);
-											jtpProperties.setExportProtMZQExcel
-													(true);
-											jtpProperties.setExportFeatMZQExcel
-													(true);
+											jtpProperties
+													.setExportPepMZQExcel(true);
+											jtpProperties
+													.setExportProtMZQExcel(true);
+											jtpProperties
+													.setExportFeatMZQExcel(true);
 
 											JOptionPane
 													.showMessageDialog(
@@ -1663,8 +959,9 @@ public class ProteoSuiteView extends JFrame {
 								model.addColumn("Version");
 								model.addColumn("Raw File");
 								File xmlFile = new File(sFirstFile);
-								Unmarshaller.unmarshalMzIDFile(model, xmlFile,
-										"", aMzIDUnmarshaller);
+
+								aMzIDUnmarshaller.add(Unmarshaller.unmarshalMzIDFile(model, xmlFile,
+										""));
 								loadMzIdentMLView(0, xmlFile.getName(),
 										jtMzIDProtGroup, jtpProperties, jcbPSM,
 										jepMzIDView, jlFileNameMzIDText, jtMzId);
@@ -1688,7 +985,7 @@ public class ProteoSuiteView extends JFrame {
 	 * @param void
 	 * @return void
 	 */
-	private void renderIdentFiles(JTable jtRawFiles, JTable jtIdentFiles) {
+	public void renderIdentFiles(JTable jtRawFiles, JTable jtIdentFiles) {
 		// Rendering
 		JComboBox<String> combo = new JComboBox<String>();
 		for (int iI = 0; iI < jtRawFiles.getRowCount(); iI++) {
@@ -1735,7 +1032,7 @@ public class ProteoSuiteView extends JFrame {
 	 * @param void
 	 * @return void
 	 */
-	private void updateSaveProjectStatus(final JMenuItem jmSaveProject,
+	public void updateSaveProjectStatus(final JMenuItem jmSaveProject,
 			final JButton jbSaveProject) {
 		jmSaveProject.setEnabled(isProjectModified);
 		jbSaveProject.setEnabled(isProjectModified);
@@ -1869,7 +1166,7 @@ public class ProteoSuiteView extends JFrame {
 	 * @param void
 	 * @return void
 	 */
-	private void updateStatusPipeline(JLabel jlRawFilesStatus,
+	public void updateStatusPipeline(JLabel jlRawFilesStatus,
 			JTable jtRawFiles, JLabel jlIdentFilesStatus, JTable jtIdentFiles) {
 		Icon loadRawFilesIcon = new ImageIcon(getClass().getClassLoader()
 				.getResource("images/fill.gif"));
@@ -1970,7 +1267,7 @@ public class ProteoSuiteView extends JFrame {
 				jlFileNameMzIDText, sFileName, aMzIDUnmarshaller, iIndex,
 				SYS_UTILS, jtMzId, jcbPSM, jtMzIDProtGroup, jepMzIDView,
 				progressBarDialog);
-		mzIdentML.start();
+		mzIdentML.run();
 	}
 
 	/**
@@ -1988,8 +1285,7 @@ public class ProteoSuiteView extends JFrame {
 	 */
 	public void loadMzQuantMLView(int iIndex, String sFile,
 			JTable jtFeatureQuant, TabbedLog jtpLog,
-			final TabbedProperties jtpProperties,
-			JEditorPane jepMZQView,
+			final TabbedProperties jtpProperties, JEditorPane jepMZQView,
 			JLabel jlFileNameMzQText, JTable jtPeptideQuant,
 			JTable jtProteinQuant, JTable jtQuantFiles) {
 		try {
@@ -2010,9 +1306,8 @@ public class ProteoSuiteView extends JFrame {
 				FileFormatMzQuantML mzQuantML = new FileFormatMzQuantML(
 						jtpProperties, iIndex, SYS_UTILS, progressBarDialog,
 						jtProteinQuant, jtPeptideQuant, jtFeatureQuant, sFile,
-						aMzQUnmarshaller, jlFileNameMzQText, jepMZQView,
-						jtpLog);
-				mzQuantML.start();
+						aMzQUnmarshaller, jlFileNameMzQText, jepMZQView, jtpLog);
+				mzQuantML.run();
 			}
 		} catch (Exception e) {
 			jtpLog.appendLog("Error reading mzQuantML - the mzQuantML file may be invalid.\nError: ");
@@ -2056,7 +1351,7 @@ public class ProteoSuiteView extends JFrame {
 		FileFormatMzML mzML = new FileFormatMzML(jtMzML, aMzMLUnmarshaller,
 				iIndex, jlFileNameMzMLText, jepMzMLView, jtpProperties,
 				progressBarDialog);
-		mzML.start();
+		mzML.run();
 	}
 
 	/**
@@ -2090,7 +1385,7 @@ public class ProteoSuiteView extends JFrame {
 		thread.start();
 		FileFormatMGF mgf = new FileFormatMGF(jtMGF, jlFileNameMGFText,
 				sFileNameRef, jtpProperties, sFilePathRef, progressBarDialog);
-		mgf.start();
+		mgf.run();
 	}
 
 	/**
@@ -2101,22 +1396,23 @@ public class ProteoSuiteView extends JFrame {
 	 * @param jlIdentFilesStatus
 	 * @param jlFileNameMzQText
 	 * @param jtRawData
-	 * @param jtpProperties 
+	 * @param jtpProperties
 	 * @param void
 	 * @return void
 	 */
 	private void initProjectValues(JMenuItem jmCloseProject,
 			JMenuItem jmSaveProject, TabbedLog jtpLog,
 			final TabbedChartViewer jtpViewer, final JButton jbSaveProject,
-			JComboBox<String> jcbTechnique,
-			final JEditorPane jepMGFView, final JEditorPane jepMZQView,
-			final JEditorPane jepMascotXMLView, final JEditorPane jepMzIDView,
-			final JEditorPane jepMzMLView, JLabel jlFileNameMzMLText,
-			JLabel jlFileNameMzIDText, JLabel jlIdentFilesStatus,
-			JLabel jlFileNameMzQText, JTable jtRawFiles, JTable jtIdentFiles,
-			JTable jtQuantFiles, JTable jtRawData, JTable jtMzML, JTable jtMGF,
-			JTable jtMzId, JTable jtMascotXMLView, JTable jtPeptideQuant,
-			JTable jtProteinQuant, JTable jtFeatureQuant, TabbedProperties jtpProperties) {
+			JComboBox<String> jcbTechnique, final JEditorPane jepMGFView,
+			final JEditorPane jepMZQView, final JEditorPane jepMascotXMLView,
+			final JEditorPane jepMzIDView, final JEditorPane jepMzMLView,
+			JLabel jlFileNameMzMLText, JLabel jlFileNameMzIDText,
+			JLabel jlIdentFilesStatus, JLabel jlFileNameMzQText,
+			JTable jtRawFiles, JTable jtIdentFiles, JTable jtQuantFiles,
+			JTable jtRawData, JTable jtMzML, JTable jtMGF, JTable jtMzId,
+			JTable jtMascotXMLView, JTable jtPeptideQuant,
+			JTable jtProteinQuant, JTable jtFeatureQuant,
+			TabbedProperties jtpProperties) {
 		// Loading values from config file
 		// From config file (workspace)
 		initSettings(jmCloseProject, jmSaveProject, jbSaveProject);
@@ -2300,8 +1596,9 @@ public class ProteoSuiteView extends JFrame {
 						model.addColumn("Type");
 						model.addColumn("Version");
 						try {
-							isOK = Unmarshaller.unmarshalMzQMLFile(model, file,
-									aMzQUnmarshaller);
+							isOK = true;
+
+							aMzQUnmarshaller.add(Unmarshaller.unmarshalMzQMLFile(model, file));
 						} catch (Exception e) {
 							jtpLog.appendLog("Error reading mzQuantML - the mzQuantML file may be invalid.\nError: ");
 							jtpLog.appendLog(e.getMessage());
@@ -2452,8 +1749,7 @@ public class ProteoSuiteView extends JFrame {
 								iMGFRaw++;
 							}
 							if (ext.toLowerCase().equals("mzml")) {
-								Unmarshaller.unmarshalMzMLFile(model, file, "",
-										aMzMLUnmarshaller);
+								aMzMLUnmarshaller.add(Unmarshaller.unmarshalMzMLFile(model, file, ""));
 								iMzMLRaw++;
 							}
 						}
@@ -2524,8 +1820,8 @@ public class ProteoSuiteView extends JFrame {
 							iXMLIdent++;
 						}
 						if (ext.toLowerCase().equals("mzid")) {
-							Unmarshaller.unmarshalMzIDFile(model2, file, "",
-									aMzIDUnmarshaller);
+
+							aMzIDUnmarshaller.add(Unmarshaller.unmarshalMzIDFile(model2, file, ""));
 							iMzID++;
 						}
 					}
@@ -2585,7 +1881,8 @@ public class ProteoSuiteView extends JFrame {
 		if (sFile.equals("New")) {
 			sFile = "test.mzq";
 			String sMessage = "This project has not been saved. Proteosuite will create a test.mzq file \n";
-			sMessage += " under " + WORKSPACE.getWorkSpace() + " to run the pipeline. \n";
+			sMessage += " under " + WORKSPACE.getWorkSpace()
+					+ " to run the pipeline. \n";
 			JOptionPane.showMessageDialog(this, sMessage, "Information",
 					JOptionPane.INFORMATION_MESSAGE);
 			sProjectName = sFile;
@@ -2632,12 +1929,12 @@ public class ProteoSuiteView extends JFrame {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		        if ("Nimbus".equals(info.getName())) {
-		            //UIManager.setLookAndFeel(info.getClassName());
-		            break;
-		        }
-		    }
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					// UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
 		} catch (ClassNotFoundException exception) {
 			exception.printStackTrace();
 		} catch (InstantiationException exception) {

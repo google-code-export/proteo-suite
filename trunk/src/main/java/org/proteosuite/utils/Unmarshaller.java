@@ -1,7 +1,6 @@
 package org.proteosuite.utils;
 
 import java.io.File;
-import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
@@ -26,21 +25,24 @@ public class Unmarshaller {
 	 * 
 	 * @return void
 	 */
-	public static void unmarshalMzMLFile(DefaultTableModel model, File xmlFile,
-			String sGroup, List<MzMLUnmarshaller> aMzMLUnmarshaller) {
+	public static MzMLUnmarshaller unmarshalMzMLFile(DefaultTableModel model, File xmlFile,
+			String sGroup) {
 		// Unmarshall mzML file and add on the aMzMLUnmarshaller list
 		MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(xmlFile);
-		aMzMLUnmarshaller.add(unmarshaller);
 
 		// split name and file extension
 		int mid = xmlFile.getName().lastIndexOf(".");
 		String ext = "";
 		ext = xmlFile.getName().substring(mid + 1, xmlFile.getName().length());
+		
 		model.insertRow(model.getRowCount(), new String[] { xmlFile.getName(),
 				xmlFile.getPath().toString().replace("\\", "/"), ext,
 				unmarshaller.getMzMLVersion() });
+		
 		System.out.println(SYS_UTILS.getTime() + " - " + xmlFile.getName()
 				+ " was unmarshalled successfully!");
+		
+		return unmarshaller;
 	}
 
 	/**
@@ -54,18 +56,24 @@ public class Unmarshaller {
 	 *            - File to unmarshall
 	 * @param sGroup
 	 *            - Raw data group
+	 * @return 
 	 * @return void
 	 **/
-	public static void unmarshalMzIDFile(DefaultTableModel model, File xmlFile,
-			String sGroup, List<MzIdentMLUnmarshaller> aMzIDUnmarshaller) {
+	public static MzIdentMLUnmarshaller unmarshalMzIDFile(DefaultTableModel model, File xmlFile,
+			String sGroup) {
 		// For each mzid file we must specify the corresponding mzML file
 		MzIdentMLUnmarshaller unmarshaller = new MzIdentMLUnmarshaller(xmlFile);
-		aMzIDUnmarshaller.add(unmarshaller);
+		
 		model.insertRow(model.getRowCount(), new String[] { xmlFile.getName(),
 				xmlFile.getPath().replace("\\", "/"), "mzid",
 				unmarshaller.getMzIdentMLVersion().toString(), sGroup });
+		
 		System.out.println(SYS_UTILS.getTime() + " - " + xmlFile.getName()
 				+ " was unmarshalled successfully!");
+		
+
+		
+		return unmarshaller;
 	}
 
 	/**
@@ -77,18 +85,19 @@ public class Unmarshaller {
 	 *            - File to unmarshall
 	 * @return boolean - Flag
 	 **/
-	public static boolean unmarshalMzQMLFile(DefaultTableModel model,
-			File xmlFile, List<MzQuantMLUnmarshaller> aMzQUnmarshaller)
+	public static MzQuantMLUnmarshaller unmarshalMzQMLFile(DefaultTableModel model,
+			File xmlFile)
 			throws Exception {
 		// Unmarshall mzquantml file
 		MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(xmlFile);
-		aMzQUnmarshaller.add(unmarshaller);
 
 		model.insertRow(model.getRowCount(), new String[] { xmlFile.getName(),
 				xmlFile.getPath().replace("\\", "/"), "mzq",
-				ProteoSuiteView.MZQUANT_VERSION });
+				ProteoSuiteView.MZQUANT_VERSION});
+		
 		System.out.println(SYS_UTILS.getTime() + " - (Unmarshalling) "
 				+ xmlFile.getName() + " was unmarshalled successfully!");
-		return true;
+		
+		return unmarshaller;
 	}
 }

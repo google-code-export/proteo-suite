@@ -13,7 +13,7 @@ import javax.swing.table.TableCellRenderer;
 
 import org.proteosuite.utils.ProgressBarDialog;
 
-public class FileFormatMGF extends Thread implements Runnable {
+public class FileFormatMGF {
 
 	private JTable jtMGF;
 	private JLabel jlFileNameMGFText;
@@ -23,9 +23,7 @@ public class FileFormatMGF extends Thread implements Runnable {
 	private ProgressBarDialog progressBarDialog;
 
 	public FileFormatMGF(JTable jtMGF, JLabel jlFileNameMGFText, String sFileNameRef, JTabbedPane jtpProperties, String sFilePathRef,
-			ProgressBarDialog progressBarDialog) {
-		super("MzQuantML Loader");
-		
+			ProgressBarDialog progressBarDialog) {		
 		this.jtMGF = jtMGF;
 		this.jlFileNameMGFText = jlFileNameMGFText;
 		this.sFileNameRef = sFileNameRef;
