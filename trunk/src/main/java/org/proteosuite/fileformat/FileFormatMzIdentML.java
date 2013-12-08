@@ -16,8 +16,6 @@ import javax.xml.bind.JAXBException;
 import org.proteosuite.ProteoSuiteView;
 import org.proteosuite.utils.DecoyDetection;
 import org.proteosuite.utils.FileFormatUtils;
-import org.proteosuite.utils.ProgressBarDialog;
-import org.proteosuite.utils.SystemUtils;
 
 import uk.ac.ebi.jmzidml.MzIdentMLElement;
 import uk.ac.ebi.jmzidml.model.mzidml.AnalysisData;
@@ -33,34 +31,29 @@ import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationList;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 
-public class FileFormatMzIdentML {
+public class FileFormatMzIdentML implements Runnable {
 	private final JTabbedPane jtpProperties;
 	private final JLabel jlFileNameMzIDText;
 	private final String filename;
-	private final List<MzIdentMLUnmarshaller> aMzIDUnmarshaller;
-	private final int iIndexRef;
-	private final SystemUtils sysutils;
 	private final JTable jtMzId;
 	private final JComboBox<String> jcbPSM;
 	private final JTable jtMzIDProtGroup;
 	private final JEditorPane jepMzIDView;
-	private final ProgressBarDialog progressBarDialog;
 	
+	private final MzIdentMLUnmarshaller unmarshaller;
 	
 	public FileFormatMzIdentML(JTabbedPane jtpProperties, JLabel jlFileNameMzIDText, String filename, 
-			List<MzIdentMLUnmarshaller> aMzIDUnmarshaller, int iIndexRef, SystemUtils sysutils, JTable jtMzId, 
-			JComboBox<String> jcbPSM, JTable jtMzIDProtGroup, JEditorPane jepMzIDView, ProgressBarDialog progressBarDialog) {
+			JTable jtMzId, 
+			JComboBox<String> jcbPSM, JTable jtMzIDProtGroup, JEditorPane jepMzIDView,
+			MzIdentMLUnmarshaller unmarshaller) {
 		this.jtpProperties = jtpProperties;
 		this.jlFileNameMzIDText = jlFileNameMzIDText;
 		this.filename = filename;
-		this.aMzIDUnmarshaller = aMzIDUnmarshaller;
-		this.iIndexRef = iIndexRef;
-		this.sysutils = sysutils;
 		this.jtMzId = jtMzId;
 		this.jcbPSM = jcbPSM;
 		this.jtMzIDProtGroup = jtMzIDProtGroup;
 		this.jepMzIDView = jepMzIDView;
-		this.progressBarDialog = progressBarDialog;
+		this.unmarshaller = unmarshaller;
 	}
 
 
@@ -78,7 +71,6 @@ public class FileFormatMzIdentML {
 
 		System.out.println("Unmarshalling mzid file: " + filename);
 
-		MzIdentMLUnmarshaller unmarshaller = aMzIDUnmarshaller.get(iIndexRef);
 		sOutput = "<b>mzIdentML Version:</b> <font color='red'>"
 				+ unmarshaller.getMzIdentMLVersion() + "</font><br />";
 
@@ -170,7 +162,7 @@ public class FileFormatMzIdentML {
 		model.addColumn("Spectrum ID");
 		model.addColumn("PassThreshold");
 
-		System.out.println(sysutils.getTime() + " - TotalScores=" + alScoreName.size());
+		System.out.println("TotalScores=" + alScoreName.size());
 		for (int iSize = 0; iSize < alScoreName.size(); iSize++) {
 			// System.out.println("alScoreName:" +
 			// alScoreName.get(iSize).toString());
@@ -398,7 +390,5 @@ public class FileFormatMzIdentML {
 		}
 
 		jepMzIDView.setText(sOutput);
-		progressBarDialog.setVisible(false);
-		progressBarDialog.dispose();
 	}
 }

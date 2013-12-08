@@ -13,8 +13,6 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import org.proteosuite.utils.ProgressBarDialog;
-
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.FileDescription;
 import uk.ac.ebi.jmzml.model.mzml.PrecursorList;
@@ -22,26 +20,22 @@ import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
-public class FileFormatMzML {
+public class FileFormatMzML implements Runnable {
 	
 	private JTable jtMzML;
-	private List<MzMLUnmarshaller> aMzMLUnmarshaller;
-	private int iIndexRef;
 	private JLabel jlFileNameMzMLText;
 	private JEditorPane jepMzMLView;
 	private JTabbedPane jtpProperties;
-	private ProgressBarDialog progressBarDialog;
+	private MzMLUnmarshaller unmarshaller;
 	
 	
-	public FileFormatMzML(JTable jtMzML, List<MzMLUnmarshaller> aMzMLUnmarshaller, int iIndexRef, JLabel jlFileNameMzMLText,
-			JEditorPane jepMzMLView, JTabbedPane jtpProperties, ProgressBarDialog progressBarDialog) {
+	public FileFormatMzML(JTable jtMzML, JLabel jlFileNameMzMLText,
+			JEditorPane jepMzMLView, JTabbedPane jtpProperties, MzMLUnmarshaller unmarshaller) {
 		this.jtMzML = jtMzML;
-		this.aMzMLUnmarshaller = aMzMLUnmarshaller;
-		this.iIndexRef = iIndexRef;
 		this.jlFileNameMzMLText = jlFileNameMzMLText;
 		this.jepMzMLView = jepMzMLView;
 		this.jtpProperties = jtpProperties;
-		this.progressBarDialog = progressBarDialog;
+		this.unmarshaller = unmarshaller;
 	}
 	
 	public void run() {
@@ -66,16 +60,13 @@ public class FileFormatMzML {
 		model.addColumn("Precurs m/z");
 		String sOutput = "";
 
-		MzMLUnmarshaller unmarshaller = aMzMLUnmarshaller
-				.get(iIndexRef);
-
-		// ... File Name and Version ...//
+		// File Name and Version
 		jlFileNameMzMLText.setText(unmarshaller.getMzMLId()
 				+ ".mzML");
 		sOutput = "<b>mzML Version:</b> <font color='red'>"
 				+ unmarshaller.getMzMLVersion() + "</font><br />";
 
-		// ... File Content ...//
+		// File Content
 		sOutput = sOutput + "<b>File Content:</b><br />";
 		FileDescription fdList = unmarshaller.unmarshalFromXpath(
 				"/fileDescription", FileDescription.class);
@@ -87,7 +78,7 @@ public class FileFormatMzML {
 			sOutput = sOutput + " - " + lCVParam.getName().trim()
 					+ "<br />";
 		}
-		// ... Source File ...//
+		// Source File
 		sOutput = sOutput + "<b>Source File:</b><br />";
 		List<CVParam> sourceParam = fdList.getSourceFileList()
 				.getSourceFile().get(0).getCvParam();
@@ -113,7 +104,7 @@ public class FileFormatMzML {
 		jepMzMLView.setText(sOutput);
 		jtpProperties.setSelectedIndex(0);
 
-		// ... Reading spectrum data ...//
+		// Reading spectrum data
 		MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller
 				.unmarshalCollectionFromXpath(
 						"/run/spectrumList/spectrum",
@@ -127,8 +118,8 @@ public class FileFormatMzML {
 		int iCount = 1;
 		double dScansMS1 = 0;
 		double dScansMS2 = 0;
-		while (spectrumIterator.hasNext()) { // ... Reading MS data
-												// ...//
+		while (spectrumIterator.hasNext()) {
+			// Reading MS data
 			Spectrum spectrum = spectrumIterator.next();
 			List<CVParam> specParam = spectrum.getCvParam();
 			for (Iterator<CVParam> lCVParamIterator = specParam.iterator(); lCVParamIterator
@@ -137,8 +128,8 @@ public class FileFormatMzML {
 						.next();
 				if (lCVParam.getAccession().equals("MS:1000511")) {
 					msLevel = lCVParam.getValue().trim();
-					if (msLevel.equals("1")) { // ... Type of data
-												// ...//
+					if (msLevel.equals("1")) {
+						// Type of data
 						dScansMS1++;
 					} else {
 						dScansMS2++;
@@ -159,32 +150,25 @@ public class FileFormatMzML {
 					.hasNext();) {
 				CVParam lCVParam = lCVParamIterator
 						.next();
-				if (lCVParam.getAccession().equals("MS:1000016")) { // ...
-																	// Extracting
-																	// RT
-																	// ...//
+				if (lCVParam.getAccession().equals("MS:1000016")) {
+					// Extracting RT
 					unitRT = lCVParam.getUnitAccession().trim();
-					if (unitRT.equals("UO:0000031")) { // ...
-														// Convert
-														// RT into
-														// seconds
-														// ...//
+					if (unitRT.equals("UO:0000031")) {
+						// Convert RT into seconds
 						rt = Float.parseFloat(lCVParam.getValue()
 								.trim());
 						rtMin = rt;
 						rt = rt * 60;
-					} else { // ... Convert RT into minutes ...//
+					} else { 
+						// Convert RT into minutes
 						rt = Float.parseFloat(lCVParam.getValue()
 								.trim());
 						rtMin = rt / 60;
 					}
 				}
 			}
-			PrecursorList plist = spectrum.getPrecursorList(); // ...
-																// Get
-																// precursor
-																// ion
-																// ...//
+			PrecursorList plist = spectrum.getPrecursorList();
+			// Get precursor ion
 			float precursMZ = 0.0f;
 			if (plist != null) {
 				if (plist.getCount().intValue() == 1) {
@@ -267,7 +251,5 @@ public class FileFormatMzML {
 				});
 
 		jtMzML.setAutoCreateRowSorter(true);
-		progressBarDialog.setVisible(false);
-		progressBarDialog.dispose();
 	}
 }

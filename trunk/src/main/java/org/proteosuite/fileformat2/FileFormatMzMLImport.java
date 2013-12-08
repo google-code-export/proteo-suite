@@ -18,7 +18,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
  * 
  * @author Andrew Collins
  */
-public class FileFormatMzMLImport {
+public class FileFormatMzMLImport implements Runnable {
 	private final TabbedLog jtpLog;
 	private final File inputFile;
 	private final List<MzMLUnmarshaller> aMzMLUnmarshaller;

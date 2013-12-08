@@ -45,13 +45,14 @@ public class MouseListenerIdentFiles implements MouseListener {
 				&& (jtIdentFiles.getValueAt(
 						jtIdentFiles.getSelectedRow(), 2).toString()
 						.equals("mascot_xml"))) {
-			FileFormatMascot.loadMascotView(
+			Runnable fileFormatMascot = new FileFormatMascot(
 					jtIdentFiles.getValueAt(
 							jtIdentFiles.getSelectedRow(), 0)
 							.toString(),
 					jtIdentFiles.getValueAt(
 							jtIdentFiles.getSelectedRow(), 1)
 							.toString(), jtMascotXMLView, jtpProperties);
+			fileFormatMascot.run();
 		}
 		if ((evt.getButton() == 1)
 				&& (jtIdentFiles.getValueAt(

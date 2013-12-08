@@ -11,32 +11,27 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import org.proteosuite.utils.ProgressBarDialog;
-
-public class FileFormatMGF {
+public class FileFormatMGF implements Runnable {
 
 	private JTable jtMGF;
 	private JLabel jlFileNameMGFText;
 	private String sFileNameRef;
 	private JTabbedPane jtpProperties;
 	private String sFilePathRef;
-	private ProgressBarDialog progressBarDialog;
 
-	public FileFormatMGF(JTable jtMGF, JLabel jlFileNameMGFText, String sFileNameRef, JTabbedPane jtpProperties, String sFilePathRef,
-			ProgressBarDialog progressBarDialog) {		
+	public FileFormatMGF(JTable jtMGF, JLabel jlFileNameMGFText,
+			String sFileNameRef, JTabbedPane jtpProperties, String sFilePathRef) {
 		this.jtMGF = jtMGF;
 		this.jlFileNameMGFText = jlFileNameMGFText;
 		this.sFileNameRef = sFileNameRef;
 		this.jtpProperties = jtpProperties;
 		this.sFilePathRef = sFilePathRef;
-		this.progressBarDialog = progressBarDialog;
 	}
-	
+
 	public void run() {
 		DefaultTableModel model = new DefaultTableModel() {
-			Class<?>[] types = new Class[] { Integer.class,
-					String.class, Double.class, String.class,
-					Long.class };
+			Class<?>[] types = new Class[] { Integer.class, String.class,
+					Double.class, String.class, Long.class };
 
 			@Override
 			public Class<?> getColumnClass(int columnIndex) {
@@ -55,8 +50,7 @@ public class FileFormatMGF {
 
 		// ... Reading file ...//
 		try {
-			BufferedReader in = new BufferedReader(new FileReader(
-					sFilePathRef));
+			BufferedReader in = new BufferedReader(new FileReader(sFilePathRef));
 			String title = "", charge = "", sPepmass = "";
 			double pepmass = 0.0;
 			long refLine = 0;
@@ -87,8 +81,7 @@ public class FileFormatMGF {
 					// ... Check for double values ...//
 					sPepmass = string.substring(8);
 					if (sPepmass.contains(" ")) {
-						sPepmass = sPepmass.substring(0,
-								sPepmass.indexOf(" "));
+						sPepmass = sPepmass.substring(0, sPepmass.indexOf(" "));
 					}
 					pepmass = Double.parseDouble(sPepmass);
 					continue;
@@ -96,15 +89,13 @@ public class FileFormatMGF {
 					charge = string.substring(7);
 					refLine = lineNum;
 					continue;
-				} else if (string.charAt(0) >= '1'
-						&& string.charAt(0) <= '9') {
+				} else if (string.charAt(0) >= '1' && string.charAt(0) <= '9') {
 					continue;
 				} else if (string.contains("END IONS")) {
 					iCount++;
 					// ... Insert rows ...//
-					model.insertRow(model.getRowCount(),
-							new Object[] { iCount, title, pepmass,
-									charge, refLine });
+					model.insertRow(model.getRowCount(), new Object[] { iCount,
+							title, pepmass, charge, refLine });
 					continue;
 				} else {
 					continue;
@@ -114,27 +105,21 @@ public class FileFormatMGF {
 		} catch (Exception e) {
 			System.exit(1);
 		}
-		jtMGF.getTableHeader().setDefaultRenderer(
-				new TableCellRenderer() {
-					final TableCellRenderer defaultRenderer = jtMGF
-							.getTableHeader().getDefaultRenderer();
+		jtMGF.getTableHeader().setDefaultRenderer(new TableCellRenderer() {
+			final TableCellRenderer defaultRenderer = jtMGF.getTableHeader()
+					.getDefaultRenderer();
 
-					public Component getTableCellRendererComponent(
-							JTable table, Object value,
-							boolean isSelected, boolean hasFocus,
-							int row, int column) {
-						JComponent component = (JComponent) defaultRenderer
-								.getTableCellRendererComponent(
-										table, value, isSelected,
-										hasFocus, row, column);
-						component.setToolTipText(""
-								+ jtMGF.getColumnName(column));
-						return component;
-					}
-				});
+			public Component getTableCellRendererComponent(JTable table,
+					Object value, boolean isSelected, boolean hasFocus,
+					int row, int column) {
+				JComponent component = (JComponent) defaultRenderer
+						.getTableCellRendererComponent(table, value,
+								isSelected, hasFocus, row, column);
+				component.setToolTipText("" + jtMGF.getColumnName(column));
+				return component;
+			}
+		});
 
 		jtMGF.setAutoCreateRowSorter(true);
-		progressBarDialog.setVisible(false);
-		progressBarDialog.dispose();
 	}
 }

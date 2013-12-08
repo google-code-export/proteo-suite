@@ -14,7 +14,7 @@ import org.proteosuite.utils.Unmarshaller;
 
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 
-public class FileFormatMzIdImport {
+public class FileFormatMzIdImport implements Runnable {
 	private File inputFile;
 	private TabbedLog jtpLog;
 	private DefaultTableModel model;

@@ -34,7 +34,6 @@ import org.proteosuite.WorkSpace;
 import org.proteosuite.gui.TabbedLog;
 import org.proteosuite.gui.TabbedProperties;
 import org.proteosuite.utils.PluginManager;
-import org.proteosuite.utils.ProgressBarDialog;
 import org.proteosuite.utils.SystemUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -80,12 +79,10 @@ import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
  * 
  * @author Andrew Collins
  */
-public class FileFormatMzQuantML {
+public class FileFormatMzQuantML implements Runnable {
 	private static final WorkSpace WORKSPACE = WorkSpace.getInstance();
 	private final TabbedProperties jtpProperties;
-	private final int iIndexRef;
-	private final SystemUtils sysutils;
-	private final ProgressBarDialog progressBarDialog;
+	private final SystemUtils sysutils = new SystemUtils();
 	private final JTable jtProteinQuant;
 	private final JTable jtPeptideQuant;
 	private final JTable jtFeatureQuant;
@@ -111,13 +108,10 @@ public class FileFormatMzQuantML {
 	 * @param jtaLog
 	 * @param jtpMzQuantMLDetail
 	 */
-	public FileFormatMzQuantML(TabbedProperties jtpProperties, int iIndexRef, SystemUtils sysutils, ProgressBarDialog progressBarDialog, 
+	public FileFormatMzQuantML(TabbedProperties jtpProperties, 
 			JTable jtProteinQuant, JTable jtPeptideQuant, JTable jtFeatureQuant, String sFileRef, List<MzQuantMLUnmarshaller> aMzQUnmarshaller, 
 			JLabel jlFileNameMzQText, JEditorPane jepMZQView, TabbedLog jtpLog) {
 		this.jtpProperties = jtpProperties;
-		this.iIndexRef = iIndexRef;
-		this.sysutils = sysutils;
-		this.progressBarDialog = progressBarDialog;
 		this.jtProteinQuant = jtProteinQuant;
 		this.jtPeptideQuant = jtPeptideQuant;
 		this.jtFeatureQuant = jtFeatureQuant;
@@ -157,8 +151,7 @@ public class FileFormatMzQuantML {
 		System.out.println(sysutils.getTime()
 				+ " - MZQ elements=" + aMzQUnmarshaller.size());
 		System.out.println(sysutils.getTime()
-				+ " - Unmarshalling element " + iIndexRef
-				+ " from the array");
+				+ " - Unmarshalling element from the array");
 
 		// ... File Name and Version ...//
 		jlFileNameMzQText.setText(sFileRef);
@@ -508,7 +501,7 @@ public class FileFormatMzQuantML {
 			}
 			jtpLog.setLog(sOutput);
 
-			// ... Tooltip for headers ...//
+			// Tooltip for headers
 			jtFeatureQuant.getTableHeader().setDefaultRenderer(
 					new TableCellRenderer() {
 						final TableCellRenderer defaultRenderer = jtFeatureQuant
@@ -536,9 +529,6 @@ public class FileFormatMzQuantML {
 		}
 		jtpProperties.setSelectedIndex(4);
 		jtpProperties.setMzQuantMLDetailIndex(1);
-
-		progressBarDialog.setVisible(false);
-		progressBarDialog.dispose();
 	}
 	
 

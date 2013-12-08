@@ -1263,11 +1263,14 @@ public class ProteoSuiteView extends JFrame {
 		}, "ProgressBarDialog");
 		thread.start();
 
-		FileFormatMzIdentML mzIdentML = new FileFormatMzIdentML(jtpProperties,
-				jlFileNameMzIDText, sFileName, aMzIDUnmarshaller, iIndex,
-				SYS_UTILS, jtMzId, jcbPSM, jtMzIDProtGroup, jepMzIDView,
-				progressBarDialog);
+		Runnable mzIdentML = new FileFormatMzIdentML(jtpProperties,
+				jlFileNameMzIDText, sFileName, 
+				 jtMzId, jcbPSM, jtMzIDProtGroup, jepMzIDView, 
+				 aMzIDUnmarshaller.get(iIndex)
+				);
 		mzIdentML.run();
+		progressBarDialog.setVisible(false);
+		progressBarDialog.dispose();
 	}
 
 	/**
@@ -1304,10 +1307,13 @@ public class ProteoSuiteView extends JFrame {
 				}, "ProgressBarDialog");
 				thread.start();
 				FileFormatMzQuantML mzQuantML = new FileFormatMzQuantML(
-						jtpProperties, iIndex, SYS_UTILS, progressBarDialog,
+						jtpProperties,
 						jtProteinQuant, jtPeptideQuant, jtFeatureQuant, sFile,
 						aMzQUnmarshaller, jlFileNameMzQText, jepMZQView, jtpLog);
 				mzQuantML.run();
+
+				progressBarDialog.setVisible(false);
+				progressBarDialog.dispose();
 			}
 		} catch (Exception e) {
 			jtpLog.appendLog("Error reading mzQuantML - the mzQuantML file may be invalid.\nError: ");
@@ -1348,23 +1354,23 @@ public class ProteoSuiteView extends JFrame {
 		}, "ProgressBarDialog");
 		thread.start();
 
-		FileFormatMzML mzML = new FileFormatMzML(jtMzML, aMzMLUnmarshaller,
-				iIndex, jlFileNameMzMLText, jepMzMLView, jtpProperties,
-				progressBarDialog);
+		Runnable mzML = new FileFormatMzML(jtMzML, jlFileNameMzMLText, jepMzMLView, jtpProperties,
+				aMzMLUnmarshaller.get(iIndex));
 		mzML.run();
+		progressBarDialog.setVisible(false);
+		progressBarDialog.dispose();
 	}
 
 	/**
 	 * Displays MGF raw data
 	 * 
-	 * @param iIndex
-	 *            - index for the array
+	 * @param iIndex index for the array
 	 * @param jtMGF
 	 * @return void
 	 */
 	public void loadMGFView(int iIndex, JLabel jlFileNameMGFText,
 			JTable jtRawFiles, final JTabbedPane jtpProperties, JTable jtMGF) {
-		// ... Check if not previously loaded
+		// Check if not previously loaded
 		if (!jtRawFiles.getValueAt(iIndex, 0).toString()
 				.equals(jlFileNameMGFText.getText()))
 			return;
@@ -1384,7 +1390,9 @@ public class ProteoSuiteView extends JFrame {
 		}, "ProgressBarDialog");
 		thread.start();
 		FileFormatMGF mgf = new FileFormatMGF(jtMGF, jlFileNameMGFText,
-				sFileNameRef, jtpProperties, sFilePathRef, progressBarDialog);
+				sFileNameRef, jtpProperties, sFilePathRef);
+		progressBarDialog.setVisible(false);
+		progressBarDialog.dispose();
 		mgf.run();
 	}
 
@@ -1828,10 +1836,11 @@ public class ProteoSuiteView extends JFrame {
 				}
 				if (iXMLIdent > 0) {
 					if (jtIdentFiles.getRowCount() > 0) {
-						FileFormatMascot.loadMascotView(jtIdentFiles
+						Runnable fileFormatMascot = new FileFormatMascot(jtIdentFiles
 								.getValueAt(0, 0).toString(), jtIdentFiles
 								.getValueAt(0, 1).toString(), jtMascotXMLView,
 								jtpProperties);
+						fileFormatMascot.run();
 					}
 				}
 				if (iMzID > 0) {
