@@ -2,6 +2,7 @@ package org.proteosuite.utils;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -15,9 +16,17 @@ import javax.swing.table.DefaultTableModel;
 
 import org.proteosuite.ProteoSuiteView;
 import org.proteosuite.WorkSpace;
+import org.proteosuite.fileformat.FileFormatMGF;
 import org.proteosuite.fileformat.FileFormatMascot;
+import org.proteosuite.fileformat.FileFormatMzIdentML;
+import org.proteosuite.fileformat.FileFormatMzML;
+import org.proteosuite.fileformat.FileFormatMzQuantML;
+import org.proteosuite.fileformat2.FileFormatMascotImport;
+import org.proteosuite.fileformat2.FileFormatMgfImport;
 import org.proteosuite.fileformat2.FileFormatMzIdImport;
 import org.proteosuite.fileformat2.FileFormatMzMLImport;
+import org.proteosuite.fileformat2.FileFormatMzQuantImport;
+import org.proteosuite.gui.AsynchronousTask;
 import org.proteosuite.gui.TabbedChartViewer;
 import org.proteosuite.gui.TabbedLog;
 import org.proteosuite.gui.TabbedProperties;
@@ -34,6 +43,12 @@ public class ImportFile {
 	private String sPreviousLocation;
 	private WorkSpace WORKSPACE = WorkSpace.getInstance();
 	private boolean isProjectModified;
+
+	private static final byte LOAD_MZML = 0;
+	private static final byte LOAD_MGF = 1;
+	private static final byte LOAD_MZID = 2;
+	private static final byte LOAD_MASCOT = 3;
+	private static final byte LOAD_MZQ = 4;
 
 	public void jmImportFileActionPerformed(
 			final ProteoSuiteView proteoSuiteView, final JTable jtRawFiles,
@@ -92,20 +107,80 @@ public class ImportFile {
 
 		jtpLog.appendLog("Reading files (Total=" + inputFiles.length + ")");
 
+		AsynchronousTask asyncTask = new AsynchronousTask(proteoSuiteView);
+		File[] doLoad = new File[5];
 		for (final File inputFile : inputFiles) {
+			Runnable task = null;
 			// Read mzML
-			if ((inputFile.getName().toLowerCase().indexOf(".mzml") > 0)
-					|| (inputFile.getName().toLowerCase().indexOf(".mzml.gz") > 0)) {
-				FileFormatMzMLImport fileFormatMzMLImport = new FileFormatMzMLImport(
-						jtpLog, inputFile, aMzMLUnmarshaller,
+			if ((inputFile.getName().toLowerCase().indexOf(".mzml") != -1)
+					|| (inputFile.getName().toLowerCase().indexOf(".mzml.gz") != -1)) {
+				task = new FileFormatMzMLImport(jtpLog, inputFile,
+						aMzMLUnmarshaller,
 						(DefaultTableModel) jtRawFiles.getModel());
-				fileFormatMzMLImport.run();
+
+				if (doLoad[LOAD_MZML] == null)
+					doLoad[LOAD_MZML] = inputFile;
+			}
+			// Read MGF
+			else if (inputFile.getName().toLowerCase().indexOf(".mgf") > 0) {
+				task = new FileFormatMgfImport(inputFile, jtRawFiles);
+
+				if (doLoad[LOAD_MGF] == null)
+					doLoad[LOAD_MGF] = inputFile;
+			}
+			// Read mzIdentML
+			else if ((inputFile.getName().toLowerCase().indexOf(".mzid") > 0)
+					|| (inputFile.getName().toLowerCase().indexOf(".mzid.gz") > 0)) {
+				task = new FileFormatMzIdImport(jtpLog, inputFile,
+						aMzIDUnmarshaller,
+						(DefaultTableModel) jtIdentFiles.getModel());
+
+				if (doLoad[LOAD_MZID] == null)
+					doLoad[LOAD_MZID] = inputFile;
+			}
+			// Read Mascot XML
+			else if (inputFile.getName().toLowerCase().indexOf(".xml") > 0) {
+				task = new FileFormatMascotImport(inputFile, jtIdentFiles);
+
+				if (doLoad[LOAD_MASCOT] == null)
+					doLoad[LOAD_MASCOT] = inputFile;
+			}
+
+			// Read mzQuantML
+			else if (inputFile.getName().toLowerCase().indexOf(".mzq") > 0) {
+				task = new FileFormatMzQuantImport(inputFile, jtQuantFiles,
+						aMzQUnmarshaller);
+
+				if (doLoad[LOAD_MZQ] == null)
+					doLoad[LOAD_MZQ] = inputFile;
+			}
+
+			if (task != null)
+				asyncTask.addTask(task);
+		}
+		asyncTask.execute();
+
+		/*/
+		for (int i = 0; i < doLoad.length; i++) {
+			if (doLoad[i] == null)
+				continue;
+
+			Runnable task = null;
+			File inputFile = doLoad[i];
+			switch (i) {
+			case LOAD_MZML:
+				// Check if not previously loaded
+				if (jtRawFiles.getValueAt(0, 0).toString()
+						.equals(jlFileNameMzMLText.getText()))
+					continue;
 
 				// We then display the first mzML element, the
 				// corresponding chromatogram and the 2D plot
 				jtpLog.appendLog("Loading mzML view");
-				proteoSuiteView.loadMzMLView(0, jtRawFiles, jtpProperties,
-						jepMzMLView, jlFileNameMzMLText, jtMzML);
+				task = new FileFormatMzML(jtMzML, jlFileNameMzMLText,
+						jepMzMLView, jtpProperties, aMzMLUnmarshaller.get(0));
+				asyncTask.addTask(task);
+
 				jtpLog.appendLog("Displaying chromatogram");
 
 				// Clear container
@@ -119,46 +194,41 @@ public class ImportFile {
 				proteoSuiteView.renderIdentFiles(jtRawFiles, jtIdentFiles);
 				proteoSuiteView.updateStatusPipeline(jlRawFilesStatus,
 						jtRawFiles, jlIdentFilesStatus, jtIdentFiles);
-			}
-			// Read MGF
-			else if (inputFile.getName().toLowerCase().indexOf(".mgf") > 0) {
-				// Fill JTable
-				final DefaultTableModel model = (DefaultTableModel) jtRawFiles
-						.getModel();
-
-				model.insertRow(
-						model.getRowCount(),
-						new String[] {
-								inputFile.getName(),
-								inputFile.getPath().toString()
-										.replace("\\", "/"), "MGF", "N/A" });
-
+				break;
+			case LOAD_MGF:
 				// Display data for the first element
 				jtpLog.appendLog("Loading MGF view");
-				proteoSuiteView.loadMGFView(0, jlFileNameMGFText, jtRawFiles,
-						jtpProperties, jtMGF);
 
-				jtpLog.appendLog("Raw files imported successfully!");
+				// Check if not previously loaded
+				//if (!jtRawFiles.getValueAt(0, 0).toString()
+				//		.equals(jlFileNameMGFText.getText()))
+				//	continue;
 
-				jtpProperties.setExportMGFExcel(true);
-				proteoSuiteView.renderIdentFiles(jtRawFiles, jtIdentFiles);
-				proteoSuiteView.updateStatusPipeline(jlRawFilesStatus,
-						jtRawFiles, jlIdentFilesStatus, jtIdentFiles);
-			}
-			// Read mzIdentML
-			else if ((inputFile.getName().toLowerCase().indexOf(".mzid") > 0)
-					|| (inputFile.getName().toLowerCase().indexOf(".mzid.gz") > 0)) {
+				final String sFileNameRef = jtRawFiles.getValueAt(0, 0)
+						.toString();
+				final String sFilePathRef = jtRawFiles.getValueAt(0, 1)
+						.toString();
 
-				FileFormatMzIdImport fileFormatMzIdImport = new FileFormatMzIdImport(
-						jtpLog, inputFile, aMzIDUnmarshaller,
-						(DefaultTableModel) jtIdentFiles.getModel());
-				fileFormatMzIdImport.run();
+				task = new FileFormatMGF(jtMGF, jlFileNameMGFText,
+						sFileNameRef, jtpProperties, sFilePathRef);
+				asyncTask.addTask(task);
 
+				//jtpLog.appendLog("Raw files imported successfully!");
+
+				//jtpProperties.setExportMGFExcel(true);
+				//proteoSuiteView.renderIdentFiles(jtRawFiles, jtIdentFiles);
+				//proteoSuiteView.updateStatusPipeline(jlRawFilesStatus,
+				//		jtRawFiles, jlIdentFilesStatus, jtIdentFiles);
+				break;
+			case LOAD_MZID:
 				// Display first element
 				jtpLog.appendLog("Loading mzIdentML view");
-				proteoSuiteView.loadMzIdentMLView(0, inputFile.getName(),
-						jtMzIDProtGroup, jtpProperties, jcbPSM, jepMzIDView,
-						jlFileNameMzIDText, jtMzId);
+
+				task = new FileFormatMzIdentML(jtpProperties,
+						jlFileNameMzIDText, inputFile.getName(), jtMzId,
+						jcbPSM, jtMzIDProtGroup, jepMzIDView,
+						aMzIDUnmarshaller.get(0));
+				asyncTask.addTask(task);
 
 				jtpLog.appendLog("Identification files imported successfully!");
 
@@ -166,26 +236,15 @@ public class ImportFile {
 				proteoSuiteView.renderIdentFiles(jtRawFiles, jtIdentFiles);
 				proteoSuiteView.updateStatusPipeline(jlRawFilesStatus,
 						jtRawFiles, jlIdentFilesStatus, jtIdentFiles);
-			}
-			// Read Mascot XML
-			else if (inputFile.getName().toLowerCase().indexOf(".xml") > 0) {
-				// Fill JTable
-				final DefaultTableModel model = (DefaultTableModel) jtIdentFiles
-						.getModel();
-
-				model.insertRow(
-						model.getRowCount(),
-						new String[] {
-								inputFile.getName(),
-								inputFile.getPath().toString()
-										.replace("\\", "/"), "mascot_xml",
-								"N/A", "" });
+				break;
+			case LOAD_MASCOT:
 
 				// Display data for the first element
 				jtpLog.appendLog("Loading Mascot XML view");
-				FileFormatMascot.loadMascotView(inputFile.getName(), inputFile
+				Runnable fileFormatMascot = new FileFormatMascot(inputFile.getName(), inputFile
 						.getPath().toString().replace("\\", "/"),
 						jtMascotXMLView, jtpProperties);
+				fileFormatMascot.run();
 
 				jtpLog.appendLog("Identifiation files imported successfully!");
 
@@ -193,58 +252,43 @@ public class ImportFile {
 				proteoSuiteView.renderIdentFiles(jtRawFiles, jtIdentFiles);
 				proteoSuiteView.updateStatusPipeline(jlRawFilesStatus,
 						jtRawFiles, jlIdentFilesStatus, jtIdentFiles);
-			}
-
-			// Read mzQuantML
-			else if (inputFile.getName().toLowerCase().indexOf(".mzq") > 0) {
-				// Fill JTable
-				final DefaultTableModel model = (DefaultTableModel) jtQuantFiles
-						.getModel();
-
-				// Reading selected files
-				boolean isOK = true;
-				// Validate file extension (mixed files)
-				if (inputFile.getName().toLowerCase().indexOf(".mzq") > 0) {
-					File xmlFile = new File(inputFile.getPath());
-
-					// Unmarshall data using jmzIdentML API
-					jtpLog.appendLog("Unmarshalling " + xmlFile.getName()
-							+ " starts");
-
-					try {
-						isOK = true;
-						aMzQUnmarshaller.add(Unmarshaller.unmarshalMzQMLFile(
-								model, xmlFile));
-						// Invalid mzq file
-						if (!isOK)
-							return;
-
-						jtpLog.appendLog("Unmarshalling ends");
-					} catch (Exception e) {
-						jtpLog.appendLog("Error reading mzQuantML - the mzQuantML file may be invalid");
-						jtpLog.appendLog(e.getMessage());
-						e.printStackTrace();
-						isOK = false;
-					}
-				}
+				break;
+			case LOAD_MZQ:
+				boolean isOK = false;
 				// For files
 				if (isOK) {
 					// Display first element
 					jtpLog.appendLog("Loading mzQuantML view");
-					// loadMzQuantMLView(0, inputFiles[0].getName());
-					proteoSuiteView.loadMzQuantMLView(0,
-							inputFile.getAbsolutePath(), jtFeatureQuant,
-							jtpLog, jtpProperties, jepMZQView,
-							jlFileNameMzQText, jtPeptideQuant, jtProteinQuant,
-							jtQuantFiles);
 
-					jtpLog.appendLog("Quantification files imported successfully!");
+					if ((!jtQuantFiles.getValueAt(0, 0).toString()
+							.equals(jlFileNameMzQText.getText()))
+							|| (jtPeptideQuant.getRowCount() <= 0)) {
+
+						task = new FileFormatMzQuantML(
+								jtpProperties, jtProteinQuant, jtPeptideQuant,
+								jtFeatureQuant, inputFile.getAbsolutePath(),
+								aMzQUnmarshaller, jlFileNameMzQText,
+								jepMZQView, jtpLog);
+						asyncTask.addTask(task);
+
+						jtpLog.appendLog("Quantification files imported successfully!");
+					}
 				}
 
 				jtpProperties.setExportPepMZQExcel(true);
 				jtpProperties.setExportProtMZQExcel(true);
 				jtpProperties.setExportFeatMZQExcel(true);
+				break;
 			}
+		}
+		/*/
+		asyncTask.execute();
+		asyncTask.showDialog();
+		try {
+			asyncTask.get();
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
