@@ -158,7 +158,17 @@ public class ImportFile {
 			if (task != null)
 				asyncTask.addTask(task);
 		}
+		asyncTask.execute();
+		asyncTask.showDialog();
 
+		try {
+			asyncTask.get();
+		} catch (InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		asyncTask = new AsynchronousTask(proteoSuiteView);
 		for (int i = 0; i < doLoad.length; i++) {
 			if (doLoad[i] == null)
 				continue;
@@ -251,15 +261,15 @@ public class ImportFile {
 				break;
 			}
 		}
-
 		asyncTask.execute();
 		asyncTask.showDialog();
-		try {
-			asyncTask.get();
-		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		//try {
+		//	asyncTask.get();
+		//} catch (InterruptedException | ExecutionException e) {
+		//	// TODO Auto-generated catch block
+		//	e.printStackTrace();
+		//}
 
 		if (doLoad[LOAD_MZML] != null) {
 			jtpLog.appendLog("Displaying chromatogram");

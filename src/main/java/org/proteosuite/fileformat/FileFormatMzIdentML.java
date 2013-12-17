@@ -174,7 +174,7 @@ public class FileFormatMzIdentML implements Runnable {
 		String sAccesion = "";
 		List<String> alScoreValues = new ArrayList<String>();
 
-		// ... Populating protein and peptide identifications ...//
+		// Populating protein and peptide identifications
 		for (SpectrumIdentificationList sil : silList) {
 			List<SpectrumIdentificationResult> sirList = sil
 					.getSpectrumIdentificationResult();
