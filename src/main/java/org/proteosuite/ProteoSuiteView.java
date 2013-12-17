@@ -981,9 +981,8 @@ public class ProteoSuiteView extends JFrame {
 
 	/**
 	 * Mapping identification files with the corresponding raw file
-	 * 
-	 * @param void
-	 * @return void
+	 * @param jtRawFiles
+	 * @param jtIdentFiles
 	 */
 	public void renderIdentFiles(JTable jtRawFiles, JTable jtIdentFiles) {
 		// Rendering
@@ -993,9 +992,11 @@ public class ProteoSuiteView extends JFrame {
 		}
 		TableColumn column = jtIdentFiles.getColumnModel().getColumn(4);
 		column.setCellEditor(new DefaultCellEditor(combo));
+		
 		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
 		renderer.setToolTipText("Please specify the associated raw file");
 		column.setCellRenderer(renderer);
+		
 		DefaultTableModel model = (DefaultTableModel) jtIdentFiles.getModel();
 		model.fireTableDataChanged();
 	}
@@ -1162,9 +1163,10 @@ public class ProteoSuiteView extends JFrame {
 
 	/**
 	 * Update status pipeline
-	 * 
-	 * @param void
-	 * @return void
+	 * @param jlRawFilesStatus
+	 * @param jtRawFiles
+	 * @param jlIdentFilesStatus
+	 * @param jtIdentFiles
 	 */
 	public void updateStatusPipeline(JLabel jlRawFilesStatus,
 			JTable jtRawFiles, JLabel jlIdentFilesStatus, JTable jtIdentFiles) {
