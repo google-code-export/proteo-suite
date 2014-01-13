@@ -21,7 +21,8 @@ public class OpenMSMapAlignerPoseClusteringExecutor extends
 	}
 
 	@Override
-	protected boolean writeConfig(Map<String, String> config, String configPath) {
+	protected boolean writeConfig(String configPath) {
+		Map<String, String> config = getConfig();
 		// TODO: Implement me
 		return false;
 	}
