@@ -17,10 +17,17 @@ public class OpenMSFeatureFinderCentroidedExecutor extends
 
 	public OpenMSFeatureFinderCentroidedExecutor(String exePath) {
 		super(exePath);
+
+		setConfig("mz_tolerance", "0.03");
+		setConfig("min_spectra", "10");
+		setConfig("max_missing", "1");
+		setConfig("slope_bound", "0.1");		
 	}
 
 	@Override
-	protected boolean writeConfig(Map<String, String> config, String configPath) {
+	protected boolean writeConfig(String configPath) {
+		Map<String, String> config = getConfig();
+		
 		// TODO: Implement me
 		return false;
 	}

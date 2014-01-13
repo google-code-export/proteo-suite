@@ -38,4 +38,10 @@ public interface OpenMSExecutor {
 	 * @return log
 	 */
 	public String getLog();
+	
+	/**
+	 * Returns the current config values either defaults or set via callExe
+	 * @return config values
+	 */
+	public Map<String, String> getConfig();
 }
