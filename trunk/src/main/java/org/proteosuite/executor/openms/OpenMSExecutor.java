@@ -21,7 +21,7 @@ public interface OpenMSExecutor {
 	 *            Location of output file
 	 * @return true if success, else false
 	 */
-	public boolean callExe(Map<String, String> config, String inputPath,
+	public boolean callExe(Map<String, Map<String, String>> config, String inputPath,
 			String outputPath);
 
 	/**
@@ -43,5 +43,5 @@ public interface OpenMSExecutor {
 	 * Returns the current config values either defaults or set via callExe
 	 * @return config values
 	 */
-	public Map<String, String> getConfig();
+	public Map<String, Map<String, String>> getConfig();
 }

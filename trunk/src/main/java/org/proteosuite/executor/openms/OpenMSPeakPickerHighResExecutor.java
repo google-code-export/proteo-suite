@@ -22,9 +22,8 @@ public class OpenMSPeakPickerHighResExecutor extends OpenMSAbstractExecutor
 
 	@Override
 	protected boolean writeConfig(String configPath) {
-		Map<String, String> config = getConfig();
+		Map<String, Map<String, String>> config = getConfig();
 		// TODO: Implement me
 		return false;
 	}
-
 }
