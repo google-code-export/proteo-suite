@@ -1,5 +1,6 @@
 package org.proteosuite.executor.openms;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.proteosuite.executor.Executor;
@@ -13,14 +14,14 @@ import org.proteosuite.executor.Executor;
  */
 public abstract class OpenMSAbstractExecutor extends Executor implements
 		OpenMSExecutor {
-	private Map<String, String> config;	
+	private Map<String, Map<String, String>> config = new HashMap<String, Map<String, String>>();	
 
 	public OpenMSAbstractExecutor(String exePath) {
 		super(exePath);
 	}
 
 	@Override
-	public boolean callExe(Map<String, String> config, String inputPath,
+	public boolean callExe(Map<String, Map<String, String>> config, String inputPath,
 			String outputPath) {
 		// TODO: Implement me
 		String configPath = ""; // TODO: Perhaps assign this to system temp?
@@ -50,7 +51,7 @@ public abstract class OpenMSAbstractExecutor extends Executor implements
 		return "";
 	}
 	
-	public Map<String, String> getConfig()
+	public Map<String, Map<String, String>> getConfig()
 	{
 		return config;
 	}
@@ -60,8 +61,13 @@ public abstract class OpenMSAbstractExecutor extends Executor implements
 	 * @param key
 	 * @param value
 	 */
-	protected void setConfig(String key, String value)
+	protected void setConfig(String section, String key, String value)
 	{
-		config.put(key,  value);		
+		if (!config.containsKey("section"))
+		{
+			config.put(section, new HashMap<String, String>());
+		}
+		config.get(section).put(key, value);
+		
 	}
 }
