@@ -80,7 +80,7 @@ public class About extends JPanel {
 			}
 		});
 
-		jlCopyright.setText("Copyright © ProteoSuite 2011-2013");
+		jlCopyright.setText("Copyright " + "\u00A9" + " ProteoSuite 2011-2013");
 
 		jlVersion.setText("Version " + ProteoSuiteView.PROTEOSUITE_VERSION + " December 2013");
 
