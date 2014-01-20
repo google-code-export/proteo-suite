@@ -119,14 +119,14 @@
     </Component>
     <Component class="javax.swing.JSeparator" name="jSeparator1">
     </Component>
-    <Component class="javax.swing.JLabel" name="jlCopyright">
+    <Component class="javax.swing.JLabel" name="jlCopyright">     
       <Properties>
-        <Property name="text" type="java.lang.String" value="Copyright &#xa9; ProteoSuite 2011-2013 "/>
+        <Property name="text" type="java.lang.String" value=""/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jlVersion">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Version 0.3.0 April 2013"/>
+        <Property name="text" type="java.lang.String" value=""/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jbSystemInfo">
