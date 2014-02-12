@@ -136,10 +136,7 @@ public abstract class MzMLCompressorBase implements MzMLCompressor {
         //... Spectra ...//
         MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller.unmarshalCollectionFromXpath("/run/spectrumList/spectrum", Spectrum.class);
         int iSpectrum = 0;
-        while (spectrumIterator.hasNext()) {
-            if (iSpectrum == 87) {
-                System.out.println("Hello!");
-            }
+        while (spectrumIterator.hasNext()) {  
             
             Spectrum spectrum = spectrumIterator.next();
 

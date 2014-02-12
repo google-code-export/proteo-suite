@@ -1,6 +1,8 @@
 package org.proteosuite.gui.toolbars;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -59,9 +61,10 @@ public class ProjectToolBar extends JToolBar {
 		jbNewProject.setFocusable(false);
 		jbNewProject.setHorizontalTextPosition(SwingConstants.CENTER);
 		jbNewProject.setVerticalTextPosition(SwingConstants.BOTTOM);
-		jbNewProject.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent evt) {
-				proteoSuiteView.jmNewProjectActionPerformed(jcbTechnique, jmSaveProject,
+		jbNewProject.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent ae) {
+                        proteoSuiteView.jmNewProjectActionPerformed(jcbTechnique, jmSaveProject,
 						jmCloseProject, jtpLog, jtpViewer, jbSaveProject,
 						jcbOutputFormat, jepMGFView,
 						jepMZQView, jepMascotXMLView, jepMzIDView, jepMzMLView,
@@ -70,7 +73,7 @@ public class ProjectToolBar extends JToolBar {
 						jtIdentFiles, jtQuantFiles, jtRawData, jtMzML, jtMGF,
 						jtMzId, jtMascotXMLView, jtPeptideQuant,
 						jtProteinQuant, jtFeatureQuant, jtpProperties);
-			}
+                    }
 		});
 
 		add(jbNewProject);

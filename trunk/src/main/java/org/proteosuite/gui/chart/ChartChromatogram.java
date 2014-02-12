@@ -13,66 +13,76 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
+import java.io.IOException;
+import javax.swing.JPanel;
+import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 
 public class ChartChromatogram {
 
+    /**
+     * Display total ion chromatogram
+     *
+     * @param iIndex - Index to the aMzMLUnmarshaller list
+     * @param sTitle - Window title
+     * @return
+     * @return void
+     */
+    public static ChromatogramPanel getChromatogram(MzMLUnmarshaller unmarshaller) {
 
-	/**
-	 * Display total ion chromatogram
-	 * 
-	 * @param iIndex
-	 *            - Index to the aMzMLUnmarshaller list
-	 * @param sTitle
-	 *            - Window title
-	 * @return 
-	 * @return void
-	 */
-	public static ChromatogramPanel getChromatogram(MzMLUnmarshaller unmarshaller)
-	{
-		try {
-			// Check if mzML contains MS1 data
-			Set<String> chromats = unmarshaller.getChromatogramIDs();
-			if (chromats.isEmpty()) {
-				System.out.println(ProteoSuiteView.SYS_UTILS.getTime()
-						+ " - This mzML file doesn't contain MS2 raw data.");
-				return null;
-			}
-			Chromatogram chromatogram = unmarshaller.getChromatogramById("TIC");
-			Number[] rtNumbers = null;
-			Number[] intenNumbers = null;
-			List<BinaryDataArray> bdal = chromatogram.getBinaryDataArrayList()
-					.getBinaryDataArray();
+        MzMLObjectIterator<Chromatogram> iterator = unmarshaller.unmarshalCollectionFromXpath("/run/chromatogramList/chromatogram", Chromatogram.class);
+        while (iterator.hasNext()) {
+            Chromatogram chrom = iterator.next();
+            
+            // Check if mzML contains MS1 data
+            if (chrom.getId().toUpperCase().equals("TIC")) {
+                return createChromatogramPanel(chrom);
+            }
+            
+            for (CVParam param : chrom.getCvParam()) {
+                if (param.getName().toUpperCase().equals("TOTAL ION CURRENT CHROMATOGRAM")) {
+                    return createChromatogramPanel(chrom);
+                }
+            }
+        }
 
-			for (BinaryDataArray bda : bdal) {
-				List<CVParam> cvpList = bda.getCvParam();
-				for (CVParam cvp : cvpList) {
-					if (cvp.getAccession().equals("MS:1000595")) {
-						rtNumbers = bda.getBinaryDataAsNumberArray();
-					}
-					if (cvp.getAccession().equals("MS:1000515")) {
-						intenNumbers = bda.getBinaryDataAsNumberArray();
-					}
-				}
-			}
-			// Converting numbers to doubles
-			double[] rt = new double[rtNumbers.length];
-			for (int iI = 0; iI < rtNumbers.length; iI++) {
-				rt[iI] = rtNumbers[iI].doubleValue();
-			}
-			double[] intensities = new double[intenNumbers.length];
-			for (int iI = 0; iI < intenNumbers.length; iI++) {
-				intensities[iI] = intenNumbers[iI].doubleValue();
-			}
-			
-			// Class chromatogram from compomics.org
-			ChromatogramPanel chromatogramPanel = new ChromatogramPanel(rt, intensities, "RT (mins)", "Intensity (counts)");
-			chromatogramPanel.setSize(new Dimension(600, 400));
-			chromatogramPanel.setPreferredSize(new Dimension(600, 400));
-			
-			return chromatogramPanel;
-		} catch (MzMLUnmarshallerException ume) {
-			System.out.println(ume.getMessage());
-		}
-		return null;
-	}
+        System.out.println(ProteoSuiteView.SYS_UTILS.getTime()
+                + " - This mzML file doesn't contain MS2 raw data.");
+            
+        return null;
+    }
+
+    private static ChromatogramPanel createChromatogramPanel(Chromatogram chrom) {
+        Number[] rtNumbers = null;
+        Number[] intenNumbers = null;
+        List<BinaryDataArray> bdal = chrom.getBinaryDataArrayList()
+                .getBinaryDataArray();
+
+        for (BinaryDataArray bda : bdal) {
+            List<CVParam> cvpList = bda.getCvParam();
+            for (CVParam cvp : cvpList) {
+                if (cvp.getAccession().equals("MS:1000595")) {
+                    rtNumbers = bda.getBinaryDataAsNumberArray();
+                }
+                if (cvp.getAccession().equals("MS:1000515")) {
+                    intenNumbers = bda.getBinaryDataAsNumberArray();
+                }
+            }
+        }
+        // Converting numbers to doubles
+        double[] rt = new double[rtNumbers.length];
+        for (int iI = 0; iI < rtNumbers.length; iI++) {
+            rt[iI] = rtNumbers[iI].doubleValue();
+        }
+        double[] intensities = new double[intenNumbers.length];
+        for (int iI = 0; iI < intenNumbers.length; iI++) {
+            intensities[iI] = intenNumbers[iI].doubleValue();
+        }
+
+        // Class chromatogram from compomics.org
+        ChromatogramPanel chromatogramPanel = new ChromatogramPanel(rt, intensities, "RT (mins)", "Intensity (counts)");
+        chromatogramPanel.setSize(new Dimension(600, 400));
+        chromatogramPanel.setPreferredSize(new Dimension(600, 400));
+
+        return chromatogramPanel;
+    }
 }
