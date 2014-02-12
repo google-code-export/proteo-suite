@@ -191,7 +191,7 @@ public class MzMLNumpress extends MzMLCompressorBase implements MzMLCompressor {
                         }
                         
                         paramList.remove(i);
-                        break;                      
+                        break;
                     } else if (param.getAccession().equals(PIC_COMPRESSION_ACCESSION)) {
                         int decodedDoubleCount = MSNumpress.decodePic(binary, binary.length, decodedDoubles);
                         if (decodedDoubleCount != dataArray.getEncodedLength()) {

@@ -24,8 +24,9 @@ public class WorkSpace {
 	private static WorkSpace instance = null;
 
 	private String sWorkspace = "C:/temp";
+        private boolean projectModified = false;
 
-	public WorkSpace() {
+	private WorkSpace() {
 		readConfig();
 	}
 
@@ -43,6 +44,14 @@ public class WorkSpace {
 	public void setWorkSpace(String string) {
 		sWorkspace = string;
 	}
+        
+        public boolean isProjectModified() {
+            return projectModified;
+        }
+        
+        public void setProjectModifiedTag(boolean tag) {
+            this.projectModified = tag;
+        }
 
 	/**
 	 * Checks if the working space is valid
