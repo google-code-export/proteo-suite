@@ -1,0 +1,48 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.proteosuite.gui.tables;
+
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
+import org.proteosuite.model.RawDataFile;
+
+/**
+ *
+ * @author SPerkins
+ */
+public class RawDataAndMultiplexingTable extends JTable {
+
+    private DefaultTableModel model;
+    
+
+    public RawDataAndMultiplexingTable() {
+        model = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
+        };
+        
+        model.addColumn("File Name");
+        model.addColumn("File Size (MB)");
+        model.addColumn("Format");
+        model.addColumn("Instrument");
+        model.addColumn("Peak-picked?");
+        model.addColumn("Spectra");
+        setModel(model);        
+
+        setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    }
+
+    public void addRawFileRow(RawDataFile rawDataFile) {
+        model.addRow(new Object[]{rawDataFile.getFileName(), rawDataFile.getFileSize(), rawDataFile.getFormat(), "QTOF", "Yes", rawDataFile.getSpectraCount()});        
+    }
+
+    public void clear() {
+        model.setRowCount(0);        
+    }
+}
