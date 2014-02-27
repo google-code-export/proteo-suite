@@ -103,6 +103,7 @@ public class FileFormatMzML implements Runnable {
         }
 
         jepMzMLView.setText(sOutput.toString());
+        jepMzMLView.setEditable(false);
         jtpProperties.setSelectedIndex(0);
 
         // Reading spectrum data
