@@ -2,7 +2,6 @@ package org.proteosuite.executor.openms;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.proteosuite.executor.Executor;
 
 /**
@@ -63,7 +62,7 @@ public abstract class OpenMSAbstractExecutor extends Executor implements
 	 */
 	protected void setConfig(String section, String key, String value)
 	{
-		if (!config.containsKey("section"))
+		if (!config.containsKey(section))
 		{
 			config.put(section, new HashMap<String, String>());
 		}
