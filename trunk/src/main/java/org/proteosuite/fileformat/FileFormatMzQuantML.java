@@ -31,8 +31,8 @@ import javax.xml.xpath.XPathFactory;
 
 import org.proteosuite.ProteoSuiteView;
 import org.proteosuite.WorkSpace;
-import org.proteosuite.gui.TabbedLog;
-import org.proteosuite.gui.TabbedProperties;
+
+
 import org.proteosuite.utils.PluginManager;
 import org.proteosuite.utils.SystemUtils;
 import org.w3c.dom.Document;
@@ -81,7 +81,7 @@ import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
  */
 public class FileFormatMzQuantML implements Runnable {
 	private static final WorkSpace WORKSPACE = WorkSpace.getInstance();
-	private final TabbedProperties jtpProperties;
+	
 	private final SystemUtils sysutils = new SystemUtils();
 	private final JTable jtProteinQuant;
 	private final JTable jtPeptideQuant;
@@ -90,7 +90,7 @@ public class FileFormatMzQuantML implements Runnable {
 	private final List<MzQuantMLUnmarshaller> aMzQUnmarshaller;
 	private final JLabel jlFileNameMzQText;
 	private final JEditorPane jepMZQView;
-	private final TabbedLog jtpLog;
+	
 	
 	/**
 	 * 
@@ -108,22 +108,20 @@ public class FileFormatMzQuantML implements Runnable {
 	 * @param jtaLog
 	 * @param jtpMzQuantMLDetail
 	 */
-	public FileFormatMzQuantML(TabbedProperties jtpProperties, 
-			JTable jtProteinQuant, JTable jtPeptideQuant, JTable jtFeatureQuant, String sFileRef, List<MzQuantMLUnmarshaller> aMzQUnmarshaller, 
-			JLabel jlFileNameMzQText, JEditorPane jepMZQView, TabbedLog jtpLog) {
-		this.jtpProperties = jtpProperties;
+	public FileFormatMzQuantML(JTable jtProteinQuant, JTable jtPeptideQuant, JTable jtFeatureQuant, String sFileRef, List<MzQuantMLUnmarshaller> aMzQUnmarshaller, 
+			JLabel jlFileNameMzQText, JEditorPane jepMZQView) {
+		
 		this.jtProteinQuant = jtProteinQuant;
 		this.jtPeptideQuant = jtPeptideQuant;
 		this.jtFeatureQuant = jtFeatureQuant;
 		this.sFileRef = sFileRef;
 		this.aMzQUnmarshaller = aMzQUnmarshaller;
 		this.jlFileNameMzQText = jlFileNameMzQText;
-		this.jepMZQView = jepMZQView;
-		this.jtpLog = jtpLog;
+		this.jepMZQView = jepMZQView;		
 	}
 
 	public void run() {
-		jtpProperties.setSelectedIndex(4);
+		
 		DefaultTableModel model = new DefaultTableModel();
 		DefaultTableModel model2 = new DefaultTableModel();
 		DefaultTableModel model3 = new DefaultTableModel();
@@ -499,7 +497,7 @@ public class FileFormatMzQuantML implements Runnable {
 				 * }
 				 */
 			}
-			jtpLog.setLog(sOutput);
+			
 
 			// Tooltip for headers
 			jtFeatureQuant.getTableHeader().setDefaultRenderer(
@@ -527,8 +525,7 @@ public class FileFormatMzQuantML implements Runnable {
 					});
 			jtFeatureQuant.setAutoCreateRowSorter(true);
 		}
-		jtpProperties.setSelectedIndex(4);
-		jtpProperties.setMzQuantMLDetailIndex(1);
+		
 	}
 	
 

@@ -17,8 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.border.EtchedBorder;
 
-import org.proteosuite.listener.KeyListenerSearch;
-import org.proteosuite.listener.MouseListenerExcelExport;
+
 
 /**
  * 
@@ -52,14 +51,12 @@ public class TabbedMzQuantMLDetail extends JTabbedPane {
 		jbExportFeatMZQExcel.setMaximumSize(new Dimension(26, 20));
 		jbExportFeatMZQExcel.setMinimumSize(new Dimension(26, 20));
 		jbExportFeatMZQExcel.setPreferredSize(new Dimension(26, 20));
-		jbExportFeatMZQExcel.addMouseListener(new MouseListenerExcelExport(
-				jtFeatureQuant));
+		
 		jtbFeatMZQ.add(jbExportFeatMZQExcel);
 
 		final JTextField jtFeatureMZQ = new JTextField(20);
 		jtFeatureMZQ.setToolTipText("Enter the scan number");
-		jtFeatureMZQ.addKeyListener(new KeyListenerSearch(0, jtFeatureQuant,
-				false));
+		
 
 		JLabel jlSearchMzQFeat = new JLabel("Search:");
 		jlSearchMzQFeat.setFont(new Font("Tahoma", 1, 11)); // NOI18N
@@ -90,8 +87,7 @@ public class TabbedMzQuantMLDetail extends JTabbedPane {
 		jbExportPepMZQExcel.setMaximumSize(new Dimension(26, 20));
 		jbExportPepMZQExcel.setMinimumSize(new Dimension(26, 20));
 		jbExportPepMZQExcel.setPreferredSize(new Dimension(26, 20));
-		jbExportPepMZQExcel.addMouseListener(new MouseListenerExcelExport(
-				jtPeptideQuant));
+		
 
 		JToolBar jtbPepMZQ = new JToolBar();
 		jtbPepMZQ.setBorder(BorderFactory
@@ -104,8 +100,7 @@ public class TabbedMzQuantMLDetail extends JTabbedPane {
 
 		final JTextField jtPeptideMZQ = new JTextField(20);
 		jtPeptideMZQ.setToolTipText("Enter the scan number");
-		jtPeptideMZQ.addKeyListener(new KeyListenerSearch(0, jtPeptideQuant,
-				false));
+		
 
 		JLabel jlSearchMzQPep = new JLabel("Search:");
 		jlSearchMzQPep.setFont(new Font("Tahoma", 1, 11)); // NOI18N
@@ -135,8 +130,7 @@ public class TabbedMzQuantMLDetail extends JTabbedPane {
 		jbExportProtMZQExcel.setMaximumSize(new Dimension(26, 20));
 		jbExportProtMZQExcel.setMinimumSize(new Dimension(26, 20));
 		jbExportProtMZQExcel.setPreferredSize(new Dimension(26, 20));
-		jbExportProtMZQExcel.addMouseListener(new MouseListenerExcelExport(
-				jtProteinQuant));
+		
 
 		JToolBar jtbProtMZQ = new JToolBar();
 		jtbProtMZQ.setBorder(BorderFactory
@@ -149,8 +143,7 @@ public class TabbedMzQuantMLDetail extends JTabbedPane {
 
 		final JTextField jtProteinMZQ = new JTextField(20);
 		jtProteinMZQ.setToolTipText("Enter the scan number");
-		jtProteinMZQ.addKeyListener(new KeyListenerSearch(0, jtProteinQuant,
-				false));
+		
 
 		JLabel jlSearchMzQProt = new JLabel("Search:");
 		jlSearchMzQProt.setFont(new Font("Tahoma", 1, 11)); // NOI18N

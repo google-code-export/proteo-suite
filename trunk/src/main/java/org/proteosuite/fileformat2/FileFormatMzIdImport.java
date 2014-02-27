@@ -9,23 +9,22 @@ import java.util.zip.GZIPInputStream;
 
 import javax.swing.table.DefaultTableModel;
 
-import org.proteosuite.gui.TabbedLog;
+
 import org.proteosuite.utils.Unmarshaller;
 
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 
 public class FileFormatMzIdImport implements Runnable {
-	private File inputFile;
-	private TabbedLog jtpLog;
+	private File inputFile;	
 	private DefaultTableModel model;
 	private List<MzIdentMLUnmarshaller> aMzIDUnmarshaller;
 
-	public FileFormatMzIdImport(TabbedLog jtpLog, File inputFile,
+	public FileFormatMzIdImport(File inputFile,
 			List<MzIdentMLUnmarshaller> aMzIDUnmarshaller,
 			DefaultTableModel model) {
 
 		this.inputFile = inputFile;
-		this.jtpLog = jtpLog;
+		
 		this.model = model;
 		this.aMzIDUnmarshaller = aMzIDUnmarshaller;
 	}
@@ -36,7 +35,7 @@ public class FileFormatMzIdImport implements Runnable {
 		// Uncompress .gz files
 		if (xmlFile.getName().toLowerCase().indexOf(".mzid.gz") > 0) {
 			try {
-				jtpLog.appendLog("Uncompressing " + xmlFile.getName());
+				
 
 				GZIPInputStream gin = new GZIPInputStream(new FileInputStream(
 						xmlFile));
@@ -52,16 +51,16 @@ public class FileFormatMzIdImport implements Runnable {
 				gin.close();
 				fos.close();
 				xmlFile = outFile;
-				jtpLog.appendLog("Uncompressing ends");
+				
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
 		}
 		
 		// Unmarshall data using jmzIdentML API
-		jtpLog.appendLog("Unmarshalling " + xmlFile.getName() + " starts");
+		
 
 		aMzIDUnmarshaller.add(Unmarshaller.unmarshalMzIDFile(model, xmlFile, ""));
-		jtpLog.appendLog("Unmarshalling ends");
+		
 	}
 }
