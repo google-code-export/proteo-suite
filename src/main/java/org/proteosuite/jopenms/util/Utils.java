@@ -6,6 +6,7 @@
 package org.proteosuite.jopenms.util;
 
 import java.util.Collection;
+import java.util.List;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
@@ -56,6 +57,16 @@ public class Utils {
         }
 
         return options;
+    }
+    
+    public static String join(List<String>stringArray) {
+        StringBuilder builder = new StringBuilder();
+        for (String value : stringArray) {
+            builder.append(value);
+            builder.append(" ");
+        }
+        
+        return builder.toString().trim();
     }
 
 }

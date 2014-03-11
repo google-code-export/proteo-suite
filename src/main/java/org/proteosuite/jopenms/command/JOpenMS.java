@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.proteosuite.jopenms.command;
 
 import java.io.*;
@@ -25,7 +24,11 @@ import org.proteosuite.jopenms.util.Utils;
  */
 public class JOpenMS {
 
-    public JOpenMS() {
+    private static final String COMMAND_OPTION = "command";
+    private static final String LIST_OPTION = "list";
+    private static final String HELP_OPTION = "help";
+
+    private JOpenMS() {
     }
 
     public static void main(String[] args) {
@@ -34,153 +37,169 @@ public class JOpenMS {
         try {
             // Definite command line
             CommandLineParser parser = new ExtendedPosixParser(true); // ignore the unrecognized options
-            Options options = new Options();
+            Options jopenms_options = new Options();
 
+            jopenms_options.addOption("h", HELP_OPTION, false, "print help message.");
 
-            String helpOpt = "help";
-            options.addOption("h", helpOpt, false, "print help message.");
+            jopenms_options.addOption("l", LIST_OPTION, false, "list all supported OpenMS modules.");
 
-            String cmdListOpt = "list";
-            options.addOption("l", cmdListOpt, false, "list all supported OpenMS modules.");
+            jopenms_options.addOption(COMMAND_OPTION, true, "print help message for specific OpenMS module.");
 
-            String cmdOpt = "command";
-
-            options.addOption(cmdOpt, true, "print help message for specific OpenMS module.");
-
-            /*
-             *
-             */
-
-            CommandLine line = parser.parse(options, args);
+            CommandLine inputArguments = parser.parse(jopenms_options, args);
             // no argument or "-h" or "--help" argument.
             // overrides any other legal argument
-            if (line.getOptions().length == 0 || line.hasOption(helpOpt)) {
-                HelpFormatter formatter = new HelpFormatter();
-                formatter.printHelp("jOpenMS -- A Java wrapper to run OpenMS. An installation of OpenMS is a MUST to run this jar. java -jar jOpenMS-version", options, true);
-            }
-            // "-l" or "-list" argument
-            else if (line.hasOption(cmdListOpt)) {
-
-                System.out.println("\nPreparing the help messages, it could take up to one minute ... ...");
-
-                Options cmdOptions = new Options();
-
-                for (OpenMSExecutable omse : OpenMSExecutable.values()) {
-
-                    omsm = new OpenMSModule(omse);
-
-                    cmdOptions.addOption(OptionBuilder
-                            .withDescription(omsm.getModuleDescription())
-                            .create(omse.getName()));
-
-                    omsm.destroy();
-                }
-
-                HelpFormatter formatter = new HelpFormatter();
-                formatter.printHelp("\tList of OpenMS modules.\nExample: java -jar jOpenMS-version [-command FeatureFinderCentroided [blank to display all parameters||-Path$To$Parameter value]].", cmdOptions);
-            }
-            // "-command" argument
-            else if (line.hasOption(cmdOpt)) {
-                String omseName = line.getOptionValue(cmdOpt);
-                try {
-                    OpenMSExecutable omse = OpenMSExecutable.valueOf(omseName);
-
-                    omsm = new OpenMSModule(omse);
-
-                    Options omsmOptions = omsm.getOptions();
-
-                    Options combOptions = Utils.combineOptions(options, omsmOptions);
-                    if (line.getArgList().isEmpty()) {
-                        omsm.printHelp(); // print specific help message for one OpenMS module
-                    }
-                    else {
-                        try {
-                            CommandLineParser combParser = new PosixParser();
-                            CommandLine combLine = combParser.parse(combOptions, args);
-
-                            // write a new config file
-                            Map newCfgMap = new HashMap(omsm.getCfgMap());
-                            Option[] inputOpts = combLine.getOptions();
-                            for (Option opt : inputOpts) {
-                                if (!opt.getOpt().equalsIgnoreCase("command")) {
-                                    //transform the value list to single String to fit setConfig() function
-                                    String newValue = "";
-                                    List<String> newValueList = opt.getValuesList();
-                                    for (String v : newValueList) {
-                                        newValue = newValue + v + " ";
-                                    }
-                                    newValue = newValue.trim();
-
-                                    //
-                                    setConfig(newCfgMap, opt.getOpt(), newValue);
-                                }
-                            }
-
-                            File dir = new File(System.getProperty("user.dir"));
-                            File newCfgFile = File.createTempFile(combLine.getOptionValue(cmdOpt) + System.currentTimeMillis(), ".ini", dir);
-                            String fileName = newCfgFile.getAbsolutePath();
-
-                            writeConfigFile(omsm.getUnmarshaller(), omsm.getMarshaller(), newCfgFile, newCfgMap);
-
-                            String path = combLine.getOptionValue(cmdOpt) + " -ini " + fileName;
-                            Runtime rt = Runtime.getRuntime();
-                            Process p = rt.exec(path);
-
-                            InputStream is = p.getInputStream();
-                            int value;
-                            while ((value = is.read()) != -1) {
-                                System.out.print((char) value);
-                            }
-
-                            InputStream errIs = p.getErrorStream();
-                            while ((value = errIs.read()) != -1) {
-                                System.out.print((char) value);
-                            }
-
-                            // destroy the process
-                            p.destroy();
-
-                            // delete the temporate config file
-                            newCfgFile.deleteOnExit();
-                        }
-                        catch (ParseException pex) {
-                            System.out.println(pex.getMessage());
-                        }
-                    }
-                    //omsm.destroy();
-                }
-                catch (IOException ex) {
-                    Logger.getLogger(JOpenMS.class.getName()).log(Level.SEVERE, null, ex);
-                    System.out.println(ex.getLocalizedMessage());
-                    //omsm.destroy();
-                }
-                catch (JAXBException ex) {
-                    Logger.getLogger(JOpenMS.class.getName()).log(Level.SEVERE, null, ex);
-                    System.out.println(ex.getMessage());
-                    //omsm.destroy();
-                }
-                catch (IllegalArgumentException irex) {
-                    System.out.println("Error:\tCommand <" + omseName + "> is not a supported OpenMS module.\n\tPlease use \"-l\" or \"--list\" option to check all supported OpenMS modules.");
-                    //System.out.println(irex.getLocalizedMessage());
-                    //omsm.destroy();
-                }
-                finally {
-                    omsm.destroy();
-                }
+            if (inputArguments.getOptions().length == 0 || inputArguments.hasOption(HELP_OPTION)) {
+                processHelp(jopenms_options);
+            } // "-l" or "-list" argument
+            else if (inputArguments.hasOption(LIST_OPTION)) {
+                processList();
+            } // "-command" argument
+            else if (inputArguments.hasOption(COMMAND_OPTION)) {
+                processCommand(inputArguments, args, jopenms_options);
             }
 
-        }
-//        catch (IOException ex) {
-//            Logger.getLogger(JOpenMS.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        catch (IOException ex) {
-//            Logger.getLogger(JOpenMS.class.getName()).log(Level.SEVERE, null, ex);
-//            System.out.println(ex.getMessage());
-//            omsm.destroy();
-//        }
+        } //        catch (IOException ex) {
+        //            Logger.getLogger(JOpenMS.class.getName()).log(Level.SEVERE, null, ex);
+        //        }
+        //        catch (IOException ex) {
+        //            Logger.getLogger(JOpenMS.class.getName()).log(Level.SEVERE, null, ex);
+        //            System.out.println(ex.getMessage());
+        //            omsm.destroy();
+        //        }
         catch (ParseException ex) {
             System.out.println(ex.getMessage());
             omsm.destroy();
+        }
+    }
+
+    private static void processList() {
+        System.out.println("\nPreparing the help messages, it could take up to one minute ... ...");
+
+        Options cmdOptions = new Options();
+
+        for (OpenMSExecutable omse : OpenMSExecutable.values()) {
+
+            OpenMSModule module = new OpenMSModule(omse);
+
+            cmdOptions.addOption(OptionBuilder
+                    .withDescription(module.getModuleDescription())
+                    .create(omse.getName()));
+
+            module.destroy();
+        }
+
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("\tList of OpenMS modules.\nExample: java -jar jOpenMS-version [-command FeatureFinderCentroided [blank to display all parameters||-Path$To$Parameter value]].", cmdOptions);
+    }
+
+    private static void processHelp(Options jopenms_options) {
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("jOpenMS -- A Java wrapper to run OpenMS. An installation of OpenMS is a MUST to run this jar. java -jar jOpenMS-version", jopenms_options, true);
+    }
+
+    private static void processCommand(CommandLine inputArguments, String[] javaArgs, Options jopenms_options) {
+        String openMSCommand = inputArguments.getOptionValue(COMMAND_OPTION);
+        OpenMSModule module = null;
+        try {
+            OpenMSExecutable openMSExecutable = OpenMSExecutable.valueOf(openMSCommand);
+
+            module = new OpenMSModule(openMSExecutable);
+
+            Options openMSOptions = module.getOptions();
+
+            Options combOptions = Utils.combineOptions(jopenms_options, openMSOptions);
+            if (inputArguments.getArgList().isEmpty()) {
+                module.printHelp(); // print specific help message for one OpenMS module
+            } else {
+                try {
+                    CommandLineParser combParser = new PosixParser();
+                    CommandLine combLine = combParser.parse(combOptions, javaArgs);
+
+                    // write a new config file
+                    Map newCfgMap = new HashMap(module.getCfgMap());
+                    Option[] inputOpts = combLine.getOptions();
+                    for (Option opt : inputOpts) {
+                        if (!opt.getOpt().equalsIgnoreCase(COMMAND_OPTION)) {
+                            //transform the value list to single String to fit setConfig() function
+                            String newValue = "";
+                            List<String> newValueList = opt.getValuesList();
+                            for (String v : newValueList) {
+                                newValue = newValue + v + " ";
+                            }
+                            newValue = newValue.trim();
+
+                            setConfig(newCfgMap, opt.getOpt(), newValue);
+                        }
+                    }
+
+                    File cfgFile = generateConfigFile(openMSExecutable.getName(), module, newCfgMap);
+
+                    performOpenMSTask(combLine.getOptionValue(COMMAND_OPTION), cfgFile);
+
+                    // delete the temporate config file
+                    cfgFile.delete();
+                } catch (ParseException pex) {
+                    System.out.println(pex.getMessage());
+                }
+            }
+            //omsm.destroy();
+        } catch (IllegalArgumentException irex) {
+            System.out.println("Error:\tCommand <" + openMSCommand + "> is not a supported OpenMS module.\n\tPlease use \"-l\" or \"--list\" option to check all supported OpenMS modules.");
+            //System.out.println(irex.getLocalizedMessage());
+            //omsm.destroy();
+        } finally {
+            module.destroy();
+        }
+    }
+
+    public static void performOpenMSTask(String openMSCommand, List<String> inputFiles, List<String>outputFiles) {
+        OpenMSExecutable openMSExecutable = OpenMSExecutable.valueOf(openMSCommand);
+        OpenMSModule module = new OpenMSModule(openMSExecutable);
+        Map cfgMap = new HashMap(module.getCfgMap());
+        setConfig(cfgMap, openMSExecutable.getName() + "$1$in", Utils.join(inputFiles));
+        setConfig(cfgMap, openMSExecutable.getName() + "$1$out", Utils.join(outputFiles));
+        File cfgFile = generateConfigFile(openMSExecutable.getName(), module, cfgMap);
+        performOpenMSTask(openMSExecutable.getName(), cfgFile);   
+        cfgFile.delete();
+    }
+
+    private static File generateConfigFile(String command, OpenMSModule module, Map cfgMap) {
+        File newCfgFile = null;
+        try {
+            File dir = new File(System.getProperty("user.dir"));
+            newCfgFile = File.createTempFile(command + System.currentTimeMillis(), ".ini", dir);
+            writeConfigFile(module.getUnmarshaller(), module.getMarshaller(), newCfgFile, cfgMap);            
+        } catch (IOException | JAXBException ex) {
+            Logger.getLogger(JOpenMS.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getLocalizedMessage());
+        }
+        
+        return newCfgFile;
+
+    }
+
+    private static void performOpenMSTask(String openMSCommand, File configFile) {
+        String path = openMSCommand + " -ini " + configFile.getAbsolutePath();
+        Runtime rt = Runtime.getRuntime();
+        try {
+            Process p = rt.exec(path);
+
+            InputStream is = p.getInputStream();
+            int value;
+            while ((value = is.read()) != -1) {
+                System.out.print((char) value);
+            }
+
+            InputStream errIs = p.getErrorStream();
+            while ((value = errIs.read()) != -1) {
+                System.out.print((char) value);
+            }
+
+            // destroy the process
+            p.destroy();
+        } catch (IOException io) {
+            Logger.getLogger(JOpenMS.class.getName()).log(Level.SEVERE, null, io);
+            System.out.println(io.getLocalizedMessage());
         }
     }
 
@@ -192,7 +211,7 @@ public class JOpenMS {
      * @param newValue
      */
     private static void setConfig(Map cfMap, String key,
-                                  String newValue) {
+            String newValue) {
 
         if (key.contains(OpenMSModule.SEPARATOR)) {
             String[] keys = key.split("\\" + OpenMSModule.SEPARATOR, 2);
@@ -209,24 +228,20 @@ public class JOpenMS {
                     if (oldValue.contains("::")) {
                         // replace the user input space separating by "::" separating 
                         subMap.put(keys[1], newValue.replace(" ", "::"));
-                    }
-                    else {
+                    } else {
                         subMap.put(keys[1], newValue);
                     }
-                }
-                else {
+                } else {
                     System.out.println("Can't not set value \"" + newValue + "\". Run with the other settings.");
                 }
-            }
-            else {
+            } else {
                 Map subMap = (Map) cfMap.get(keys[0]);
                 if (subMap == null) {
                     subMap = (Map) cfMap.get(Utils.nameDecode(keys[0]));
                 }
                 if (subMap != null) {
                     setConfig(subMap, keys[1], newValue);
-                }
-                else {
+                } else {
                     System.out.println("Can't not set value \"" + newValue + "\". Run with the other settings.");
                 }
             }
@@ -234,8 +249,8 @@ public class JOpenMS {
     }
 
     private static boolean writeConfigFile(Unmarshaller um, Marshaller m,
-                                           File output,
-                                           Map<String, Object> cfMap)
+            File output,
+            Map<String, Object> cfMap)
             throws JAXBException {
 
         boolean ret = true;
@@ -253,13 +268,11 @@ public class JOpenMS {
                 if (value instanceof String) {
                     String newValue = (String) value;
                     item.setValue(newValue);
-                }
-                else {
+                } else {
                     System.out.println(item.getName() + " in configMap is not a leaf but a node!\n");
                     ret = false;
                 }
-            }
-            else if (itemObject instanceof ITEMLIST) {
+            } else if (itemObject instanceof ITEMLIST) {
                 ITEMLIST itlst = (ITEMLIST) itemObject;
                 String lstName = itlst.getName();
                 Object value = cfMap.get(lstName);
@@ -298,13 +311,11 @@ public class JOpenMS {
                 if (value instanceof String) {
                     String newValue = (String) value;
                     item.setValue(newValue);
-                }
-                else {
+                } else {
                     System.out.println(item.getName() + " in configMap is not a leaf but a node!\n");
                     ret = false;
                 }
-            }
-            else if (obj instanceof ITEMLIST) {
+            } else if (obj instanceof ITEMLIST) {
                 ITEMLIST itlst = (ITEMLIST) obj;
                 String lstName = itlst.getName();
                 Object value = cfMap.get(lstName);
@@ -316,8 +327,7 @@ public class JOpenMS {
                         itlst.getLISTITEM().add(lstitem);
                     }
                 }
-            }
-            else if (obj instanceof NODE) {
+            } else if (obj instanceof NODE) {
                 NODE subNode = (NODE) obj;
                 if (cfMap.get(subNode.getName()) instanceof Map) {
                     Map subCfMap = (Map) cfMap.get(subNode.getName());
@@ -327,5 +337,4 @@ public class JOpenMS {
         }
         return ret;
     }
-
 }

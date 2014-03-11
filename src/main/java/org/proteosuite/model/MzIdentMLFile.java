@@ -6,6 +6,7 @@
 package org.proteosuite.model;
 
 import java.io.File;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import javax.swing.SwingWorker;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
@@ -23,12 +24,30 @@ public class MzIdentMLFile extends IdentDataFile {
     }
 
     @Override
+    public String getFormat() {
+        return "mzML";
+    }
+    
+    @Override
     protected void initiateLoading() {
         ExecutorService executor = AnalyseData.getInstance().getExecutor();
         SwingWorker<MzIdentMLUnmarshaller, Void> mzIdentMLWorker = new SwingWorker<MzIdentMLUnmarshaller, Void>() {
             @Override
             protected MzIdentMLUnmarshaller doInBackground() {
                 return new MzIdentMLUnmarshaller(file);
+            }
+            
+            @Override
+            protected void done() {
+                try {
+                    unmarshaller = get();
+                    System.out.println("Done loading mzIdentML file.");
+                } catch (InterruptedException ex) {                    
+                    System.out.println("Interrupted exception: " + ex.getLocalizedMessage());
+                } catch (ExecutionException ex) {
+                    System.out.println("Execution exception: " + ex.getLocalizedMessage());
+                }
+                
             }
         };       
 

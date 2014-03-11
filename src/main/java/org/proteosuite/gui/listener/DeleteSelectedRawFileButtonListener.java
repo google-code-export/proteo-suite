@@ -31,7 +31,7 @@ public class DeleteSelectedRawFileButtonListener implements ActionListener {
             int[] selectedRows = step.getRawDataTable().getSelectedRows();
             Arrays.sort(selectedRows);
             for (int i = selectedRows.length - 1; i >= 0; i--) {
-                data.getRawDataFiles().remove(selectedRows[i]);
+                data.deleteRawDataFile(selectedRows[i]);
             }
             
             step.refreshFromData();

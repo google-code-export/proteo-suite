@@ -50,6 +50,7 @@ public class IdentParamsView extends JPanel {
     private Map<String, String> hmUniModsVar = new HashMap<String, String>();
     private boolean bRun = false;
     private boolean bProteinInference = false;
+    private File modificationFile;
     
     public IdentParamsView(String sMode) {
         this.sMode = sMode;
@@ -772,7 +773,9 @@ public class IdentParamsView extends JPanel {
                     //... Write file ...//
                     FileWriter fstream;
                     try {
-                        fstream = new FileWriter("Mods.txt");
+                        modificationFile = new File("Mods.txt");
+                        fstream = new FileWriter(modificationFile);
+                        
                         BufferedWriter out = new BufferedWriter(fstream);            
                         out.write("NumMods="+(iSizeFixed+iSizeVar));
                         out.newLine();
@@ -784,8 +787,7 @@ public class IdentParamsView extends JPanel {
                             out.write(getValueUniModVar(varModsModel.getElementAt(iI).toString()));
                             out.newLine();
                         }                 
-                        out.close();
-                        hmParams.put("-mod", "Mods.txt");                                       //... 10 - Modifications                ...//
+                        out.close();                                                               //... 10 - Modifications                ...//
                     } catch (IOException ex) {
                         Logger.getLogger(IdentParamsView.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -813,6 +815,11 @@ public class IdentParamsView extends JPanel {
     public Map<String, String> getParams() {
         return hmParams;
     }
+    
+    public File getModificationFile() {
+        return modificationFile;
+    }
+    
     public boolean getRun() {
         return bRun;
     }

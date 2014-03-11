@@ -47,10 +47,11 @@ public class DefineConditionsStep extends JPanel {
         return conditionsTable;
     }
     
-    public void refreshFromData() {
+    public synchronized void refreshFromData() {
         AnalyseData data = AnalyseData.getInstance();
         conditionsTable.clear();
-        for (RawDataFile file: data.getRawDataFiles()) {
+        for (int i = 0; i < data.getRawDataCount(); i++) {
+            RawDataFile file = data.getRawDataFile(i);
             for (String assay : file.getConditions().keySet()) {                
                 conditionsTable.addConditionRow(file.getConditions().get(assay), file.getFileName(), assay);
             }

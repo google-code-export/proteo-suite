@@ -90,16 +90,16 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
             MSGFPlusWrapper msgf = new MSGFPlusWrapper(identParamsExecute.getParams());
 
             // First get the spectrum file we want to run identifications for in this run.
-            RawDataFile rawDataFile = data.getRawDataFiles().get(selectedRawFiles[fileIndex]);          
+            RawDataFile rawDataFile = data.getRawDataFile(selectedRawFiles[fileIndex]);          
 
             // Set the spectrum file as the input to MSGF+
-            msgf.setInputSpectrum(rawDataFile);
+            msgf.setInputSpectrum(rawDataFile);          
 
             if (fileIndex == 0) {
                 firstFile = msgf.getOutputFileName();
             }
 
-            msgf.performSearch();
+            msgf.performSearch(5);
         }
     }
 }
