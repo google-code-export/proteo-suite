@@ -85,10 +85,11 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
         return identParamsView;
     }
     
-    public void refreshFromData() {
+    public synchronized void refreshFromData() {
         identificationsTable.clear();
         AnalyseData data = AnalyseData.getInstance();
-        for (RawDataFile dataFile : data.getRawDataFiles()) {
+        for (int i = 0; i < data.getRawDataCount(); i++) {
+            RawDataFile dataFile = data.getRawDataFile(i);
             identificationsTable.addRawFileRow(dataFile);
         }
     }  

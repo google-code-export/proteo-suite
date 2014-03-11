@@ -25,7 +25,7 @@ public class AnalyseData {
     
     private AnalyseData() {
         // Should really calculate most efficient number of threads to use.
-        executor = Executors.newFixedThreadPool(5);
+        executor = Executors.newCachedThreadPool();
     }
     
     public static AnalyseData getInstance() {
@@ -40,12 +40,29 @@ public class AnalyseData {
         return executor;
     }
     
+    
     public void addRawDataFile(RawDataFile rawDataFile) {
-        rawDataFiles.add(rawDataFile);
+        synchronized(this) {            
+            rawDataFiles.add(rawDataFile);
+        }
     }
     
-    public List<RawDataFile> getRawDataFiles() {
-        return rawDataFiles;
+    public RawDataFile getRawDataFile(int fileIndex) {
+        synchronized(this) {            
+            return rawDataFiles.get(fileIndex);
+        }
+    }
+    
+    public void deleteRawDataFile(int fileIndex) {
+        synchronized(this) {
+            rawDataFiles.remove(fileIndex);
+        }
+    }
+    
+    public int getRawDataCount() {
+        synchronized(this) {
+            return rawDataFiles.size();
+        }
     }
     
     public void setMultiplexing(String multiplexing) {

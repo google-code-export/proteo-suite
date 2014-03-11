@@ -38,7 +38,8 @@ public class PreviousButtonListener implements ActionListener {
 
                 String fileName = (String) conditionsTable.getModel().getValueAt(i, 1);
                 String assay = (String) conditionsTable.getModel().getValueAt(i, 2);
-                for (RawDataFile dataFile : data.getRawDataFiles()) {
+                for (int j = 0; j < data.getRawDataCount(); j++) {
+                    RawDataFile dataFile = data.getRawDataFile(j);
                     if (dataFile.getFileName().equals(fileName)) {
                         if (dataFile.getConditions().containsKey(assay)) {
                             dataFile.getConditions().put(assay, condition);

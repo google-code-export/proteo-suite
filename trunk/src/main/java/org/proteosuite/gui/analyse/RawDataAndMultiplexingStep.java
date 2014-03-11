@@ -84,7 +84,8 @@ public class RawDataAndMultiplexingStep extends JPanel {
     public void refreshFromData() {
         AnalyseData data = AnalyseData.getInstance();
         rawDataTable.clear();
-        for (RawDataFile dataFile: data.getRawDataFiles()) {
+        for (int i = 0; i < data.getRawDataCount(); i++) {
+            RawDataFile dataFile = data.getRawDataFile(i);
             rawDataTable.addRawFileRow(dataFile);            
         }
     }

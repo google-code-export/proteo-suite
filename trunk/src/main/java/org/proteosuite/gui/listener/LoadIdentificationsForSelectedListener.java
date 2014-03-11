@@ -42,7 +42,7 @@ public class LoadIdentificationsForSelectedListener implements ActionListener {
             File file = chooser.getSelectedFile();
             MzIdentMLFile mzIdentML = new MzIdentMLFile(file);
             for (int i : selectedRawFiles) {                
-                data.getRawDataFiles().get(i).setIdentificationDataFile(mzIdentML);                
+                data.getRawDataFile(i).setIdentificationDataFile(mzIdentML);                
             }
         }
 

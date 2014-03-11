@@ -75,10 +75,11 @@ public class RawMzMLFile extends RawDataFile {
             protected void done() {
                 try {
                     unmarshaller = get();
+                    System.out.println("Done loading mzML file.");
                 } catch (InterruptedException ex) {
-                    
+                    System.out.println("Interrupted exception loading mzML file: " + ex.getLocalizedMessage());
                 } catch (ExecutionException ex) {
-                    
+                    System.out.println("Execution exception loading mzML file: " + ex.getLocalizedMessage());
                 }
             }
         };        

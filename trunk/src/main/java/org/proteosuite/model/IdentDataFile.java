@@ -24,5 +24,15 @@ public abstract class IdentDataFile {
         return loadingStatus;
     }
     
+    public String getAbsoluteFileName() {
+        return file.getAbsolutePath();
+    }
+    
+    public String getFileName() {
+        return file.getName();
+    }
+    
+    public abstract String getFormat();
+    
     protected abstract void initiateLoading();
 }
