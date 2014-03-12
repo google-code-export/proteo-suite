@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import javax.swing.SwingWorker;
+import org.proteosuite.gui.inspect.InspectTab;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 
 /**
@@ -41,6 +42,8 @@ public class MzIdentMLFile extends IdentDataFile {
             protected void done() {
                 try {
                     unmarshaller = get();
+                    AnalyseData.getInstance().getInspectModel().addIdentDataFile(MzIdentMLFile.this);
+                    InspectTab.getInstance().refreshFileTable();
                     System.out.println("Done loading mzIdentML file.");
                 } catch (InterruptedException ex) {                    
                     System.out.println("Interrupted exception: " + ex.getLocalizedMessage());
