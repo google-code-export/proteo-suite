@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.SwingWorker;
+import org.proteosuite.gui.inspect.InspectTab;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 /**
@@ -75,6 +76,8 @@ public class RawMzMLFile extends RawDataFile {
             protected void done() {
                 try {
                     unmarshaller = get();
+                    AnalyseData.getInstance().getInspectModel().addRawDataFile(RawMzMLFile.this);
+                    InspectTab.getInstance().refreshFileTable();
                     System.out.println("Done loading mzML file.");
                 } catch (InterruptedException ex) {
                     System.out.println("Interrupted exception loading mzML file: " + ex.getLocalizedMessage());

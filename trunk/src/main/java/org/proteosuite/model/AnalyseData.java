@@ -16,7 +16,9 @@ import java.util.concurrent.Executors;
  * @author SPerkins
  */
 public class AnalyseData {
+    private ExecutorService msgfExecutor;
     private ExecutorService executor;
+    private InspectModel inspectModel = new InspectModel();
     private List<RawDataFile> rawDataFiles = new ArrayList<RawDataFile>();    
     private String multiplexing = "";
     private boolean supportGenomeAnnotation = false;
@@ -25,7 +27,8 @@ public class AnalyseData {
     
     private AnalyseData() {
         // Should really calculate most efficient number of threads to use.
-        executor = Executors.newCachedThreadPool();
+        executor = Executors.newFixedThreadPool(4);
+        msgfExecutor = Executors.newSingleThreadExecutor();
     }
     
     public static AnalyseData getInstance() {
@@ -40,6 +43,13 @@ public class AnalyseData {
         return executor;
     }
     
+    public ExecutorService getMSGFPlusExecutor() {
+        return msgfExecutor;
+    }
+    
+    public InspectModel getInspectModel() {
+        return inspectModel;
+    }
     
     public void addRawDataFile(RawDataFile rawDataFile) {
         synchronized(this) {            

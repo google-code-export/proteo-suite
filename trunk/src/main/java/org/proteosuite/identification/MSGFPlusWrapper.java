@@ -13,7 +13,6 @@ import edu.ucsd.msjava.params.ParamManager;
 import edu.ucsd.msjava.ui.MSGFPlus;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
@@ -89,7 +88,7 @@ public class MSGFPlusWrapper extends SearchEngineBase implements SearchEngine {
     }
 
     public void performSearch(final int executionDelay) {        
-        ExecutorService executor = AnalyseData.getInstance().getExecutor();
+        ExecutorService executor = AnalyseData.getInstance().getMSGFPlusExecutor();
         buildModificationFile();
         buildMap();
         buildParameterArray();

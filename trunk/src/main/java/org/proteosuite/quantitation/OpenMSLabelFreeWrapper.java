@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import org.proteosuite.jopenms.command.JOpenMS;
 import org.proteosuite.model.AnalyseData;
@@ -40,12 +42,14 @@ public class OpenMSLabelFreeWrapper {
     public void compute() {
         List<String> featureFinderCentroidedFiles = new ArrayList<String>();  
         List<String> mapAlignerPoseClusteringFiles = new ArrayList<String>();
+        int featureFinderExecutionDelay = 0;
         for (RawDataFile dataFile : rawDataFiles) {
             String featureFinderCentroidedFile = dataFile.getAbsoluteFileName().replaceAll("\\." + dataFile.getFormat() + '$', "_FFC.featureXML");
             String mapAlignerPostClusteringFile = featureFinderCentroidedFile.replaceAll("\\." + "featureXML" + '$', "_MAPC.featureXML");
-            doFeatureFinderCentroided(dataFile, featureFinderCentroidedFile, featureFinderCentroidedLatch);
+            doFeatureFinderCentroided(dataFile, featureFinderCentroidedFile, featureFinderCentroidedLatch, featureFinderExecutionDelay);
             featureFinderCentroidedFiles.add(featureFinderCentroidedFile);
             mapAlignerPoseClusteringFiles.add(mapAlignerPostClusteringFile);            
+            featureFinderExecutionDelay += 5;
         }
         
         String unlabledOutputFile = rawDataFiles.get(0).getFile().getParent() + "\\unlabeled_result_FLUQT.consensusXML";
@@ -55,16 +59,20 @@ public class OpenMSLabelFreeWrapper {
         doFeatureLinkerUnlabeledQT(mapAlignerPoseClusteringFiles, unlabledOutputFile, mapAlignerPoseClusteringLatch);
     }
 
-    private void doFeatureFinderCentroided(final RawDataFile inputDataFile, final String outputFile, final CountDownLatch featureFinderCentroidedLatch) {
+    private void doFeatureFinderCentroided(final RawDataFile inputDataFile, final String outputFile, final CountDownLatch featureFinderCentroidedLatch, final int executionDelay) {
         
         SwingWorker<Void, String> worker = new SwingWorker<Void, String>() {
             @Override
-            public Void doInBackground() {
+            public Void doInBackground(){
                 try {
-                JOpenMS.performOpenMSTask("FeatureFinderCentroided", Arrays.asList(inputDataFile.getAbsoluteFileName()), Arrays.asList(outputFile));
+                    Thread.sleep(executionDelay * 1000);
+                    JOpenMS.performOpenMSTask("FeatureFinderCentroided", Arrays.asList(inputDataFile.getAbsoluteFileName()), Arrays.asList(outputFile));
                 
-                featureFinderCentroidedLatch.countDown();} catch (NullPointerException n) {
+                    featureFinderCentroidedLatch.countDown();
+                } catch (NullPointerException n) {
                     n.printStackTrace();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(OpenMSLabelFreeWrapper.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 return null;
             }

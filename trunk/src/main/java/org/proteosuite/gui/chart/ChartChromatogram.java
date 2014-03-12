@@ -2,7 +2,6 @@ package org.proteosuite.gui.chart;
 
 import java.awt.Dimension;
 import java.util.List;
-import java.util.Set;
 
 import org.proteosuite.ProteoSuiteView;
 
@@ -10,11 +9,8 @@ import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
-import java.io.IOException;
-import javax.swing.JPanel;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 
 public class ChartChromatogram {
