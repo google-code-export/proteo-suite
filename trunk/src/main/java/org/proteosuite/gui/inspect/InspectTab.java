@@ -2,10 +2,12 @@
 package org.proteosuite.gui.inspect;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import org.proteosuite.gui.listener.InspectTableListener;
-import org.proteosuite.gui.tables.InspectFileTable;
+import org.proteosuite.gui.listener.InspectComboListener;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.InspectModel;
@@ -17,23 +19,29 @@ import org.proteosuite.model.RawDataFile;
  */
 public class InspectTab extends JPanel {
     private BorderLayout layout = new BorderLayout();
-    private InspectFileTable fileTable;
+    private JComboBox dataFileComboBox;
     private InspectModel inspectModel;
     private static InspectTab instance = null;
+    private InspectTablePanel tablePanel;
+    private InspectChartPanel chartPanel;
     private InspectTab() {
         setLayout(layout);
         
         inspectModel = AnalyseData.getInstance().getInspectModel();
-        fileTable = new InspectFileTable();
-        fileTable.getSelectionModel().addListSelectionListener(new InspectTableListener());
-        JScrollPane fileTableScroller = new JScrollPane(fileTable);
-        add(fileTableScroller, BorderLayout.WEST);
+        JPanel inspectHeader = new JPanel();
+        inspectHeader.setLayout(new FlowLayout());
+        inspectHeader.add(new JLabel("Select data file: "));
+        dataFileComboBox = new JComboBox();
+        dataFileComboBox.addItemListener(new InspectComboListener());
+        inspectHeader.add(dataFileComboBox);
         
-        JScrollPane dataScroller = new JScrollPane();
-        add(dataScroller, BorderLayout.EAST);
+        add(inspectHeader, BorderLayout.PAGE_START);
         
-        JPanel chartArea = new JPanel();
-        add(chartArea, BorderLayout.SOUTH);
+        tablePanel = new InspectTablePanel();        
+        add(tablePanel, BorderLayout.EAST);
+        
+        chartPanel = new InspectChartPanel();
+        add(chartPanel, BorderLayout.SOUTH);
     }
     
     public static InspectTab getInstance() {
@@ -44,14 +52,23 @@ public class InspectTab extends JPanel {
         return instance;
     }
     
-    public void refreshFileTable() {
-        fileTable.clear();
+    public InspectTablePanel getTablePanel() {
+        return tablePanel;
+    }  
+    
+    public InspectChartPanel getChartPanel() {
+        return chartPanel;
+    }
+    
+    public void refreshComboBox() {
+        dataFileComboBox.removeAllItems();
         for (RawDataFile dataFile : inspectModel.getRawData()) {
-            fileTable.addFileRow(dataFile.getFileName(), dataFile.getFormat());
+            dataFileComboBox.addItem(dataFile.getFileName());
+            
         }
         
         for (IdentDataFile identFile : inspectModel.getIdentData()) {
-            fileTable.addFileRow(identFile.getFileName(), identFile.getFormat());
+            dataFileComboBox.addItem(identFile.getFileName());
         }
         
     }

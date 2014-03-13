@@ -43,7 +43,7 @@ public class MzIdentMLFile extends IdentDataFile {
                 try {
                     unmarshaller = get();
                     AnalyseData.getInstance().getInspectModel().addIdentDataFile(MzIdentMLFile.this);
-                    InspectTab.getInstance().refreshFileTable();
+                    InspectTab.getInstance().refreshComboBox();
                     System.out.println("Done loading mzIdentML file.");
                 } catch (InterruptedException ex) {                    
                     System.out.println("Interrupted exception: " + ex.getLocalizedMessage());

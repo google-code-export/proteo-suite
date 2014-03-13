@@ -31,6 +31,10 @@ public class RawMzMLFile extends RawDataFile {
         super(file);
     }
     
+    public MzMLUnmarshaller getUnmarshaller() {
+        return unmarshaller;
+    }
+    
     @Override
     public String getFormat() {
         return "mzML";
@@ -77,7 +81,7 @@ public class RawMzMLFile extends RawDataFile {
                 try {
                     unmarshaller = get();
                     AnalyseData.getInstance().getInspectModel().addRawDataFile(RawMzMLFile.this);
-                    InspectTab.getInstance().refreshFileTable();
+                    InspectTab.getInstance().refreshComboBox();
                     System.out.println("Done loading mzML file.");
                 } catch (InterruptedException ex) {
                     System.out.println("Interrupted exception loading mzML file: " + ex.getLocalizedMessage());
