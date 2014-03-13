@@ -1,30 +1,26 @@
 package org.proteosuite.gui.chart;
 
+import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import java.awt.Dimension;
 import java.util.List;
-
 import org.proteosuite.ProteoSuiteView;
-
+import org.proteosuite.model.RawMzMLFile;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
-
-import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
+import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 public class ChartChromatogram {
 
     /**
      * Display total ion chromatogram
      *
-     * @param iIndex - Index to the aMzMLUnmarshaller list
-     * @param sTitle - Window title
+     * @param unmarshaller
      * @return
-     * @return void
      */
-    public static ChromatogramPanel getChromatogram(MzMLUnmarshaller unmarshaller) {
-
+    public static ChromatogramPanel getChromatogram(RawMzMLFile dataFile) {
+        MzMLUnmarshaller unmarshaller = dataFile.getUnmarshaller();
         MzMLObjectIterator<Chromatogram> iterator = unmarshaller.unmarshalCollectionFromXpath("/run/chromatogramList/chromatogram", Chromatogram.class);
         while (iterator.hasNext()) {
             Chromatogram chrom = iterator.next();

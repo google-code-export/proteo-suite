@@ -5,9 +5,6 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import org.proteosuite.utils.compression.DeltaConversion;
-import org.proteosuite.utils.compression.DeltaConversion.DeltaEncodedDataFormatException;
-
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.PrecursorList;
