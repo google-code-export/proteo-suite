@@ -47,34 +47,38 @@ public class InspectModel {
 
         return false;
     }
-    
+
     public RawDataFile getRawDataFile(String fileName) {
         for (RawDataFile dataFile : rawData) {
             if (dataFile.getFileName().equals(fileName)) {
                 return dataFile;
             }
         }
-        
+
         return null;
     }
-    
+
     public boolean isIdentFile(String fileName) {
         for (IdentDataFile identFile : identData) {
             if (identFile.getFileName().equals(fileName)) {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     public IdentDataFile getIdentDataFile(String fileName) {
         for (IdentDataFile identFile : identData) {
             if (identFile.getFileName().equals(fileName)) {
                 return identFile;
             }
         }
-        
+
         return null;
+    }
+
+    public boolean isQuantFile(String fileName) {
+        return false;
     }
 }

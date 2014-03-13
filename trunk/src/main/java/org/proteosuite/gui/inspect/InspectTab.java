@@ -6,7 +6,6 @@ import java.awt.FlowLayout;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import org.proteosuite.gui.listener.InspectComboListener;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.IdentDataFile;
@@ -58,6 +57,10 @@ public class InspectTab extends JPanel {
     
     public InspectChartPanel getChartPanel() {
         return chartPanel;
+    }
+    
+    public String getSelectedFile() {
+        return (String)dataFileComboBox.getSelectedItem();
     }
     
     public void refreshComboBox() {
