@@ -15,10 +15,17 @@ import javax.swing.JTable;
  * @author SPerkins
  */
 public class InspectTablePanel extends JPanel {
+	private JTable jTable;
     
     public void setTable(JTable table) {
         removeAll();
+        jTable = table;
         add(new JScrollPane(table));
         repaint();
+    }
+    
+    public JTable getTable()
+    {
+    	return jTable;
     }
 }

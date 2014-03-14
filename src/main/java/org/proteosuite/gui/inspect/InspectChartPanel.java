@@ -16,6 +16,7 @@ import javax.swing.JTabbedPane;
  * @author SPerkins
  */
 public class InspectChartPanel extends JPanel {
+	
     private final JTabbedPane tabbedPane;
     private ChromatogramPanel chromPanel;
     private SpectrumPanel specPanel;
@@ -27,25 +28,30 @@ public class InspectChartPanel extends JPanel {
     
     public void setChromatogram(ChromatogramPanel chromPanel) {
         this.chromPanel = chromPanel;
-        refreshTabView();
+        refreshTabView(0);
     }
     
     public void setSpectrum(SpectrumPanel specPanel) {
         this.specPanel = specPanel;
-        refreshTabView();
+        refreshTabView(1);
     }
     
-    public void refreshTabView() {
+    public void refreshTabView(int index) {
         removeAll();
         tabbedPane.removeAll();
         if (chromPanel != null) {
-            tabbedPane.addTab("Chromatogram", null, chromPanel);
+            tabbedPane.addTab("Chromatogram", chromPanel);
         }
+        else
+        	index--;
         
         if (specPanel != null) {
-            tabbedPane.addTab("Spectrum", null, specPanel);
+            tabbedPane.addTab("Spectrum", specPanel);
         }
         
+        tabbedPane.setSelectedIndex(index);
+        
         add(tabbedPane);
+        repaint();
     }
 }
