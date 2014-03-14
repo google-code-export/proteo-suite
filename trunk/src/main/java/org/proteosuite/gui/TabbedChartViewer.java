@@ -10,6 +10,7 @@ import javax.swing.JTabbedPane;
 import org.proteosuite.gui.chart.ChartChromatogram;
 import org.proteosuite.gui.chart.ChartPlot2D;
 import org.proteosuite.gui.chart.ChartSpectrum;
+import org.proteosuite.model.RawMzMLFile;
 
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
@@ -50,7 +51,7 @@ public class TabbedChartViewer extends JTabbedPane {
 		jp2D.removeAll();
 	}
 
-	public void updateChromatogram(MzMLUnmarshaller mzMLUnmarshaller) {
+	public void updateChromatogram(RawMzMLFile mzMLUnmarshaller) {
 		jdpTIC.removeAll();
 		
 		JPanel chromatogramPanel = ChartChromatogram.getChromatogram(mzMLUnmarshaller);

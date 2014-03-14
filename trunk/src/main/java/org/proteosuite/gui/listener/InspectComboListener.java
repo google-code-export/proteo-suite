@@ -26,7 +26,8 @@ public class InspectComboListener implements ItemListener {
             RawDataFile dataFile = inspectModel.getRawDataFile(fileChosen);
             JTableMzML rawData = new JTableMzML();
             rawData.showData((RawMzMLFile)dataFile);
-            InspectTab.getInstance().getTablePanel().setTable(rawData);  
+            InspectTab.getInstance().getTablePanel().setTable(rawData);
+            rawData.getSelectionModel().addListSelectionListener(InspectTab.getInstance());
             InspectTab.getInstance().getChartPanel().setChromatogram(ChartChromatogram.getChromatogram((RawMzMLFile)dataFile));
         } else if (inspectModel.isIdentFile(fileChosen)) {
             // Open mzIdentMLViewer.
