@@ -5,7 +5,6 @@
  */
 package org.proteosuite.quantitation;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,24 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import org.proteosuite.ProteoSuiteView;
 import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.utils.PluginManager;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import uk.ac.liv.core.ITRAQParameterSettingsException;
 import uk.ac.liv.jmzqml.model.mzqml.AbstractParam;
 import uk.ac.liv.jmzqml.model.mzqml.AnalysisSummary;
 import uk.ac.liv.jmzqml.model.mzqml.Assay;
@@ -65,11 +50,10 @@ public class QuantUtils {
     private QuantUtils() {
     }
 
-    public static boolean writeMzQuantML(String technique, String quantFileName,
+    public static void writeMzQuantML(String technique, String quantFileName,
             List<RawDataFile> rawData) {
 
-        String directory = "".replace("\\", "/");
-        boolean ret = true;
+        String directory = rawData.get(0).getFile().getParent().replace("\\", "/");        
 
         // ... Create object ...//
         MzQuantML qml = new MzQuantML();
@@ -340,7 +324,7 @@ public class QuantUtils {
             idFileNameIdMap.put(idFname, idId); // ... Saving hashmap for
             // AssayList ...//
         }
-        
+
         inputFiles.setIdentificationFiles(idFiles);
         qml.setInputFiles(inputFiles);
 
@@ -544,129 +528,65 @@ public class QuantUtils {
         // This will be used in StudyVariableList
         Map<String, List<Assay>> studyVarAssayID = new HashMap<String, List<Assay>>();
 
-        if (technique.contains("iTRAQ")) {
-            // ... Assay list will be retrieved from the parameters set up in
-            // the configQuantML file ...//
-            try {
-                DocumentBuilderFactory domFactory = DocumentBuilderFactory
-                        .newInstance();
-                domFactory.setNamespaceAware(true);
-                DocumentBuilder builder = domFactory.newDocumentBuilder();
-                Document doc = builder.parse("configQuant.xml");
-                XPath xpath = XPathFactory.newInstance().newXPath();
+        if (technique.contains("iTRAQ")) {            
+            for (int rawDataFileIndex = 0; rawDataFileIndex < rawData.size(); rawDataFileIndex++) {
+                RawDataFile dataFile = rawData.get(rawDataFileIndex);
+                Map<String, String> conditions = dataFile.getConditions();
 
-                // ... Check raw files ...//
-                for (int rawDataFileIndex = 0; rawDataFileIndex < rawData.size(); rawDataFileIndex++) {
-                    RawDataFile dataFile = rawData.get(rawDataFileIndex);
-                    XPathExpression expr = xpath
-                            .compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='"
-                                    + dataFile.getFileName() + "']");
+                for (Entry<String, String> condition : conditions.entrySet()) {
+                    ITRAQReagent reagent = ITRAQReagent.getReagent(true, condition.getKey());
+                    Assay assay = new Assay();
+                    assay.setName(reagent.getId());
+                    assay.setId("i" + (rawDataFileIndex + 1) + "_" + reagent.getId());
 
-                    NodeList nodes = (NodeList) expr.evaluate(doc,
-                            XPathConstants.NODESET);
-                    if (nodes.getLength() <= 0) {
-                        throw new ITRAQParameterSettingsException();
+                    // Change me!
+                    String sStudyVariable = condition.getValue();
+
+                    List<Assay> al;
+                    if (!studyVarAssayID
+                            .containsKey(sStudyVariable)) {
+                        al = new ArrayList<Assay>();
+                    } else {
+                        al = studyVarAssayID.get(sStudyVariable);
                     }
 
-                    // ... Validating files ...//
-                    expr = xpath
-                            .compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='"
-                                    + dataFile.getFileName()
-                                    + "']/AssayParam");
+                    al.add(assay);
 
-                    nodes = (NodeList) expr.evaluate(doc,
-                            XPathConstants.NODESET);
-                    
-                    boolean blnExists = false;
-                    for (int iI = 0; iI < nodes.getLength(); iI++) {
-                        Node node = nodes.item(iI);
-                        if (node.getNodeType() == Node.ELEMENT_NODE) {
-                            Element element = (Element) node;
-                            NodeList nodelist = element
-                                    .getElementsByTagName("AssayID");
-                            Element element2 = (Element) nodelist.item(0);
-                            NodeList fstNm1 = element2.getChildNodes();
-                            String sAssayID = fstNm1.item(0).getNodeValue()
-                                    .toString();
+                    studyVarAssayID.put(sStudyVariable, al);
 
-                            Element element3 = (Element) node;
-                            NodeList nodelist2 = element3
-                                    .getElementsByTagName("AssayName");
-                            Element element4 = (Element) nodelist2.item(0);
-                            NodeList fstNm2 = element4.getChildNodes();
-                            String sAssayName = fstNm2.item(0).getNodeValue()
-                                    .toString();
+                    String sRawFile = dataFile.getFileName();
 
-                            Element element5 = (Element) node;
-                            NodeList nodelist3 = element5
-                                    .getElementsByTagName("mzValue");
-                            Element element6 = (Element) nodelist3.item(0);
-                            NodeList fstNm3 = element6.getChildNodes();
-                            String sMzValue = fstNm3.item(0).getNodeValue()
-                                    .toString();
-
-                            Element element7 = (Element) node;
-                            NodeList nodelist4 = element7
-                                    .getElementsByTagName("StudyVariable");
-                            Element element8 = (Element) nodelist4.item(0);
-                            NodeList fstNm4 = element8.getChildNodes();
-                            String sStudyVariable = fstNm4.item(0)
-                                    .getNodeValue().toString();
-
-                            Assay assay = new Assay();
-                            String sRawFile = dataFile.getFileName();
-                            String assName = sAssayID; // ... e.g. 114 ...//
-                            String assId = "i" + (rawDataFileIndex + 1) + "_" + sAssayID;
-                            assay.setId(assId);
-                            assay.setName(assName);
-
-                            // ... Create the study variable tree ...//
-                            blnExists = studyVarAssayID
-                                    .containsKey(sStudyVariable);
-                            List<Assay> al;
-                            if (!blnExists) {
-                                al = new ArrayList<Assay>();
-                            } else {
-                                al = studyVarAssayID.get(sStudyVariable);
-                            }
-
-                            al.add(assay);
-                            studyVarAssayID.put(sStudyVariable, al);
-
-                            // ... Check the rawFileGroup associated to that
-                            // assay ...//
-                            int iK = 0;
-                            for (RawFilesGroup rfg : rawFilesGroupList) {
-                                String sKey = sRawFile;
-                                RawFilesGroup rfGroup = rawFilesGroupList
-                                        .get(iK);
-                                if (rfg.getId().equals(sKey)) {
-                                    assay.setRawFilesGroup(rfGroup);
-                                    break;
-                                }
-                                iK++;
-                            }
-
-                            Label label = new Label();
-                            CvParam labelCvParam = new CvParam();
-                            labelCvParam.setAccession("");
-                            labelCvParam.setName(sAssayName);
-                            labelCvParam.setValue(sMzValue);
-                            labelCvParam.setCv(cvPSI_MOD);
-                            List<ModParam> modParams = label.getModification();
-                            ModParam modParam = new ModParam();
-                            modParam.setCvParam(labelCvParam);
-                            modParam.setMassDelta(145.0f);
-                            modParams.add(modParam);
-                            assay.setLabel(label);
-                            assayList.add(assay);
+                    // ... Check the rawFileGroup associated to that
+                    // assay ...//
+                    int iK = 0;
+                    for (RawFilesGroup rfg : rawFilesGroupList) {
+                        String sKey = sRawFile;
+                        RawFilesGroup rfGroup = rawFilesGroupList
+                                .get(iK);
+                        if (rfg.getId().equals(sKey)) {
+                            assay.setRawFilesGroup(rfGroup);
+                            break;
                         }
+                        iK++;
                     }
-                }                
-            } catch (ParserConfigurationException | SAXException | IOException | XPathExpressionException e) {
-                e.printStackTrace();
+
+                    Label label = new Label();
+                    CvParam labelCvParam = new CvParam();
+                    labelCvParam.setAccession("");
+                    labelCvParam.setName(reagent.getName());
+                    labelCvParam.setValue(String.valueOf(reagent.getMz()));
+                    labelCvParam.setCv(cvPSI_MOD);
+                    List<ModParam> modParams = label.getModification();
+                    ModParam modParam = new ModParam();
+                    modParam.setCvParam(labelCvParam);
+                    modParam.setMassDelta(145.0f);
+                    modParams.add(modParam);
+                    assay.setLabel(label);
+                    assayList.add(assay);
+                }
             }
         }
+        
         if (technique.contains("emPAI")) {
             // ... Check the rawFileGroup associated to that assay ...//
             int iK = 0;
@@ -728,11 +648,11 @@ public class QuantUtils {
             assayRefList.add(assayList.get(0).getId());
             studyVariableList.add(studyVariable);
         }
+        
         qml.setStudyVariableList(studyVariables);
 
         // ... Marshal mzQuantML object ...//
         MzQuantMLMarshaller marshaller = new MzQuantMLMarshaller(directory + "/" + quantFileName);
-        marshaller.marshall(qml);
-        return ret;
-    }
+        marshaller.marshall(qml);        
+    }    
 }

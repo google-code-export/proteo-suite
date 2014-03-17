@@ -17,6 +17,7 @@ import org.proteosuite.gui.analyse.LabelFreeStep;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.quantitation.OpenMSLabelFreeWrapper;
+import org.proteosuite.quantitation.XTrackerITRAQWrapper;
 
 /**
  *
@@ -41,7 +42,14 @@ public class ConfirmButtonListener implements ActionListener {
             labelFree.compute();
             parent.moveToStep(AnalyseDynamicTab.DONE_STEP);
         } else if (panel instanceof ITRAQStep) {
+            List<RawDataFile> dataFiles = new ArrayList<RawDataFile>();
+            for (int i = 0; i < AnalyseData.getInstance().getRawDataCount(); i++) {
+                dataFiles.add(AnalyseData.getInstance().getRawDataFile(i));
+            }
             
+            XTrackerITRAQWrapper itraq = new XTrackerITRAQWrapper(dataFiles);
+            itraq.compute();
+            parent.moveToStep(AnalyseDynamicTab.DONE_STEP);
         }
     }
 }

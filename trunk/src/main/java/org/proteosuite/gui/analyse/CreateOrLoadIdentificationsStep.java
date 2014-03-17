@@ -63,12 +63,12 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
         previousButton.addActionListener(new PreviousButtonListener(this));
         buttonsPanel.add(previousButton);
         
-        JPanel supportGenomeAnnotationOption = new JPanel();
-        supportGenomeAnnotationOption.setLayout(new BoxLayout(supportGenomeAnnotationOption, BoxLayout.X_AXIS));
-        JCheckBox genomeAnnotationOption = new JCheckBox();
-        supportGenomeAnnotationOption.add(genomeAnnotationOption);
-        supportGenomeAnnotationOption.add(new JLabel("Support Genome Annotation?"));
-        buttonsPanel.add(supportGenomeAnnotationOption);
+        //JPanel supportGenomeAnnotationOption = new JPanel();
+        //supportGenomeAnnotationOption.setLayout(new BoxLayout(supportGenomeAnnotationOption, BoxLayout.X_AXIS));
+        //JCheckBox genomeAnnotationOption = new JCheckBox();
+        //supportGenomeAnnotationOption.add(genomeAnnotationOption);
+        //supportGenomeAnnotationOption.add(new JLabel("Support Genome Annotation?"));
+        //buttonsPanel.add(supportGenomeAnnotationOption);
         
         JButton continueButton = new JButton("Continue");
         continueButton.addActionListener(new ContinueButtonListener(this));

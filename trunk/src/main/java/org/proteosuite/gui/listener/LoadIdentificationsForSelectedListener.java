@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JFileChooser;
+import org.proteosuite.ProteoSuiteView;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.tables.CreateOrLoadIdentificationsTable;
 import org.proteosuite.model.AnalyseData;
@@ -35,11 +36,15 @@ public class LoadIdentificationsForSelectedListener implements ActionListener {
         }
 
         AnalyseData data = AnalyseData.getInstance();
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser(ProteoSuiteView.sPreviousLocation);
         chooser.setMultiSelectionEnabled(false);
         int returnVal = chooser.showOpenDialog(step);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = chooser.getSelectedFile();
+            if (!file.getParent().equals(ProteoSuiteView.sPreviousLocation)) {
+                ProteoSuiteView.sPreviousLocation = file.getParent();
+            }
+            
             MzIdentMLFile mzIdentML = new MzIdentMLFile(file);
             for (int i : selectedRawFiles) {                
                 data.getRawDataFile(i).setIdentificationDataFile(mzIdentML);                

@@ -26,7 +26,7 @@ public class CreateOrLoadIdentificationsTable extends JTable {
         };
         
         model.addColumn("File Name");
-        model.addColumn("Format");
+       
         model.addColumn("Identifications Status");
         
         setModel(model);
@@ -35,9 +35,9 @@ public class CreateOrLoadIdentificationsTable extends JTable {
     public void addRawFileRow(RawDataFile dataFile) {
         IdentDataFile identFile = dataFile.getIdentificationDataFile();
         if (identFile == null) {
-            model.addRow(new Object[]{dataFile.getFileName(), dataFile.getFormat(), "<None>"}); 
+            model.addRow(new Object[]{dataFile.getFileName(), "<None>"}); 
         } else {
-            model.addRow(new Object[]{dataFile.getFileName(), dataFile.getFormat(), identFile.getLoadingStatus()}); 
+            model.addRow(new Object[]{dataFile.getFileName(), identFile.getLoadingStatus()}); 
         }              
     }
     

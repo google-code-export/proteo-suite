@@ -27,7 +27,7 @@ public class MzIdentMLFile extends IdentDataFile {
 
     @Override
     public String getFormat() {
-        return "mzML";
+        return "mzIdentML";
     }
     
     @Override
