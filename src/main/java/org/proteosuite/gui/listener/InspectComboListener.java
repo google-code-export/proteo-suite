@@ -20,6 +20,9 @@ public class InspectComboListener implements ItemListener {
     
     @Override
     public void itemStateChanged(ItemEvent e) {
+    	if (e.getStateChange() != ItemEvent.SELECTED)
+    		return;
+    	
         // Populate the table.
         String fileChosen = (String)e.getItem();
         if (inspectModel.isRawDataFile(fileChosen)) {
