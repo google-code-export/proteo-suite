@@ -19,6 +19,7 @@ public class AnalyseData {
     private ExecutorService msgfExecutor;
     private ExecutorService executor;
     private InspectModel inspectModel = new InspectModel();
+    private TasksModel tasksModel = new TasksModel();
     private List<RawDataFile> rawDataFiles = new ArrayList<RawDataFile>();    
     private String multiplexing = "";
     private boolean supportGenomeAnnotation = false;
@@ -49,6 +50,10 @@ public class AnalyseData {
     
     public InspectModel getInspectModel() {
         return inspectModel;
+    }
+    
+    public TasksModel getTasksModel() {
+        return tasksModel;
     }
     
     public void addRawDataFile(RawDataFile rawDataFile) {

@@ -24,9 +24,11 @@ import javax.swing.SwingWorker;
 import static org.proteosuite.ProteoSuiteView.SYS_UTILS;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
+import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.MzIdentMLFile;
 import org.proteosuite.model.RawDataFile;
+import org.proteosuite.model.Task;
 
 /**
  *
@@ -89,6 +91,10 @@ public class MSGFPlusWrapper extends SearchEngineBase implements SearchEngine {
 
     public void performSearch(final int executionDelay) {        
         ExecutorService executor = AnalyseData.getInstance().getMSGFPlusExecutor();
+        
+        AnalyseData.getInstance().getTasksModel().set(new Task(inputSpectrum.getFileName(), "Create Identifications"));
+        TasksTab.getInstance().refreshFromTasksModel();
+        
         buildModificationFile();
         buildMap();
         buildParameterArray();
@@ -122,6 +128,8 @@ public class MSGFPlusWrapper extends SearchEngineBase implements SearchEngine {
                 try {
                     System.out.println("MSGF run finished for: " + inputSpectrum == null ? inputSpectrum.getFileName() : inputSpectrumString);
                     String searchErrorMessage = get();
+                    AnalyseData.getInstance().getTasksModel().set(new Task(inputSpectrum.getFileName(), "Create Identifications", "Complete"));
+                    TasksTab.getInstance().refreshFromTasksModel();
                     if (searchErrorMessage == null) {
                         AnalyseData data = AnalyseData.getInstance();
                         for (int i = 0; i < data.getRawDataCount(); i++) {

@@ -17,6 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.SwingWorker;
 import org.proteosuite.gui.inspect.InspectTab;
+import org.proteosuite.gui.tasks.TasksTab;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 /**
@@ -69,6 +70,9 @@ public class RawMzMLFile extends RawDataFile {
 
     @Override
     protected void initiateLoading() {
+        AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Load Raw Data"));
+        TasksTab.getInstance().refreshFromTasksModel();
+        
         ExecutorService executor = AnalyseData.getInstance().getExecutor();        
         SwingWorker<MzMLUnmarshaller, Void> mzMLWorker = new SwingWorker<MzMLUnmarshaller, Void>() {
             @Override
@@ -82,6 +86,8 @@ public class RawMzMLFile extends RawDataFile {
                     unmarshaller = get();
                     AnalyseData.getInstance().getInspectModel().addRawDataFile(RawMzMLFile.this);
                     InspectTab.getInstance().refreshComboBox();
+                    AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Load Raw Data", "Complete"));
+                    TasksTab.getInstance().refreshFromTasksModel();
                     System.out.println("Done loading mzML file.");
                 } catch (InterruptedException ex) {
                     System.out.println("Interrupted exception loading mzML file: " + ex.getLocalizedMessage());
