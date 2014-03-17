@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.proteosuite.ProteoSuiteView;
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.RawMzMLFile;
@@ -28,14 +29,18 @@ public class AddRawDataListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
         AnalyseData data = AnalyseData.getInstance();
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser(ProteoSuiteView.sPreviousLocation);
         FileNameExtensionFilter mzML_filter = new FileNameExtensionFilter(
         "mzML Data Files", "mzML", "mzML");
         chooser.setMultiSelectionEnabled(true);
         chooser.setFileFilter(mzML_filter);
         int returnVal = chooser.showOpenDialog(step);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File[] files = chooser.getSelectedFiles();            
+            File[] files = chooser.getSelectedFiles(); 
+            if (!files[0].getParent().equals(ProteoSuiteView.sPreviousLocation)) {
+                ProteoSuiteView.sPreviousLocation = files[0].getParent();
+            }
+            
             for (File f : files) {
                 data.addRawDataFile(new RawMzMLFile(f));               
             }

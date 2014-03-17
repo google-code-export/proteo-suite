@@ -78,8 +78,8 @@ public class XTrackerITRAQWrapper {
         System.out.println(sysUtils.getTime()
                 + " - Generating files for the pipeline ...");
         
-        if (sFile.equals("New")) {
-            sFile = "test.mzq"; 
+        if (sFile.equals("New") || sFile.equals("")) {
+            sFile = "output.mzq"; 
             
             ProteoSuiteView.sProjectName = sFile;
         }
@@ -87,10 +87,7 @@ public class XTrackerITRAQWrapper {
         // Generate mzq file
         System.out.println(sysUtils.getTime() + " - Generating mzq file ...");
         
-        boolean isOK = QuantUtils.writeMzQuantML(technique, sFile, rawData);
-        if (!isOK) {
-            return false;
-        }
+        QuantUtils.writeMzQuantML(technique, sFile, rawData);        
 
         // Unmarshall mzquantml file
         Validator validator = XMLparser.getValidator(MZQ_XSD);
@@ -109,14 +106,15 @@ public class XTrackerITRAQWrapper {
     /**
      * Write xTrackerMain based on the technique
      *     
+     * @param technique The technique used.
      */
     public void writeXTrackerFiles(String technique) {
 
-		// ... Based on the technique, select the plugins that are available to
+	// ... Based on the technique, select the plugins that are available to
         // perform the quantitation ...//
         String[] sPipeline = PluginManager.getPlugins(technique, rawData.get(0).getFormat(), "mzIdentML", "mzQuantML");
 
-		// ... xTracker consists of 4 main plugins (read more on
+	// ... xTracker consists of 4 main plugins (read more on
         // www.x-tracker.info) ...//
         writeXTrackerIdent(technique, sPipeline[0]);
         writeXTrackerRaw(sPipeline[1]);

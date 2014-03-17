@@ -19,7 +19,7 @@ public class LeftColumnAndTabbedPanel extends JPanel {
     public LeftColumnAndTabbedPanel() {
         layout = new BoxLayout(this, BoxLayout.X_AXIS);
         setLayout(layout);
-        add(new ProjectAndOngoingTasksPanel());
+        //add(new ProjectAndOngoingTasksPanel());
         add(new TabbedMainPanel());
     }
 }

@@ -14,10 +14,10 @@ import java.io.File;
  */
 public abstract class IdentDataFile {
     protected File file;
-    private String loadingStatus = "Loading...";
+    private String loadingStatus = "Done";
     public IdentDataFile(File file) {
         this.file = file;
-        initiateLoading();
+        //initiateLoading();
     }
     
     public String getLoadingStatus() {

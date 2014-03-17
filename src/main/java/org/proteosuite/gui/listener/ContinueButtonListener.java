@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.analyse.DefineConditionsStep;
+import org.proteosuite.gui.analyse.ITRAQStep;
 import org.proteosuite.gui.analyse.LabelFreeStep;
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
 import org.proteosuite.gui.tables.DefineConditionsTable;
@@ -72,14 +73,17 @@ public class ContinueButtonListener implements ActionListener {
             ((CreateOrLoadIdentificationsStep) AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP).refreshFromData();
             parent.moveToStep(AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP);
         } else if (panel instanceof CreateOrLoadIdentificationsStep) {
-            if (data.getMultiplexing().equals("None (label-free)")) {
-                ((LabelFreeStep) AnalyseDynamicTab.LABEL_FREE_STEP).refreshFromData();
-                parent.moveToStep(AnalyseDynamicTab.LABEL_FREE_STEP);
-            } else if (data.getMultiplexing().equals("iTRAQ 4-plex")) {
-                ((LabelFreeStep) AnalyseDynamicTab.ITRAQ_STEP).refreshFromData();
-                parent.moveToStep(AnalyseDynamicTab.ITRAQ_STEP);
-            } else if (data.getMultiplexing().equals("iTRAQ 8-plex")) {
-            
+            switch (data.getMultiplexing()) {
+                case "None (label-free)":
+                    ((LabelFreeStep) AnalyseDynamicTab.LABEL_FREE_STEP).refreshFromData();
+                    parent.moveToStep(AnalyseDynamicTab.LABEL_FREE_STEP);
+                    break;
+                case "iTRAQ 4-plex":
+                    ((ITRAQStep) AnalyseDynamicTab.ITRAQ_STEP).refreshFromData();
+                    parent.moveToStep(AnalyseDynamicTab.ITRAQ_STEP);
+                    break;
+                case "iTRAQ 8-plex":
+                    break;
             }
         }
     }

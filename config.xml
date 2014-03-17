@@ -9,6 +9,7 @@
                 <pluginsLoadIdentFilesList>
                     <pluginLoadIdentFiles id="mascot_xml" type="LoadIdent" value="loadMascotIdent" desc="Plugin for loading Mascot XML files" />
                     <pluginLoadIdentFiles id="mzid" type="LoadIdent" value="loadMzIdentML" desc="Plugin for loading mzIdentML files" />
+		    <pluginLoadIdentFiles id="mzIdentML" type="LoadIdent" value="loadMzIdentML" desc="Plugin for loading mzIdentML files" />
                 </pluginsLoadIdentFilesList>
                 <pluginsLoadRawFilesList>
                     <pluginLoadRawFiles id="mgf" type="LoadRaw" value="loadRawMGF" desc="Plugin for loading Mascot Generic Format files" />
@@ -21,6 +22,7 @@
                 </pluginsQuantitationList>
                 <pluginsOutputList>
                     <pluginOutput id="mzq" type="Output" value="outputMZQ" desc="Plugin to display results as mzQuantML" />
+		    <pluginOutput id="mzQuantML" type="Output" value="outputMZQ" desc="Plugin to display results as mzQuantML" />
                     <pluginOutput id="csv" type="Output" value="outputCSV" desc="Plugin to display results as CSV" />
                 </pluginsOutputList>
             </plugins>
