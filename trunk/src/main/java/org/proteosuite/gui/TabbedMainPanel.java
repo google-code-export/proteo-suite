@@ -19,6 +19,6 @@ public class TabbedMainPanel extends JTabbedPane {
     public TabbedMainPanel() {
         addTab("Analyse", null, new AnalyseDynamicTab(), "Analyse your data using our pipeline.");
         addTab("Inspect", null, InspectTab.getInstance(), "Inspect your data.");
-        addTab("Tasks", null, new TasksTab(), "View currently running analyses.");
+        addTab("Tasks", null, TasksTab.getInstance(), "View currently running analyses.");
     }
 }

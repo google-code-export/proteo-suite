@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import javax.swing.SwingWorker;
 import org.proteosuite.gui.inspect.InspectTab;
+import org.proteosuite.gui.tasks.TasksTab;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 
 /**
@@ -31,6 +32,9 @@ public class MzIdentMLFile extends IdentDataFile {
     
     @Override
     protected void initiateLoading() {
+        AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Loading Identifications"));
+        TasksTab.getInstance().refreshFromTasksModel();
+        
         ExecutorService executor = AnalyseData.getInstance().getExecutor();
         SwingWorker<MzIdentMLUnmarshaller, Void> mzIdentMLWorker = new SwingWorker<MzIdentMLUnmarshaller, Void>() {
             @Override
@@ -44,6 +48,10 @@ public class MzIdentMLFile extends IdentDataFile {
                     unmarshaller = get();
                     AnalyseData.getInstance().getInspectModel().addIdentDataFile(MzIdentMLFile.this);
                     InspectTab.getInstance().refreshComboBox();
+                    
+                    AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Loading Identifications", "Complete"));
+                    TasksTab.getInstance().refreshFromTasksModel();
+                    
                     System.out.println("Done loading mzIdentML file.");
                 } catch (InterruptedException ex) {                    
                     System.out.println("Interrupted exception: " + ex.getLocalizedMessage());
