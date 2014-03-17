@@ -96,7 +96,7 @@ public class ChartSpectrum {
             JPanel spectrumPanel = null;
             if (mz.length != 0 && intensities.length != 0) {
                 spectrumPanel = new SpectrumPanel(mz, intensities, parIonMz,
-                    Integer.toString(parCharge), sID, 50, false, true, true,
+                    Integer.toString(parCharge), sID, 50, true, true,
                     true, Integer.parseInt(mslevel));
             spectrumPanel.setSize(new Dimension(600, 400));
             spectrumPanel.setPreferredSize(new Dimension(600, 400));
