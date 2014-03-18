@@ -109,10 +109,13 @@ public class InspectTab extends JPanel implements ListSelectionListener {
 		if (listSelectionModel.getAnchorSelectionIndex() == -1)
 			return;
 		
-		RawMzMLFile rawMzMLFile = (RawMzMLFile) inspectModel.getRawDataFile(getSelectedFile());		
-		String sID = (String) getTablePanel().getValueAt(listSelectionModel.getAnchorSelectionIndex(), 1);
-
-		SpectrumPanel specPanel = (SpectrumPanel) ChartSpectrum.getSpectrum(rawMzMLFile.getUnmarshaller(), sID);
-		chartPanel.setSpectrum(specPanel);
+		if (inspectModel.isRawDataFile(getSelectedFile()))
+		{
+			RawMzMLFile rawMzMLFile = (RawMzMLFile) inspectModel.getRawDataFile(getSelectedFile());		
+			String sID = (String) getTablePanel().getValueAt(listSelectionModel.getAnchorSelectionIndex(), 1);
+	
+			SpectrumPanel specPanel = (SpectrumPanel) ChartSpectrum.getSpectrum(rawMzMLFile.getUnmarshaller(), sID);
+			chartPanel.setSpectrum(specPanel);
+		}
 	}
 }

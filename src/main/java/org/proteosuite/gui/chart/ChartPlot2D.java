@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.swing.JPanel;
 
 import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.model.RawMzMLFile;
 import org.proteosuite.utils.TwoDPlot;
 
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
@@ -125,5 +126,10 @@ public class ChartPlot2D {
 				+ iCounter + " elements.");
 
 		return TwoDPlot.getTwoDPlot(mz, intensities, art);
+	}
+
+	public static JPanel get2DPlot(RawMzMLFile dataFile) {
+		
+		return get2DPlot(dataFile.getUnmarshaller());
 	}
 }
