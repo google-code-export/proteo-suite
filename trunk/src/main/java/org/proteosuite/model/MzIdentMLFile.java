@@ -36,16 +36,16 @@ public class MzIdentMLFile extends IdentDataFile {
         TasksTab.getInstance().refreshFromTasksModel();
         
         ExecutorService executor = AnalyseData.getInstance().getExecutor();
-        SwingWorker<MzIdentMLUnmarshaller, Void> mzIdentMLWorker = new SwingWorker<MzIdentMLUnmarshaller, Void>() {
+        SwingWorker<Void, Void> mzIdentMLWorker = new SwingWorker<Void, Void>() {
             @Override
-            protected MzIdentMLUnmarshaller doInBackground() {
-                return new MzIdentMLUnmarshaller(file);
+            protected Void doInBackground() {                
+                return null;
             }
             
             @Override
             protected void done() {
                 try {
-                    unmarshaller = get();
+                    get();
                     AnalyseData.getInstance().getInspectModel().addIdentDataFile(MzIdentMLFile.this);
                     InspectTab.getInstance().refreshComboBox();
                     

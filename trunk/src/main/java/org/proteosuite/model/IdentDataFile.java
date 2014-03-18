@@ -17,7 +17,7 @@ public abstract class IdentDataFile {
     private String loadingStatus = "Done";
     public IdentDataFile(File file) {
         this.file = file;
-        //initiateLoading();
+        initiateLoading();
     }
     
     public String getLoadingStatus() {

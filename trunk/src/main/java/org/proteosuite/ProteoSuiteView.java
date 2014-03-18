@@ -49,6 +49,7 @@ public class ProteoSuiteView extends JFrame {
     private final IdentParamsView identParamsExecute;   
 
     public ProteoSuiteView() {             
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         System.out.println("User dir: " + System.getProperty("user.dir"));
 
