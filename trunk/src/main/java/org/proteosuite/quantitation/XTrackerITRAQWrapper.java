@@ -346,7 +346,7 @@ public class XTrackerITRAQWrapper {
                 // configurations ...//
                 expr = xpath
                         .compile("/ProteoSuiteApplication/configSettings/quantParamSettings/techniques/technique[@id='iTRAQ']/AssayParamList/RawFile[@id='"
-                                + rawData.get(0).getFileName());//jtRawFiles.getValueAt(iJ, 0) + "']");
+                                + rawData.get(0).getFileName() + "']");
                 nodes = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
 
                 // ... Assay Parameters (Labels) ...//
@@ -422,13 +422,7 @@ public class XTrackerITRAQWrapper {
             for (int iI = 0; iI < nodes.getLength(); iI++) {
                 alFastaFiles.add(nodes.item(iI).getTextContent());
             }
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XPathExpressionException e) {
+        } catch (ParserConfigurationException | SAXException | IOException | XPathExpressionException e) {
             e.printStackTrace();
         }
 
