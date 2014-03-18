@@ -31,8 +31,25 @@ public class OpenMSLabelFreeWrapper {
     private List<RawDataFile> rawDataFiles;
     private CountDownLatch featureFinderCentroidedLatch;
     private CountDownLatch mapAlignerPoseClusteringLatch;
+    private static String exeLocation;
 
     public OpenMSLabelFreeWrapper(List<RawDataFile> rawDataFiles) {
+        String operatingSystemType = System.getProperty("os.name");
+        if (operatingSystemType.startsWith("Windows")) {
+            if (System.getenv("ProgramFiles(x86)") != null) {
+                exeLocation = getClass().getClassLoader().getResource("lib/openms/win64").getFile();
+            } else {
+                exeLocation = getClass().getClassLoader().getResource("lib/openms/win32").getFile();
+            }
+        } else {
+            String linuxVersion = org.proteosuite.jopenms.util.Utils.getLinuxVersion();
+            if (linuxVersion.contains("x86_64") || linuxVersion.contains("ia64")) {
+                exeLocation = getClass().getClassLoader().getResource("lib/openms/linux64").getFile();
+            } else {
+                exeLocation = getClass().getClassLoader().getResource("lib/openms/linux32").getFile();
+            }
+        }
+        
         this.executor = AnalyseData.getInstance().getExecutor();
         this.rawDataFiles = rawDataFiles;
         featureFinderCentroidedLatch = new CountDownLatch(rawDataFiles.size());
