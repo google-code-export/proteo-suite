@@ -15,8 +15,12 @@ import java.util.HashMap;
  */
 public abstract class RawDataFile {
     protected File file;
+    protected boolean[] peakPicking = {false, false};
+    protected boolean peakPickingChecked;
+    protected int spectraCount;
+    protected boolean spectraCountChecked;
     private HashMap<String, String> assayConditions = new HashMap<String, String>();
-    private IdentDataFile identFile = null;    
+    private IdentDataFile identFile = null;
     public RawDataFile(File file) {
         this.file = file;        
         initiateLoading();
@@ -54,6 +58,7 @@ public abstract class RawDataFile {
     
     public abstract String getFormat();
     public abstract int getSpectraCount();
+    public abstract boolean[] getPeakPicking();    
     
     public String getFileName() {
         return file.getName();

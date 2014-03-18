@@ -31,7 +31,8 @@ public class RawDataAndMultiplexingTable extends JTable {
         model.addColumn("File Size (MB)");
         model.addColumn("Format");
         model.addColumn("Instrument");
-        model.addColumn("Peak-picked?");
+        model.addColumn("MS1 Peak-picked?");
+        model.addColumn("MS2 Peak-picked?");
         model.addColumn("Spectra");
         setModel(model);        
 
@@ -39,7 +40,10 @@ public class RawDataAndMultiplexingTable extends JTable {
     }
 
     public void addRawFileRow(RawDataFile rawDataFile) {
-        model.addRow(new Object[]{rawDataFile.getFileName(), rawDataFile.getFileSize(), rawDataFile.getFormat(), "QTOF", "Yes", rawDataFile.getSpectraCount()});        
+        boolean[] peakPicked = rawDataFile.getPeakPicking();
+        String ms1PeakPicked = peakPicked[0] ? "Yes" : "No";
+        String ms2PeakPicked = peakPicked[1] ? "Yes" : "No";
+        model.addRow(new Object[]{rawDataFile.getFileName(), rawDataFile.getFileSize(), rawDataFile.getFormat(), "QTOF", ms1PeakPicked, ms2PeakPicked, rawDataFile.getSpectraCount()});        
     }
 
     public void clear() {

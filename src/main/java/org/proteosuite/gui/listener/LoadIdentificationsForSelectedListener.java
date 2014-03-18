@@ -21,10 +21,10 @@ import org.proteosuite.model.MzIdentMLFile;
  */
 public class LoadIdentificationsForSelectedListener implements ActionListener {
 
-    private CreateOrLoadIdentificationsStep step;    
+    private CreateOrLoadIdentificationsStep step;
 
     public LoadIdentificationsForSelectedListener(CreateOrLoadIdentificationsStep step) {
-        this.step = step;       
+        this.step = step;
     }
 
     @Override
@@ -37,21 +37,37 @@ public class LoadIdentificationsForSelectedListener implements ActionListener {
 
         AnalyseData data = AnalyseData.getInstance();
         JFileChooser chooser = new JFileChooser(ProteoSuiteView.sPreviousLocation);
-        chooser.setMultiSelectionEnabled(false);
+        chooser.setMultiSelectionEnabled(true);
         int returnVal = chooser.showOpenDialog(step);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = chooser.getSelectedFile();
-            if (!file.getParent().equals(ProteoSuiteView.sPreviousLocation)) {
-                ProteoSuiteView.sPreviousLocation = file.getParent();
+            File[] files = chooser.getSelectedFiles();
+
+            if (!files[0].getParent().equals(ProteoSuiteView.sPreviousLocation)) {
+                ProteoSuiteView.sPreviousLocation = files[0].getParent();
             }
             
-            MzIdentMLFile mzIdentML = new MzIdentMLFile(file);
-            for (int i : selectedRawFiles) {                
-                data.getRawDataFile(i).setIdentificationDataFile(mzIdentML);                
-            }
+            if (files.length < 2) {
+                MzIdentMLFile mzIdentML = new MzIdentMLFile(files[0]);
+                for (int i : selectedRawFiles) {
+                    data.getRawDataFile(i).setIdentificationDataFile(mzIdentML);
+                }
+            } else {
+                for (File file : files) {
+                    for (int i : selectedRawFiles) {
+                        if (stripExtension(data.getRawDataFile(i).getAbsoluteFileName()).equals(stripExtension(file.getAbsolutePath()))) {
+                            data.getRawDataFile(i).setIdentificationDataFile(new MzIdentMLFile(file));
+                            break;
+                        }
+                    }
+                }
+            }            
         }
 
         step.refreshFromData();
+    }
+    
+    public String stripExtension(String fileName) {
+        return fileName.replaceAll("\\.[^\\.]+$", "").replace("_msgfplus", "");
     }
 
 }
