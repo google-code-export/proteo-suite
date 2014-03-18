@@ -29,6 +29,7 @@ public class JTableMzML extends JTableDefault {
 
 	public JTableMzML() {
 		reset();
+		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	}
 
 	public void showData(RawMzMLFile mzml) {
@@ -39,9 +40,7 @@ public class JTableMzML extends JTableDefault {
 			return;
 		}
 		else
-		{
 			cache.put(mzml, model);
-		}
 			
 		MzMLUnmarshaller unmarshaller = mzml.getUnmarshaller();
 
@@ -85,20 +84,20 @@ public class JTableMzML extends JTableDefault {
 			}
 			PrecursorList plist = spectrum.getPrecursorList();
 			// Get precursor ion
-			float precursMZ = 0.0f;
+			float precursMz = 0.0f;
 			if (plist != null && plist.getCount().intValue() == 1) {
 				// Detect parent ion m/z and charge
 				for (CVParam lCVParam : plist.getPrecursor().get(0)
 						.getSelectedIonList().getSelectedIon().get(0)
 						.getCvParam()) {
 					if (lCVParam.getAccession().equals("MS:1000744")) {
-						precursMZ = Float
+						precursMz = Float
 								.parseFloat(lCVParam.getValue().trim());
 					}
 				}
 			}
 
-			if (precursMZ > 0.0) {
+			if (precursMz > 0.0) {
 				model.insertRow(
 						model.getRowCount(),
 						new Object[] {
@@ -110,7 +109,7 @@ public class JTableMzML extends JTableDefault {
 								Float.parseFloat(String.format("%.2f",
 										basePeakInt)),
 								Float.parseFloat(String.format("%.2f", rt)),
-								String.format("%.4f", precursMZ) });
+								String.format("%.4f", precursMz) });
 			} else {
 				model.insertRow(
 						model.getRowCount(),
@@ -173,8 +172,5 @@ public class JTableMzML extends JTableDefault {
 		model.addColumn("RT (sec)");
 		model.addColumn("Precurs m/z");
 		setModel(model);
-
-		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	}
-
 }

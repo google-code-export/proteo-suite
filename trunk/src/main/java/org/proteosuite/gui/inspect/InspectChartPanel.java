@@ -9,6 +9,7 @@ package org.proteosuite.gui.inspect;
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 /**
@@ -18,6 +19,7 @@ import javax.swing.JTabbedPane;
 public class InspectChartPanel extends JTabbedPane {
     private ChromatogramPanel chromPanel;
     private SpectrumPanel specPanel;
+    private JPanel chartPanel;
     
     public void setChromatogram(ChromatogramPanel chromPanel) {
         this.chromPanel = chromPanel;
@@ -27,6 +29,11 @@ public class InspectChartPanel extends JTabbedPane {
     public void setSpectrum(SpectrumPanel specPanel) {
         this.specPanel = specPanel;
         refreshTabView(1);
+    }
+    
+    public void set2D(JPanel chartPanel) {
+        this.chartPanel = chartPanel;
+        refreshTabView(2);
     }
     
     public void refreshTabView(int index) {
@@ -39,6 +46,11 @@ public class InspectChartPanel extends JTabbedPane {
         
         if (specPanel != null)
             addTab("Spectrum", specPanel);
+        else
+        	index--;
+        
+        if (chartPanel != null)
+            addTab("2D", chartPanel);
         
         setSelectedIndex(index);
         

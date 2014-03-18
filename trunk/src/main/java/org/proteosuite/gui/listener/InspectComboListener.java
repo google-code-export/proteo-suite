@@ -7,6 +7,7 @@ import java.awt.event.ItemListener;
 import javax.swing.JTable;
 
 import org.proteosuite.gui.chart.ChartChromatogram;
+import org.proteosuite.gui.chart.ChartPlot2D;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.tables.JTableMzML;
 import org.proteosuite.model.AnalyseData;
@@ -40,6 +41,7 @@ public class InspectComboListener implements ItemListener {
             //InspectTab.getInstance().getTablePanel().setTable(rawData);
             rawData.getSelectionModel().addListSelectionListener(InspectTab.getInstance());
             InspectTab.getInstance().getChartPanel().setChromatogram(ChartChromatogram.getChromatogram((RawMzMLFile)dataFile));
+            InspectTab.getInstance().getChartPanel().set2D(ChartPlot2D.get2DPlot((RawMzMLFile)dataFile));
         } else if (inspectModel.isIdentFile(fileChosen)) {
             // Open mzIdentMLViewer.
         } else if (inspectModel.isQuantFile(fileChosen)) {
