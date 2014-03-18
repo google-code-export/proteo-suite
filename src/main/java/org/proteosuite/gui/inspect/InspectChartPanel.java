@@ -8,23 +8,16 @@ package org.proteosuite.gui.inspect;
 
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
-import javax.swing.JPanel;
+
 import javax.swing.JTabbedPane;
 
 /**
  *
  * @author SPerkins
  */
-public class InspectChartPanel extends JPanel {
-	
-    private final JTabbedPane tabbedPane;
+public class InspectChartPanel extends JTabbedPane {
     private ChromatogramPanel chromPanel;
     private SpectrumPanel specPanel;
-    
-    public InspectChartPanel() {
-        super();
-        tabbedPane = new JTabbedPane();
-    }
     
     public void setChromatogram(ChromatogramPanel chromPanel) {
         this.chromPanel = chromPanel;
@@ -38,20 +31,17 @@ public class InspectChartPanel extends JPanel {
     
     public void refreshTabView(int index) {
         removeAll();
-        tabbedPane.removeAll();
         if (chromPanel != null) {
-            tabbedPane.addTab("Chromatogram", chromPanel);
+            addTab("Chromatogram", chromPanel);
         }
         else
         	index--;
         
-        if (specPanel != null) {
-            tabbedPane.addTab("Spectrum", specPanel);
-        }
+        if (specPanel != null)
+            addTab("Spectrum", specPanel);
         
-        tabbedPane.setSelectedIndex(index);
+        setSelectedIndex(index);
         
-        add(tabbedPane);
         repaint();
     }
 }
