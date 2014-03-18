@@ -1,11 +1,15 @@
 package org.proteosuite.gui.inspect;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -29,23 +33,39 @@ public class InspectTab extends JPanel implements ListSelectionListener {
 	private final JComboBox<String> dataFileComboBox = new JComboBox<String>();
 	private final InspectModel inspectModel = AnalyseData.getInstance().getInspectModel();
 	private static InspectTab instance = null;
-	private final InspectTablePanel tablePanel = new InspectTablePanel();
+	//private final InspectTablePanel tablePanel = new InspectTablePanel();
 	private final InspectChartPanel chartPanel = new InspectChartPanel();
+	private final JTable jTable = new JTable();
 
 	private InspectTab() {
 		setLayout(layout);
 
 		dataFileComboBox.addItemListener(new InspectComboListener());
 		
+		add(getHeaderPanel(), BorderLayout.PAGE_START);
+		add(getBodyPanel(), BorderLayout.CENTER);
+	}
+	
+	private Component getBodyPanel() {
+		JPanel body = new JPanel();
+		body.setLayout(new GridLayout(1, 2));
+		body.add(chartPanel);
+		body.add(new JScrollPane(jTable));
+		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		jTable.getSelectionModel().addListSelectionListener(this);
+		jTable.setAutoCreateRowSorter(true);
+		
+		return body;
+	}
+
+	public Component getHeaderPanel()
+	{
 		JPanel inspectHeader = new JPanel();
 		inspectHeader.setLayout(new FlowLayout());
-		inspectHeader.add(new JLabel("Select data file: "));		
+		inspectHeader.add(new JLabel("Select data file: "));
 		inspectHeader.add(dataFileComboBox);
-
-		add(inspectHeader, BorderLayout.PAGE_START);
-
-		add(tablePanel, BorderLayout.EAST);		
-		add(chartPanel, BorderLayout.CENTER);
+		
+		return inspectHeader;
 	}
 
 	public static InspectTab getInstance() {
@@ -56,8 +76,8 @@ public class InspectTab extends JPanel implements ListSelectionListener {
 		return instance;
 	}
 
-	public InspectTablePanel getTablePanel() {
-		return tablePanel;
+	public JTable getTablePanel() {
+		return jTable;
 	}
 
 	public InspectChartPanel getChartPanel() {
@@ -77,7 +97,6 @@ public class InspectTab extends JPanel implements ListSelectionListener {
 		for (IdentDataFile identFile : inspectModel.getIdentData()) {
 			dataFileComboBox.addItem(identFile.getFileName());
 		}
-
 	}
 
 	@Override
@@ -87,8 +106,11 @@ public class InspectTab extends JPanel implements ListSelectionListener {
 		
 		ListSelectionModel listSelectionModel = (ListSelectionModel) listSelectionEvent.getSource();
 
+		if (listSelectionModel.getAnchorSelectionIndex() == -1)
+			return;
+		
 		RawMzMLFile rawMzMLFile = (RawMzMLFile) inspectModel.getRawDataFile(getSelectedFile());		
-		String sID = (String) getTablePanel().getTable().getValueAt(listSelectionModel.getAnchorSelectionIndex(), 1);
+		String sID = (String) getTablePanel().getValueAt(listSelectionModel.getAnchorSelectionIndex(), 1);
 
 		SpectrumPanel specPanel = (SpectrumPanel) ChartSpectrum.getSpectrum(rawMzMLFile.getUnmarshaller(), sID);
 		chartPanel.setSpectrum(specPanel);

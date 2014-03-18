@@ -3,6 +3,9 @@ package org.proteosuite.gui.listener;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+
+import javax.swing.JTable;
+
 import org.proteosuite.gui.chart.ChartChromatogram;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.tables.JTableMzML;
@@ -29,7 +32,12 @@ public class InspectComboListener implements ItemListener {
             RawDataFile dataFile = inspectModel.getRawDataFile(fileChosen);
             JTableMzML rawData = new JTableMzML();
             rawData.showData((RawMzMLFile)dataFile);
-            InspectTab.getInstance().getTablePanel().setTable(rawData);
+            
+            JTable jTable = InspectTab.getInstance().getTablePanel();
+        	jTable.removeAll();
+            jTable.setModel(rawData.getModel());
+            
+            //InspectTab.getInstance().getTablePanel().setTable(rawData);
             rawData.getSelectionModel().addListSelectionListener(InspectTab.getInstance());
             InspectTab.getInstance().getChartPanel().setChromatogram(ChartChromatogram.getChromatogram((RawMzMLFile)dataFile));
         } else if (inspectModel.isIdentFile(fileChosen)) {

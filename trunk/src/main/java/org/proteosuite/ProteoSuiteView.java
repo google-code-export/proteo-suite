@@ -55,10 +55,10 @@ public class ProteoSuiteView extends JFrame {
         // Load parameter settings
         identParamsExecute = new IdentParamsView("execute");              
 
-        initComponents();
+        add(new LeftColumnAndTabbedPanel(), BorderLayout.CENTER);
 
-        // Project default settings
-        initProjectValues();
+        // ISO 3166 country code - GB
+        Locale.setDefault(new Locale("en", "GB"));   
 
         updateTitle();
 
@@ -87,11 +87,6 @@ public class ProteoSuiteView extends JFrame {
         pack();
     }
 
-    private void initComponents() {
-        add(new LeftColumnAndTabbedPanel(), BorderLayout.CENTER);
-        pack();
-    } 
-
     /**
      * Update window title main project
      */
@@ -99,24 +94,7 @@ public class ProteoSuiteView extends JFrame {
         setTitle("ProteoSuite " + PROTEOSUITE_VERSION + " - <Project: "
                 + WORKSPACE.getWorkSpace() + " - " + sProjectName
                 + ">      http://www.proteosuite.org");
-    }       
-
-    /**
-     * Initialise project settings (all modules)
-     *
-     * @param jlFileNameMzMLText
-     * @param jlFileNameMzIDText
-     * @param jlIdentFilesStatus
-     * @param jlFileNameMzQText
-     * @param jtRawData
-     * @param jtpProperties
-     * @param void
-     * @return void
-     */
-    private void initProjectValues() {
-        // ISO 3166 country code - GB
-        Locale.setDefault(new Locale("en", "GB"));        
-    }   
+    }
 
     /**
      * Main
@@ -131,7 +109,7 @@ public class ProteoSuiteView extends JFrame {
 
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    // UIManager.setLookAndFeel(info.getClassName());
+                    UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
