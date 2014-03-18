@@ -33,6 +33,9 @@ public class ITRAQReagent {
         return mz;
     }
     
+    public double[] getCorrectionFactors() {
+        return correctionFactors;
+    }
     
 
     public static ITRAQReagent getReagent(boolean fourPlex, String simpleName) {

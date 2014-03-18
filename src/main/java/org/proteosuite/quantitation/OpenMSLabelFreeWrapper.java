@@ -31,7 +31,7 @@ public class OpenMSLabelFreeWrapper {
     private List<RawDataFile> rawDataFiles;
     private CountDownLatch featureFinderCentroidedLatch;
     private CountDownLatch mapAlignerPoseClusteringLatch;
-    private static String exeLocation;
+    private static String exeLocation = "";
 
     public OpenMSLabelFreeWrapper(List<RawDataFile> rawDataFiles) {
         String operatingSystemType = System.getProperty("os.name");
@@ -85,7 +85,7 @@ public class OpenMSLabelFreeWrapper {
             protected Void doInBackground(){
                 try {
                     Thread.sleep(executionDelay * 1000);
-                    JOpenMS.performOpenMSTask("FeatureFinderCentroided", Arrays.asList(inputDataFile.getAbsoluteFileName()), Arrays.asList(outputFile));
+                    JOpenMS.performOpenMSTask(exeLocation, "FeatureFinderCentroided", Arrays.asList(inputDataFile.getAbsoluteFileName()), Arrays.asList(outputFile));
                 
                     featureFinderCentroidedLatch.countDown();
                 } catch (NullPointerException | InterruptedException n) {
@@ -117,7 +117,7 @@ public class OpenMSLabelFreeWrapper {
             protected Void doInBackground() {
                 try {
                     featureFinderCentroidedLatch.await();
-                    JOpenMS.performOpenMSTask("MapAlignerPoseClustering", inputFiles, outputFiles);                    
+                    JOpenMS.performOpenMSTask(exeLocation, "MapAlignerPoseClustering", inputFiles, outputFiles);                    
                     mapAlignerPoseClusteringLatch.countDown();                    
                 } catch (InterruptedException ex) {
 
@@ -149,7 +149,7 @@ public class OpenMSLabelFreeWrapper {
             protected Void doInBackground() {
                 try {
                 mapAlignerPoseClusteringLatch.await();
-                JOpenMS.performOpenMSTask("FeatureLinkerUnlabeledQT", inputFiles, Arrays.asList(outputFile));
+                JOpenMS.performOpenMSTask(exeLocation, "FeatureLinkerUnlabeledQT", inputFiles, Arrays.asList(outputFile));
                 } catch (InterruptedException ex) {
                 
                 }
