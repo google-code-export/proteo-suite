@@ -152,13 +152,19 @@ public class JOpenMS {
         }
     }
 
-    public static void performOpenMSTask(String openMSCommand, List<String> inputFiles, List<String>outputFiles) {
+    public static void performOpenMSTask(String exeLocation, String openMSCommand, List<String> inputFiles, List<String>outputFiles) {
         OpenMSExecutable openMSExecutable = OpenMSExecutable.valueOf(openMSCommand);
         OpenMSModule module = new OpenMSModule(openMSExecutable);
         Map cfgMap = new HashMap(module.getCfgMap());
         setConfig(cfgMap, openMSExecutable.getName() + "$1$in", Utils.join(inputFiles));
         setConfig(cfgMap, openMSExecutable.getName() + "$1$out", Utils.join(outputFiles));
         File cfgFile = generateConfigFile(openMSExecutable.getName(), module, cfgMap);
+        if (exeLocation.equals("")) {
+            performOpenMSTask(openMSExecutable.getName(), cfgFile);
+        } else {
+            performOpenMSTask(exeLocation + '\\' + openMSExecutable.getName(), cfgFile); 
+        }
+        
         performOpenMSTask(openMSExecutable.getName(), cfgFile);   
         cfgFile.delete();
     }
