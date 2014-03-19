@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JFileChooser;
 import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.tables.CreateOrLoadIdentificationsTable;
 import org.proteosuite.model.AnalyseData;
@@ -60,7 +61,9 @@ public class LoadIdentificationsForSelectedListener implements ActionListener {
                         }
                     }
                 }
-            }            
+            }   
+            
+            AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setIdentificationsProcessing();
         }
 
         step.refreshFromData();

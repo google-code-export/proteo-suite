@@ -56,6 +56,7 @@ public abstract class RawDataFile {
         return (int)megabytes;
     }
     
+    public abstract boolean isLoaded();
     public abstract String getFormat();
     public abstract int getSpectraCount();
     public abstract boolean[] getPeakPicking();    

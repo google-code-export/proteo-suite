@@ -2,7 +2,6 @@ package org.proteosuite.gui;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -17,7 +16,7 @@ public class ProjectStatus extends JPanel {
 	{
 		JLabel jlQuantFilesStatus = new JLabel(new ImageIcon(getClass()
 				.getClassLoader().getResource("images/empty.gif")));
-		jlQuantFilesStatus.setFont(new Font("Tahoma", 1, 11)); // NOI18N
+		
 		
 		
 		JLabel jlRawFiles = new JLabel("1) Raw Files:");

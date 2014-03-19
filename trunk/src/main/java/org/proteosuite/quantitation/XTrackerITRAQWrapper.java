@@ -43,6 +43,7 @@ public class XTrackerITRAQWrapper {
 
     public void compute() {
         SwingWorker<Void, Void> iTRAQWorker = new SwingWorker<Void, Void>() {
+            @Override
             public Void doInBackground() {
                 generateFiles("iTRAQ");
                 xTracker xtracker = new xTracker(rawData.get(0).getAbsoluteFileName(), rawData.get(0).getFile().getParent());
@@ -327,28 +328,28 @@ public class XTrackerITRAQWrapper {
                 out.write("	<AssayParamList>");
                 out.newLine();
 
-                for (int iI = 0; iI < twoDim.size(); iI++) {
+                for (List<String> twoDimValue : twoDim) {
                     out.write("		<AssayParam>");
                     out.newLine();
-                    List<String> lList = twoDim.get(iI);
-                    out.write("			<AssayName>" + lList.get(0).toString()
+                    
+                    out.write("			<AssayName>" + twoDimValue.get(0)
                             + "</AssayName>");
                     out.newLine();
-                    out.write("			<mzValue>" + lList.get(1).toString()
+                    out.write("			<mzValue>" + twoDimValue.get(1)
                             + "</mzValue>");
                     out.newLine();
                     out.write("			<CorrectionFactors>");
                     out.newLine();
-                    out.write("				<factor deltaMass=\"-2\">" + lList.get(2)
+                    out.write("				<factor deltaMass=\"-2\">" + twoDimValue.get(2)
                             + "</factor>");
                     out.newLine();
-                    out.write("				<factor deltaMass=\"-1\">" + lList.get(3)
+                    out.write("				<factor deltaMass=\"-1\">" + twoDimValue.get(3)
                             + "</factor>");
                     out.newLine();
-                    out.write("				<factor deltaMass=\"+1\">" + lList.get(4)
+                    out.write("				<factor deltaMass=\"+1\">" + twoDimValue.get(4)
                             + "</factor>");
                     out.newLine();
-                    out.write("				<factor deltaMass=\"+2\">" + lList.get(5)
+                    out.write("				<factor deltaMass=\"+2\">" + twoDimValue.get(5)
                             + "</factor>");
                     out.newLine();
                     out.write("			</CorrectionFactors>");
@@ -412,9 +413,8 @@ public class XTrackerITRAQWrapper {
                 out.newLine();
                 out.write("    <fastaFiles>");
                 out.newLine();
-                for (int iI = 0; iI < alFastaFiles.size(); iI++) {
-                    out.write("        <fastaFile>"
-                            + alFastaFiles.get(iI).toString() + "</fastaFile>");
+                for (String alFastaFile : alFastaFiles) {
+                    out.write("        <fastaFile>" + alFastaFile + "</fastaFile>");
                     out.newLine();
                 }
                 out.write("    </fastaFiles>");
@@ -475,6 +475,7 @@ public class XTrackerITRAQWrapper {
                 out.write("</output>");
                 out.newLine();
             }
+            
             out.close();
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());

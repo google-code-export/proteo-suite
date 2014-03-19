@@ -34,5 +34,6 @@ public abstract class IdentDataFile {
     
     public abstract String getFormat();
     
+    public abstract boolean isLoaded();
     protected abstract void initiateLoading();
 }

@@ -17,7 +17,7 @@ import org.proteosuite.gui.tasks.TasksTab;
  */
 public class TabbedMainPanel extends JTabbedPane {
     public TabbedMainPanel() {
-        addTab("Analyse", null, new AnalyseDynamicTab(), "Analyse your data using our pipeline.");
+        addTab("Analyse", null, AnalyseDynamicTab.getInstance(), "Analyse your data using our pipeline.");
         addTab("Inspect", null, InspectTab.getInstance(), "Inspect your data.");
         addTab("Tasks", null, TasksTab.getInstance(), "View currently running analyses.");
     }

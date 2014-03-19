@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import javax.swing.SwingWorker;
+import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.tasks.TasksTab;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
@@ -28,6 +29,15 @@ public class MzIdentMLFile extends IdentDataFile {
     @Override
     public String getFormat() {
         return "mzIdentML";
+    }
+    
+    @Override
+    public boolean isLoaded() {
+        if (file == null) {
+            return false;
+        }
+        
+        return true;
     }
     
     @Override
@@ -51,6 +61,8 @@ public class MzIdentMLFile extends IdentDataFile {
                     
                     AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Loading Identifications", "Complete"));
                     TasksTab.getInstance().refreshFromTasksModel();
+                    
+                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().checkAndUpdateIdentificationsStatus();
                     
                     System.out.println("Done loading mzIdentML file.");
                 } catch (InterruptedException ex) {                    
