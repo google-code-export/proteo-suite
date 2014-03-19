@@ -31,7 +31,7 @@ import org.proteosuite.model.RawDataFile;
 public class RawDataAndMultiplexingStep extends JPanel {
     private static final BorderLayout layout = new BorderLayout();    
     private RawDataAndMultiplexingTable rawDataTable;
-    private JComboBox multiplexingBox;    
+    private JComboBox<String> multiplexingBox;    
     public RawDataAndMultiplexingStep() {
         
         setLayout(layout);
@@ -73,7 +73,7 @@ public class RawDataAndMultiplexingStep extends JPanel {
         
         buttonsPanel.add(new JLabel("Select multiplexing:"));
         
-        multiplexingBox = new JComboBox(new String[]{"iTRAQ 4-plex", "iTRAQ 8-plex", "None", "None (label-free)"});
+        multiplexingBox = new JComboBox<String>(new String[]{"iTRAQ 4-plex", "iTRAQ 8-plex", "None", "None (label-free)"});
         multiplexingBox.setSelectedIndex(2);
         multiplexingBox.addActionListener(new MultiplexingSelectionListener(this));
         buttonsPanel.add(multiplexingBox);
@@ -94,7 +94,7 @@ public class RawDataAndMultiplexingStep extends JPanel {
         return rawDataTable;
     }
     
-    public JComboBox getMultiplexingBox() {
+    public JComboBox<String> getMultiplexingBox() {
         return multiplexingBox;
     }
 }

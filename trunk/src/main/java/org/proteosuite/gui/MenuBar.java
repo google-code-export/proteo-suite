@@ -13,7 +13,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.KeyStroke;
 
 import org.proteosuite.ProteoSuiteView;

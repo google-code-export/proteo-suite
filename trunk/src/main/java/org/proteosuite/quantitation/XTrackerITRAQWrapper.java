@@ -38,7 +38,7 @@ public class XTrackerITRAQWrapper {
 
     public XTrackerITRAQWrapper(List<RawDataFile> rawData) {
         this.rawData = rawData;
-        this.executor = AnalyseData.getInstance().getExecutor();
+        executor = AnalyseData.getInstance().getExecutor();
     }
 
     public void compute() {
