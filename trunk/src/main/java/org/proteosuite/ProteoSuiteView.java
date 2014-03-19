@@ -13,15 +13,23 @@ package org.proteosuite;
 
 
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.proteosuite.gui.*;
+import org.proteosuite.quantitation.OpenMSLabelFreeWrapper;
+import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.SystemUtils;
 
 /**
@@ -86,6 +94,14 @@ public class ProteoSuiteView extends JFrame {
 
         // Configuring exit events
         pack();
+        
+        if (!OpenMSLabelFreeWrapper.checkIsInstalled()) {
+            int result = JOptionPane.showConfirmDialog(this, "You do not appear to have openMS installed.\nYou need to install openMS in able to use the label-free quantiation feature.\n"
+                    + "OpenMS is available at:\nhttp://open-ms.sourceforge.net/\nTo install now, click \"Yes\" to be directed to the openMS web site.", "openMS Not Installed!", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                new OpenURL("http://open-ms.sourceforge.net/");
+            }
+        }
     }
 
     /**

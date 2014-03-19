@@ -81,7 +81,7 @@ public class JOpenMS {
 
         for (OpenMSExecutable omse : OpenMSExecutable.values()) {
 
-            OpenMSModule module = new OpenMSModule(omse);
+            OpenMSModule module = new OpenMSModule(omse, "");
 
             cmdOptions.addOption(OptionBuilder
                     .withDescription(module.getModuleDescription())
@@ -105,7 +105,7 @@ public class JOpenMS {
         try {
             OpenMSExecutable openMSExecutable = OpenMSExecutable.valueOf(openMSCommand);
 
-            module = new OpenMSModule(openMSExecutable);
+            module = new OpenMSModule(openMSExecutable, "");
 
             Options openMSOptions = module.getOptions();
 
@@ -154,20 +154,17 @@ public class JOpenMS {
         }
     }
 
-    public static void performOpenMSTask(String exeLocation, String openMSCommand, List<String> inputFiles, List<String>outputFiles) {
+    public static void performOpenMSTask(String systemExecutableExtension, String openMSCommand, List<String> inputFiles, List<String> outputFiles) {
         OpenMSExecutable openMSExecutable = OpenMSExecutable.valueOf(openMSCommand);
-        OpenMSModule module = new OpenMSModule(exeLocation, openMSExecutable);
+        OpenMSModule module = new OpenMSModule(openMSExecutable, systemExecutableExtension);
         Map<String, Object> cfgMap = new HashMap<String, Object>(module.getCfgMap());
         setConfig(cfgMap, openMSExecutable.getName() + "$1$in", Utils.join(inputFiles));
         setConfig(cfgMap, openMSExecutable.getName() + "$1$out", Utils.join(outputFiles));
         File cfgFile = generateConfigFile(openMSExecutable.getName(), module, cfgMap);
-        if (exeLocation.equals("")) {
-            performOpenMSTask(openMSExecutable.getName(), cfgFile);
-        } else {
-            performOpenMSTask(exeLocation + '\\' + openMSExecutable.getName(), cfgFile); 
-        }
-        
-        performOpenMSTask(openMSExecutable.getName(), cfgFile);   
+
+        performOpenMSTask(openMSExecutable.getName(), cfgFile);
+
+        performOpenMSTask(openMSExecutable.getName(), cfgFile);
         cfgFile.delete();
     }
 
@@ -176,12 +173,12 @@ public class JOpenMS {
         try {
             File dir = new File(System.getProperty("user.dir"));
             newCfgFile = File.createTempFile(command + System.currentTimeMillis(), ".ini", dir);
-            writeConfigFile(module.getUnmarshaller(), module.getMarshaller(), newCfgFile, cfgMap);            
+            writeConfigFile(module.getUnmarshaller(), module.getMarshaller(), newCfgFile, cfgMap);
         } catch (IOException | JAXBException ex) {
             Logger.getLogger(JOpenMS.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println(ex.getLocalizedMessage());
         }
-        
+
         return newCfgFile;
 
     }
