@@ -32,9 +32,8 @@ public class ChartPlot2D {
 		// CheckMemory chm = new
 		// CheckMemory("Before allocating memory for 2D plot");
 		// Display about 27 x 3 = 51 MB maximum for now
-		float[] mz = new float[200000];
-		float[] intensities = new float[200000];
-		float[] art = new float[200000];
+		float[] mz = new float[200_000];
+		float[] art = new float[200_000];
 		// CheckMemory chm2 = new
 		// CheckMemory("After allocating memory for 2D plot");
 
@@ -61,9 +60,8 @@ public class ChartPlot2D {
 			// Identify MS1 data
 			String mslevel = "";
 			for (CVParam lCVParam : spectrumobj.getCvParam()) {
-				if (lCVParam.getAccession().equals("MS:1000511")) {
+				if (lCVParam.getAccession().equals("MS:1000511"))
 					mslevel = lCVParam.getValue().trim();
-				}
 			}
 			if (!mslevel.equals("1"))
 				continue;
@@ -72,19 +70,15 @@ public class ChartPlot2D {
 				Spectrum spectrum = unmarshaller.getSpectrumById(spectrumid);
 				for (CVParam lCVParam : spectrum.getScanList().getScan().get(0)
 						.getCvParam()) {
-					if (lCVParam.getAccession().equals("MS:1000016")) {
-						// Get RT
-						rt = Float.parseFloat(lCVParam.getValue().trim());
-						unitRT = lCVParam.getUnitAccession().trim();
+					if (!lCVParam.getAccession().equals("MS:1000016"))
+						continue;
+					
+					// Get RT
+					rt = Float.parseFloat(lCVParam.getValue().trim());
+					unitRT = lCVParam.getUnitAccession().trim();
 
-						if (unitRT.equals("UO:0000031")) {
-							// Convert RT into seconds
-							rt = Float.parseFloat(lCVParam.getValue().trim());
-							rt *= 60;
-						} else {
-							rt = Float.parseFloat(lCVParam.getValue().trim());
-						}
-					}
+					if (unitRT.equals("UO:0000031"))
+						rt *= 60;
 				}
 				Number[] mzNumbers = null;
 				Number[] intenNumbers = null;
@@ -94,26 +88,31 @@ public class ChartPlot2D {
 				for (BinaryDataArray bda : bdal) {
 					List<CVParam> cvpList = bda.getCvParam();
 					for (CVParam cvp : cvpList) {
-						if (cvp.getAccession().equals("MS:1000514")) {
+						if (cvp.getAccession().equals("MS:1000514"))
 							mzNumbers = bda.getBinaryDataAsNumberArray();
-						}
-						if (cvp.getAccession().equals("MS:1000515")) {
+						
+						if (cvp.getAccession().equals("MS:1000515"))
 							intenNumbers = bda.getBinaryDataAsNumberArray();
-						}
 					}
 				}
 				int iI = 0;
 				while (iI < mzNumbers.length) {
 					// Removing zero values
-					if (intenNumbers[iI].doubleValue() > 0) {
-						if (iCounter < 200000) {
-							mz[iCounter] = mzNumbers[iI].floatValue();
-							intensities[iCounter] = intenNumbers[iI]
-									.floatValue();
-							art[iCounter] = rt;
-							iCounter++;
-						}
+					if (intenNumbers[iI].doubleValue() <= 0.0)
+					{
+						iI += 10;
+						continue;
 					}
+					
+					if (iCounter >= 200_000) {
+						iI += 10;
+						continue;
+					}
+					
+					mz[iCounter] = mzNumbers[iI].floatValue();
+					art[iCounter] = rt;
+					
+					iCounter++;
 					iI += 10;
 				}
 			} catch (MzMLUnmarshallerException ume) {
@@ -125,11 +124,10 @@ public class ChartPlot2D {
 		System.out.println(ProteoSuiteView.SYS_UTILS.getTime() + " - 2D view holding "
 				+ iCounter + " elements.");
 
-		return TwoDPlot.getTwoDPlot(mz, intensities, art);
+		return TwoDPlot.getTwoDPlot(mz, art);
 	}
 
-	public static JPanel get2DPlot(RawMzMLFile dataFile) {
-		
+	public static JPanel get2DPlot(RawMzMLFile dataFile) {		
 		return get2DPlot(dataFile.getUnmarshaller());
 	}
 }
