@@ -37,6 +37,10 @@ public class InspectModel {
     public synchronized void addQuantDataFile(QuantDataFile quantDataFile) {
         quantData.add(quantDataFile);
     }
+    
+    public synchronized List<QuantDataFile> getQuantData() {
+        return quantData;
+    }
 
     public boolean isRawDataFile(String fileName) {
         for (RawDataFile dataFile : rawData) {

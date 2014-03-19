@@ -35,6 +35,7 @@ public class AddRawDataListener implements ActionListener {
         "mzML Data Files", "mzML", "mzML");
         chooser.setMultiSelectionEnabled(true);
         chooser.setFileFilter(mzML_filter);
+        chooser.setAcceptAllFileFilterUsed(false);
         int returnVal = chooser.showOpenDialog(step);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File[] files = chooser.getSelectedFiles(); 

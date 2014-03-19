@@ -156,7 +156,7 @@ public class JOpenMS {
 
     public static void performOpenMSTask(String exeLocation, String openMSCommand, List<String> inputFiles, List<String>outputFiles) {
         OpenMSExecutable openMSExecutable = OpenMSExecutable.valueOf(openMSCommand);
-        OpenMSModule module = new OpenMSModule(openMSExecutable);
+        OpenMSModule module = new OpenMSModule(exeLocation, openMSExecutable);
         Map<String, Object> cfgMap = new HashMap<String, Object>(module.getCfgMap());
         setConfig(cfgMap, openMSExecutable.getName() + "$1$in", Utils.join(inputFiles));
         setConfig(cfgMap, openMSExecutable.getName() + "$1$out", Utils.join(outputFiles));

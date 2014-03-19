@@ -30,22 +30,21 @@ public class ITRAQStep extends JPanel {
         
         JLabel mainText = new JLabel("Your identifications will be automatically created and/or loaded in the background.\n"
                 + "Additionally your raw data files are (or have) been loaded for inspection in the Inspect tab. This tab will"
-                + " also become populated with identification data, and quantitation data after you click confirm below.\n\n"
-                + "Identifications created in Proteosuite are provided by MSGF+.\n"
-                + "Label free  quantitation is provided by openMS.\n"
+                + " also become populated with quantitation data after you click confirm below.\n\n"
+                + "Identifications created in Proteosuite are provided by MSGF+.\n" 
                 + "iTRAQ quantitation is provided by xTracker.");
         
         mainText.setFont(new Font(mainText.getFont().getFontName(), mainText.getFont().getStyle(), 48));
         add(mainText, BorderLayout.CENTER);
         
         JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new BoxLayout(buttonsPanel   , BoxLayout.X_AXIS));
+        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
         buttonsPanel.add(new JLabel("CLICK CONFIRM TO CONFIRM QUANTITATION TYPE AS iTRAQ AND RUN ANALYSIS"));
         JButton confirmButton = new JButton("Confirm");
         confirmButton.addActionListener(new ConfirmButtonListener(this));
         buttonsPanel.add(confirmButton);
         
-        add(buttonsPanel);
+        add(buttonsPanel, BorderLayout.PAGE_END);
     }
     
     public void refreshFromData() {}

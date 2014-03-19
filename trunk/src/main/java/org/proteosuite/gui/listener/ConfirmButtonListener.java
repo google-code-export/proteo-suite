@@ -38,6 +38,8 @@ public class ConfirmButtonListener implements ActionListener {
                 dataFiles.add(AnalyseData.getInstance().getRawDataFile(i));
             }
             
+            AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationProcessing();
+            
             OpenMSLabelFreeWrapper labelFree = new OpenMSLabelFreeWrapper(dataFiles);
             labelFree.compute();
             parent.moveToStep(AnalyseDynamicTab.DONE_STEP);
@@ -46,6 +48,8 @@ public class ConfirmButtonListener implements ActionListener {
             for (int i = 0; i < AnalyseData.getInstance().getRawDataCount(); i++) {
                 dataFiles.add(AnalyseData.getInstance().getRawDataFile(i));
             }
+            
+            AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationProcessing();
             
             XTrackerITRAQWrapper itraq = new XTrackerITRAQWrapper(dataFiles);
             itraq.compute();
