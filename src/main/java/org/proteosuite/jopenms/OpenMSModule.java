@@ -32,7 +32,7 @@ import org.proteosuite.jopenms.util.Utils;
 public class OpenMSModule {
 
     private static Options options;
-    private static Map cfgMap;
+    private static Map<String, Object> cfgMap;
     private static OpenMSExecutable openMSExe;
     private String desc;
     private static File cfgFile;
@@ -96,7 +96,7 @@ public class OpenMSModule {
         return options;
     }
 
-    public Map getCfgMap() {
+    public Map<String, Object> getCfgMap() {
         return cfgMap;
     }
 
@@ -123,9 +123,9 @@ public class OpenMSModule {
      *
      * @return a map version of INI file.
      */
-    private Map initConfigMap(File ini) {
+    private Map<String, Object> initConfigMap(File ini) {
 
-        Map configMap = new HashMap();
+        Map<String, Object> configMap = new HashMap<String, Object>();
 
         configMap.put("iniFile", ini); // store the input file name with key "inputFileName"
 
@@ -251,25 +251,25 @@ public class OpenMSModule {
 
     }
 
-    private boolean putInConfigMap(Map m, String nodeName,
-                                   List objs) {
+    private boolean putInConfigMap(Map<String, Object> m, String nodeName,
+                                   List<Object> objs) {
         boolean ret = true;
 
         if (objs != null) {
             for (Object obj : objs) {
                 if (obj instanceof ITEM) {
                     ITEM item = (ITEM) obj;
-                    Map subMap;
+                    Map<String, Object> subMap;
                     Object value = m.get(nodeName);
 
                     if (value == null) {
-                        subMap = new HashMap();
+                        subMap = new HashMap<String, Object>();
                         m.put(nodeName, subMap);
                         subMap.put(item.getName(), item.getValue());
                         //subMap.put(item.getName(), item);
                     }
                     else if (value instanceof Map) {
-                        subMap = (Map) value;
+                        subMap = (Map<String, Object>) value;
                         subMap.put(item.getName(), item.getValue());
                         //subMap.put(item.getName(), item);
                     }
@@ -280,17 +280,17 @@ public class OpenMSModule {
                 }
                 else if (obj instanceof ITEMLIST) {
                     ITEMLIST itlst = (ITEMLIST) obj;
-                    Map subMap;
+                    Map<String, Object> subMap;
                     Object value = m.get(nodeName);
 
                     if (value == null) {
-                        subMap = new HashMap();
+                        subMap = new HashMap<String, Object>();
                         m.put(nodeName, subMap);
                         subMap.put(itlst.getName(), getItemListValue(itlst));
                         //subMap.put(item.getName(), item);
                     }
                     else if (value instanceof Map) {
-                        subMap = (Map) value;
+                        subMap = (Map<String, Object>) value;
                         subMap.put(itlst.getName(), getItemListValue(itlst));
                         //subMap.put(item.getName(), item);    
                     }
@@ -300,18 +300,18 @@ public class OpenMSModule {
                     if (node.getName().equalsIgnoreCase(openMSExe.getName())) {
                         desc = node.getDescription(); // store description
                     }
-                    Map subMap;
-                    Object value = (Map) m.get(nodeName);
+                    Map<String, Object> subMap;
+                    Object value = m.get(nodeName);
 
                     if (value == null) {
-                        subMap = new HashMap();
+                        subMap = new HashMap<String, Object>();
                         m.put(nodeName, subMap);
 
                         // Param_1_6_2.xsd
                         ret = putInConfigMap(subMap, node.getName(), node.getITEMOrITEMLISTOrNODE());
                     }
                     else if (value instanceof Map) {
-                        subMap = (Map) value;
+                        subMap = (Map<String, Object>) value;
                         // Param_1_6_2.xsd
                         ret = putInConfigMap(subMap, node.getName(), node.getITEMOrITEMLISTOrNODE());
                     }

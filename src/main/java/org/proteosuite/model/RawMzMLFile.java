@@ -80,6 +80,7 @@ public class RawMzMLFile extends RawDataFile {
                     }
                 }
             }
+            reader.close();
         } catch (FileNotFoundException ex) {
 
         } catch (IOException io) {

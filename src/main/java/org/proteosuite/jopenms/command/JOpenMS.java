@@ -8,7 +8,9 @@ import java.io.*;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.bind.*;
+
 import org.apache.commons.cli.*;
 import org.proteosuite.jopenms.OpenMSExecutable;
 import org.proteosuite.jopenms.OpenMSModule;
@@ -33,7 +35,7 @@ public class JOpenMS {
 
     public static void main(String[] args) {
 
-        OpenMSModule omsm = null;
+        //OpenMSModule omsm = null;
         try {
             // Definite command line
             CommandLineParser parser = new ExtendedPosixParser(true); // ignore the unrecognized options
@@ -68,7 +70,7 @@ public class JOpenMS {
         //        }
         catch (ParseException ex) {
             System.out.println(ex.getMessage());
-            omsm.destroy();
+            //omsm.destroy();
         }
     }
 
@@ -116,7 +118,7 @@ public class JOpenMS {
                     CommandLine combLine = combParser.parse(combOptions, javaArgs);
 
                     // write a new config file
-                    Map newCfgMap = new HashMap(module.getCfgMap());
+                    Map<String, Object> newCfgMap = new HashMap<String, Object>(module.getCfgMap());
                     Option[] inputOpts = combLine.getOptions();
                     for (Option opt : inputOpts) {
                         if (!opt.getOpt().equalsIgnoreCase(COMMAND_OPTION)) {
@@ -155,7 +157,7 @@ public class JOpenMS {
     public static void performOpenMSTask(String exeLocation, String openMSCommand, List<String> inputFiles, List<String>outputFiles) {
         OpenMSExecutable openMSExecutable = OpenMSExecutable.valueOf(openMSCommand);
         OpenMSModule module = new OpenMSModule(openMSExecutable);
-        Map cfgMap = new HashMap(module.getCfgMap());
+        Map<String, Object> cfgMap = new HashMap<String, Object>(module.getCfgMap());
         setConfig(cfgMap, openMSExecutable.getName() + "$1$in", Utils.join(inputFiles));
         setConfig(cfgMap, openMSExecutable.getName() + "$1$out", Utils.join(outputFiles));
         File cfgFile = generateConfigFile(openMSExecutable.getName(), module, cfgMap);
@@ -169,7 +171,7 @@ public class JOpenMS {
         cfgFile.delete();
     }
 
-    private static File generateConfigFile(String command, OpenMSModule module, Map cfgMap) {
+    private static File generateConfigFile(String command, OpenMSModule module, Map<String, Object> cfgMap) {
         File newCfgFile = null;
         try {
             File dir = new File(System.getProperty("user.dir"));
@@ -216,15 +218,15 @@ public class JOpenMS {
      * @param key
      * @param newValue
      */
-    private static void setConfig(Map cfMap, String key,
+    private static void setConfig(Map<String, Object> cfMap, String key,
             String newValue) {
 
         if (key.contains(OpenMSModule.SEPARATOR)) {
             String[] keys = key.split("\\" + OpenMSModule.SEPARATOR, 2);
             if (!keys[1].contains(OpenMSModule.SEPARATOR)) {
-                Map subMap = (Map) cfMap.get(keys[0]);
+                Map<String, Object> subMap = (Map<String, Object>) cfMap.get(keys[0]);
                 if (subMap == null) {
-                    subMap = (Map) cfMap.get(Utils.nameDecode(keys[0]));
+                    subMap = (Map<String, Object>) cfMap.get(Utils.nameDecode(keys[0]));
                 }
 
                 if (subMap != null) {
@@ -241,9 +243,9 @@ public class JOpenMS {
                     System.out.println("Can't not set value \"" + newValue + "\". Run with the other settings.");
                 }
             } else {
-                Map subMap = (Map) cfMap.get(keys[0]);
+                Map<String, Object> subMap = (Map<String, Object>) cfMap.get(keys[0]);
                 if (subMap == null) {
-                    subMap = (Map) cfMap.get(Utils.nameDecode(keys[0]));
+                    subMap = (Map<String, Object>) cfMap.get(Utils.nameDecode(keys[0]));
                 }
                 if (subMap != null) {
                     setConfig(subMap, keys[1], newValue);
@@ -296,7 +298,7 @@ public class JOpenMS {
         List<NODE> nodes = parameters.getNODE();
         for (NODE node : nodes) {
             if (cfMap.get(node.getName()) instanceof Map) {
-                Map subCfMap = (Map) cfMap.get(node.getName());
+                Map<String, Object> subCfMap = (Map<String, Object>) cfMap.get(node.getName());
                 ret = writeNode(node, subCfMap);
             }
         }
@@ -336,7 +338,7 @@ public class JOpenMS {
             } else if (obj instanceof NODE) {
                 NODE subNode = (NODE) obj;
                 if (cfMap.get(subNode.getName()) instanceof Map) {
-                    Map subCfMap = (Map) cfMap.get(subNode.getName());
+                    Map<String, Object> subCfMap = (Map<String, Object>) cfMap.get(subNode.getName());
                     ret = writeNode(subNode, subCfMap);
                 }
             }

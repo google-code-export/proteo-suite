@@ -8,7 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
