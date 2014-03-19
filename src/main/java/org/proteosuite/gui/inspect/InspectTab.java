@@ -1,10 +1,10 @@
 package org.proteosuite.gui.inspect;
 
+import com.compomics.util.gui.spectrum.SpectrumPanel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,16 +13,14 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import org.proteosuite.gui.chart.ChartSpectrum;
 import org.proteosuite.gui.listener.InspectComboListener;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.InspectModel;
+import org.proteosuite.model.QuantDataFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.model.RawMzMLFile;
-
-import com.compomics.util.gui.spectrum.SpectrumPanel;
 
 /**
  * 
@@ -97,6 +95,10 @@ public class InspectTab extends JPanel implements ListSelectionListener {
 		for (IdentDataFile identFile : inspectModel.getIdentData()) {
 			dataFileComboBox.addItem(identFile.getFileName());
 		}
+                
+                for (QuantDataFile quantFile : inspectModel.getQuantData()) {
+                    dataFileComboBox.addItem(quantFile.getFileName());
+                }
 	}
 
 	@Override

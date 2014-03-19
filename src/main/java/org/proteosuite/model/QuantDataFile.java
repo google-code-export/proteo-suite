@@ -6,10 +6,24 @@
 
 package org.proteosuite.model;
 
+import java.io.File;
+
 /**
  *
  * @author SPerkins
  */
-public class QuantDataFile {
+public abstract class QuantDataFile {
+    protected File file;
     
+    public QuantDataFile(File file) {
+        this.file = file;
+        initiateLoading();
+    }
+    
+    public String getFileName() {
+        return file.getName();
+    }
+    
+    public abstract boolean isLoaded();
+    public abstract void initiateLoading();
 }

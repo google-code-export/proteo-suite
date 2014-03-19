@@ -39,7 +39,12 @@ public class OpenMSModule {
     private static Unmarshaller unmarsh;
     private static Marshaller marsh;
     public static final String SEPARATOR = "$";
+    private String exeLocation = null;
 
+    public OpenMSModule(String exeLocation, OpenMSExecutable omse) {
+        this.exeLocation = exeLocation;
+    }
+    
     public OpenMSModule(OpenMSExecutable omse) {
         try {
             openMSExe = omse;
@@ -49,7 +54,12 @@ public class OpenMSModule {
             cfgFile = File.createTempFile(fn, ".ini");
 
             Runtime rt = Runtime.getRuntime();
-            Process p = rt.exec(omse.getName() + ".exe" + " -write_ini " + cfgFile.getAbsolutePath());
+            Process p;
+            if (exeLocation == null) {
+                p = rt.exec(omse.getName() + ".exe" + " -write_ini " + cfgFile.getAbsolutePath());
+            } else {
+                p = rt.exec(exeLocation + omse.getName() + ".exe" + " -write_ini " + cfgFile.getAbsolutePath());
+            }            
 
             InputStream is = p.getInputStream();
             int value;

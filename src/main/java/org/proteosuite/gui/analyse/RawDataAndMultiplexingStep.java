@@ -73,8 +73,8 @@ public class RawDataAndMultiplexingStep extends JPanel {
         
         buttonsPanel.add(new JLabel("Select multiplexing:"));
         
-        multiplexingBox = new JComboBox<String>(new String[]{"iTRAQ 4-plex", "iTRAQ 8-plex", "None", "None (label-free)"});
-        multiplexingBox.setSelectedIndex(2);
+        multiplexingBox = new JComboBox<String>(new String[]{"iTRAQ 4-plex", "None (label-free)"});
+        multiplexingBox.setSelectedIndex(1);
         multiplexingBox.addActionListener(new MultiplexingSelectionListener(this));
         buttonsPanel.add(multiplexingBox);
         

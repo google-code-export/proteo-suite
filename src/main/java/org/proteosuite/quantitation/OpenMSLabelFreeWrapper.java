@@ -9,6 +9,7 @@
  */
 package org.proteosuite.quantitation;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import javax.swing.SwingWorker;
+import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.jopenms.command.JOpenMS;
 import org.proteosuite.model.AnalyseData;
@@ -35,18 +37,20 @@ public class OpenMSLabelFreeWrapper {
 
     public OpenMSLabelFreeWrapper(List<RawDataFile> rawDataFiles) {
         String operatingSystemType = System.getProperty("os.name");
+        String rootLocation = getClass().getClassLoader().getResource("native/openms/placeholder.txt").getPath();
+        rootLocation = rootLocation.replaceAll("placeholder.txt", "");
         if (operatingSystemType.startsWith("Windows")) {
-            if (System.getenv("ProgramFiles(x86)") != null) {
-                exeLocation = getClass().getClassLoader().getResource("lib/openms/win64").getFile();
+            if (System.getenv("ProgramFiles(x86)") != null) {              
+                exeLocation = rootLocation + "win64";                
             } else {
-                exeLocation = getClass().getClassLoader().getResource("lib/openms/win32").getFile();
+                exeLocation = rootLocation + "win32";
             }
         } else {
             String linuxVersion = org.proteosuite.jopenms.util.Utils.getLinuxVersion();
             if (linuxVersion.contains("x86_64") || linuxVersion.contains("ia64")) {
-                exeLocation = getClass().getClassLoader().getResource("lib/openms/linux64").getFile();
+                exeLocation = rootLocation + "linux64";                
             } else {
-                exeLocation = getClass().getClassLoader().getResource("lib/openms/linux32").getFile();
+                exeLocation = rootLocation + "linux32";
             }
         }
         
@@ -57,6 +61,8 @@ public class OpenMSLabelFreeWrapper {
     }
 
     public void compute() {
+        AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationProcessing();
+        
         List<String> featureFinderCentroidedFiles = new ArrayList<String>();  
         List<String> mapAlignerPoseClusteringFiles = new ArrayList<String>();
         int featureFinderExecutionDelay = 0;
@@ -163,6 +169,9 @@ public class OpenMSLabelFreeWrapper {
                     get();
                     AnalyseData.getInstance().getTasksModel().set(new Task(inputFiles.get(0), "Linking Features", "Complete"));
                     TasksTab.getInstance().refreshFromTasksModel();
+                    
+                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationDone();
+                    
                 } catch (InterruptedException | ExecutionException ex) {
                     System.out.println(ex.getLocalizedMessage());
                 }

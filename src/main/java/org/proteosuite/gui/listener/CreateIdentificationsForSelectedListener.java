@@ -87,7 +87,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
 
         for (int fileIndex = 0; fileIndex < selectedRawFiles.length; fileIndex++) {
             
-            identTable.setValueAt("Creating...", selectedRawFiles[fileIndex], 2);            
+            identTable.setValueAt("Creating...", selectedRawFiles[fileIndex], 1);            
             
             // Create an MSGFPlusWrapper from the view's params.
             MSGFPlusWrapper msgf = new MSGFPlusWrapper(identParamsExecute.getParams());
