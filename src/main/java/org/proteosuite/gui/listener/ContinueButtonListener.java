@@ -50,7 +50,7 @@ public class ContinueButtonListener implements ActionListener {
 
         } else if (panel instanceof DefineConditionsStep) {
             DefineConditionsTable conditionsTable = ((DefineConditionsStep) panel).getConditionsTable();
-
+            AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setConditionsProcessing();
             for (int i = 0; i < conditionsTable.getRowCount(); i++) {
                 String condition = (String) conditionsTable.getModel().getValueAt(i, 0);
                 if (condition.equals("")) {
@@ -69,6 +69,8 @@ public class ContinueButtonListener implements ActionListener {
                     }
                 }
             }
+            
+            AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setConditionsDone();
 
             ((CreateOrLoadIdentificationsStep) AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP).refreshFromData();
             parent.moveToStep(AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP);

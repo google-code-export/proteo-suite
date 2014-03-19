@@ -12,6 +12,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.RawMzMLFile;
@@ -46,6 +47,7 @@ public class AddRawDataListener implements ActionListener {
             }
         }
         
+        AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setRawDataProcessing();
         step.refreshFromData();
     }
 }

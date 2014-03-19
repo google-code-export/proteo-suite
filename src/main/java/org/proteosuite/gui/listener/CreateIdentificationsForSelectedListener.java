@@ -11,6 +11,7 @@ import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import org.proteosuite.gui.IdentParamsView;
+import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.tables.CreateOrLoadIdentificationsTable;
 import org.proteosuite.identification.MSGFPlusWrapper;
@@ -75,6 +76,8 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
 
         // Check if we're okay to run identifications..
         boolean paramsSetOkay = identParamsExecute.getRun();
+        
+        AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setIdentificationsProcessing();
 
         // Check if we should do protein inference.
         boolean doProteinInference = identParamsExecute

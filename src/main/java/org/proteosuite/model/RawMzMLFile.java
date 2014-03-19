@@ -15,6 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.SwingWorker;
+import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.tasks.TasksTab;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
@@ -25,7 +26,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
  */
 public class RawMzMLFile extends RawDataFile {
 
-    private MzMLUnmarshaller unmarshaller;
+    private MzMLUnmarshaller unmarshaller = null;
     private Pattern spectrumListPattern = Pattern.compile("<spectrumList([^<]+)>");
     private Pattern spectrumCountPattern = Pattern.compile("count=\"(\\d+)\"");
     private Pattern spectrumStartPattern = Pattern.compile("<spectrum [^<]+>");
@@ -46,6 +47,15 @@ public class RawMzMLFile extends RawDataFile {
         return "mzML";
     }
 
+    @Override
+    public boolean isLoaded() {
+        if (unmarshaller == null) {
+            return false;
+        }
+        
+        return true;
+    }
+    
     @Override
     public int getSpectraCount() {
         if (spectraCountChecked) {
@@ -175,6 +185,9 @@ public class RawMzMLFile extends RawDataFile {
                     InspectTab.getInstance().refreshComboBox();
                     AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Load Raw Data", "Complete"));
                     TasksTab.getInstance().refreshFromTasksModel();
+                    
+                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().checkAndUpdateRawDataStatus();
+                    
                     System.out.println("Done loading mzML file.");
                 } catch (InterruptedException ex) {
                     System.out.println("Interrupted exception loading mzML file: " + ex.getLocalizedMessage());
