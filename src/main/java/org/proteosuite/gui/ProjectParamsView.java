@@ -455,7 +455,7 @@ public class ProjectParamsView extends javax.swing.JPanel {
 
     private void jlURLMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jlURLMouseClicked
 	//... Call x-tracker website ...//
-        OpenURL url = new OpenURL("http://www.x-tracker.info");
+    	OpenURL.open("http://www.x-tracker.info");
     }//GEN-LAST:event_jlURLMouseClicked
 
     private void jbRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbRemoveActionPerformed
