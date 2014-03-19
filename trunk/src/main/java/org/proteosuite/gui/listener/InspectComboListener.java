@@ -4,6 +4,7 @@ package org.proteosuite.gui.listener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 import org.proteosuite.gui.chart.ChartChromatogram;
@@ -43,7 +44,12 @@ public class InspectComboListener implements ItemListener {
             InspectTab.getInstance().getChartPanel().setChromatogram(ChartChromatogram.getChromatogram((RawMzMLFile)dataFile));
             InspectTab.getInstance().getChartPanel().set2D(ChartPlot2D.get2DPlot((RawMzMLFile)dataFile));
         } else if (inspectModel.isIdentFile(fileChosen)) {
-            // Open mzIdentMLViewer.
+			int response = JOptionPane.showConfirmDialog(null, "Open in ProteoIDViewer?", "View MzIdentML", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			
+			if (response == JOptionPane.NO_OPTION)
+				return;
+			
+			JOptionPane.showMessageDialog(null, "Opening!");
         } else if (inspectModel.isQuantFile(fileChosen)) {
             
         }

@@ -31,7 +31,7 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.FastScatterPlot;
 
 /**
- * This class corresponds to 2D Visualisation of MS raw data. This is under construction ...//
+ * This class corresponds to 2D Visualisation of MS raw data. This is under construction
  * @author fgonzalez
  * @param title - Window title ...//
  * @param mz - m/z values
@@ -39,31 +39,21 @@ import org.jfree.chart.plot.FastScatterPlot;
  * @param art - RT values 
  */
 public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
-
-    private static float[][] data = new float[2][1000000];
-    //private float[] mz;
-    //private float[] intens;
-    //private float[] art;
-
-    //... Generate chart from raw data ...//
-    public static ChartPanel getTwoDPlot(float[] mz, float[] intens, float[] art) {            
-        //... Windows default settings ...//
-        //this.mz = mz;
-        //this.intens = intens;
-        //this.art = art;
+    //Generate chart from raw data
+    public static ChartPanel getTwoDPlot(float[] mz, float[] art) {
         
         //CheckMemory chm = new CheckMemory("Before filling arrays");
         
-        //... Filling data ...//
-        populateData(mz, intens, art);
+        // Filling data
+    	float[][] data = populateData(mz, art);
 
-        //... Seeting axis ...//
+        //ySeeting axis
         final NumberAxis xAxis = new NumberAxis("Retention Time (secs)");
         xAxis.setAutoRangeIncludesZero(true);
         final NumberAxis yAxis = new NumberAxis("m/z");
         yAxis.setAutoRangeIncludesZero(true);
 
-        //... Graph and values ...//
+        // Graph and values
         final FastScatterPlot plot = new FastScatterPlot(data, yAxis, xAxis);
 
         plot.setDomainGridlinesVisible(false);
@@ -71,9 +61,12 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
         plot.setBackgroundPaint(Color.white);
         plot.setPaint(Color.red);
 
-        //... Container ...//
+        // Container
         final JFreeChart chart = new JFreeChart("", plot);
-        chart.getRenderingHints().put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        // Does nothing?
+        // chart.setAntiAlias(true);
+        // chart.getRenderingHints().put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         
         final ChartPanel panel = new ChartPanel(chart, true);
         panel.setPreferredSize(new Dimension(500, 400));
@@ -82,29 +75,33 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
         panel.setMinimumDrawWidth(20);
         panel.setMaximumDrawWidth(2000);
         panel.setBackground(Color.red);
-        panel.setZoomFillPaint(new Color(216,240,223,100));
-        panel.setZoomOutlinePaint(new Color(216,240,223));
+        panel.setZoomFillPaint(new Color(216, 240, 223, 100));
+        panel.setZoomOutlinePaint(new Color(216, 240, 223));
         panel.setMouseWheelEnabled(true);
         panel.setDisplayToolTips(true);
         
         return panel;
     }
-    /**---------------------------------
+    
+    /**
      * Populate array
      * @param mz - m/z values 
-     * @param intens - intensity values 
-     * @param art - RT values 
-     ----------------------------------*/
-    private static void populateData(float[] mz, float[] intens, float[] art) {
+     * @param rt - RT values 
+     */
+    private static float[][] populateData(float[] mz, float[] rt) {
+    	float[][] data = new float[2][mz.length];
         int iCounter = 0;
+        
         for (int iI = 0; iI < mz.length; iI++) {
-            data[1][iCounter] = art[iI];
+            data[1][iCounter] = rt[iI];
             data[0][iCounter] = mz[iI];
             iCounter++;
         }
+        
+        return data;
     }
 
-    void eventOutput(String eventDescription, MouseEvent e) {
+    private void eventOutput(String eventDescription, MouseEvent e) {
         System.out.println(eventDescription + " RT: " + e.getX() + "\n m/z: " + e.getY());
     }
 
