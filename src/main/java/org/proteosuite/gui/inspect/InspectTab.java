@@ -42,10 +42,22 @@ public class InspectTab extends JPanel implements ListSelectionListener {
 		dataFileComboBox.addItemListener(new InspectComboListener());
 		
 		add(getHeaderPanel(), BorderLayout.PAGE_START);
-		add(getBodyPanel(), BorderLayout.CENTER);
+		add(getMzMLBodyPanel(), BorderLayout.CENTER);
 	}
 	
-	private Component getBodyPanel() {
+	private Component getMzMLBodyPanel() {
+		JPanel body = new JPanel();
+		body.setLayout(new GridLayout(1, 2));
+		body.add(chartPanel);
+		body.add(new JScrollPane(jTable));
+		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		jTable.getSelectionModel().addListSelectionListener(this);
+		jTable.setAutoCreateRowSorter(true);
+		
+		return body;
+	}
+	
+	private Component getMzQuantBodyPanel() {
 		JPanel body = new JPanel();
 		body.setLayout(new GridLayout(1, 2));
 		body.add(chartPanel);
