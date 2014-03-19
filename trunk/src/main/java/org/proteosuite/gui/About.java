@@ -212,7 +212,7 @@ public class About extends JPanel {
 	}// </editor-fold>//GEN-END:initComponents
 
 	private void jlURLMouseClicked(MouseEvent evt) {// GEN-FIRST:event_jlURLMouseClicked
-		OpenURL url = new OpenURL("http://www.proteosuite.org");
+		OpenURL.open("http://www.proteosuite.org");
 	}// GEN-LAST:event_jlURLMouseClicked
 
 	private void jbSystemInfoActionPerformed(ActionEvent evt) {// GEN-FIRST:event_jbSystemInfoActionPerformed
@@ -230,7 +230,7 @@ public class About extends JPanel {
 	}// GEN-LAST:event_jbSystemInfoActionPerformed
 
 	private void jbLicenseActionPerformed(ActionEvent evt) {// GEN-FIRST:event_jbLicenseActionPerformed
-		OpenURL url = new OpenURL("http://www.proteosuite.org/?q=licence");
+		OpenURL.open("http://www.proteosuite.org/?q=licence");
 	}// GEN-LAST:event_jbLicenseActionPerformed
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables
