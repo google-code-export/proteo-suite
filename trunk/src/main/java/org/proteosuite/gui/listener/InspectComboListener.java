@@ -38,33 +38,63 @@ public class InspectComboListener implements ItemListener {
 		// Populate the table.
 		String fileChosen = (String) e.getItem();
 		if (inspectModel.isRawDataFile(fileChosen)) {
-			RawDataFile dataFile = inspectModel.getRawDataFile(fileChosen);
-			JTableMzML rawData = new JTableMzML();
-			rawData.showData((RawMzMLFile) dataFile);
-
-			JTable jTable = InspectTab.getInstance().getTablePanel();
-			jTable.removeAll();
-			jTable.setModel(rawData.getModel());
-
-			// InspectTab.getInstance().getTablePanel().setTable(rawData);
-			rawData.getSelectionModel().addListSelectionListener(
-					InspectTab.getInstance());
-			InspectTab
-					.getInstance()
-					.getChartPanel()
-					.setChromatogram(
-							ChartChromatogram
-									.getChromatogram((RawMzMLFile) dataFile));
-			InspectTab.getInstance().getChartPanel()
-					.set2D(ChartPlot2D.get2DPlot((RawMzMLFile) dataFile));
+			openRawFile(fileChosen);
 		} else if (inspectModel.isIdentFile(fileChosen)) {
 			openIdentFile(fileChosen);
 		} else if (inspectModel.isQuantFile(fileChosen)) {
-
+			openQuantFile(fileChosen);
 		}
 	}
 
+	private void openQuantFile(String fileChosen) {
+		InspectTab.getInstance().setInspectType(InspectTab.PANEL_QUANT);
+		
+		RawDataFile dataFile = inspectModel.getRawDataFile(fileChosen);
+		JTableMzML rawData = new JTableMzML();
+		rawData.showData((RawMzMLFile) dataFile);
+
+		JTable jTable = InspectTab.getInstance().getTablePanel();
+		jTable.removeAll();
+		jTable.setModel(rawData.getModel());
+
+		rawData.getSelectionModel().addListSelectionListener(
+				InspectTab.getInstance());
+		InspectTab
+				.getInstance()
+				.getChartPanel()
+				.setChromatogram(
+						ChartChromatogram
+								.getChromatogram((RawMzMLFile) dataFile));
+		InspectTab.getInstance().getChartPanel()
+				.set2D(ChartPlot2D.get2DPlot((RawMzMLFile) dataFile));
+	}
+
+	private void openRawFile(String fileChosen) {
+		InspectTab.getInstance().setInspectType(InspectTab.PANEL_RAW);
+		
+		RawDataFile dataFile = inspectModel.getRawDataFile(fileChosen);
+		JTableMzML rawData = new JTableMzML();
+		rawData.showData((RawMzMLFile) dataFile);
+
+		JTable jTable = InspectTab.getInstance().getTablePanel();
+		jTable.removeAll();
+		jTable.setModel(rawData.getModel());
+
+		rawData.getSelectionModel().addListSelectionListener(
+				InspectTab.getInstance());
+		InspectTab
+				.getInstance()
+				.getChartPanel()
+				.setChromatogram(
+						ChartChromatogram
+								.getChromatogram((RawMzMLFile) dataFile));
+		InspectTab.getInstance().getChartPanel()
+				.set2D(ChartPlot2D.get2DPlot((RawMzMLFile) dataFile));
+	}
+
 	private void openIdentFile(String fileChosen) {
+		InspectTab.getInstance().setInspectType(InspectTab.PANEL_IDENT);
+		
 		int response = JOptionPane.showConfirmDialog(null,
 				"Open in ProteoIDViewer?", "View MzIdentML",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -83,7 +113,8 @@ public class InspectComboListener implements ItemListener {
 
 			JFileChooser search = new JFileChooser();
 			search.setAcceptAllFileFilterUsed(false);
-			search.addChoosableFileFilter(new FileNameExtensionFilter("ProteoIDViewer.jar", "jar"));
+			search.addChoosableFileFilter(new FileNameExtensionFilter(
+					"ProteoIDViewer.jar", "jar"));
 			search.showOpenDialog(null);
 
 			f = search.getSelectedFile();
@@ -99,25 +130,24 @@ public class InspectComboListener implements ItemListener {
 
 			Thread.sleep(5_000);
 			// If it died in less than 5 seconds. Something went wrong!
-                        try {
-                            if (proc.exitValue() != 0) {
-                                    InputStream err = proc.getErrorStream();
-                                    String error = "";
-                                    while (true) {
-                                            int data = err.read();
-                                            if (data == -1)
-                                                    break;
+			try {
+				if (proc.exitValue() != 0) {
+					InputStream err = proc.getErrorStream();
+					String error = "";
+					while (true) {
+						int data = err.read();
+						if (data == -1)
+							break;
 
-                                            error += (char) data;
-                                    }
-                                    if (error.length() > 0)
-                                            JOptionPane.showMessageDialog(null, error, "Error",
-                                                            JOptionPane.ERROR_MESSAGE);
-                            }
-                        } catch (IllegalThreadStateException e)
-                        {
-                            // Ran fine!
-                        }
+						error += (char) data;
+					}
+					if (error.length() > 0)
+						JOptionPane.showMessageDialog(null, error, "Error",
+								JOptionPane.ERROR_MESSAGE);
+				}
+			} catch (IllegalThreadStateException e) {
+				// Ran fine!
+			}
 
 		} catch (IOException e1) {
 			e1.printStackTrace();
