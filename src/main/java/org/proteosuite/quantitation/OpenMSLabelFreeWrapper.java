@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutorService;
 import javax.swing.SwingWorker;
 import javax.xml.bind.JAXBException;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
-import org.proteosuite.gui.analyse.MappingHelper;
+import org.proteosuite.utils.MappingHelper;
 import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.jopenms.command.JOpenMS;
 import org.proteosuite.model.AnalyseData;

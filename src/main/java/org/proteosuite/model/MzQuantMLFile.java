@@ -51,8 +51,7 @@ public class MzQuantMLFile extends QuantDataFile {
             @Override
             protected void done() {
                 try {
-                    unmarshaller = get();
-                    AnalyseData.getInstance().getInspectModel().addQuantDataFile(MzQuantMLFile.this);
+                    unmarshaller = get();                    
                     InspectTab.getInstance().refreshComboBox();
                     AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Load Quantitation Data", "Complete"));
                     TasksTab.getInstance().refreshFromTasksModel();
