@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import javax.swing.SwingWorker;
 import javax.xml.validation.Validator;
@@ -35,6 +36,7 @@ public class XTrackerITRAQWrapper {
     private List<RawDataFile> rawData;
     private static ExecutorService executor;
     private static SystemUtils sysUtils = new SystemUtils();
+    private String outputPath = null;
 
     public XTrackerITRAQWrapper(List<RawDataFile> rawData) {
         this.rawData = rawData;
@@ -46,8 +48,19 @@ public class XTrackerITRAQWrapper {
             @Override
             public Void doInBackground() {
                 generateFiles("iTRAQ");
-                xTracker xtracker = new xTracker(rawData.get(0).getAbsoluteFileName(), rawData.get(0).getFile().getParent());
+                xTracker xtracker = new xTracker(outputPath, rawData.get(0).getFile().getParent());
                 return null;
+            }
+            
+            @Override
+            public void done() {
+                try {
+                    get();
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                } catch (ExecutionException ex) {
+                    ex.printStackTrace();
+                }
             }
         };
 
@@ -77,9 +90,9 @@ public class XTrackerITRAQWrapper {
         // Generate mzq file
         System.out.println(sysUtils.getTime() + " - Generating mzq file ...");
 
-        QuantUtils.writeMzQuantML(technique, sFile, rawData);
+        outputPath = QuantUtils.writeMzQuantML(technique, sFile, rawData);
 
-        // Unmarshall mzquantml file
+        // Unmarshall mzquantml file        
         Validator validator = XMLparser.getValidator(MZQ_XSD);
         boolean validFlag = XMLparser.validate(validator, rawData.get(0).getFile().getParent().replace("\\", "/") + "/" + ProteoSuiteView.sProjectName);
         System.out.println(sysUtils.getTime() + " - Validating mzQuantML ...");

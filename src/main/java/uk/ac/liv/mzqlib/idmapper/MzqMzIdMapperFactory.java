@@ -3,6 +3,7 @@
  * and open the template in the editor.
  */
 
+//Commented out 216 and 272 ish.
 package uk.ac.liv.mzqlib.idmapper;
 
 import java.io.File;
@@ -213,7 +214,7 @@ public class MzqMzIdMapperFactory {
                         for (EvidenceRef evdRef : evdRefs) {
                             List<SIIData> siiDataList = featureToSIIsMap.get(evdRef.getFeatureRef());
                             //if (evdRef.getIdRefs().isEmpty()) {
-                            evdRef.setIdRefs(null); //remove previous reference
+                            //evdRef.setIdRefs(null); //remove previous reference
                             //}
                             evdRef.setIdentificationFile(null); // reset IdentificationFile;
 
@@ -269,7 +270,7 @@ public class MzqMzIdMapperFactory {
                         // remove previous idRefs as no consensus exist for this peptide
                         evdRefs = pepCon.getEvidenceRef();
                         for (EvidenceRef evdRef : evdRefs) {
-                            evdRef.setIdRefs(null); //remove previous reference
+                            //evdRef.setIdRefs(null); //remove previous reference
                             evdRef.setIdentificationFile(null); // reset IdentificationFile;                       
                         }
                         UserParam userParam = new UserParam();

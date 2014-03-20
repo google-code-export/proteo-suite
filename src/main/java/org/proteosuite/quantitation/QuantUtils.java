@@ -50,7 +50,7 @@ public class QuantUtils {
     private QuantUtils() {
     }
 
-    public static void writeMzQuantML(String technique, String quantFileName,
+    public static String writeMzQuantML(String technique, String quantFileName,
             List<RawDataFile> rawData) {
 
         String directory = rawData.get(0).getFile().getParent().replace("\\", "/");        
@@ -516,6 +516,7 @@ public class QuantUtils {
             pmList4.add(up4_3);
             dataProcessing.getProcessingMethod().add(processingMethod4);
         }
+        
         dataProcessingList.getDataProcessing().add(dataProcessing);
         qml.setDataProcessingList(dataProcessingList);
 
@@ -653,6 +654,8 @@ public class QuantUtils {
 
         // ... Marshal mzQuantML object ...//
         MzQuantMLMarshaller marshaller = new MzQuantMLMarshaller(directory + "/" + quantFileName);
-        marshaller.marshall(qml);        
+        marshaller.marshall(qml);     
+        
+        return directory + "/" + quantFileName;
     }    
 }

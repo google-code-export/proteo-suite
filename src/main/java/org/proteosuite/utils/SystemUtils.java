@@ -12,6 +12,7 @@
  */
 package org.proteosuite.utils;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
@@ -56,7 +57,7 @@ public class SystemUtils {
             con.setRequestMethod("HEAD");
             return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
         }
-        catch (Exception e) {
+        catch (IOException e) {
             e.printStackTrace();
             return false;
         }
