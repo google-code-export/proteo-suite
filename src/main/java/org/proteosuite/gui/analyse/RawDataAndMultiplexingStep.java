@@ -18,7 +18,6 @@ import org.proteosuite.gui.listener.AddRawDataListener;
 import org.proteosuite.gui.listener.ClearAllRawFileButtonListener;
 import org.proteosuite.gui.listener.ContinueButtonListener;
 import org.proteosuite.gui.listener.DeleteSelectedRawFileButtonListener;
-import org.proteosuite.gui.listener.MultiplexingSelectionListener;
 import org.proteosuite.gui.listener.RestartButtonListener;
 import org.proteosuite.gui.tables.RawDataAndMultiplexingTable;
 import org.proteosuite.model.AnalyseData;
@@ -74,8 +73,7 @@ public class RawDataAndMultiplexingStep extends JPanel {
         buttonsPanel.add(new JLabel("Select multiplexing:"));
         
         multiplexingBox = new JComboBox<String>(new String[]{"iTRAQ 4-plex", "None (label-free)"});
-        multiplexingBox.setSelectedIndex(1);
-        multiplexingBox.addActionListener(new MultiplexingSelectionListener(this));
+        multiplexingBox.setSelectedIndex(1);        
         buttonsPanel.add(multiplexingBox);
         
         add(buttonsPanel, BorderLayout.PAGE_END);

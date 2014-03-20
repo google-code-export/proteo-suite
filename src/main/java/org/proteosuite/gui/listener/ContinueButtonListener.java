@@ -36,8 +36,15 @@ public class ContinueButtonListener implements ActionListener {
         AnalyseDynamicTab parent = (AnalyseDynamicTab) panel.getParent();
         AnalyseData data = AnalyseData.getInstance();
         if (panel instanceof RawDataAndMultiplexingStep) {
+            String selectedMultiplexing = (String)((RawDataAndMultiplexingStep)panel).getMultiplexingBox().getSelectedItem();            
+            boolean multiplexChange = !selectedMultiplexing.equals(data.getMultiplexing());
+            data.setMultiplexing((String)((RawDataAndMultiplexingStep)panel).getMultiplexingBox().getSelectedItem());
             for (int i  = 0; i < data.getRawDataCount(); i++) {
                 RawDataFile file = data.getRawDataFile(i);
+                if (multiplexChange) {
+                    file.resetAssay();
+                }
+                
                 if (data.getMultiplexing().equals("iTRAQ 4-plex")) {
                     file.setAssays(new String[]{"114", "115", "116", "117"});
                 } else if (data.getMultiplexing().equals("None (label-free)")) {

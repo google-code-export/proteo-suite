@@ -99,7 +99,7 @@ public class ProteoSuiteView extends JFrame {
             int result = JOptionPane.showConfirmDialog(this, "You do not appear to have openMS installed.\nYou need to install openMS in able to use the label-free quantiation feature.\n"
                     + "OpenMS is available at:\nhttp://open-ms.sourceforge.net/\nTo install now, click \"Yes\" to be directed to the openMS web site.", "openMS Not Installed!", JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.YES_OPTION) {
-                new OpenURL("http://open-ms.sourceforge.net/");
+                OpenURL.open("http://open-ms.sourceforge.net/");
             }
         }
     }

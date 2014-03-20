@@ -160,9 +160,7 @@ public class JOpenMS {
         Map<String, Object> cfgMap = new HashMap<String, Object>(module.getCfgMap());
         setConfig(cfgMap, openMSExecutable.getName() + "$1$in", Utils.join(inputFiles));
         setConfig(cfgMap, openMSExecutable.getName() + "$1$out", Utils.join(outputFiles));
-        File cfgFile = generateConfigFile(openMSExecutable.getName(), module, cfgMap);
-
-        performOpenMSTask(openMSExecutable.getName(), cfgFile);
+        File cfgFile = generateConfigFile(openMSExecutable.getName(), module, cfgMap);       
 
         performOpenMSTask(openMSExecutable.getName(), cfgFile);
         cfgFile.delete();

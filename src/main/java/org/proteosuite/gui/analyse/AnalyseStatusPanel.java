@@ -24,6 +24,9 @@ public class AnalyseStatusPanel extends JPanel {
     private static final JPanel quantitationSection = new JPanel();
     private static final JLabel quantitation = new JLabel("Quantitation");
     private static final JLabel quantitationStatus = new JLabel();
+    private static final JPanel mappingSection = new JPanel();
+    private static final JLabel mapping = new JLabel("Mapping");
+    private static final JLabel mappingStatus = new JLabel();
     private static ImageIcon notDone;
     private static ImageIcon done;
     private static ImageIcon processing;
@@ -39,16 +42,19 @@ public class AnalyseStatusPanel extends JPanel {
         conditions.setFont(new Font(rawData.getFont().getFontName(), rawData.getFont().getStyle(), 20));
         identifications.setFont(new Font(rawData.getFont().getFontName(), rawData.getFont().getStyle(), 20));
         quantitation.setFont(new Font(rawData.getFont().getFontName(), rawData.getFont().getStyle(), 20));
+        mapping.setFont(new Font(rawData.getFont().getFontName(), rawData.getFont().getStyle(), 20));
         
         rawDataStatus.setIcon(notDone);
         conditionsStatus.setIcon(notDone);
         identificationsStatus.setIcon(notDone);
         quantitationStatus.setIcon(notDone);
+        mappingStatus.setIcon(notDone);
         
         rawDataSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         conditionsSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         identificationsSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         quantitationSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
+        mappingSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         
         //setBorder(BorderFactory.createEtchedBorder());
 	//setPreferredSize(new Dimension(102, 30));
@@ -63,11 +69,14 @@ public class AnalyseStatusPanel extends JPanel {
         identificationsSection.add(identifications);        
         quantitationSection.add(quantitationStatus); 
         quantitationSection.add(quantitation);
+        mappingSection.add(mappingStatus);
+        mappingSection.add(mapping);
         
         add(rawDataSection);
         add(conditionsSection);
         add(identificationsSection);
         add(quantitationSection);
+        add(mappingSection);
     }
     
     public void reset() {
@@ -75,6 +84,7 @@ public class AnalyseStatusPanel extends JPanel {
         setConditionsNotDone();
         setIdentificationsNotDone();
         setQuantitationNotDone();
+        setMappingNotDone();
     }
     
     public void setRawDataDone() {
@@ -124,6 +134,18 @@ public class AnalyseStatusPanel extends JPanel {
     public void setQuantitationProcessing() {
         quantitationStatus.setIcon(processing);
     }
+    
+    public void setMappingDone() {
+        mappingStatus.setIcon(done);
+    }
+    
+    public void setMappingNotDone() {
+        mappingStatus.setIcon(notDone);
+    }
+    
+    public void setMappingProcessing() {
+        mappingStatus.setIcon(processing);
+    }    
     
     public synchronized void checkAndUpdateRawDataStatus() {
         AnalyseData data = AnalyseData.getInstance();

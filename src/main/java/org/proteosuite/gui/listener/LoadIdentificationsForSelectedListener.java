@@ -40,7 +40,7 @@ public class LoadIdentificationsForSelectedListener implements ActionListener {
         AnalyseData data = AnalyseData.getInstance();
         JFileChooser chooser = new JFileChooser(ProteoSuiteView.sPreviousLocation);
         FileNameExtensionFilter mzq_filter = new FileNameExtensionFilter(
-        "mzML Data Files", "mzQuantML", "mzid");
+        "Identification Data Files", "mzIdentML", "mzid");
         chooser.setFileFilter(mzq_filter);
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setMultiSelectionEnabled(true);

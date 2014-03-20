@@ -17,16 +17,18 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import javax.xml.bind.JAXBException;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
+import org.proteosuite.gui.analyse.MappingHelper;
 import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.jopenms.command.JOpenMS;
 import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.MzQuantMLFile;
+import org.proteosuite.model.QuantDataFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.model.Task;
+import org.proteosuite.utils.CommandExecutor;
 import uk.ac.liv.mzqlib.consensusxml.convertor.ConsensusXMLProcessor;
 import uk.ac.liv.mzqlib.consensusxml.convertor.ConsensusXMLProcessorFactory;
 
@@ -44,6 +46,14 @@ public class OpenMSLabelFreeWrapper {
     private static String systemExecutableExtension;
 
     public static boolean checkIsInstalled() {
+        if (CommandExecutor.outputContains("FeatureFinderCentroided", "No options given. Aborting!")) {
+            return true;
+        }
+        
+        if (CommandExecutor.outputContains("FeatureFinderCentroided.exe", "No options given. Aborting!")) {
+            return true;
+        }      
+        
         return false;
     }
 
@@ -90,7 +100,7 @@ public class OpenMSLabelFreeWrapper {
         }
 
         String unlabeledOutputFile = rawDataFiles.get(0).getFile().getParent() + "\\unlabeled_result_FLUQT.consensusXML";
-        String mzQuantMLFile = unlabeledOutputFile.replace("consensusXML", "mzq");
+        String mzQuantMLFile = unlabeledOutputFile.replace(".consensusXML", ".mzq");
 
         doMapAlignerPoseClustering(featureFinderCentroidedFiles, mapAlignerPoseClusteringFiles, featureFinderCentroidedLatch, mapAlignerPoseClusteringLatch);
 
@@ -224,6 +234,9 @@ public class OpenMSLabelFreeWrapper {
             protected void done() {
                 try {
                     get();
+                    QuantDataFile quantFile = new MzQuantMLFile(new File(mzqFile));                    
+                    
+                    MappingHelper.map(quantFile);
                 } catch (InterruptedException | ExecutionException ex) {
                     System.out.println(ex.getLocalizedMessage());
                 }

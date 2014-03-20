@@ -85,4 +85,10 @@ public class InspectModel {
     public boolean isQuantFile(String fileName) {
         return false;
     }
+    
+    public void clear() {
+        rawData.clear();
+        identData.clear();
+        quantData.clear();
+    }
 }

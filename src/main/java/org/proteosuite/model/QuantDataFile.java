@@ -24,6 +24,14 @@ public abstract class QuantDataFile {
         return file.getName();
     }
     
+    public File getFile() {
+        return file;
+    }
+    
+    public String getAbsoluteFileName() {
+        return file.getAbsolutePath();
+    }
+    
     public abstract boolean isLoaded();
     public abstract void initiateLoading();
 }

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 
 /**
  *
@@ -23,12 +24,13 @@ public class AnalyseData {
     private List<RawDataFile> rawDataFiles = new ArrayList<RawDataFile>();    
     private String multiplexing = "";
     private boolean supportGenomeAnnotation = false;
+    private static int threads = 1;
     
     private static AnalyseData instance = null;
     
     private AnalyseData() {
         // Should really calculate most efficient number of threads to use.
-        executor = Executors.newFixedThreadPool(4);
+        executor = Executors.newFixedThreadPool(threads);
         msgfExecutor = Executors.newSingleThreadExecutor();
     }
     
@@ -91,5 +93,13 @@ public class AnalyseData {
     public void clear() {
         rawDataFiles.clear();
         multiplexing = "";
+        tasksModel.clear();
+        inspectModel.clear();
+        supportGenomeAnnotation = false;
+        msgfExecutor.shutdownNow();
+        msgfExecutor = Executors.newSingleThreadExecutor();
+        executor.shutdownNow();
+        executor = Executors.newFixedThreadPool(threads);
+        AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().reset();
     }
 }
