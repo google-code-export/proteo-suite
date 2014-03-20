@@ -21,5 +21,5 @@ public class TasksModel extends HashSet<Task> {
         this.remove(task);
         this.add(task);
         return true;
-    }
+    }  
 }

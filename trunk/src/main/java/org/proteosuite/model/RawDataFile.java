@@ -30,6 +30,10 @@ public abstract class RawDataFile {
         return assayConditions;
     }
     
+    public void resetAssay() {
+        assayConditions.clear();
+    }
+    
     public void setAssays(String[] assays) {
         for (String assay : assays) {
             if (!assayConditions.containsKey(assay)) {
