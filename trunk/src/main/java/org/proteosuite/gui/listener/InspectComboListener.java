@@ -99,20 +99,25 @@ public class InspectComboListener implements ItemListener {
 
 			Thread.sleep(5_000);
 			// If it died in less than 5 seconds. Something went wrong!
-			if (!proc.isAlive()) {
-				InputStream err = proc.getErrorStream();
-				String error = "";
-				while (true) {
-					int data = err.read();
-					if (data == -1)
-						break;
+                        try {
+                            if (proc.exitValue() != 0) {
+                                    InputStream err = proc.getErrorStream();
+                                    String error = "";
+                                    while (true) {
+                                            int data = err.read();
+                                            if (data == -1)
+                                                    break;
 
-					error += (char) data;
-				}
-				if (error.length() > 0)
-					JOptionPane.showMessageDialog(null, error, "Error",
-							JOptionPane.ERROR_MESSAGE);
-			}
+                                            error += (char) data;
+                                    }
+                                    if (error.length() > 0)
+                                            JOptionPane.showMessageDialog(null, error, "Error",
+                                                            JOptionPane.ERROR_MESSAGE);
+                            }
+                        } catch (IllegalThreadStateException e)
+                        {
+                            // Ran fine!
+                        }
 
 		} catch (IOException e1) {
 			e1.printStackTrace();

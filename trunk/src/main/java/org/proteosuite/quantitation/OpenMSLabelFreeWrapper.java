@@ -29,6 +29,7 @@ import org.proteosuite.model.QuantDataFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.model.Task;
 import org.proteosuite.utils.CommandExecutor;
+import org.proteosuite.utils.FileUtils;
 import uk.ac.liv.mzqlib.consensusxml.convertor.ConsensusXMLProcessor;
 import uk.ac.liv.mzqlib.consensusxml.convertor.ConsensusXMLProcessorFactory;
 
@@ -143,7 +144,7 @@ public class OpenMSLabelFreeWrapper {
     }
 
     private void doMapAlignerPoseClustering(final List<String> inputFiles, final List<String> outputFiles, final CountDownLatch featureFinderCentroidedLatch, final CountDownLatch mapAlignerPoseClusteringLatch) {
-        AnalyseData.getInstance().getTasksModel().set(new Task(inputFiles.get(0), "Aligning Features"));
+        AnalyseData.getInstance().getTasksModel().set(new Task(FileUtils.getFileNameFromFullPath(inputFiles.get(0)), "Aligning Features"));
         TasksTab.getInstance().refreshFromTasksModel();
         SwingWorker<Void, String> worker = new SwingWorker<Void, String>() {
             @Override
@@ -153,7 +154,7 @@ public class OpenMSLabelFreeWrapper {
                     JOpenMS.performOpenMSTask(systemExecutableExtension, "MapAlignerPoseClustering", inputFiles, outputFiles);
                     mapAlignerPoseClusteringLatch.countDown();
                 } catch (InterruptedException ex) {
-
+                    System.out.println(ex.getLocalizedMessage());
                 }
 
                 return null;
@@ -163,7 +164,7 @@ public class OpenMSLabelFreeWrapper {
             protected void done() {
                 try {
                     get();
-                    AnalyseData.getInstance().getTasksModel().set(new Task(inputFiles.get(0), "Aligning Features", "Complete"));
+                    AnalyseData.getInstance().getTasksModel().set(new Task(FileUtils.getFileNameFromFullPath(inputFiles.get(0)), "Aligning Features", "Complete"));
                     TasksTab.getInstance().refreshFromTasksModel();
                 } catch (InterruptedException | ExecutionException ex) {
                     System.out.println(ex.getLocalizedMessage());
@@ -175,7 +176,7 @@ public class OpenMSLabelFreeWrapper {
     }
 
     private void doFeatureLinkerUnlabeledQT(final List<String> inputFiles, final String outputFile, final CountDownLatch mapAlignerPoseClusteringLatch, final CountDownLatch featureLinkerUnlabeledQTLatch) {
-        AnalyseData.getInstance().getTasksModel().set(new Task(inputFiles.get(0), "Linking Features"));
+        AnalyseData.getInstance().getTasksModel().set(new Task(FileUtils.getFileNameFromFullPath(inputFiles.get(0)), "Linking Features"));
         TasksTab.getInstance().refreshFromTasksModel();
         SwingWorker<Void, String> worker = new SwingWorker<Void, String>() {
             @Override
@@ -194,7 +195,7 @@ public class OpenMSLabelFreeWrapper {
             protected void done() {
                 try {
                     get();
-                    AnalyseData.getInstance().getTasksModel().set(new Task(inputFiles.get(0), "Linking Features", "Complete"));
+                    AnalyseData.getInstance().getTasksModel().set(new Task(FileUtils.getFileNameFromFullPath(inputFiles.get(0)), "Linking Features", "Complete"));
                     TasksTab.getInstance().refreshFromTasksModel();
 
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationDone();

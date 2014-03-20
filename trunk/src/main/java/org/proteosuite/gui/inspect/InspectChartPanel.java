@@ -52,7 +52,9 @@ public class InspectChartPanel extends JTabbedPane {
         if (chartPanel != null)
             addTab("2D", chartPanel);
         
-        setSelectedIndex(index);
+        if (index > 0 && index < this.getTabCount()) {
+            setSelectedIndex(index);
+        }
         
         repaint();
     }
