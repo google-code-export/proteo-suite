@@ -22,6 +22,7 @@ import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.utils.PluginManager;
+import org.proteosuite.utils.ProteinInferenceHelper;
 import org.proteosuite.utils.SystemUtils;
 import org.w3c.dom.DOMException;
 import uk.ac.cranfield.xTracker.utils.XMLparser;
@@ -56,6 +57,8 @@ public class XTrackerITRAQWrapper {
             public void done() {
                 try {
                     get();
+                    
+                    ProteinInferenceHelper.infer(outputPath, "iTRAQ 4-plex", "median");
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 } catch (ExecutionException ex) {

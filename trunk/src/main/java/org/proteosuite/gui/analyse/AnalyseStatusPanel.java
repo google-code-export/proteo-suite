@@ -27,6 +27,9 @@ public class AnalyseStatusPanel extends JPanel {
     private static final JPanel mappingSection = new JPanel();
     private static final JLabel mapping = new JLabel("Mapping");
     private static final JLabel mappingStatus = new JLabel();
+    private static final JPanel proteinInferenceSection = new JPanel();
+    private static final JLabel proteinInference = new JLabel("Protein Inference");
+    private static final JLabel proteinInferenceStatus = new JLabel();
     private static ImageIcon notDone;
     private static ImageIcon done;
     private static ImageIcon processing;
@@ -39,22 +42,25 @@ public class AnalyseStatusPanel extends JPanel {
 				.getClassLoader().getResource("images/loading.gif"));
         
         rawData.setFont(new Font(rawData.getFont().getFontName(), rawData.getFont().getStyle(), 20));
-        conditions.setFont(new Font(rawData.getFont().getFontName(), rawData.getFont().getStyle(), 20));
-        identifications.setFont(new Font(rawData.getFont().getFontName(), rawData.getFont().getStyle(), 20));
-        quantitation.setFont(new Font(rawData.getFont().getFontName(), rawData.getFont().getStyle(), 20));
-        mapping.setFont(new Font(rawData.getFont().getFontName(), rawData.getFont().getStyle(), 20));
+        conditions.setFont(new Font(conditions.getFont().getFontName(), conditions.getFont().getStyle(), 20));
+        identifications.setFont(new Font(identifications.getFont().getFontName(), identifications.getFont().getStyle(), 20));
+        quantitation.setFont(new Font(quantitation.getFont().getFontName(), quantitation.getFont().getStyle(), 20));
+        mapping.setFont(new Font(mapping.getFont().getFontName(), mapping.getFont().getStyle(), 20));
+        proteinInference.setFont(new Font(proteinInference.getFont().getFontName(), proteinInference.getFont().getStyle(), 20));
         
         rawDataStatus.setIcon(notDone);
         conditionsStatus.setIcon(notDone);
         identificationsStatus.setIcon(notDone);
         quantitationStatus.setIcon(notDone);
         mappingStatus.setIcon(notDone);
+        proteinInference.setIcon(notDone);
         
         rawDataSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         conditionsSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         identificationsSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         quantitationSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         mappingSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
+        proteinInference.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         
         //setBorder(BorderFactory.createEtchedBorder());
 	//setPreferredSize(new Dimension(102, 30));
@@ -71,12 +77,15 @@ public class AnalyseStatusPanel extends JPanel {
         quantitationSection.add(quantitation);
         mappingSection.add(mappingStatus);
         mappingSection.add(mapping);
+        proteinInferenceSection.add(proteinInferenceStatus);
+        proteinInferenceSection.add(proteinInference);
         
         add(rawDataSection);
         add(conditionsSection);
         add(identificationsSection);
         add(quantitationSection);
         add(mappingSection);
+        add(proteinInferenceSection);
     }
     
     public void reset() {
@@ -85,6 +94,7 @@ public class AnalyseStatusPanel extends JPanel {
         setIdentificationsNotDone();
         setQuantitationNotDone();
         setMappingNotDone();
+        setProteinInferenceNotDone();
     }
     
     public void setRawDataDone() {
@@ -145,6 +155,18 @@ public class AnalyseStatusPanel extends JPanel {
     
     public void setMappingProcessing() {
         mappingStatus.setIcon(processing);
+    }    
+    
+    public void setProteinInferenceDone() {
+        proteinInferenceStatus.setIcon(done);
+    }
+    
+    public void setProteinInferenceNotDone() {
+        proteinInferenceStatus.setIcon(notDone);
+    }
+    
+    public void setProteinInferenceProcessing() {
+        proteinInferenceStatus.setIcon(processing);
     }    
     
     public synchronized void checkAndUpdateRawDataStatus() {
