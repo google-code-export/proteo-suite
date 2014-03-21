@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JDialog;
@@ -82,9 +83,13 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
         for (int fileIndex = 0; fileIndex < selectedRawFiles.length; fileIndex++) {
             
             identTable.setValueAt("Creating...", selectedRawFiles[fileIndex], 1);            
+            Map<String, String> runParams = identParamsExecute.getParams();
+            
+            // Inject thread setting.
+            runParams.put("-thread", String.valueOf(AnalyseData.MAX_THREADS));
             
             // Create an MSGFPlusWrapper from the view's params.
-            MSGFPlusWrapper msgf = new MSGFPlusWrapper(identParamsExecute.getParams());
+            MSGFPlusWrapper msgf = new MSGFPlusWrapper(runParams);
 
             // First get the spectrum file we want to run identifications for in this run.
             RawDataFile rawDataFile = data.getRawDataFile(selectedRawFiles[fileIndex]);          
