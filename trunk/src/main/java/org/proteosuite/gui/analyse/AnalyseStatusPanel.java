@@ -53,14 +53,14 @@ public class AnalyseStatusPanel extends JPanel {
         identificationsStatus.setIcon(notDone);
         quantitationStatus.setIcon(notDone);
         mappingStatus.setIcon(notDone);
-        proteinInference.setIcon(notDone);
+        proteinInferenceStatus.setIcon(notDone);
         
         rawDataSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         conditionsSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         identificationsSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         quantitationSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         mappingSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
-        proteinInference.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
+        proteinInferenceSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         
         //setBorder(BorderFactory.createEtchedBorder());
 	//setPreferredSize(new Dimension(102, 30));

@@ -214,7 +214,7 @@ public class MzqMzIdMapperFactory {
                         for (EvidenceRef evdRef : evdRefs) {
                             List<SIIData> siiDataList = featureToSIIsMap.get(evdRef.getFeatureRef());
                             //if (evdRef.getIdRefs().isEmpty()) {
-                            //evdRef.setIdRefs(null); //remove previous reference
+                            evdRef.setIdRefs(null); //remove previous reference
                             //}
                             evdRef.setIdentificationFile(null); // reset IdentificationFile;
 
@@ -270,7 +270,7 @@ public class MzqMzIdMapperFactory {
                         // remove previous idRefs as no consensus exist for this peptide
                         evdRefs = pepCon.getEvidenceRef();
                         for (EvidenceRef evdRef : evdRefs) {
-                            //evdRef.setIdRefs(null); //remove previous reference
+                            evdRef.setIdRefs(null); //remove previous reference
                             evdRef.setIdentificationFile(null); // reset IdentificationFile;                       
                         }
                         UserParam userParam = new UserParam();

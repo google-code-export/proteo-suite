@@ -75,6 +75,12 @@ public class MzqProcessorFactory {
                 FeatureList ftList = itFeatureList.next();
                 RawFilesGroup rg = (RawFilesGroup) this.mzqUm.unmarshal(uk.ac.liv.jmzqml.model.mzqml.RawFilesGroup.class, ftList.getRawFilesGroupRef());
                 String rawFn = rg.getRawFile().get(0).getName();
+                if (rawFn == null) {
+                    rawFn = rg.getRawFile().get(0).getLocation();
+                }
+                
+                rawFn = rawFn.replaceAll(".featureXML", ".mzML").replaceAll("_FFC", "").replaceAll("_MAPC", "");
+                
                 String mzidFileName = rawToMzidMap.get(rawFn);
 
                 // corresponding mzIdentML processor 

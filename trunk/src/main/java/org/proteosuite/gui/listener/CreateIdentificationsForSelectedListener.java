@@ -77,13 +77,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
         // Check if we're okay to run identifications..
         boolean paramsSetOkay = identParamsExecute.getRun();
         
-        AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setIdentificationsProcessing();
-
-        // Check if we should do protein inference.
-        boolean doProteinInference = identParamsExecute
-                .getProteinInference();
-        String sRegex = identParamsExecute.getRegex();
-        String firstFile = "";
+        AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setIdentificationsProcessing();        
 
         for (int fileIndex = 0; fileIndex < selectedRawFiles.length; fileIndex++) {
             
@@ -97,10 +91,6 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
 
             // Set the spectrum file as the input to MSGF+
             msgf.setInputSpectrum(rawDataFile);          
-
-            if (fileIndex == 0) {
-                firstFile = msgf.getOutputFileName();
-            }
 
             msgf.performSearch(5);
         }
