@@ -16,12 +16,14 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.util.Locale;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
+
 import org.proteosuite.gui.*;
 import org.proteosuite.quantitation.OpenMSLabelFreeWrapper;
 import org.proteosuite.utils.OpenURL;
@@ -59,7 +61,10 @@ public class ProteoSuiteView extends JFrame {
         // Load parameter settings
         identParamsExecute = new IdentParamsView("execute");              
 
+        setJMenuBar(new MenuBar());
         add(new LeftColumnAndTabbedPanel(), BorderLayout.CENTER);
+        add(new StatusPanel(), BorderLayout.PAGE_END);
+        
 
         // ISO 3166 country code - GB
         Locale.setDefault(new Locale("en", "GB"));   

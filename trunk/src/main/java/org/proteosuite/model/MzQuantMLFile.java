@@ -13,7 +13,6 @@ import javax.swing.SwingWorker;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.tasks.TasksTab;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 
 /**
@@ -68,5 +67,9 @@ public class MzQuantMLFile extends QuantDataFile {
         };
 
         executor.submit(mzMLWorker);
+    }
+
+    public MzQuantMLUnmarshaller getUnmarshaller() {
+        return unmarshaller;
     }
 }

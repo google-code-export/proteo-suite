@@ -13,11 +13,16 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.proteosuite.gui.chart.ChartChromatogram;
 import org.proteosuite.gui.chart.ChartPlot2D;
+import org.proteosuite.gui.inspect.InspectQuant;
+import org.proteosuite.gui.inspect.InspectRaw;
 import org.proteosuite.gui.inspect.InspectTab;
+import org.proteosuite.gui.tables.JTableFeatureQuant;
 import org.proteosuite.gui.tables.JTableMzML;
+import org.proteosuite.gui.tables.JTablePeptideQuant;
+import org.proteosuite.gui.tables.JTableProteinQuant;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.InspectModel;
-import org.proteosuite.model.RawDataFile;
+import org.proteosuite.model.MzQuantMLFile;
 import org.proteosuite.model.RawMzMLFile;
 
 /**
@@ -37,64 +42,69 @@ public class InspectComboListener implements ItemListener {
 
 		// Populate the table.
 		String fileChosen = (String) e.getItem();
-		if (inspectModel.isRawDataFile(fileChosen)) {
+		if (inspectModel.isRawDataFile(fileChosen))
 			openRawFile(fileChosen);
-		} else if (inspectModel.isIdentFile(fileChosen)) {
+		else if (inspectModel.isIdentFile(fileChosen))
 			openIdentFile(fileChosen);
-		} else if (inspectModel.isQuantFile(fileChosen)) {
+		else if (inspectModel.isQuantFile(fileChosen))
 			openQuantFile(fileChosen);
-		}
 	}
 
 	private void openQuantFile(String fileChosen) {
 		InspectTab.getInstance().setInspectType(InspectTab.PANEL_QUANT);
+		InspectQuant quantPanel = (InspectQuant) InspectTab.getInstance().getContentPanel();
+
+		MzQuantMLFile dataFile = (MzQuantMLFile) inspectModel.getQuantDataFile(fileChosen);
 		
-		RawDataFile dataFile = inspectModel.getRawDataFile(fileChosen);
-		JTableMzML rawData = new JTableMzML();
-		rawData.showData((RawMzMLFile) dataFile);
+		JTablePeptideQuant peptideQuant = new JTablePeptideQuant();
+		peptideQuant.showData(dataFile);
 
-		JTable jTable = InspectTab.getInstance().getTablePanel();
+		JTable jTable = quantPanel.getPeptideTable();
 		jTable.removeAll();
-		jTable.setModel(rawData.getModel());
+		jTable.setModel(peptideQuant.getModel());
 
-		rawData.getSelectionModel().addListSelectionListener(
-				InspectTab.getInstance());
-		InspectTab
-				.getInstance()
-				.getChartPanel()
-				.setChromatogram(
-						ChartChromatogram
-								.getChromatogram((RawMzMLFile) dataFile));
-		InspectTab.getInstance().getChartPanel()
-				.set2D(ChartPlot2D.get2DPlot((RawMzMLFile) dataFile));
+		JTableProteinQuant proteinQuant = new JTableProteinQuant();
+		proteinQuant.showData(dataFile);
+
+		jTable = quantPanel.getProteinTable();
+		jTable.removeAll();
+		jTable.setModel(proteinQuant.getModel());
+
+		JTableFeatureQuant featureQuant = new JTableFeatureQuant();
+		featureQuant.showData(dataFile);
+
+		jTable = quantPanel.getFeatureTable();
+		jTable.removeAll();
+		jTable.setModel(featureQuant.getModel());
 	}
 
 	private void openRawFile(String fileChosen) {
 		InspectTab.getInstance().setInspectType(InspectTab.PANEL_RAW);
-		
-		RawDataFile dataFile = inspectModel.getRawDataFile(fileChosen);
-		JTableMzML rawData = new JTableMzML();
-		rawData.showData((RawMzMLFile) dataFile);
 
-		JTable jTable = InspectTab.getInstance().getTablePanel();
+		RawMzMLFile dataFile = (RawMzMLFile) inspectModel.getRawDataFile(fileChosen);
+		JTableMzML rawData = new JTableMzML();
+		rawData.showData(dataFile);
+
+		InspectRaw rawPanel = (InspectRaw) InspectTab.getInstance().getContentPanel();
+		
+		JTable jTable = rawPanel.getTablePanel();
 		jTable.removeAll();
 		jTable.setModel(rawData.getModel());
 
 		rawData.getSelectionModel().addListSelectionListener(
-				InspectTab.getInstance());
-		InspectTab
-				.getInstance()
+				rawPanel);
+		rawPanel
 				.getChartPanel()
 				.setChromatogram(
 						ChartChromatogram
-								.getChromatogram((RawMzMLFile) dataFile));
-		InspectTab.getInstance().getChartPanel()
-				.set2D(ChartPlot2D.get2DPlot((RawMzMLFile) dataFile));
+								.getChromatogram(dataFile));
+		rawPanel.getChartPanel()
+				.set2D(ChartPlot2D.get2DPlot(dataFile));
 	}
 
 	private void openIdentFile(String fileChosen) {
 		InspectTab.getInstance().setInspectType(InspectTab.PANEL_IDENT);
-		
+
 		int response = JOptionPane.showConfirmDialog(null,
 				"Open in ProteoIDViewer?", "View MzIdentML",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
