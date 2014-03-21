@@ -83,8 +83,24 @@ public class InspectModel {
     }
 
     public boolean isQuantFile(String fileName) {
+        for (QuantDataFile identFile : quantData) {
+            if (identFile.getFileName().equals(fileName)) {
+                return true;
+            }
+        }
+        
         return false;
     }
+
+	public QuantDataFile getQuantDataFile(String fileName) {
+        for (QuantDataFile quantFile : quantData) {
+            if (quantFile.getFileName().equals(fileName)) {
+                return quantFile;
+            }
+        }
+
+        return null;
+	}
     
     public void clear() {
         rawData.clear();
