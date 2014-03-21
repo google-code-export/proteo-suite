@@ -5,14 +5,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
-
 public class InspectQuant extends JTabbedPane {
 	private final JTable peptideTable = new JTable();
 	private final JTable proteinTable = new JTable();
 	private final JTable featureTable = new JTable();
 
 	public InspectQuant() {
-		//setTabPlacement(JTabbedPane.LEFT);
 		setTabPlacement(JTabbedPane.BOTTOM);
 		add("Peptides", new JScrollPane(peptideTable));
 		add("Proteins", new JScrollPane(proteinTable));

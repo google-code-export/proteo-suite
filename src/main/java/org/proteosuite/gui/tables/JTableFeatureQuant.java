@@ -9,11 +9,9 @@ import javax.swing.table.TableCellRenderer;
 
 import org.proteosuite.model.MzQuantMLFile;
 
-import uk.ac.liv.jmzqml.MzQuantMLElement;
 import uk.ac.liv.jmzqml.model.mzqml.Feature;
 import uk.ac.liv.jmzqml.model.mzqml.FeatureList;
 import uk.ac.liv.jmzqml.model.mzqml.MzQuantML;
-import uk.ac.liv.jmzqml.model.mzqml.ProteinList;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 
 public class JTableFeatureQuant extends JTableDefault {
@@ -34,7 +32,7 @@ public class JTableFeatureQuant extends JTableDefault {
 			public boolean isCellEditable(int row, int col) {
 				return false;
 			}
-			
+
 			@Override
 			public Class<?> getColumnClass(int columnIndex) {
 				if (columnIndex == 0)
@@ -45,7 +43,7 @@ public class JTableFeatureQuant extends JTableDefault {
 					return Double.class;
 				else if (columnIndex == 3)
 					return Byte.class;
-				
+
 				return String.class;
 			}
 		};
@@ -61,13 +59,6 @@ public class JTableFeatureQuant extends JTableDefault {
 		// iIndexRef).toString());
 		MzQuantMLUnmarshaller unmarshaller = dataFile.getUnmarshaller();
 		MzQuantML mzq = unmarshaller.unmarshal(MzQuantML.class);
-
-		// Check if mzq file contains protein list
-		ProteinList proteinList = unmarshaller
-				.unmarshal(MzQuantMLElement.ProteinList);
-
-		if (proteinList == null)
-			return;
 
 		// Feature Quantitation
 		// Based on the the assay list and study
