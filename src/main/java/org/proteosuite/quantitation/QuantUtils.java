@@ -5,6 +5,7 @@
  */
 package org.proteosuite.quantitation;
 
+import java.io.File;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,7 +54,7 @@ public class QuantUtils {
     public static String writeMzQuantML(String technique, String quantFileName,
             List<RawDataFile> rawData) {
 
-        String directory = rawData.get(0).getFile().getParent().replace("\\", "/");        
+        String directory = rawData.get(0).getFile().getParent().replace("\\", File.separator);        
 
         // ... Create object ...//
         MzQuantML qml = new MzQuantML();
@@ -319,7 +320,7 @@ public class QuantUtils {
             IdentificationFile idFile = new IdentificationFile();
             idFile.setName(idFname);
             idFile.setId(idId);
-            idFile.setLocation(identFile.getAbsoluteFileName().replace("\\", "/"));
+            idFile.setLocation(identFile.getAbsoluteFileName().replace("\\", File.separator));
             idFilesList.add(idFile);
             idFileNameIdMap.put(idFname, idId); // ... Saving hashmap for
             // AssayList ...//
@@ -382,7 +383,7 @@ public class QuantUtils {
             pmList.add(up2);
             UserParam up3 = new UserParam();
             up3.setName("Plugin configuration file");
-            up3.setValue(directory + "/xTracker_"
+            up3.setValue(directory + File.separator + "xTracker_"
                     + sPipeline[0] + ".xtp");
             pmList.add(up3);
             dataProcessing.getProcessingMethod().add(processingMethod);
@@ -400,7 +401,7 @@ public class QuantUtils {
             pmList2.add(up2_2);
             UserParam up2_3 = new UserParam();
             up2_3.setName("Plugin configuration file");
-            up2_3.setValue(directory + "/xTracker_"
+            up2_3.setValue(directory + File.separator + "xTracker_"
                     + sPipeline[1] + ".xtp");
             pmList2.add(up2_3);
             dataProcessing.getProcessingMethod().add(processingMethod2);
@@ -418,7 +419,7 @@ public class QuantUtils {
             pmList3.add(up3_2);
             UserParam up3_3 = new UserParam();
             up3_3.setName("Plugin configuration file");
-            up3_3.setValue(directory.replace("\\", "/") + "/xTracker_"
+            up3_3.setValue(directory.replace("\\", File.separator) + File.separator + "xTracker_"
                     + sPipeline[2] + ".xtp");
             pmList3.add(up3_3);
             UserParam up3_4 = new UserParam();
@@ -452,7 +453,7 @@ public class QuantUtils {
             pmList4.add(up4_2);
             UserParam up4_3 = new UserParam();
             up4_3.setName("Plugin configuration file");
-            up4_3.setValue(directory.replace("\\", "/") + "/xTracker_"
+            up4_3.setValue(directory.replace("\\", File.separator) + File.separator + "xTracker_"
                     + sPipeline[3] + ".xtp");
             pmList4.add(up4_3);
             dataProcessing.getProcessingMethod().add(processingMethod4);
@@ -475,7 +476,7 @@ public class QuantUtils {
             pmList.add(up2);
             UserParam up3 = new UserParam();
             up3.setName("Plugin configuration file");
-            up3.setValue(directory.replace("\\", "/") + "/xTracker_"
+            up3.setValue(directory.replace("\\", File.separator) + File.separator + "xTracker_"
                     + sPipeline[0] + ".xtp");
             pmList.add(up3);
             dataProcessing.getProcessingMethod().add(processingMethod);
@@ -493,7 +494,7 @@ public class QuantUtils {
             pmList3.add(up3_2);
             UserParam up3_3 = new UserParam();
             up3_3.setName("Plugin configuration file");
-            up3_3.setValue(directory.replace("\\", "/") + "/xTracker_"
+            up3_3.setValue(directory.replace("\\", File.separator) + File.separator + "xTracker_"
                     + sPipeline[2] + ".xtp");
             pmList3.add(up3_3);
             dataProcessing.getProcessingMethod().add(processingMethod3);
@@ -511,7 +512,7 @@ public class QuantUtils {
             pmList4.add(up4_2);
             UserParam up4_3 = new UserParam();
             up4_3.setName("Plugin configuration file");
-            up4_3.setValue(directory.replace("\\", "/") + "/xTracker_"
+            up4_3.setValue(directory.replace("\\", File.separator) + File.separator + "xTracker_"
                     + sPipeline[3] + ".xtp");
             pmList4.add(up4_3);
             dataProcessing.getProcessingMethod().add(processingMethod4);
@@ -653,9 +654,9 @@ public class QuantUtils {
         qml.setStudyVariableList(studyVariables);
 
         // ... Marshal mzQuantML object ...//
-        MzQuantMLMarshaller marshaller = new MzQuantMLMarshaller(directory + "/" + quantFileName);
+        MzQuantMLMarshaller marshaller = new MzQuantMLMarshaller(directory + File.separator + quantFileName);
         marshaller.marshall(qml);     
         
-        return directory + "/" + quantFileName;
+        return directory + File.separator + quantFileName;
     }    
 }
