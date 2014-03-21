@@ -752,7 +752,7 @@ public class IdentParamsView extends JPanel {
                                                                                                 //...     Output File                   ...//
                 hmParams.put("-t", jtMSMSTol.getText()+jcMSMSTol.getSelectedItem().toString()); //... 1 - Precursor Mass Tolerance      ...//
                 hmParams.put("-ti", jtErrorRange.getText());                                    //... 2 - Isotope Error Range           ...//
-                hmParams.put("-thread", jcThreads.getSelectedItem().toString());                //... 3 - Threads                       ...//
+                             
                 if (jchbSearchDecoy.isSelected()){                                              //... 4 - TDA                           ...//
                     hmParams.put("-tda", "1");
                 }else{
