@@ -24,13 +24,13 @@ public class AnalyseData {
     private List<RawDataFile> rawDataFiles = new ArrayList<RawDataFile>();    
     private String multiplexing = "";
     private boolean supportGenomeAnnotation = false;
-    private static int threads = 1;
+    public static int MAX_THREADS = computeOptimumThreads();
     
     private static AnalyseData instance = null;
     
     private AnalyseData() {
         // Should really calculate most efficient number of threads to use.
-        executor = Executors.newFixedThreadPool(threads);
+        executor = Executors.newFixedThreadPool(MAX_THREADS);
         msgfExecutor = Executors.newSingleThreadExecutor();
     }
     
@@ -99,7 +99,11 @@ public class AnalyseData {
         msgfExecutor.shutdownNow();
         msgfExecutor = Executors.newSingleThreadExecutor();
         executor.shutdownNow();
-        executor = Executors.newFixedThreadPool(threads);
+        executor = Executors.newFixedThreadPool(MAX_THREADS);
         AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().reset();
+    }
+    
+    private static int computeOptimumThreads() {
+        return Runtime.getRuntime().availableProcessors() - 1;
     }
 }

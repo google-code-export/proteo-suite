@@ -10,7 +10,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import uk.ac.liv.jmzqml.MzQuantMLElement;
+import static uk.ac.liv.jmzqml.MzQuantMLElement.FeatureList;
+import uk.ac.liv.jmzqml.model.mzqml.Feature;
 import uk.ac.liv.jmzqml.model.mzqml.FeatureList;
+
+import uk.ac.liv.jmzqml.model.mzqml.MzQuantML;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 
 /**
@@ -23,7 +27,8 @@ public class TestMapper {
         rawToMzidMap.put("e:\\data\\mam_042408o_CPTAC_study6_6B011_2400_3600.mzML", "e:\\data\\mam_042408o_CPTAC_study6_6B011_2400_3600_msgfplus.mzid");
         rawToMzidMap.put("e:\\data\\mam_042408o_CPTAC_study6_6C008_2400_3600.mzML", "e:\\data\\mam_042408o_CPTAC_study6_6C0081_2400_3600_msgfplus.mzid");
         MzQuantMLUnmarshaller umarsh = new MzQuantMLUnmarshaller("e:\\data\\unlabeled_result_FLUQT.mzq");
-        Iterator<FeatureList> ftList = umarsh.unmarshalCollectionFromXpath(MzQuantMLElement.FeatureList);
+        Iterator<FeatureList> ftList = umarsh.unmarshalCollectionFromXpath(FeatureList);
+        System.out.println(ftList.hasNext());
     
     }
 }

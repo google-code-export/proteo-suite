@@ -18,9 +18,12 @@ import javax.swing.SwingWorker;
 import javax.xml.validation.Validator;
 import org.proteosuite.ProteoSuiteView;
 import static org.proteosuite.ProteoSuiteView.MZQ_XSD;
+import org.proteosuite.gui.analyse.AnalyseDynamicTab;
+import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.RawDataFile;
+import org.proteosuite.model.Task;
 import org.proteosuite.utils.PluginManager;
 import org.proteosuite.utils.ProteinInferenceHelper;
 import org.proteosuite.utils.SystemUtils;
@@ -48,6 +51,9 @@ public class XTrackerITRAQWrapper {
         SwingWorker<Void, Void> iTRAQWorker = new SwingWorker<Void, Void>() {
             @Override
             public Void doInBackground() {
+                AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationProcessing();
+                AnalyseData.getInstance().getTasksModel().set(new Task(rawData.get(0).getFileName(), "Quantitating iTRAQ Data"));
+                TasksTab.getInstance().refreshFromTasksModel();
                 generateFiles("iTRAQ");
                 xTracker xtracker = new xTracker(outputPath, rawData.get(0).getFile().getParent());
                 return null;
@@ -58,7 +64,11 @@ public class XTrackerITRAQWrapper {
                 try {
                     get();
                     
-                    ProteinInferenceHelper.infer(outputPath, "iTRAQ 4-plex", "median", ProteinInferenceHelper.REPORTER_ION_INTENSITY);
+                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationDone();
+                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setMappingDone();
+                    AnalyseData.getInstance().getTasksModel().set(new Task(rawData.get(0).getFileName(), "Quantitating iTRAQ Data", "Complete"));
+                    TasksTab.getInstance().refreshFromTasksModel();
+                    ProteinInferenceHelper.infer(outputPath, "iTRAQ 4-plex", ProteinInferenceHelper.REPORTER_ION_INTENSITY, "sum");
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 } catch (ExecutionException ex) {

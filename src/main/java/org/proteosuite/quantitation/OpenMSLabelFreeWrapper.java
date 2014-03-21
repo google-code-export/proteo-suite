@@ -39,11 +39,11 @@ import uk.ac.liv.mzqlib.consensusxml.convertor.ConsensusXMLProcessorFactory;
  */
 public class OpenMSLabelFreeWrapper {
 
-    private ExecutorService executor;
-    private List<RawDataFile> rawDataFiles;
-    private CountDownLatch featureFinderCentroidedLatch;
-    private CountDownLatch mapAlignerPoseClusteringLatch;
-    private CountDownLatch featureLinkerUnlabeledQTLatch;
+    private final ExecutorService executor;
+    private final List<RawDataFile> rawDataFiles;
+    private final CountDownLatch featureFinderCentroidedLatch;
+    private final CountDownLatch mapAlignerPoseClusteringLatch;
+    private final CountDownLatch featureLinkerUnlabeledQTLatch;
     private static String systemExecutableExtension;
 
     public static boolean checkIsInstalled() {
@@ -236,7 +236,7 @@ public class OpenMSLabelFreeWrapper {
                 try {
                     get();
                     QuantDataFile quantFile = new MzQuantMLFile(new File(mzqFile));                    
-                    
+                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationDone();
                     MappingHelper.map(quantFile);
                 } catch (InterruptedException | ExecutionException ex) {
                     System.out.println(ex.getLocalizedMessage());

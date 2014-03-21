@@ -10,11 +10,13 @@ import javax.swing.SwingWorker;
 import javax.xml.bind.JAXBException;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.inspect.InspectTab;
+import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.MzQuantMLFile;
 import org.proteosuite.model.QuantDataFile;
 import org.proteosuite.model.RawDataFile;
+import org.proteosuite.model.Task;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 import uk.ac.liv.mzqlib.idmapper.MzqMzIdMapper;
 import uk.ac.liv.mzqlib.idmapper.MzqMzIdMapperFactory;
@@ -35,6 +37,8 @@ public class MappingHelper {
             @Override
             protected Void doInBackground() {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setMappingProcessing();
+                AnalyseData.getInstance().getTasksModel().set(new Task(quantData.getFileName(), "Mapping Identifications"));
+                TasksTab.getInstance().refreshFromTasksModel();
                 outputFile = quantData.getAbsoluteFileName().replace(".mzq", "_mapped.mzq");
                 Map<String, String> rawToMzidMap = new HashMap<String, String>();
                 for (int i = 0; i < AnalyseData.getInstance().getRawDataCount(); i++) {
@@ -64,11 +68,12 @@ public class MappingHelper {
                     
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setMappingDone();
                     
-                    ProteinInferenceHelper.infer(outputFile, "Label-free", "median");                    
+                    AnalyseData.getInstance().getTasksModel().set(new Task(quantData.getFileName(), "Mapping Identifications", "Complete"));
+                    TasksTab.getInstance().refreshFromTasksModel();
                     
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(MappingHelper.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (ExecutionException ex) {
+                    //ProteinInferenceHelper.infer(outputFile, "Label-free", "median");                    
+                    
+                } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(MappingHelper.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
