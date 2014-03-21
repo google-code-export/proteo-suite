@@ -30,7 +30,7 @@ public class MenuBar extends JMenuBar {
 	private JMenu getFileMenu() {
 		JMenuItem openFile = new JMenuItem("Open File");
 		openFile.addActionListener(new OpenListener());
-		
+
 		JMenuItem jmExit = new JMenuItem("Exit");
 		jmExit.addActionListener(new ExitListener());
 		jmExit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4,

@@ -52,10 +52,12 @@ public class InspectComboListener implements ItemListener {
 
 	private void openQuantFile(String fileChosen) {
 		InspectTab.getInstance().setInspectType(InspectTab.PANEL_QUANT);
-		InspectQuant quantPanel = (InspectQuant) InspectTab.getInstance().getContentPanel();
+		InspectQuant quantPanel = (InspectQuant) InspectTab.getInstance()
+				.getContentPanel();
 
-		MzQuantMLFile dataFile = (MzQuantMLFile) inspectModel.getQuantDataFile(fileChosen);
-		
+		MzQuantMLFile dataFile = (MzQuantMLFile) inspectModel
+				.getQuantDataFile(fileChosen);
+
 		JTablePeptideQuant peptideQuant = new JTablePeptideQuant();
 		peptideQuant.showData(dataFile);
 
@@ -81,25 +83,22 @@ public class InspectComboListener implements ItemListener {
 	private void openRawFile(String fileChosen) {
 		InspectTab.getInstance().setInspectType(InspectTab.PANEL_RAW);
 
-		RawMzMLFile dataFile = (RawMzMLFile) inspectModel.getRawDataFile(fileChosen);
+		RawMzMLFile dataFile = (RawMzMLFile) inspectModel
+				.getRawDataFile(fileChosen);
 		JTableMzML rawData = new JTableMzML();
 		rawData.showData(dataFile);
 
-		InspectRaw rawPanel = (InspectRaw) InspectTab.getInstance().getContentPanel();
-		
+		InspectRaw rawPanel = (InspectRaw) InspectTab.getInstance()
+				.getContentPanel();
+
 		JTable jTable = rawPanel.getTablePanel();
 		jTable.removeAll();
 		jTable.setModel(rawData.getModel());
 
-		rawData.getSelectionModel().addListSelectionListener(
-				rawPanel);
-		rawPanel
-				.getChartPanel()
-				.setChromatogram(
-						ChartChromatogram
-								.getChromatogram(dataFile));
-		rawPanel.getChartPanel()
-				.set2D(ChartPlot2D.get2DPlot(dataFile));
+		rawData.getSelectionModel().addListSelectionListener(rawPanel);
+		rawPanel.getChartPanel().setChromatogram(
+				ChartChromatogram.getChromatogram(dataFile));
+		rawPanel.getChartPanel().set2D(ChartPlot2D.get2DPlot(dataFile));
 	}
 
 	private void openIdentFile(String fileChosen) {

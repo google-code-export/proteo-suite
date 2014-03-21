@@ -77,10 +77,14 @@ public class JTableProteinQuant extends JTableDefault {
 		StudyVariableList studyList = unmarshaller
 				.unmarshal(MzQuantMLElement.StudyVariableList);
 
-		List<StudyVariable> listStudy = studyList.getStudyVariable();
-		int iStudyVars = listStudy.size();
-		for (StudyVariable study : listStudy) {
-			proteinModel.addColumn(study.getName());
+		int iStudyVars = 0;
+		if (studyList != null)
+		{
+			List<StudyVariable> listStudy = studyList.getStudyVariable();
+			iStudyVars = listStudy.size();
+			for (StudyVariable study : listStudy) {
+				proteinModel.addColumn(study.getName());
+			}
 		}
 
 		// Fill rows
@@ -89,13 +93,13 @@ public class JTableProteinQuant extends JTableDefault {
 		ProteinList proteinList = unmarshaller
 				.unmarshal(MzQuantMLElement.ProteinList);
 
+		if (proteinList == null)
+			return;
+		
 		Map<String, Protein> mapIDToProt = new HashMap<String, Protein>();
 		for (Protein protein : proteinList.getProtein()) {
 			mapIDToProt.put(protein.getId(), protein);
 		}
-
-		if (proteinList == null)
-			return;
 
 		Map<String, List<String>> hmProtein = new HashMap<String, List<String>>();
 		// Getting DataMatrix from AssayQuantLayer

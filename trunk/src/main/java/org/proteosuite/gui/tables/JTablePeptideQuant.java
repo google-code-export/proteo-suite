@@ -1,9 +1,7 @@
 package org.proteosuite.gui.tables;
 
 import java.awt.Component;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JTable;
@@ -17,8 +15,6 @@ import uk.ac.liv.jmzqml.model.mzqml.Assay;
 import uk.ac.liv.jmzqml.model.mzqml.AssayList;
 import uk.ac.liv.jmzqml.model.mzqml.MzQuantML;
 import uk.ac.liv.jmzqml.model.mzqml.PeptideConsensusList;
-import uk.ac.liv.jmzqml.model.mzqml.Protein;
-import uk.ac.liv.jmzqml.model.mzqml.ProteinList;
 import uk.ac.liv.jmzqml.model.mzqml.Row;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 
@@ -62,18 +58,6 @@ public class JTablePeptideQuant extends JTableDefault {
 		List<Assay> listAssay = assayList.getAssay();
 		final int iAssays = listAssay.size();
 
-		// Check if mzq file contains protein list
-		ProteinList proteinList = unmarshaller
-				.unmarshal(MzQuantMLElement.ProteinList);
-
-		Map<String, Protein> mapIDToProt = new HashMap<String, Protein>();
-		for (Protein protein : proteinList.getProtein()) {
-			mapIDToProt.put(protein.getId(), protein);
-		}
-
-		if (proteinList == null)
-			return;
-
 		// Peptide Quantitation
 		// Based on the the assay list and study
 		// variables we will include the different columns
@@ -95,7 +79,10 @@ public class JTablePeptideQuant extends JTableDefault {
 
 				int iI = 1;
 				for (String s : row.getValue()) {
-					aObj[iI] = Double.parseDouble(s);
+					if (s.equals("null"))
+						aObj[iI] = Double.NaN;
+					else
+						aObj[iI] = Double.parseDouble(s);
 					iI++;
 				}
 				peptideModel.insertRow(peptideModel.getRowCount(), aObj);
