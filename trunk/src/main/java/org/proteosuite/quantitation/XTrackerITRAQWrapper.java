@@ -58,7 +58,7 @@ public class XTrackerITRAQWrapper {
                 try {
                     get();
                     
-                    ProteinInferenceHelper.infer(outputPath, "iTRAQ 4-plex", "median");
+                    ProteinInferenceHelper.infer(outputPath, "iTRAQ 4-plex", "median", ProteinInferenceHelper.REPORTER_ION_INTENSITY);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 } catch (ExecutionException ex) {
@@ -303,9 +303,9 @@ public class XTrackerITRAQWrapper {
             // configurations ...//
 
             RawDataFile dataFile = rawData.get(loopIterator);
-            for (Entry<String, String> assay : dataFile.getConditions().entrySet()) {
-                String assayName = assay.getKey();
+            for (Entry<String, String> assay : dataFile.getConditions().entrySet()) {                
                 ITRAQReagent reagent = ITRAQReagent.getReagent(true, assay.getKey());
+                String assayName = reagent.getName();
                 String mzValue = String.valueOf(reagent.getMz());
                 double[] correctionFactorsDoubles = reagent.getCorrectionFactors();
                 String[] correctionFactors = new String[correctionFactorsDoubles.length];

@@ -20,13 +20,14 @@ import uk.ac.man.mzqlib.postprocessing.ProteinAbundanceInference;
  * @author SPerkins
  */
 public class ProteinInferenceHelper {
+    public static final String REPORTER_ION_INTENSITY = "MS:1001847";
     private static final String peptideDataParamAccession = "MS:1001891";
     private static final String proteinDataParamAccession = "MS:1001890";
     private static final String proteinDataParamName = "Progenesis: protein normalised abundance";
     private static final String quantLayerType = "AssayQuantLayer";
     private static String outputFile = null;
     private ProteinInferenceHelper() {}
-    public static void infer(final String inputFile, final String quantMethod, final String mergeOperator) {
+    public static void infer(final String inputFile, final String quantMethod, final String quantDataType, final String mergeOperator) {
         SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
             
             @Override
@@ -34,7 +35,7 @@ public class ProteinInferenceHelper {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setProteinInferenceProcessing();
                 String outputFile = inputFile.replaceAll(".mzq", "_protein_inference.mzq");
                 try {
-                    new ProteinAbundanceInference(inputFile, outputFile, quantMethod, mergeOperator, peptideDataParamAccession,
+                    new ProteinAbundanceInference(inputFile, outputFile, quantMethod, mergeOperator, quantDataType,
                             proteinDataParamAccession, proteinDataParamName, quantLayerType);
                 } catch (FileNotFoundException ex) {
                     System.out.println("Protein inference error: " + ex.getLocalizedMessage());

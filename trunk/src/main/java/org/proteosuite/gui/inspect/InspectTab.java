@@ -68,7 +68,10 @@ public class InspectTab extends JPanel implements ListSelectionListener {
 			throw new IllegalArgumentException("Unknown panel type");
 		}
 
-		remove(CONTENT_PANEL_INDEX);
+                if (!(CONTENT_PANEL_INDEX >= this.getComponentCount())) {
+                    remove(CONTENT_PANEL_INDEX);
+                }
+		
 		addImpl(content, BorderLayout.CENTER, CONTENT_PANEL_INDEX);
 		repaint();
 		revalidate();
