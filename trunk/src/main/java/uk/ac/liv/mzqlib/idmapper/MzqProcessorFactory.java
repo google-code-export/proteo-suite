@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package uk.ac.liv.mzqlib.idmapper;
 
 import gnu.trove.map.TIntObjectMap;
@@ -41,7 +40,7 @@ public class MzqProcessorFactory {
     }
 
     public MzqProcessor buildMzqProcessor(MzQuantMLUnmarshaller mzqUm,
-                                          Map rawToMzidMap)
+            Map rawToMzidMap)
             throws JAXBException {
         return new MzqProcessorImpl(mzqUm, rawToMzidMap);
     }
@@ -62,7 +61,7 @@ public class MzqProcessorFactory {
          * Constructor
          */
         private MzqProcessorImpl(MzQuantMLUnmarshaller mzqUm,
-                                 Map<String, String> rawToMzidMap)
+                Map<String, String> rawToMzidMap)
                 throws JAXBException {
 
             this.mzqUm = mzqUm;
@@ -78,9 +77,9 @@ public class MzqProcessorFactory {
                 if (rawFn == null) {
                     rawFn = rg.getRawFile().get(0).getLocation();
                 }
-                
+
                 rawFn = rawFn.replaceAll(".featureXML", ".mzML").replaceAll("_FFC", "").replaceAll("_MAPC", "");
-                
+
                 String mzidFileName = rawToMzidMap.get(rawFn);
 
                 // corresponding mzIdentML processor 
@@ -98,33 +97,8 @@ public class MzqProcessorFactory {
 
                     ExtendedFeature exFt = new ExtendedFeature(ft);
 
-                    // try up RT first 
-                    int upperRt = (int) exFt.getURT();
-
-                    List<SIIData> siiDataList = rtToSIIsMap.get(upperRt);
-
-                    if (siiDataList != null) {
-                        for (SIIData sd : siiDataList) {
-                            double siiExpMz = sd.getExperimentalMassToCharge();
-                            double siiRt = sd.getRetentionTime();
-                            // determine if rt and mz of the SIIData is in the mass trace of the feature
-                            if (isInRange(siiExpMz, exFt.getLMZ(), exFt.getRMZ()) && isInRange(siiRt, exFt.getBRT(), exFt.getURT())) {
-                                if (ftSIIDataList == null) {
-                                    ftSIIDataList = new ArrayList();
-                                    featureToSIIsMap.put(ft.getId(), ftSIIDataList);
-                                }
-                                ftSIIDataList.add(sd);
-                            }
-                        }
-                    }
-
-                    // try bottom RT second if different from up RT
-                    // for example: (35.433-36.112) will give both 35 and 36 a try
-                    //              (35.022-35.913) will only give 35 a try
-                    int bottomRt = (int) exFt.getBRT();
-                    if (bottomRt != upperRt) {
-                        siiDataList = rtToSIIsMap.get(bottomRt);
-
+                    for (int i = (int) exFt.getBRT(); i <= (int) exFt.getURT(); i++) {
+                        List<SIIData> siiDataList = rtToSIIsMap.get(i);
                         if (siiDataList != null) {
                             for (SIIData sd : siiDataList) {
                                 double siiExpMz = sd.getExperimentalMassToCharge();
@@ -139,7 +113,7 @@ public class MzqProcessorFactory {
                                 }
                             }
                         }
-                    }
+                    }                 
 
                     // build combinedPepModStringToSIIsMap;
                     Map<String, List<SIIData>> pepModStringToSIIsMap = mzidProc.getPeptideModStringToSIIsMap();
@@ -201,18 +175,19 @@ public class MzqProcessorFactory {
     /**
      * Determine if the test double falls in a range defined by both boundaries.
      *
-     * @param test           the double number to be test
-     * @param rangeBoundary1 one side of the range boundary regardless left or right side
-     * @param rangeBoundary2 the other side of the range boundary regardless left or right side
+     * @param test the double number to be test
+     * @param rangeBoundary1 one side of the range boundary regardless left or
+     * right side
+     * @param rangeBoundary2 the other side of the range boundary regardless
+     * left or right side
      *
      * @return true if test double falls in the given range; false otherwise
      */
     private boolean isInRange(double test, double rangeBoundary1,
-                              double rangeBoundary2) {
+            double rangeBoundary2) {
         if (rangeBoundary1 <= rangeBoundary2) {
             return test >= rangeBoundary1 && test <= rangeBoundary2;
-        }
-        else {
+        } else {
             return test <= rangeBoundary1 && test >= rangeBoundary2;
         }
     }

@@ -20,6 +20,7 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
+import org.proteosuite.utils.FileUtils;
 import uk.ac.ebi.jmzidml.model.mzidml.*;
 import uk.ac.liv.jmzqml.MzQuantMLElement;
 import uk.ac.liv.jmzqml.model.mzqml.*;
@@ -355,6 +356,7 @@ public class MzqMzIdMapperFactory {
             SmallMoleculeList smallMolList = mzqUm.unmarshal(MzQuantMLElement.SmallMoleculeList);
             Iterator<FeatureList> ftListIter = mzqUm.unmarshalCollectionFromXpath(MzQuantMLElement.FeatureList);
 
+            
 
             MzQuantMLMarshaller marsh = new MzQuantMLMarshaller();
 
@@ -380,7 +382,7 @@ public class MzqMzIdMapperFactory {
                 IdentificationFile idFile = new IdentificationFile();
                 idFile.setFileFormat(ff);
                 //String id = "idfile_" + count;
-                idFile.setId(mzidFnToFileIdMap.get(mzidFn));
+                idFile.setId(mzidFnToFileIdMap.get(FileUtils.getFileNameFromFullPath(mzidFn)));
                 //count++;
                 File f = new File(mzidFn);
                 idFile.setLocation(f.getAbsolutePath());
@@ -454,8 +456,16 @@ public class MzqMzIdMapperFactory {
                 }
 
                 // new ProteinList
-                ProteinList newProtList = new ProteinList();
-                newProtList.setId(protList.getId());
+                ProteinList newProtList = new ProteinList();  
+                
+                
+                if (protList == null) {
+                    newProtList.setId("ProteinList1");
+                } else {
+                    newProtList.setId(protList.getId());
+                }
+                
+                
                 int protCount = 0;
                 for (String protAcc : protAccToPepConNewIdsMap.keySet()) {
                     Protein protein = new Protein();
@@ -472,8 +482,11 @@ public class MzqMzIdMapperFactory {
                     }
                     newProtList.getProtein().add(protein);
                 }
-                m.marshall(newProtList, writer);
-                writer.write("\n");
+                
+                if (!protAccToPepConNewIdsMap.isEmpty()) {
+                    m.marshall(newProtList, writer);
+                    writer.write("\n");
+                }                
 
                 for (PeptideConsensusList pepConList : this.pepConLists) {
                     m.marshall(pepConList, writer);

@@ -113,7 +113,7 @@ public class ProteinGrouping {
 //        peptideToProteinTmp = peptideToProtein;
         int subSetGroupNo = 0;
         String pepTmpSel = null;
-        while (!subSetTmp.isEmpty()) {
+        while (!subSetTmp.isEmpty() && subSetGroupNo < 1000000) {
             subSetGroupNo++;
 
             for (String pep : subSetTmp) {
