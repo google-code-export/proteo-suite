@@ -1,6 +1,5 @@
 package org.proteosuite.utils;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -9,11 +8,9 @@ import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import javax.xml.bind.JAXBException;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
-import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.IdentDataFile;
-import org.proteosuite.model.MzQuantMLFile;
 import org.proteosuite.model.QuantDataFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.model.Task;
@@ -71,7 +68,7 @@ public class MappingHelper {
                     AnalyseData.getInstance().getTasksModel().set(new Task(quantData.getFileName(), "Mapping Identifications", "Complete"));
                     TasksTab.getInstance().refreshFromTasksModel();
                     
-                    //ProteinInferenceHelper.infer(outputFile, "Label-free", "median");                    
+                    ProteinInferenceHelper.infer(outputFile, "Label-free", ProteinInferenceHelper.LCMS_FEATURE_INTENSITY, "sum");                    
                     
                 } catch (InterruptedException | ExecutionException ex) {
                     Logger.getLogger(MappingHelper.class.getName()).log(Level.SEVERE, null, ex);

@@ -16,7 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import uk.ac.liv.jmzqml.MzQuantMLElement;
-//import static uk.ac.liv.jmzqml.MzQuantMLElement.MzQuantML;
 import uk.ac.liv.jmzqml.model.mzqml.*;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLMarshaller;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
