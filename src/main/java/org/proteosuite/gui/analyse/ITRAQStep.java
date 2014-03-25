@@ -12,6 +12,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import org.proteosuite.gui.listener.ConfirmButtonListener;
 
 /**
@@ -28,7 +29,7 @@ public class ITRAQStep extends JPanel {
         stepTitle.setFont(new Font(stepTitle.getFont().getFontName(), stepTitle.getFont().getStyle(), 72));
         add(stepTitle, BorderLayout.PAGE_START);
         
-        JLabel mainText = new JLabel("Your identifications will be automatically created and/or loaded in the background.\n"
+        JTextArea mainText = new JTextArea("Your identifications will be automatically created and/or loaded in the background.\n"
                 + "Additionally your raw data files are (or have) been loaded for inspection in the Inspect tab. This tab will"
                 + " also become populated with quantitation data after you click confirm below.\n\n"
                 + "Identifications created in Proteosuite are provided by MSGF+.\n" 
