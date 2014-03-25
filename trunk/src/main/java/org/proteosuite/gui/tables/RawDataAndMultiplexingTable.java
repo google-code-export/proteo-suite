@@ -43,7 +43,7 @@ public class RawDataAndMultiplexingTable extends JTable {
         boolean[] peakPicked = rawDataFile.getPeakPicking();
         String ms1PeakPicked = peakPicked[0] ? "Yes" : "No";
         String ms2PeakPicked = peakPicked[1] ? "Yes" : "No";
-        model.addRow(new Object[]{rawDataFile.getFileName(), rawDataFile.getFileSize(), rawDataFile.getFormat(), "QTOF", ms1PeakPicked, ms2PeakPicked, rawDataFile.getSpectraCount()});        
+        model.addRow(new Object[]{rawDataFile.getFileName(), rawDataFile.getFileSize(), rawDataFile.getFormat(), "Unknown", ms1PeakPicked, ms2PeakPicked, rawDataFile.getSpectraCount()});        
     }
 
     public void clear() {
