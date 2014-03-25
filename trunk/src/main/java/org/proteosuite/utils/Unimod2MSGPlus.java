@@ -35,14 +35,14 @@ import uk.ac.liv.unimod.UnimodT;
 
 public class Unimod2MSGPlus {
     
-    private static String UNIMOD_PATH =  "/resources/unimod.xml";
+    private static String UNIMOD_PATH = "config/unimod.xml";
     private List<ModT> modList;
     private List<List<String>> alMods = new ArrayList<List<String>>();
 
     //... Constructor ...//
-    public Unimod2MSGPlus(){
+    public Unimod2MSGPlus(){        
         try{
-            InputStream stream = getClass().getResourceAsStream(UNIMOD_PATH);
+            InputStream stream = getClass().getClassLoader().getResourceAsStream(UNIMOD_PATH);
             UnimodT unimod = unmarshal(UnimodT.class, stream);
 
             ModificationsT mods = unimod.getModifications();

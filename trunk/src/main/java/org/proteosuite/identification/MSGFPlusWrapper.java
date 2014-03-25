@@ -29,6 +29,7 @@ import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.MzIdentMLFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.model.Task;
+import org.proteosuite.utils.RetentionTimeHelper;
 
 /**
  *
@@ -135,7 +136,8 @@ public class MSGFPlusWrapper extends SearchEngineBase implements SearchEngine {
                         for (int i = 0; i < data.getRawDataCount(); i++) {
                             RawDataFile rawDataFile = data.getRawDataFile(i);
                             if (rawDataFile.equals(inputSpectrum)) {
-                                rawDataFile.setIdentificationDataFile(new MzIdentMLFile(new File(outputFileName)));
+                                String correctedRtFile = RetentionTimeHelper.fill(rawDataFile.getAbsoluteFileName(), outputFileName);
+                                rawDataFile.setIdentificationDataFile(new MzIdentMLFile(new File(correctedRtFile)));
                                 ((CreateOrLoadIdentificationsStep)AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP).refreshFromData();
                             }
                         }
