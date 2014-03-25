@@ -189,7 +189,7 @@ public class IdentParamsView extends JPanel {
 		jlEnzyme.setText("Enzyme:");
 
 		jcMSMSTol.setModel(new DefaultComboBoxModel<String>(new String[] {
-				"PPM", "Da" }));
+				"ppm", "Da" }));
 
 		jtMSMSTol.setText("20");
 		jtMSMSTol
@@ -802,7 +802,7 @@ public class IdentParamsView extends JPanel {
 
 		jlUniMod.setText("Unimod modifications:");
 
-		javax.swing.GroupLayout jPanel2Layout = new GroupLayout(
+		GroupLayout jPanel2Layout = new GroupLayout(
 				jPanel2);
 		jPanel2.setLayout(jPanel2Layout);
 		jPanel2Layout
@@ -974,7 +974,7 @@ public class IdentParamsView extends JPanel {
 
 		jlRegex.setText("Regex:");
 
-		javax.swing.GroupLayout layout = new GroupLayout(this);
+		GroupLayout layout = new GroupLayout(this);
 		setLayout(layout);
 		layout.setHorizontalGroup(layout
 				.createParallelGroup(Alignment.LEADING)
