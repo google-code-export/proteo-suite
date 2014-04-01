@@ -45,9 +45,7 @@ public class DeltaConversionTest {
             for (int i = 0; i < testDataAsNumbers.length; i++) {
                 assertEquals((Double) testDataAsNumbers[i], (Double) testDataAsNumbersConvertedBackFromDeltas[i], 0.0d);
             }
-        } catch (DeltaSourceDataFormatException d) {
-            System.out.println(d.getLocalizedMessage());
-        } catch (DeltaEncodedDataFormatException d) {
+        } catch (DeltaSourceDataFormatException | DeltaEncodedDataFormatException d) {
             System.out.println(d.getLocalizedMessage());
         }
     }
