@@ -34,91 +34,95 @@ import uk.ac.liv.unimod.SpecificityT;
 import uk.ac.liv.unimod.UnimodT;
 
 public class Unimod2MSGPlus {
-    
-    private static String UNIMOD_PATH = "config/unimod.xml";
-    private List<ModT> modList;
-    private List<List<String>> alMods = new ArrayList<List<String>>();
 
-    //... Constructor ...//
-    public Unimod2MSGPlus(){        
-        try{
-            InputStream stream = getClass().getClassLoader().getResourceAsStream(UNIMOD_PATH);
-            UnimodT unimod = unmarshal(UnimodT.class, stream);
+	private static String UNIMOD_PATH = "config/unimod.xml";
+	private List<ModT> modList;
 
-            ModificationsT mods = unimod.getModifications();
-            modList = mods.getMod();              
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-    //... Getting all modifications ...//
-    public List<List<String>> getAllMods(){        
-        try {
-            for (ModT mod : modList) {
-                String modValue = "";
-                CompositionT comp = mod.getDelta();
-                double mass = comp.getMonoMass();
+	// Constructor
+	public Unimod2MSGPlus() {
+		try {
+			InputStream stream = getClass().getClassLoader()
+					.getResourceAsStream(UNIMOD_PATH);
+			UnimodT unimod = unmarshal(UnimodT.class, stream);
 
-                String psiMs = mod.getTitle();
-                for(SpecificityT spec : mod.getSpecificity()){
-                    String site = spec.getSite();
-                    String site2 = spec.getSite();
-                    String position = spec.getPosition().value();
+			ModificationsT mods = unimod.getModifications();
+			modList = mods.getMod();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-                    if (site.equals("N-term") || site.equals("C-term")) {
-                        site = "*";
-                    }
-                    
-                    if (position.equals("Anywhere")) {
-                        position = "any";
-                    } else if (position.equals("Protein N-term")) {
-                        position = "Prot-N-term";
-                    } else if (position.equals("Protein C-term")) {
-                        position = "Prot-N-term";
-                    } else if (position.equals("Any N-term")) {
-                        position = "N-term";
-                    } else if (position.equals("Any C-term")) {
-                        position = "C-term";
-                    } else {
-                        System.out.println("Position not recognized:" + position);
-                    }
-                    List<String> al = new ArrayList<String>();                                        
-                    modValue = psiMs+" ("+site2+")";
+	// Getting all modifications
+	public List<List<String>> getAllMods() {
+		List<List<String>> alMods = new ArrayList<List<String>>();
+		try {
+			for (ModT mod : modList) {
+				String modValue = "";
+				CompositionT comp = mod.getDelta();
+				double mass = comp.getMonoMass();
 
-                    al.add(modValue);
-                    al.add(Double.toString(mass));
-                    al.add(site);
-                    al.add(position);
-                    al.add(psiMs);
-                    alMods.add(al);
-                }
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        Collections.sort(alMods, new ArrayList2DComparator());        
-        return alMods;
-    }
-    //... Sorting array ...//
-    private static class ArrayList2DComparator implements Comparator<List<String>> {  
-        @Override
-        public int compare(List<String> P, List<String> Q) {  
-            String S = P.get(0);
-            String T = Q.get(0);
-            
-            return S.toLowerCase().compareTo(T.toLowerCase());  
-        }  
-    }     
-    
-    //... JAXB unmarshalling ...//
-    public <T> T unmarshal( Class<T> docClass, InputStream inputStream )
-        throws JAXBException {
-        String packageName = docClass.getPackage().getName();
-        JAXBContext jc = JAXBContext.newInstance( packageName );
-        Unmarshaller u = jc.createUnmarshaller();
-        @SuppressWarnings("unchecked")
-        JAXBElement<T> doc = (JAXBElement<T>)u.unmarshal( inputStream );
-        return doc.getValue();
-    }
+				String psiMs = mod.getTitle();
+				for (SpecificityT spec : mod.getSpecificity()) {
+					String site = spec.getSite();
+					String site2 = spec.getSite();
+					String position = spec.getPosition().value();
+
+					if (site.equals("N-term") || site.equals("C-term")) {
+						site = "*";
+					}
+
+					if (position.equals("Anywhere")) {
+						position = "any";
+					} else if (position.equals("Protein N-term")) {
+						position = "Prot-N-term";
+					} else if (position.equals("Protein C-term")) {
+						position = "Prot-N-term";
+					} else if (position.equals("Any N-term")) {
+						position = "N-term";
+					} else if (position.equals("Any C-term")) {
+						position = "C-term";
+					} else {
+						System.out.println("Position not recognized:"
+								+ position);
+					}
+					List<String> al = new ArrayList<String>();
+					modValue = psiMs + " (" + site2 + ")";
+
+					al.add(modValue);
+					al.add(Double.toString(mass));
+					al.add(site);
+					al.add(position);
+					al.add(psiMs);
+					alMods.add(al);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Collections.sort(alMods, new ArrayList2DComparator());
+		return alMods;
+	}
+
+	// Sorting array
+	private static class ArrayList2DComparator implements
+			Comparator<List<String>> {
+		@Override
+		public int compare(List<String> P, List<String> Q) {
+			String S = P.get(0);
+			String T = Q.get(0);
+
+			return S.toLowerCase().compareTo(T.toLowerCase());
+		}
+	}
+
+	// JAXB unmarshalling
+	public <T> T unmarshal(Class<T> docClass, InputStream inputStream)
+			throws JAXBException {
+		String packageName = docClass.getPackage().getName();
+		JAXBContext jc = JAXBContext.newInstance(packageName);
+		Unmarshaller u = jc.createUnmarshaller();
+		@SuppressWarnings("unchecked")
+		JAXBElement<T> doc = (JAXBElement<T>) u.unmarshal(inputStream);
+		return doc.getValue();
+	}
 }
