@@ -8,6 +8,7 @@ import javax.swing.JPanel;
  * @author SPerkins
  */
 public class AnalyseDynamicTab extends JPanel {
+	private static final long serialVersionUID = 1L;
 	private static AnalyseDynamicTab instance = null;
 	private final BorderLayout layout = new BorderLayout();
 	public static final JPanel RAW_DATA_AND_MULTIPLEXING_STEP = new RawDataAndMultiplexingStep();

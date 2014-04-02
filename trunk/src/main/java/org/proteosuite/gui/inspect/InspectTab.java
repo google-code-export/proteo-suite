@@ -4,7 +4,6 @@ package org.proteosuite.gui.inspect;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -22,6 +21,7 @@ import org.proteosuite.model.RawDataFile;
  * @author SPerkins
  */
 public class InspectTab extends JPanel {
+	private static final long serialVersionUID = 1L;
 	public static final byte PANEL_BLANK = 0;
 	public static final byte PANEL_RAW = 1;
 	public static final byte PANEL_IDENT = 2;

@@ -18,7 +18,8 @@ import org.proteosuite.model.RawDataFile;
  * @author SPerkins
  */
 public class DefineConditionsStep extends JPanel {
-    private static final BorderLayout layout = new BorderLayout();
+	private static final long serialVersionUID = 1L;
+	private static final BorderLayout layout = new BorderLayout();
     private DefineConditionsTable conditionsTable;    
     public DefineConditionsStep() {
         setLayout(layout);        
@@ -32,13 +33,14 @@ public class DefineConditionsStep extends JPanel {
        
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+        
         JButton previousButton = new JButton("Previous");
         previousButton.addActionListener(new PreviousButtonListener(this));
         buttonsPanel.add(previousButton);
+        
         JButton continueButton = new JButton("Continue");
         continueButton.addActionListener(new ContinueButtonListener(this));
         buttonsPanel.add(continueButton);
-        
         
         add(buttonsPanel, BorderLayout.PAGE_END);
     }

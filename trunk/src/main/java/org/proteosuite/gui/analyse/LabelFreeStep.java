@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.proteosuite.gui.analyse;
 
 import java.awt.BorderLayout;
@@ -20,7 +14,9 @@ import org.proteosuite.gui.listener.ConfirmButtonListener;
  * @author SPerkins
  */
 public class LabelFreeStep extends JPanel {
-    private static final BorderLayout layout = new BorderLayout();
+	private static final long serialVersionUID = 1L;
+	
+	private static final BorderLayout layout = new BorderLayout();
     
     public LabelFreeStep() {
         setLayout(layout);
@@ -41,6 +37,7 @@ public class LabelFreeStep extends JPanel {
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel   , BoxLayout.X_AXIS));
         buttonsPanel.add(new JLabel("CLICK CONFIRM TO CONFIRM QUANTITATION TYPE AS LABEL-FREE AND RUN ANALYSIS"));
+        
         JButton confirmButton = new JButton("Confirm");
         confirmButton.addActionListener(new ConfirmButtonListener(this));
         buttonsPanel.add(confirmButton);

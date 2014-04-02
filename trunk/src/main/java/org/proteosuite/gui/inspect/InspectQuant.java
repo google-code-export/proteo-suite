@@ -6,6 +6,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
 public class InspectQuant extends JTabbedPane {
+	private static final long serialVersionUID = 1L;
 	private final JTable peptideTable = new JTable();
 	private final JTable proteinTable = new JTable();
 	private final JTable featureTable = new JTable();

@@ -38,7 +38,7 @@ import org.proteosuite.utils.SystemUtils;
 public class ProteoSuiteView extends JFrame {
 
     // Project settings
-    public static final String PROTEOSUITE_VERSION = "0.3.3 ALPHA";
+    public static final String PROTEOSUITE_VERSION = "1.0.0 ALPHA";
     public static String sProjectName = "";
     public static String sPreviousLocation = "user.home";    
     public static final String MZQ_XSD = "mzQuantML_1_0_0.xsd";

@@ -63,6 +63,7 @@ import org.proteosuite.utils.Unimod2MSGPlus;
  * @author fgonzalez
  */
 public class IdentParamsView extends JPanel {
+	private static final long serialVersionUID = 1L;
 	private static final WorkSpace workSpace = WorkSpace.getInstance();
 	private static final String NO_MODS_SELECTED = "--- none selected ---";
 

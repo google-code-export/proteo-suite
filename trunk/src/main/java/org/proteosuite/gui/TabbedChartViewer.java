@@ -19,6 +19,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
  * @author Andrew Collins
  */
 public class TabbedChartViewer extends JTabbedPane {
+	private static final long serialVersionUID = 1L;
 	private final JPanel jdpMS = new JPanel();
 	private final JPanel jdpTIC = new JPanel();
 	private final JPanel jp2D = new JPanel();
