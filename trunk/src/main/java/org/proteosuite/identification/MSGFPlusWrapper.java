@@ -1,27 +1,23 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- *//*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.proteosuite.identification;
 
 import edu.ucsd.msjava.params.ParamManager;
 import edu.ucsd.msjava.ui.MSGFPlus;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.SwingWorker;
+
 import static org.proteosuite.ProteoSuiteView.SYS_UTILS;
+
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.tasks.TasksTab;
@@ -32,191 +28,205 @@ import org.proteosuite.model.Task;
 import org.proteosuite.utils.RetentionTimeHelper;
 
 /**
- *
+ * 
  * @author SPerkins
  */
 public class MSGFPlusWrapper extends SearchEngineBase implements SearchEngine {
 
-    // MSGF+ param manager.
-    private ParamManager paramManager;
+	// MSGF+ param manager.
+	private ParamManager paramManager;
 
-    // The input spectrum file for the search we will do.
-    private RawDataFile inputSpectrum;
+	// The input spectrum file for the search we will do.
+	private RawDataFile inputSpectrum;
 
-    private String inputSpectrumString;
-    
-    private String modificationFileName = null;
+	private String inputSpectrumString;
 
-    private String outputFileName = null;
+	private String modificationFileName = null;
 
-    // Map to store MSGF+ command line options.
-    Map<String, String> map;
+	private String outputFileName = null;
 
-    // Array to store MSGF+ command line options (from map).
-    String[] parameterArray;
+	// Map to store MSGF+ command line options.
+	private Map<String, String> map;
 
-    public MSGFPlusWrapper(Map<String, String> map) {
-        // Create a paramManager to define our run.
-        paramManager = new ParamManager(
-                "MS-GF+", MSGFPlus.VERSION,
-                MSGFPlus.RELEASE_DATE, "java -Xmx"
-                + SYS_UTILS.getMaxMemory()
-                + "M -jar MSGFPlus.jar");
-        paramManager.addMSGFPlusParams();
-        this.map = map;
-    }
+	// Array to store MSGF+ command line options (from map).
+	private String[] parameterArray;
 
-    public void setInputSpectrum(RawDataFile inputSpectrum) {
-        this.inputSpectrum = inputSpectrum;
-    }
+	public MSGFPlusWrapper(Map<String, String> map) {
+		// Create a paramManager to define our run.
+		paramManager = new ParamManager("MS-GF+", MSGFPlus.VERSION,
+				MSGFPlus.RELEASE_DATE, "java -Xmx" + SYS_UTILS.getMaxMemory()
+						+ "M -jar MSGFPlus.jar");
+		paramManager.addMSGFPlusParams();
+		this.map = map;
+	}
 
-    public void setInputSpectrumString(String inputSpectrumString) {
-        this.inputSpectrumString = inputSpectrumString;
-    }
+	public void setInputSpectrum(RawDataFile inputSpectrum) {
+		this.inputSpectrum = inputSpectrum;
+	}
 
-    public void setOutputFileName(String outputFileName) {
-        this.outputFileName = outputFileName;
-    }
-    
-    public void setModificationFileName(String modificationFile) {
-        this.modificationFileName = modificationFile;
-    }
+	public void setInputSpectrumString(String inputSpectrumString) {
+		this.inputSpectrumString = inputSpectrumString;
+	}
 
-    public String getOutputFileName() {
-        if (outputFileName == null) {
-            generateOutputFileName();
-        }
+	public void setOutputFileName(String outputFileName) {
+		this.outputFileName = outputFileName;
+	}
 
-        return outputFileName;
-    }
+	public void setModificationFileName(String modificationFile) {
+		this.modificationFileName = modificationFile;
+	}
 
-    public void performSearch(final int executionDelay) {        
-        ExecutorService executor = AnalyseData.getInstance().getMSGFPlusExecutor();
-        
-        AnalyseData.getInstance().getTasksModel().set(new Task(inputSpectrum.getFileName(), "Create Identifications"));
-        TasksTab.getInstance().refreshFromTasksModel();
-        
-        buildModificationFile();
-        buildMap();
-        buildParameterArray();
-        if (parameterArray.length == 0) {
-            // This is a problem, we are supplying no arguments to MSGF+.
-        }
+	public String getOutputFileName() {
+		if (outputFileName == null)
+			generateOutputFileName();
 
-        String parameterParseError = paramManager.parseParams(parameterArray);
-        if (parameterParseError != null) {
-            System.out.println("Parameter parse error: " + parameterParseError);
-            // Problem with the parameters! Do something!
-            // Possible printUsageInfo();
-        }
+		return outputFileName;
+	}
 
-        paramManager.printToolInfo();
-        SwingWorker<String, Void> msgfSearchWorker = new SwingWorker<String, Void>() {
-            @Override
-            protected String doInBackground() {
-                try {
-                    Thread.sleep(executionDelay * 1000);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(MSGFPlusWrapper.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                String searchError = MSGFPlus.runMSGFPlus(paramManager);
-                return searchError;
-//                return null;
-            }
+	public void performSearch(final int executionDelay) {
+		ExecutorService executor = AnalyseData.getInstance()
+				.getMSGFPlusExecutor();
 
-            @Override
-            protected void done() {
-                try {
-                    System.out.println("MSGF run finished for: " + inputSpectrum == null ? inputSpectrum.getFileName() : inputSpectrumString);
-                    String searchErrorMessage = get();
-                    AnalyseData.getInstance().getTasksModel().set(new Task(inputSpectrum.getFileName(), "Create Identifications", "Complete"));
-                    TasksTab.getInstance().refreshFromTasksModel();
-                    if (searchErrorMessage == null) {
-                        AnalyseData data = AnalyseData.getInstance();
-                        for (int i = 0; i < data.getRawDataCount(); i++) {
-                            RawDataFile rawDataFile = data.getRawDataFile(i);
-                            if (rawDataFile.equals(inputSpectrum)) {
-                                String correctedRtFile = RetentionTimeHelper.fill(rawDataFile.getAbsoluteFileName(), outputFileName);
-                                rawDataFile.setIdentificationDataFile(new MzIdentMLFile(new File(correctedRtFile)));
-                                ((CreateOrLoadIdentificationsStep)AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP).refreshFromData();
-                            }
-                        }
-                    }
+		AnalyseData
+				.getInstance()
+				.getTasksModel()
+				.set(new Task(inputSpectrum.getFileName(),
+						"Create Identifications"));
+		TasksTab.getInstance().refreshFromTasksModel();
 
-                } catch (InterruptedException ex) {
-                    System.out.println("Interrupted exception: " + ex.getLocalizedMessage());
-                    ex.printStackTrace();
-                } catch (ExecutionException ex) {
-                    System.out.println("Execution exception: " + ex.getLocalizedMessage());
-                    ex.printStackTrace();
-                }
-            }
-        };
+		buildModificationFile();
+		buildMap();
+		buildParameterArray();
+		if (parameterArray.length == 0) {
+			// This is a problem, we are supplying no arguments to MSGF+.
+		}
 
-        executor.submit(msgfSearchWorker);
+		String parameterParseError = paramManager.parseParams(parameterArray);
+		if (parameterParseError != null) {
+			System.out.println("Parameter parse error: " + parameterParseError);
+			// Problem with the parameters! Do something!
+			// Possible printUsageInfo();
+		}
 
-    }
-    
-    private void buildModificationFile() {
-        if (modificationFileName == null) {
-            return;
-        }
-        
-        try {
-            File modFile = File.createTempFile("msgf_mod_file", ".cfg");
-            Files.copy(new File(modificationFileName).toPath(), modFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            modificationFileName = modFile.getAbsolutePath();
-        } catch (IOException ex) {
-            System.out.println(ex.getLocalizedMessage());
-        }
-    }
+		paramManager.printToolInfo();
+		SwingWorker<String, Void> msgfSearchWorker = new SwingWorker<String, Void>() {
+			@Override
+			protected String doInBackground() {
+				try {
+					Thread.sleep(executionDelay * 1000);
+				} catch (InterruptedException ex) {
+					Logger.getLogger(MSGFPlusWrapper.class.getName()).log(
+							Level.SEVERE, null, ex);
+				}
+				String searchError = MSGFPlus.runMSGFPlus(paramManager);
+				return searchError;
+				// return null;
+			}
 
-    private void buildMap() {
-        if (inputSpectrum == null) {
-            map.put("-s", inputSpectrumString);
-        } else {
-            map.put("-s", inputSpectrum.getAbsoluteFileName());
-        }
+			@Override
+			protected void done() {
+				try {
+					System.out.println("MSGF run finished for: "
+							+ inputSpectrum == null ? inputSpectrum
+							.getFileName() : inputSpectrumString);
+					String searchErrorMessage = get();
+					AnalyseData
+							.getInstance()
+							.getTasksModel()
+							.set(new Task(inputSpectrum.getFileName(),
+									"Create Identifications", "Complete"));
+					TasksTab.getInstance().refreshFromTasksModel();
+					if (searchErrorMessage == null) {
+						AnalyseData data = AnalyseData.getInstance();
+						for (int i = 0; i < data.getRawDataCount(); i++) {
+							RawDataFile rawDataFile = data.getRawDataFile(i);
+							if (rawDataFile.equals(inputSpectrum)) {
+								String correctedRtFile = RetentionTimeHelper
+										.fill(rawDataFile.getAbsoluteFileName(),
+												outputFileName);
+								rawDataFile
+										.setIdentificationDataFile(new MzIdentMLFile(
+												new File(correctedRtFile)));
+								((CreateOrLoadIdentificationsStep) AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)
+										.refreshFromData();
+							}
+						}
+					}
 
-        if (outputFileName == null) {
-            generateOutputFileName();
-        }
+				} catch (InterruptedException ex) {
+					System.out.println("Interrupted exception: "
+							+ ex.getLocalizedMessage());
+					ex.printStackTrace();
+				} catch (ExecutionException ex) {
+					System.out.println("Execution exception: "
+							+ ex.getLocalizedMessage());
+					ex.printStackTrace();
+				}
+			}
+		};
 
-        map.put("-o", outputFileName);
-        
-        if (modificationFileName != null) {
-            map.put("-mod", modificationFileName);
-        }
-    }
+		executor.submit(msgfSearchWorker);
 
-    private void buildParameterArray() {        
-        parameterArray = new String[map.size() * 2];
-        int arrayIndex = 0;
-        for (Map.Entry<String, String> entry : map
-                .entrySet()) {            
-            
-            parameterArray[arrayIndex] = entry.getKey();
+	}
 
-            parameterArray[arrayIndex + 1] = entry.getValue();
+	private void buildModificationFile() {
+		if (modificationFileName == null)
+			return;
 
-            arrayIndex += 2;
-        }
-    }
+		try {
+			File modFile = File.createTempFile("msgf_mod_file", ".cfg");
+			Files.copy(new File(modificationFileName).toPath(),
+					modFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			modificationFileName = modFile.getAbsolutePath();
+		} catch (IOException ex) {
+			System.out.println(ex.getLocalizedMessage());
+		}
+	}
 
-    private void generateOutputFileName() {
-        String outputFileName;
-        if (inputSpectrum == null) {
-            File inputSpectrum = new File(inputSpectrumString);
-            String[] fileNameParts = inputSpectrum.getName().split("\\.");
-            String fileExtension = fileNameParts[fileNameParts.length - 1];
-            outputFileName = inputSpectrum.getAbsolutePath().replace('.' + fileExtension, "_msgfplus.mzid");
-        } else {
-            String[] fileNameParts = inputSpectrum.getFile().getName().split("\\.");
-            String fileExtension = fileNameParts[fileNameParts.length - 1];
-            outputFileName = inputSpectrum.getAbsoluteFileName().replace('.' + fileExtension, "_msgfplus.mzid");
-        }
+	private void buildMap() {
+		if (inputSpectrum == null)
+			map.put("-s", inputSpectrumString);
+		else
+			map.put("-s", inputSpectrum.getAbsoluteFileName());
 
-        String outputFileNameClean = outputFileName;//.replace("\\", "/");
-        this.outputFileName = outputFileNameClean;
-    }
+		if (outputFileName == null)
+			generateOutputFileName();
+
+		map.put("-o", outputFileName);
+
+		if (modificationFileName != null)
+			map.put("-mod", modificationFileName);
+	}
+
+	private void buildParameterArray() {
+		parameterArray = new String[map.size() * 2];
+		int arrayIndex = 0;
+		
+		for (Entry<String, String> entry : map.entrySet()) {
+			parameterArray[arrayIndex] = entry.getKey();
+			parameterArray[arrayIndex + 1] = entry.getValue();
+
+			arrayIndex += 2;
+		}
+	}
+
+	private void generateOutputFileName() {
+		String outputFileName;
+		if (inputSpectrum == null) {
+			File inputSpectrum = new File(inputSpectrumString);
+			String[] fileNameParts = inputSpectrum.getName().split("\\.");
+			String fileExtension = fileNameParts[fileNameParts.length - 1];
+			outputFileName = inputSpectrum.getAbsolutePath().replace(
+					'.' + fileExtension, "_msgfplus.mzid");
+		} else {
+			String[] fileNameParts = inputSpectrum.getFile().getName()
+					.split("\\.");
+			String fileExtension = fileNameParts[fileNameParts.length - 1];
+			outputFileName = inputSpectrum.getAbsoluteFileName().replace(
+					'.' + fileExtension, "_msgfplus.mzid");
+		}
+
+		String outputFileNameClean = outputFileName;// .replace("\\", "/");
+		this.outputFileName = outputFileNameClean;
+	}
 }

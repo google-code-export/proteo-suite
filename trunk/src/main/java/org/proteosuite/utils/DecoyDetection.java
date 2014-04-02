@@ -15,17 +15,15 @@ import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 
 public class DecoyDetection {
 
-
-	/*------------------------------------------------------------------------
-	 * Checks if a proten detection hypothesis is decoy 
+	/**
+	 * Checks if a protein detection hypothesis is decoy 
 	 * @param unmarshaller - unmarshaller element
 	 * @param proteinDetectionHypothesis - proteinDetectionHypothesis element
 	 * @return true|false
-	 -------------------------------------------------------------------------*/
+	 */
 	public static boolean checkIfProteinDetectionHypothesisIsDecoy(MzIdentMLUnmarshaller unmarshaller,
 			ProteinDetectionHypothesis proteinDetectionHypothesis) {
 		
-		boolean result = false;
 		List<PeptideHypothesis> PeptideHyposthesisList = proteinDetectionHypothesis
 				.getPeptideHypothesis();
 		
@@ -37,8 +35,7 @@ public class DecoyDetection {
 				PeptideEvidence peptiedEvidence = unmarshaller.unmarshal(
 						PeptideEvidence.class, peptidRef);
 				if (peptiedEvidence.isIsDecoy()) {
-					result = true;
-					break;
+					return true;
 				}
 			} catch (JAXBException ex) {
 				Logger.getLogger(ProteoSuiteView.class.getName()).log(
@@ -46,6 +43,6 @@ public class DecoyDetection {
 			}
 		}
 		
-		return result;
+		return false;
 	}
 }

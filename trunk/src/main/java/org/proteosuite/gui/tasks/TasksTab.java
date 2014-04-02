@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.proteosuite.gui.tasks;
 
 import java.awt.BorderLayout;
@@ -19,7 +13,8 @@ import org.proteosuite.model.TasksModel;
  * @author SPerkins
  */
 public class TasksTab extends JPanel {
-    private static TasksTab instance = null;
+	private static final long serialVersionUID = 1L;
+	private static TasksTab instance = null;
     private BorderLayout layout = new BorderLayout();
     private TasksTable tasksTable;    
     
@@ -32,9 +27,8 @@ public class TasksTab extends JPanel {
     }
     
     public static TasksTab getInstance() {
-        if (instance == null) {
+        if (instance == null)
             instance = new TasksTab();
-        }
         
         return instance;
     }

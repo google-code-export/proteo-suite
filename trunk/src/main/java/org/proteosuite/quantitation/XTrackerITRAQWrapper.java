@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.proteosuite.quantitation;
 
 import java.io.BufferedWriter;
@@ -55,7 +50,8 @@ public class XTrackerITRAQWrapper {
                 AnalyseData.getInstance().getTasksModel().set(new Task(rawData.get(0).getFileName(), "Quantitating iTRAQ Data"));
                 TasksTab.getInstance().refreshFromTasksModel();
                 generateFiles("iTRAQ");
-                xTracker xtracker = new xTracker(outputPath, rawData.get(0).getFile().getParent());
+                new xTracker(outputPath, rawData.get(0).getFile().getParent());
+                
                 return null;
             }
             

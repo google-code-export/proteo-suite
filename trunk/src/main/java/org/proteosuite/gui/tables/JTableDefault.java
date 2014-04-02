@@ -4,7 +4,6 @@ import javax.swing.JTable;
 
 public abstract class JTableDefault extends JTable {
 
-
 	public JTableDefault()
 	{
 		reset();

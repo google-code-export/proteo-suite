@@ -23,6 +23,8 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
  * @author Andrew collins
  */
 public class JTableMzML extends JTableDefault {
+	private static final long serialVersionUID = 1L;
+
 	private static Map<RawMzMLFile, DefaultTableModel> cache = new HashMap<RawMzMLFile, DefaultTableModel>();
 	
 	private DefaultTableModel model;

@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.proteosuite.gui.tables;
 
 import javax.swing.JTable;
@@ -16,7 +10,8 @@ import org.proteosuite.model.RawDataFile;
  * @author SPerkins
  */
 public class CreateOrLoadIdentificationsTable extends JTable {
-    private DefaultTableModel model;
+	private static final long serialVersionUID = 1L;
+	private DefaultTableModel model;
     public CreateOrLoadIdentificationsTable() {
         model = new DefaultTableModel(){
             @Override
@@ -25,8 +20,7 @@ public class CreateOrLoadIdentificationsTable extends JTable {
             }
         };
         
-        model.addColumn("File Name");
-       
+        model.addColumn("File Name");       
         model.addColumn("Identifications Status");
         
         setModel(model);
