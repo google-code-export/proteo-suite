@@ -1,5 +1,7 @@
 package org.proteosuite.gui.chart;
 
+import java.awt.geom.Point2D;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,6 +23,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
  * @author Andrew Collins
  */
 public class ChartPlot2D {
+	private static final double LOW_INTENSITY = 10;
 
 	/**
 	 * Displays the MS1 raw data as 2D plots
@@ -29,20 +32,10 @@ public class ChartPlot2D {
 	 * @return
 	 */
 	public static JPanel get2DPlot(MzMLUnmarshaller unmarshaller) {
-		// CheckMemory chm = new
-		// CheckMemory("Before allocating memory for 2D plot");
-		// Display about 27 x 3 = 51 MB maximum for now
-		float[] mz = new float[200_000];
-		float[] art = new float[200_000];
-		// CheckMemory chm2 = new
-		// CheckMemory("After allocating memory for 2D plot");
-
-		float rt = 0;
-		int iCounter = 0;
+		Set<Point2D.Float> points = new HashSet<Point2D.Float>();
 
 		// Check if mzML contains MS1 data
-		Set<String> chromats = unmarshaller.getChromatogramIDs();
-		if (chromats.isEmpty()) {
+		if (unmarshaller.getChromatogramIDs().isEmpty()) {
 			System.out.println(ProteoSuiteView.SYS_UTILS.getTime()
 					+ " - This mzML file doesn't contain MS2 raw data.");
 			return null;
@@ -50,24 +43,22 @@ public class ChartPlot2D {
 		MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller
 				.unmarshalCollectionFromXpath("/run/spectrumList/spectrum",
 						Spectrum.class);
-		int iK = 0;
-		String unitRT = "";
-		// Display first 100 scans for now
-		while ((spectrumIterator.hasNext()) && (iK < 100)) {
+
+		while (spectrumIterator.hasNext()) {
+			float rt = 0;
 			Spectrum spectrumobj = spectrumIterator.next();
-			String spectrumid = spectrumobj.getId();
 
 			// Identify MS1 data
-			String mslevel = "";
+			String msLevel = "";
 			for (CVParam lCVParam : spectrumobj.getCvParam()) {
 				if (lCVParam.getAccession().equals("MS:1000511"))
-					mslevel = lCVParam.getValue().trim();
+					msLevel = lCVParam.getValue().trim();
 			}
-			if (!mslevel.equals("1"))
+			if (!msLevel.equals("1"))
 				continue;
 
 			try {
-				Spectrum spectrum = unmarshaller.getSpectrumById(spectrumid);
+				Spectrum spectrum = unmarshaller.getSpectrumById(spectrumobj.getId());
 				for (CVParam lCVParam : spectrum.getScanList().getScan().get(0)
 						.getCvParam()) {
 					if (!lCVParam.getAccession().equals("MS:1000016"))
@@ -75,9 +66,8 @@ public class ChartPlot2D {
 					
 					// Get RT
 					rt = Float.parseFloat(lCVParam.getValue().trim());
-					unitRT = lCVParam.getUnitAccession().trim();
 
-					if (unitRT.equals("UO:0000031"))
+					if (lCVParam.getUnitAccession().trim().equals("UO:0000031"))
 						rt *= 60;
 				}
 				Number[] mzNumbers = null;
@@ -95,36 +85,36 @@ public class ChartPlot2D {
 							intenNumbers = bda.getBinaryDataAsNumberArray();
 					}
 				}
-				int iI = 0;
-				while (iI < mzNumbers.length) {
+				int i = 0;
+				while (i < mzNumbers.length) {
 					// Removing zero values
-					if (intenNumbers[iI].doubleValue() <= 0.0)
+					if (intenNumbers[i].doubleValue() <= LOW_INTENSITY)
 					{
-						iI += 10;
+						i++;
 						continue;
 					}
 					
-					if (iCounter >= 200_000) {
-						iI += 10;
-						continue;
-					}
+					points.add(new Point2D.Float(mzNumbers[i].floatValue(), rt));
 					
-					mz[iCounter] = mzNumbers[iI].floatValue();
-					art[iCounter] = rt;
-					
-					iCounter++;
-					iI += 10;
+					i++;
 				}
 			} catch (MzMLUnmarshallerException ume) {
 				System.out.println(ume.getMessage());
 			}
-			iK++;
-
 		}
 		System.out.println(ProteoSuiteView.SYS_UTILS.getTime() + " - 2D view holding "
-				+ iCounter + " elements.");
-
-		return TwoDPlot.getTwoDPlot(mz, art);
+				+ points.size() + " elements.");
+		
+		int i = 0;
+    	float[][] data = new float[2][points.size()];
+		for (Point2D.Float point : points)
+		{
+            data[0][i] = point.x;
+            data[1][i] = point.y;
+            i++;
+		}
+		
+		return TwoDPlot.getTwoDPlot(data);
 	}
 
 	public static JPanel get2DPlot(RawMzMLFile dataFile) {		
