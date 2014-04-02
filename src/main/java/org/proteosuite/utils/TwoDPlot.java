@@ -19,7 +19,6 @@ package org.proteosuite.utils;
  */
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
@@ -41,8 +40,6 @@ import org.jfree.chart.plot.FastScatterPlot;
 public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
     //Generate chart from raw data
     public static ChartPanel getTwoDPlot(float[] mz, float[] art) {
-        
-        //CheckMemory chm = new CheckMemory("Before filling arrays");
         
         // Filling data
     	float[][] data = populateData(mz, art);

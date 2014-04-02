@@ -36,8 +36,8 @@ import org.proteosuite.utils.SystemUtils;
  * @author fgonzalez
  */
 public class ProteoSuiteView extends JFrame {
-
-    // Project settings
+	private static final long serialVersionUID = 1L;
+	// Project settings
     public static final String PROTEOSUITE_VERSION = "1.0.0 ALPHA";
     public static String sProjectName = "";
     public static String sPreviousLocation = "user.home";    

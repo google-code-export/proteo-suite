@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.proteosuite.model;
 
 import java.util.ArrayList;
@@ -14,9 +9,9 @@ import java.util.List;
  */
 public class InspectModel {
 
-    private List<RawDataFile> rawData = new ArrayList<RawDataFile>();
-    private List<IdentDataFile> identData = new ArrayList<IdentDataFile>();
-    private List<QuantDataFile> quantData = new ArrayList<QuantDataFile>();
+    private final List<RawDataFile> rawData = new ArrayList<RawDataFile>();
+    private final List<IdentDataFile> identData = new ArrayList<IdentDataFile>();
+    private final List<QuantDataFile> quantData = new ArrayList<QuantDataFile>();
 
     public synchronized void addRawDataFile(RawDataFile rawDataFile) {
         rawData.add(rawDataFile);
