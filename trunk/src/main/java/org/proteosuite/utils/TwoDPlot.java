@@ -30,26 +30,21 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.FastScatterPlot;
 
 /**
- * This class corresponds to 2D Visualisation of MS raw data. This is under construction
- * @author fgonzalez
- * @param title - Window title ...//
- * @param mz - m/z values
- * @param intensity - intensity values
- * @param art - RT values 
+ * This class corresponds to 2D Visualisation of MS raw data.
  */
 public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
-    //Generate chart from raw data
-    public static ChartPanel getTwoDPlot(float[] mz, float[] art) {
-        
-        // Filling data
-    	float[][] data = populateData(mz, art);
-
+    /**
+     * Generate chart from raw data
+     * @param data
+     * @return
+     */
+    public static ChartPanel getTwoDPlot(float[][] data) {
         //ySeeting axis
         final NumberAxis xAxis = new NumberAxis("Retention Time (secs)");
         xAxis.setAutoRangeIncludesZero(true);
         final NumberAxis yAxis = new NumberAxis("m/z");
         yAxis.setAutoRangeIncludesZero(true);
-
+        
         // Graph and values
         final FastScatterPlot plot = new FastScatterPlot(data, yAxis, xAxis);
 
@@ -79,24 +74,6 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
         
         return panel;
     }
-    
-    /**
-     * Populate array
-     * @param mz - m/z values 
-     * @param rt - RT values 
-     */
-    private static float[][] populateData(float[] mz, float[] rt) {
-    	float[][] data = new float[2][mz.length];
-        int iCounter = 0;
-        
-        for (int iI = 0; iI < mz.length; iI++) {
-            data[1][iCounter] = rt[iI];
-            data[0][iCounter] = mz[iI];
-            iCounter++;
-        }
-        
-        return data;
-    }
 
     private void eventOutput(String eventDescription, MouseEvent e) {
         System.out.println(eventDescription + " RT: " + e.getX() + "\n m/z: " + e.getY());
@@ -109,5 +86,4 @@ public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
     public void mouseDragged(MouseEvent e) {
         eventOutput("Dragged", e);
     }
-
 }
