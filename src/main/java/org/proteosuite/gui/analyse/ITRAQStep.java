@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.proteosuite.gui.analyse;
 
 import java.awt.BorderLayout;
@@ -20,7 +14,8 @@ import org.proteosuite.gui.listener.ConfirmButtonListener;
  * @author SPerkins
  */
 public class ITRAQStep extends JPanel {
-    private static BorderLayout layout = new BorderLayout();
+	private static final long serialVersionUID = 1L;
+	private static BorderLayout layout = new BorderLayout();
     
     public ITRAQStep() {
         setLayout(layout);
@@ -41,6 +36,7 @@ public class ITRAQStep extends JPanel {
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
         buttonsPanel.add(new JLabel("CLICK CONFIRM TO CONFIRM QUANTITATION TYPE AS iTRAQ AND RUN ANALYSIS"));
+        
         JButton confirmButton = new JButton("Confirm");
         confirmButton.addActionListener(new ConfirmButtonListener(this));
         buttonsPanel.add(confirmButton);

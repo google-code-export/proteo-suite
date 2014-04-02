@@ -17,6 +17,7 @@ import org.proteosuite.model.RawMzMLFile;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 
 public class InspectRaw extends JPanel implements ListSelectionListener {
+	private static final long serialVersionUID = 1L;
 	private final InspectChartPanel chartPanel = new InspectChartPanel();
 	private final JTable jTable = new JTable();
 	private final InspectModel inspectModel = AnalyseData.getInstance()

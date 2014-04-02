@@ -11,6 +11,7 @@ import javax.swing.border.BevelBorder;
 import org.proteosuite.ProteoSuiteView;
 
 public class StatusPanel extends JPanel {
+	private static final long serialVersionUID = 1L;
 
 	public StatusPanel()
 	{

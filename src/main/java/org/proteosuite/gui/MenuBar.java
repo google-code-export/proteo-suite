@@ -21,6 +21,7 @@ import org.proteosuite.gui.listener.OpenUrlListener;
  * @author Andrew Collins
  */
 public class MenuBar extends JMenuBar {
+	private static final long serialVersionUID = 1L;
 
 	public MenuBar() {
 		add(getFileMenu());

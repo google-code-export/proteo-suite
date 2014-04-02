@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.proteosuite.gui.inspect;
 
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
@@ -17,7 +11,8 @@ import javax.swing.JTabbedPane;
  * @author SPerkins
  */
 public class InspectChartPanel extends JTabbedPane {
-    private ChromatogramPanel chromPanel;
+	private static final long serialVersionUID = 1L;
+	private ChromatogramPanel chromPanel;
     private SpectrumPanel specPanel;
     private JPanel chartPanel;
     
@@ -38,9 +33,8 @@ public class InspectChartPanel extends JTabbedPane {
     
     public void refreshTabView(int index) {
         removeAll();
-        if (chromPanel != null) {
+        if (chromPanel != null)
             addTab("Chromatogram", chromPanel);
-        }
         else
         	index--;
         
@@ -52,9 +46,8 @@ public class InspectChartPanel extends JTabbedPane {
         if (chartPanel != null)
             addTab("2D", chartPanel);
         
-        if (index > 0 && index < this.getTabCount()) {
+        if (index > 0 && index < this.getTabCount())
             setSelectedIndex(index);
-        }
         
         repaint();
     }

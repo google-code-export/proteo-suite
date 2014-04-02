@@ -12,7 +12,8 @@ import org.proteosuite.model.AnalyseData;
  * @author SPerkins
  */
 public class AnalyseStatusPanel extends JPanel {
-    private static final JPanel rawDataSection = new JPanel();
+	private static final long serialVersionUID = 1L;
+	private static final JPanel rawDataSection = new JPanel();
     private static final JLabel rawData = new JLabel("Raw Data");    
     private static final JLabel rawDataStatus = new JLabel();
     private static final JPanel conditionsSection = new JPanel();
