@@ -1,7 +1,11 @@
 package org.proteosuite.model;
 
+import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.swing.JPanel;
 
 /**
  *
@@ -10,6 +14,8 @@ import java.util.List;
 public class InspectModel {
 
     private final List<RawDataFile> rawData = new ArrayList<RawDataFile>();
+    private final Map<String, ChromatogramPanel> cachedChromatograms = new HashMap<String, ChromatogramPanel>();
+    private final Map<String, JPanel> cached2DViews = new HashMap<String, JPanel>();
     private final List<IdentDataFile> identData = new ArrayList<IdentDataFile>();
     private final List<QuantDataFile> quantData = new ArrayList<QuantDataFile>();
 
@@ -36,6 +42,22 @@ public class InspectModel {
     public synchronized List<QuantDataFile> getQuantData() {
         return quantData;
     }
+    
+    public ChromatogramPanel getCachedChromatogramOrNull(String fileName) {
+        return cachedChromatograms.get(fileName);
+    }
+    
+    public void addCachedChromatogram(String fileName, ChromatogramPanel chromatogram) {
+        cachedChromatograms.put(fileName, chromatogram);
+    } 
+    
+    public JPanel getCached2DViewOrNull(String fileName) {
+        return cached2DViews.get(fileName);
+    }
+    
+    public void addCached2DView(String fileName, JPanel twoDView) {
+        cached2DViews.put(fileName, twoDView);
+    } 
 
     public boolean isRawDataFile(String fileName) {
         for (RawDataFile dataFile : rawData) {
