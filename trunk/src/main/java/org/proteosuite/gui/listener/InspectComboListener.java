@@ -1,16 +1,16 @@
 package org.proteosuite.gui.listener;
 
+import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import org.proteosuite.gui.chart.ChartChromatogram;
 import org.proteosuite.gui.chart.ChartPlot2D;
 import org.proteosuite.gui.inspect.InspectQuant;
@@ -96,9 +96,22 @@ public class InspectComboListener implements ItemListener {
 		jTable.setModel(rawData.getModel());
 
 		rawData.getSelectionModel().addListSelectionListener(rawPanel);
+                ChromatogramPanel cachedChromatogram = inspectModel.getCachedChromatogramOrNull(fileChosen);
+                if (cachedChromatogram == null) {
+                    cachedChromatogram = ChartChromatogram.getChromatogram(dataFile);
+                    inspectModel.addCachedChromatogram(fileChosen, cachedChromatogram);
+                }
+                
 		rawPanel.getChartPanel().setChromatogram(
-				ChartChromatogram.getChromatogram(dataFile));
-		rawPanel.getChartPanel().set2D(ChartPlot2D.get2DPlot(dataFile));
+				cachedChromatogram);
+                
+                JPanel cached2DView = inspectModel.getCached2DViewOrNull(fileChosen);
+                if (cached2DView == null) {
+                    cached2DView = ChartPlot2D.get2DPlot(dataFile);
+                    inspectModel.addCached2DView(fileChosen, cached2DView);
+                }
+                
+		rawPanel.getChartPanel().set2D(cached2DView);
 	}
 
 	private void openIdentFile(String fileChosen) {
