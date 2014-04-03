@@ -15,7 +15,6 @@ public class RawDataTableListener implements ListSelectionListener,
 	private final JButton deleteSelectedButton;
 	private final JButton clearAllButton;
 	private final JButton continueButton;
-	private final JButton restartButton;
 
 	public RawDataTableListener(RawDataAndMultiplexingTable rawDataTable,
 			JButton deleteSelectedButton) {
@@ -24,16 +23,13 @@ public class RawDataTableListener implements ListSelectionListener,
 
 		clearAllButton = null;
 		continueButton = null;
-		restartButton = null;
 	}
 
 	public RawDataTableListener(JButton deleteSelectedButton,
-			JButton clearAllButton, JButton continueButton,
-			JButton restartButton) {
+			JButton clearAllButton, JButton continueButton) {
 		this.deleteSelectedButton = deleteSelectedButton;
 		this.clearAllButton = clearAllButton;
 		this.continueButton = continueButton;
-		this.restartButton = restartButton;
 
 		rawDataTable = null;
 	}
@@ -68,7 +64,6 @@ public class RawDataTableListener implements ListSelectionListener,
 		case TableModelEvent.INSERT:
 			continueButton.setEnabled(true);
 			clearAllButton.setEnabled(true);
-			restartButton.setEnabled(true);
 			break;
 		}
 	}
