@@ -1,7 +1,9 @@
 package org.proteosuite.gui.analyse;
 
 import java.awt.BorderLayout;
+
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 /**
  * 
@@ -35,6 +37,7 @@ public class AnalyseDynamicTab extends JPanel {
 	public void moveToStep(JPanel panel) {
 		removeAll();
 		add(analysisStatusPanel, BorderLayout.PAGE_START);
+		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 		add(panel, BorderLayout.CENTER);
 		repaint();
 	}

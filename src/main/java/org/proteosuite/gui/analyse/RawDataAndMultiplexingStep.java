@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -16,7 +15,6 @@ import org.proteosuite.gui.listener.ClearAllRawFileButtonListener;
 import org.proteosuite.gui.listener.ContinueButtonListener;
 import org.proteosuite.gui.listener.DeleteSelectedRawFileButtonListener;
 import org.proteosuite.gui.listener.RawDataTableListener;
-import org.proteosuite.gui.listener.RestartButtonListener;
 import org.proteosuite.gui.tables.RawDataAndMultiplexingTable;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.RawDataFile;
@@ -40,7 +38,6 @@ public class RawDataAndMultiplexingStep extends JPanel {
 		final JButton clearAllButton = new JButton("Clear All");
 		final JButton continueButton = new JButton("Continue");
 		final JButton deleteSelectedButton = new JButton("Delete Selected");
-		final JButton restartButton = new JButton("Restart");
 		JButton addRawDataButton = new JButton("Add Data Files...");
 
 		clearAllButton.setEnabled(false);
@@ -52,29 +49,25 @@ public class RawDataAndMultiplexingStep extends JPanel {
 				.addActionListener(new DeleteSelectedRawFileButtonListener(this));
 		clearAllButton
 				.addActionListener(new ClearAllRawFileButtonListener(this));
-		restartButton.addActionListener(new RestartButtonListener(this));
 		continueButton.addActionListener(new ContinueButtonListener(this));
 		rawDataTable.getSelectionModel().addListSelectionListener(
 				new RawDataTableListener(rawDataTable, deleteSelectedButton));
 		rawDataTable.getModel().addTableModelListener(
 				new RawDataTableListener(deleteSelectedButton, clearAllButton,
-						continueButton, restartButton));
+						continueButton));
 
 		multiplexingBox.setSelectedIndex(1);
 
 		JPanel buttonsPanel = new JPanel();
-		buttonsPanel.setLayout(new GridLayout(3, 3));
+		buttonsPanel.setLayout(new GridLayout(2, 3));
 
 		buttonsPanel.add(addRawDataButton);
-		buttonsPanel.add(deleteSelectedButton);
-		buttonsPanel.add(clearAllButton);
-
-		buttonsPanel.add(restartButton);
-		buttonsPanel.add(Box.createGlue());
-		buttonsPanel.add(continueButton);
-
 		buttonsPanel.add(new JLabel("Select multiplexing:"));
-		buttonsPanel.add(multiplexingBox);
+		buttonsPanel.add(clearAllButton);
+		
+		buttonsPanel.add(deleteSelectedButton);
+		buttonsPanel.add(multiplexingBox);		
+		buttonsPanel.add(continueButton);
 
 		setLayout(new BorderLayout());
 		add(stepTitle, BorderLayout.PAGE_START);
