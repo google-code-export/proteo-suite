@@ -93,7 +93,7 @@ public class TableRenderDemo extends JPanel {
     public void setUpSportColumn(JTable table,
                                  TableColumn sportColumn) {
         //Set up the editor for the sport cells.
-        JComboBox comboBox = new JComboBox();
+        JComboBox<String> comboBox = new JComboBox<String>();
         comboBox.addItem("Snowboarding");
         comboBox.addItem("Rowing");
         comboBox.addItem("Knitting");

@@ -567,14 +567,14 @@ public class FastScatterPlot extends Plot implements ValueAxisPlot,
      * @param ticks  the ticks.
      */
     protected void drawDomainGridlines(Graphics2D g2, Rectangle2D dataArea, 
-                                       List ticks) {
+                                       List<ValueTick> ticks) {
 
         // draw the domain grid lines, if any...
         if (isDomainGridlinesVisible()) {
             Stroke gridStroke = getDomainGridlineStroke();
             Paint gridPaint = getDomainGridlinePaint();
             if ((gridStroke != null) && (gridPaint != null)) {
-                Iterator iterator = ticks.iterator();
+                Iterator<ValueTick> iterator = ticks.iterator();
                 while (iterator.hasNext()) {
                     ValueTick tick = (ValueTick) iterator.next();
                     double v = this.domainAxis.valueToJava2D(
@@ -599,14 +599,14 @@ public class FastScatterPlot extends Plot implements ValueAxisPlot,
      * @param ticks  the ticks.
      */
     protected void drawRangeGridlines(Graphics2D g2, Rectangle2D dataArea, 
-                                      List ticks) {
+                                      List<ValueTick> ticks) {
 
         // draw the range grid lines, if any...
         if (isRangeGridlinesVisible()) {
             Stroke gridStroke = getRangeGridlineStroke();
             Paint gridPaint = getRangeGridlinePaint();
             if ((gridStroke != null) && (gridPaint != null)) {
-                Iterator iterator = ticks.iterator();
+                Iterator<ValueTick> iterator = ticks.iterator();
                 while (iterator.hasNext()) {
                     ValueTick tick = (ValueTick) iterator.next();
                     double v = this.rangeAxis.valueToJava2D(

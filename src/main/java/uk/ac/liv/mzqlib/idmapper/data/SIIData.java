@@ -9,9 +9,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.bind.JAXBException;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import uk.ac.ebi.jmzidml.model.mzidml.*;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 
@@ -32,7 +35,7 @@ public class SIIData implements Comparable<SIIData> {
     private double rt = Double.NaN;
     private final int rank;
     private final boolean passTh;
-    private List peptideEvidenceRef;
+    private List<PeptideEvidenceRef> peptideEvidenceRef;
     private String peptideModString;
     //private SpectrumIdentificationItem sii;
     private MzIdentMLUnmarshaller um;
@@ -88,7 +91,7 @@ public class SIIData implements Comparable<SIIData> {
         return passTh;
     }
 
-    public List getPeptideEvidenceRef() {
+    public List<PeptideEvidenceRef> getPeptideEvidenceRef() {
         return peptideEvidenceRef;
     }
 

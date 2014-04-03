@@ -23,13 +23,13 @@ public class MzidToMzqElementConvertor {
 
     public static List<Modification> convertMzidModsToMzqMods(
             List<uk.ac.ebi.jmzidml.model.mzidml.Modification> modifications) {
-        List<Modification> mzqMods = new ArrayList();
+        List<Modification> mzqMods = new ArrayList<Modification>();
         for (uk.ac.ebi.jmzidml.model.mzidml.Modification mzidMod : modifications) {
             Modification mzqMod = new Modification();
             List<CvParam> mzqCps;
             List<uk.ac.ebi.jmzidml.model.mzidml.CvParam> mzidCps = mzidMod.getCvParam();
             if (!mzidCps.isEmpty()) {
-                mzqCps = new ArrayList();
+                mzqCps = new ArrayList<CvParam>();
                 for (uk.ac.ebi.jmzidml.model.mzidml.CvParam mzidCp : mzidCps) {
                     CvParam mzqCp = convertMzidCvParamToMzqCvParam(mzidCp);
                     mzqCps.add(mzqCp);
