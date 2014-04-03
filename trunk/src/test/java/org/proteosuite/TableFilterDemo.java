@@ -13,10 +13,13 @@ import javax.swing.event.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.Dimension;
-import java.awt.Component;
  
 public class TableFilterDemo extends JPanel {
-    private boolean DEBUG = false;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 8342474884526551763L;
+	private boolean DEBUG = false;
     private JTable table;
     private JTextField filterText;
     private JTextField statusText;

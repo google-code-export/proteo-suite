@@ -148,17 +148,17 @@ public class MzqProcessorFactory {
         }
 
         @Override
-        public Map getFeatureToSIIsMap() {
+        public Map<String, List<SIIData>> getFeatureToSIIsMap() {
             return featureToSIIsMap;
         }
 
         @Override
-        public Map getCombinedPepModStringToSIIsMap() {
+        public Map<String, List<SIIData>> getCombinedPepModStringToSIIsMap() {
             return combinedPepModStringToSIIsMap;
         }
 
         @Override
-        public Map getCombPepModStringToProtAccessionsMap() {
+        public Map<String, List<String>> getCombPepModStringToProtAccessionsMap() {
             if (combPepModStringToProtAccessionsMap == null) {
                 combPepModStringToProtAccessionsMap = new HashMap<>();
             }

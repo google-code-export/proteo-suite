@@ -6,8 +6,12 @@
 package uk.ac.liv.mzqlib.idmapper;
 
 import gnu.trove.map.TIntObjectMap;
+
+import java.util.List;
 import java.util.Map;
+
 import uk.ac.ebi.jmzidml.model.mzidml.SearchDatabase;
+import uk.ac.liv.mzqlib.idmapper.data.SIIData;
 
 /**
  *
@@ -23,16 +27,15 @@ public interface MzidProcessor {
      *
      * @return the peptide to spectrumIdentificationItems map.
      */
-    public Map getPeptideModStringToSIIsMap();
-
-    //public Map getPeptideModStringToProtAccessionsMap();
+    public Map<String, List<SIIData>> getPeptideModStringToSIIsMap();
+    
     /**
      * Get retention time (minute) to spectumIdentificationItems map.
      * This is a one to many map with retention time (round to minute) as key and SII data as values.
      *
      * @return retention time to spectrumIdentifications map.
      */
-    public TIntObjectMap getRtToSIIsMap();
+    public TIntObjectMap<List<SIIData>> getRtToSIIsMap();
 
     public SearchDatabase getSearchDatabase();
 

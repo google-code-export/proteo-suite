@@ -5,8 +5,11 @@
 
 package uk.ac.liv.mzqlib.idmapper;
 
+import java.util.List;
 import java.util.Map;
+
 import uk.ac.liv.jmzqml.model.mzqml.SearchDatabase;
+import uk.ac.liv.mzqlib.idmapper.data.SIIData;
 
 /**
  *
@@ -16,7 +19,7 @@ import uk.ac.liv.jmzqml.model.mzqml.SearchDatabase;
  */
 public interface MzqProcessor {
 
-    public Map getFeatureToSIIsMap();
+    public Map<String, List<SIIData>> getFeatureToSIIsMap();
 
     public Map getCombPepModStringToProtAccessionsMap();
 

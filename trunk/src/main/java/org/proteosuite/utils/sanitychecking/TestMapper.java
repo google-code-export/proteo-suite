@@ -9,12 +9,9 @@ package org.proteosuite.utils.sanitychecking;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import uk.ac.liv.jmzqml.MzQuantMLElement;
 import static uk.ac.liv.jmzqml.MzQuantMLElement.FeatureList;
-import uk.ac.liv.jmzqml.model.mzqml.Feature;
 import uk.ac.liv.jmzqml.model.mzqml.FeatureList;
 
-import uk.ac.liv.jmzqml.model.mzqml.MzQuantML;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 
 /**

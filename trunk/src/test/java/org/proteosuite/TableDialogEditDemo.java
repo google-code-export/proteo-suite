@@ -5,7 +5,6 @@
 package org.proteosuite;
 
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -14,8 +13,6 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
  
 /**
  * This is like TableDemo, except that it substitutes a

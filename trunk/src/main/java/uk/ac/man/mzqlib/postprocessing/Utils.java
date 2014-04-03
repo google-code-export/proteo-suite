@@ -1,16 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package uk.ac.man.mzqlib.postprocessing;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
+
 import uk.ac.liv.jmzqml.model.mzqml.DataMatrix;
 import uk.ac.liv.jmzqml.model.mzqml.Row;
 
@@ -27,10 +21,8 @@ public class Utils {
      * @return 
      */
     public static DataMatrix SortedMap(Map<String, List<String>> map, DataMatrix dM) {
-        Set s = map.entrySet();
-
-        for (Iterator it = s.iterator(); it.hasNext();) {
-            Map.Entry entry = (Map.Entry) it.next();
+        for (Entry<String, List<String>> entry : map.entrySet()) {
+           // Entry entry = (Entry) it.next();
 //            String key = (String) entry.getKey();
             String value = entry.getValue().toString();
             //remove the double quotation marks in front and rear

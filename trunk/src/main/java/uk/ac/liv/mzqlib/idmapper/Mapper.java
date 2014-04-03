@@ -31,7 +31,7 @@ public class Mapper {
         //mzqFile = new File("CPTAC-Progenesis.mzq");
         mzqFile = new File("CPTAC-Progenesis-small-example.mzq");
         String outMzFn = "CPTAC-Progenesis-after-mapper-small.mzq";
-        rawToMzidMap = new HashMap();
+        rawToMzidMap = new HashMap<String, String>();
         rawToMzidMap.put("mam_042408o_CPTAC_study6_6B011.raw", "mam_042408o_CPTAC_study6_6B011_rt.mzid");
         rawToMzidMap.put("mam_050108o_CPTAC_study6_6B011.raw", "mam_050108o_CPTAC_study6_6B011_rt.mzid");
         rawToMzidMap.put("mam_050108o_CPTAC_study6_6B011_080504231912.raw", "mam_050108o_CPTAC_study6_6B011_080504231912_rt.mzid");
