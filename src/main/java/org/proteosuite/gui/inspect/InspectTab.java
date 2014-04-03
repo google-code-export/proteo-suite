@@ -4,6 +4,8 @@ package org.proteosuite.gui.inspect;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -98,17 +100,28 @@ public class InspectTab extends JPanel {
 	}
 
 	public void refreshComboBox() {
-		dataFileComboBox.removeAllItems();
+		Set<String> files = new HashSet<String>();
+
 		for (RawDataFile dataFile : inspectModel.getRawData()) {
-			dataFileComboBox.addItem(dataFile.getFileName());
+			files.add(dataFile.getFileName());
 		}
 
 		for (IdentDataFile identFile : inspectModel.getIdentData()) {
-			dataFileComboBox.addItem(identFile.getFileName());
+			files.add(identFile.getFileName());
 		}
 
 		for (QuantDataFile quantFile : inspectModel.getQuantData()) {
-			dataFileComboBox.addItem(quantFile.getFileName());
+			files.add(quantFile.getFileName());
+		}
+		
+		for (int i = 0; i < dataFileComboBox.getModel().getSize(); i++)
+		{
+			files.remove(dataFileComboBox.getModel().getElementAt(i));
+		}
+		
+		for (String file : files)
+		{
+			dataFileComboBox.addItem(file);			
 		}
 	}
 }
