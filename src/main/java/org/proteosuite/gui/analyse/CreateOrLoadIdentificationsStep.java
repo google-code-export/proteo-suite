@@ -64,10 +64,6 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
 				new RawDataTableListener(identificationsTable,
 						loadIdentifications, createIdentifications, resetIdentifications));
 
-		// identificationsTable.getModel().addTableModelListener(
-		// new RawDataTableListener(deleteSelectedButton, clearAllButton,
-		// continueButton));
-
 		JButton continueButton = new JButton("Continue");
 		JButton previousButton = new JButton("Previous");
 
