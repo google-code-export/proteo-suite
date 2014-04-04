@@ -16,13 +16,17 @@ public class UpdateCheck {
 	 * @return URL to get latest version, null if current version is latest
 	 * @throws IOException
 	 */
-	public static String hasUpdate(String version) throws IOException {
+	public static String hasUpdate(String version) throws IOException {			
 		String currentVersionInfo = "jvendor=" + System.getProperty("java.vendor");
 		currentVersionInfo += "&jversion=" + System.getProperty("java.version");
 		currentVersionInfo += "&osarch=" + System.getProperty("os.arch");
 		currentVersionInfo += "&osname=" + System.getProperty("os.name");
 		currentVersionInfo += "&osversion=" + System.getProperty("os.version");
 		currentVersionInfo += "&psversion=" + version.replace(' ', '-');
+		currentVersionInfo += "&sysproc=" + Runtime.getRuntime().availableProcessors();
+		currentVersionInfo += "&sysmem=" + Runtime.getRuntime().maxMemory();		
+		
+		
 		currentVersionInfo = currentVersionInfo.replace(" ", "%20");
 		
 		String query = String.format(UPDATE_CHECK_URL, currentVersionInfo);
