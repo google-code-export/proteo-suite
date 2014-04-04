@@ -3,6 +3,7 @@ package org.proteosuite.gui.analyse;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Window;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -28,7 +29,7 @@ import org.proteosuite.model.RawDataFile;
 public class CreateOrLoadIdentificationsStep extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private CreateOrLoadIdentificationsTable identificationsTable = new CreateOrLoadIdentificationsTable();
-	private IdentParamsView identParamsView = new IdentParamsView("execute");
+	private IdentParamsView identParamsView = new IdentParamsView((Window) this.getParent(), "execute");
 
 	public CreateOrLoadIdentificationsStep() {
 		setLayout(new BorderLayout());

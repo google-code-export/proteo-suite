@@ -51,15 +51,10 @@ public class ProteoSuiteView extends JFrame {
 
     private static final WorkSpace WORKSPACE = WorkSpace.getInstance();
 
-    private final IdentParamsView identParamsExecute;   
-
     public ProteoSuiteView() {             
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         System.out.println("User dir: " + System.getProperty("user.dir"));
-
-        // Load parameter settings
-        identParamsExecute = new IdentParamsView("execute");              
 
         setJMenuBar(new MenuBar());
         add(new LeftColumnAndTabbedPanel(), BorderLayout.CENTER);

@@ -15,12 +15,15 @@ package org.proteosuite.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -39,6 +42,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -62,7 +66,7 @@ import org.proteosuite.utils.Unimod2MSGPlus;
  *            type of entry (edit|execute)
  * @author fgonzalez
  */
-public class IdentParamsView extends JPanel {
+public class IdentParamsView extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private static final WorkSpace workSpace = WorkSpace.getInstance();
 	private static final String NO_MODS_SELECTED = "--- none selected ---";
@@ -111,7 +115,9 @@ public class IdentParamsView extends JPanel {
 	JTextField jtRegex = new JTextField("XXX");
 	JTextField jtSpectraMatches = new JTextField("1");
 
-	public IdentParamsView(String sMode) {
+	public IdentParamsView(Window owner, String sMode) {
+		super(owner, "Set Identifications Parameters", Dialog.ModalityType.APPLICATION_MODAL);
+		
 		Unimod2MSGPlus getMods = new Unimod2MSGPlus();
 		DefaultListModel<String> listModel = (DefaultListModel<String>) jlstUnimods
 				.getModel();
@@ -149,10 +155,20 @@ public class IdentParamsView extends JPanel {
 		jtSpectraMatches
 				.setToolTipText("Number of matches per spectrum to be reported");
 
-		createInterface(sMode);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				setRun(false);
+				dispose();
+			}
+		});
+		
+		getContentPane().add(createInterface(sMode));
+		pack();
 	}
 
-	private void createInterface(String sMode) {
+	private Component createInterface(String sMode) {
+		JPanel content = new JPanel();
 		final JComboBox<String> jcEnzyme = new JComboBox<String>(new String[] {
 				"unspecified cleavage", "Trypsin", "Chymotrypsin", "Lys-C",
 				"Lys-N", "glutamyl endopeptidase", "Arg-C", "Asp-N", "alphaLP",
@@ -190,12 +206,14 @@ public class IdentParamsView extends JPanel {
 			}
 		});
 
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		add(getParametersPanel(jcEnzyme, jchbSearchDecoy));
-		add(getModificationsPanel());
-		add(getRow(new JLabel("Regex:"), jtRegex, jbSetDefaults, jbSetDefaults,
-				new JLabel("Press escape (ESC) to cancel"), run, jbSave));
+		content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+		content.add(getParametersPanel(jcEnzyme, jchbSearchDecoy));
+		content.add(getModificationsPanel());
+		content.add(getRow(new JLabel("Regex:"), jtRegex, jbSetDefaults,
+				jbSetDefaults, new JLabel("Press escape (ESC) to cancel"), run,
+				jbSave));
 
+		return content;
 	}
 
 	private void addMods(List<String> selectedMods,
