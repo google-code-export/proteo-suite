@@ -9,6 +9,10 @@ import java.io.File;
 public abstract class IdentDataFile {
     protected File file;
     private String loadingStatus = "Done";
+    protected boolean computedPSMStats = false;
+    protected int psmCountPassingThreshold = 0;
+    private int psmCountNotPassingThrehsold = 0;
+    private int peptideCountPassingThreshold = 0;
     public IdentDataFile(File file) {
         this.file = file;
         initiateLoading();
@@ -30,4 +34,9 @@ public abstract class IdentDataFile {
     
     public abstract boolean isLoaded();
     protected abstract void initiateLoading();
+    protected abstract void computePSMStats();
+    public abstract int getPSMCountPassingThreshold();
+    public abstract int getPSMCountNotPassingThreshold();
+    public abstract int getPeptideCountPassingThreshold();
+    public abstract String getThresholdingUsed();
 }

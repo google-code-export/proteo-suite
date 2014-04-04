@@ -26,8 +26,7 @@ import org.proteosuite.model.RawDataFile;
  * 
  * @author SPerkins
  */
-public class CreateOrLoadIdentificationsStep extends JPanel {
-	private static final long serialVersionUID = 1L;
+public class CreateOrLoadIdentificationsStep extends JPanel {	
 	private CreateOrLoadIdentificationsTable identificationsTable = new CreateOrLoadIdentificationsTable();
 	private IdentParamsView identParamsView = new IdentParamsView((Window) this.getParent(), "execute");
 

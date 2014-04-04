@@ -22,6 +22,9 @@ public class AnalyseStatusPanel extends JPanel {
     private static final JPanel identificationsSection = new JPanel();
     private static final JLabel identifications = new JLabel("Identifications");
     private static final JLabel identificationsStatus = new JLabel();
+    private static final JPanel cleanIdentificationsSection = new JPanel();
+    private static final JLabel cleanIdentifications = new JLabel("Clean Identifications");
+    private static final JLabel cleanIdentificationsStatus = new JLabel();
     private static final JPanel quantitationSection = new JPanel();
     private static final JLabel quantitation = new JLabel("Quantitation");
     private static final JLabel quantitationStatus = new JLabel();
@@ -45,20 +48,23 @@ public class AnalyseStatusPanel extends JPanel {
         rawData.setFont(new Font(rawData.getFont().getFontName(), rawData.getFont().getStyle(), 20));
         conditions.setFont(new Font(conditions.getFont().getFontName(), conditions.getFont().getStyle(), 20));
         identifications.setFont(new Font(identifications.getFont().getFontName(), identifications.getFont().getStyle(), 20));
+        cleanIdentifications.setFont(new Font(cleanIdentifications.getFont().getName(), cleanIdentifications.getFont().getStyle(), 20));
         quantitation.setFont(new Font(quantitation.getFont().getFontName(), quantitation.getFont().getStyle(), 20));
         mapping.setFont(new Font(mapping.getFont().getFontName(), mapping.getFont().getStyle(), 20));
         proteinInference.setFont(new Font(proteinInference.getFont().getFontName(), proteinInference.getFont().getStyle(), 20));
-        
+                
         rawDataStatus.setIcon(notDone);
         conditionsStatus.setIcon(notDone);
         identificationsStatus.setIcon(notDone);
+        cleanIdentificationsStatus.setIcon(notDone);
         quantitationStatus.setIcon(notDone);
         mappingStatus.setIcon(notDone);
-        proteinInferenceStatus.setIcon(notDone);
+        proteinInferenceStatus.setIcon(notDone);        
         
         rawDataSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         conditionsSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         identificationsSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
+        cleanIdentificationsSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         quantitationSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         mappingSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
         proteinInferenceSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
@@ -73,7 +79,9 @@ public class AnalyseStatusPanel extends JPanel {
         conditionsSection.add(conditionsStatus);
         conditionsSection.add(conditions);        
         identificationsSection.add(identificationsStatus);
-        identificationsSection.add(identifications);        
+        identificationsSection.add(identifications);    
+        cleanIdentificationsSection.add(cleanIdentificationsStatus);
+        cleanIdentificationsSection.add(cleanIdentifications);
         quantitationSection.add(quantitationStatus); 
         quantitationSection.add(quantitation);
         mappingSection.add(mappingStatus);
@@ -84,6 +92,7 @@ public class AnalyseStatusPanel extends JPanel {
         add(rawDataSection);
         add(conditionsSection);
         add(identificationsSection);
+        //add(cleanIdentificationsSection);
         add(quantitationSection);
         add(mappingSection);
         add(proteinInferenceSection);
@@ -93,6 +102,7 @@ public class AnalyseStatusPanel extends JPanel {
         setRawDataNotDone();
         setConditionsNotDone();
         setIdentificationsNotDone();
+        setCleanIdentificationsNotDone();
         setQuantitationNotDone();
         setMappingNotDone();
         setProteinInferenceNotDone();
@@ -132,6 +142,18 @@ public class AnalyseStatusPanel extends JPanel {
     
     public void setIdentificationsProcessing() {
         identificationsStatus.setIcon(processing);
+    }
+    
+    public void setCleanIdentificationsDone() {
+        cleanIdentificationsStatus.setIcon(done);
+    }
+    
+    public void setCleanIdentificationsNotDone() {
+        cleanIdentificationsStatus.setIcon(notDone);
+    }
+    
+    public void setCleanIdentificationsProcessing() {
+        cleanIdentificationsStatus.setIcon(processing);
     }
     
     public void setQuantitationDone() {

@@ -75,7 +75,7 @@ public class LoadIdentificationsForSelectedListener implements ActionListener {
     }
     
     public String stripExtension(String fileName) {
-        return fileName.replaceAll("\\.[^\\.]+$", "").replace("_msgfplus", "");
+        return fileName.replaceAll("\\.[^\\.]+$", "").replace("_msgfplus", "").replace("_rt_corrected", "");
     }
 
 }
