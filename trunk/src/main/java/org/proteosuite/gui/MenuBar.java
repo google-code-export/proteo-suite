@@ -11,7 +11,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 import org.proteosuite.gui.listener.AboutListener;
-import org.proteosuite.gui.listener.CheckUpdateListener;
 import org.proteosuite.gui.listener.ExitListener;
 import org.proteosuite.gui.listener.OpenListener;
 import org.proteosuite.gui.listener.OpenUrlListener;
@@ -66,11 +65,6 @@ public class MenuBar extends JMenuBar {
 				"http://www.proteosuite.org/?q=contact"));
 
 		jmHelp.add(jmContactUs);
-
-		JMenuItem jmCheckUpdates = new JMenuItem("Check for updates");
-		jmCheckUpdates.addActionListener(new CheckUpdateListener());
-		jmHelp.add(jmCheckUpdates);
-		jmHelp.add(new JPopupMenu.Separator());
 
 		JMenuItem jmAbout = new JMenuItem("About ProteoSuite");
 		jmAbout.addActionListener(new AboutListener());
