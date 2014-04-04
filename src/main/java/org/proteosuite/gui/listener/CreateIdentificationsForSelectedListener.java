@@ -1,16 +1,10 @@
 package org.proteosuite.gui.listener;
 
 import java.awt.Component;
-import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Map;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JTable;
 
@@ -49,31 +43,8 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
 			parent = parent.getParent();
 		}
 
-		final JDialog dialogIdentParamsExecute = new JDialog((JFrame) parent,
-				"Set Identification Parameters",
-				Dialog.ModalityType.APPLICATION_MODAL);
-
-		// Action for when window close is attempted.
-		final Action closeAction = new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				identParamsExecute.setRun(false);
-				dialogIdentParamsExecute.dispose();
-			}
-		};
-
-		// Add the window close action as a listener.
-		dialogIdentParamsExecute.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				closeAction.actionPerformed(null);
-			}
-		});
-
 		// Add the view to the content pane.
-		dialogIdentParamsExecute.getContentPane().add(identParamsExecute);
-		dialogIdentParamsExecute.pack();
-		dialogIdentParamsExecute.setVisible(true);
+		identParamsExecute.setVisible(true);
 
 		// Check if we're okay to run identifications..
 		boolean paramsSetOkay = identParamsExecute.getRun();
