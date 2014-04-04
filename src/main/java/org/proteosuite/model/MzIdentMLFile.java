@@ -36,6 +36,29 @@ public class MzIdentMLFile extends IdentDataFile {
     }
     
     @Override
+    public int getPSMCountPassingThreshold() {
+        return 0;
+    }
+    
+    @Override
+    public int getPSMCountNotPassingThreshold() {
+        return 0;
+    }
+    
+    @Override
+    public int getPeptideCountPassingThreshold() {
+        return 0;
+    }
+    
+    @Override
+    public String getThresholdingUsed() {
+        return "";
+    }
+    
+    @Override
+    protected void computePSMStats() {}
+    
+    @Override
     protected void initiateLoading() {
         AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Loading Identifications"));
         TasksTab.getInstance().refreshFromTasksModel();

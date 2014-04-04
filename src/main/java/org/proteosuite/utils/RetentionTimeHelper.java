@@ -6,7 +6,7 @@
 
 package org.proteosuite.utils;
 
-//import uk.ac.liv.mzidlib.AddRetentionTimeToMzid;
+import uk.ac.liv.mzidlib.AddRetentionTimeToMzid;
 
 /**
  *
@@ -16,7 +16,7 @@ public class RetentionTimeHelper {
     private RetentionTimeHelper() {}
     public static String fill(String rawFile, String mzidFile) {
         String ftFilledIn = mzidFile.replaceAll(".mzid", "_rt_corrected.mzid");
-        //new AddRetentionTimeToMzid(mzidFile, rawFile, ftFilledIn);
+        new AddRetentionTimeToMzid(mzidFile, rawFile, ftFilledIn);
         return ftFilledIn;
     }
 }
