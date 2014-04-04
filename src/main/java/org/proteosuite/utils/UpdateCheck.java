@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 public class UpdateCheck {
-	private static final String UPDATE_CHECK_URL = "http://www.proteosuite.org/service/update.php?version=%s";
+	private static final String UPDATE_CHECK_URL = "http://www.proteosuite.org/service/update.php?%s";
 	private static final String NO_NEW_VERSION = "FALSE";
 
 	/**
@@ -17,8 +17,15 @@ public class UpdateCheck {
 	 * @throws IOException
 	 */
 	public static String hasUpdate(String version) throws IOException {
-		String webSafeVersion = version.replace(' ', '-');
-		String query = String.format(UPDATE_CHECK_URL, webSafeVersion);
+		String currentVersionInfo = "jvendor=" + System.getProperty("java.vendor");
+		currentVersionInfo += "&jversion=" + System.getProperty("java.version");
+		currentVersionInfo += "&osarch=" + System.getProperty("os.arch");
+		currentVersionInfo += "&osname=" + System.getProperty("os.name");
+		currentVersionInfo += "&osversion=" + System.getProperty("os.version");
+		currentVersionInfo += "&psversion=" + version.replace(' ', '-');
+		currentVersionInfo = currentVersionInfo.replace(" ", "%20");
+		
+		String query = String.format(UPDATE_CHECK_URL, currentVersionInfo);
 		URL url = new URL(query);
 		
 		InputStream moo = url.openStream();
