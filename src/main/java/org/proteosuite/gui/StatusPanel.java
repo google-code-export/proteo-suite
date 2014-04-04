@@ -19,7 +19,7 @@ public class StatusPanel extends JPanel {
 		setPreferredSize(new Dimension(800, 16));
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
-		JLabel versionLabel = new JLabel("ProteoSuite" + ProteoSuiteView.PROTEOSUITE_VERSION);
+		JLabel versionLabel = new JLabel("ProteoSuite " + ProteoSuiteView.PROTEOSUITE_VERSION);
 		versionLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		add(versionLabel);
 	}

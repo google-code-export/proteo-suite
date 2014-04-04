@@ -32,17 +32,17 @@ public class UpdateCheck {
 		String query = String.format(UPDATE_CHECK_URL, currentVersionInfo);
 		URL url = new URL(query);
 		
-		InputStream moo = url.openStream();
-		StringBuilder str = new StringBuilder();
+		InputStream urlStream = url.openStream();
+		StringBuilder data = new StringBuilder();
 		while (true)
 		{
-			int read = moo.read();
+			int read = urlStream.read();
 			if (read == -1)
 				break;
 			
-			str.append((char) read);
+			data.append((char) read);
 		}
-		String newVersion = str.toString();
+		String newVersion = data.toString();
 		
 		if (newVersion.equalsIgnoreCase(NO_NEW_VERSION))
 			return null;
