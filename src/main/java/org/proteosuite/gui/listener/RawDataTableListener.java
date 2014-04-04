@@ -2,24 +2,24 @@ package org.proteosuite.gui.listener;
 
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
+import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-import org.proteosuite.gui.tables.RawDataAndMultiplexingTable;
-
 public class RawDataTableListener implements ListSelectionListener,
 		TableModelListener {
-	private final RawDataAndMultiplexingTable rawDataTable;
-	private final JButton deleteSelectedButton;
+	private final JTable table;
+	private final JButton[] toggleButtons;
 	private final JButton clearAllButton;
 	private final JButton continueButton;
+	
+	private JButton deleteSelectedButton;
 
-	public RawDataTableListener(RawDataAndMultiplexingTable rawDataTable,
-			JButton deleteSelectedButton) {
-		this.rawDataTable = rawDataTable;
-		this.deleteSelectedButton = deleteSelectedButton;
+	public RawDataTableListener(JTable table, JButton... toggleButtons) {
+		this.table = table;
+		this.toggleButtons = toggleButtons;
 
 		clearAllButton = null;
 		continueButton = null;
@@ -31,7 +31,8 @@ public class RawDataTableListener implements ListSelectionListener,
 		this.clearAllButton = clearAllButton;
 		this.continueButton = continueButton;
 
-		rawDataTable = null;
+		toggleButtons = null;
+		table = null;
 	}
 
 	@Override
@@ -41,21 +42,26 @@ public class RawDataTableListener implements ListSelectionListener,
 
 		DefaultListSelectionModel model = (DefaultListSelectionModel) e
 				.getSource();
+		
+		boolean state = true;
 
 		if (model.getAnchorSelectionIndex() == -1)
-			deleteSelectedButton.setEnabled(false);
-		else
-			deleteSelectedButton.setEnabled(true);
+			state = false;
 
-		if (rawDataTable.getRowCount() == 0)
-			deleteSelectedButton.setEnabled(false);
+		if (table.getRowCount() == 0)
+			state  = false;
+		
+		for (JButton button : toggleButtons)
+		{
+			button.setEnabled(state);
+		}
 	}
 
 	@Override
 	public void tableChanged(TableModelEvent e) {
 		switch (e.getType()) {
 		case TableModelEvent.DELETE:
-			if (rawDataTable.getRowCount() == 0) {
+			if (table.getRowCount() == 0) {
 				clearAllButton.setEnabled(false);
 				deleteSelectedButton.setEnabled(false);
 				continueButton.setEnabled(false);

@@ -15,6 +15,7 @@ import org.proteosuite.gui.listener.ContinueButtonListener;
 import org.proteosuite.gui.listener.CreateIdentificationsForSelectedListener;
 import org.proteosuite.gui.listener.LoadIdentificationsForSelectedListener;
 import org.proteosuite.gui.listener.PreviousButtonListener;
+import org.proteosuite.gui.listener.RawDataTableListener;
 import org.proteosuite.gui.listener.ResetIdentificationsForSelectedListener;
 import org.proteosuite.gui.tables.CreateOrLoadIdentificationsTable;
 import org.proteosuite.model.AnalyseData;
@@ -39,22 +40,33 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setLayout(new GridLayout(2, 3));
 
-		JButton loadIdentificationsButton = new JButton(
+		JButton loadIdentifications = new JButton(
 				"Load identifications for selected...");
-		JButton createIdentificationsButton = new JButton(
+		JButton createIdentifications = new JButton(
 				"Create identifications for selected...");
-		JButton resetIdentificationsButton = new JButton(
+		JButton resetIdentifications = new JButton(
 				"Reset status for selected...");
 
-		loadIdentificationsButton
+		loadIdentifications.setEnabled(false);
+		createIdentifications.setEnabled(false);
+		resetIdentifications.setEnabled(false);
+
+		loadIdentifications
 				.addActionListener(new LoadIdentificationsForSelectedListener(
 						this));
-		createIdentificationsButton
+		createIdentifications
 				.addActionListener(new CreateIdentificationsForSelectedListener(
 						this));
-		resetIdentificationsButton
+		resetIdentifications
 				.addActionListener(new ResetIdentificationsForSelectedListener(
 						this));
+		identificationsTable.getSelectionModel().addListSelectionListener(
+				new RawDataTableListener(identificationsTable,
+						loadIdentifications, createIdentifications, resetIdentifications));
+
+		// identificationsTable.getModel().addTableModelListener(
+		// new RawDataTableListener(deleteSelectedButton, clearAllButton,
+		// continueButton));
 
 		JButton continueButton = new JButton("Continue");
 		JButton previousButton = new JButton("Previous");
@@ -62,9 +74,9 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
 		previousButton.addActionListener(new PreviousButtonListener(this));
 		continueButton.addActionListener(new ContinueButtonListener(this));
 
-		buttonsPanel.add(loadIdentificationsButton);
-		buttonsPanel.add(createIdentificationsButton);
-		buttonsPanel.add(resetIdentificationsButton);
+		buttonsPanel.add(loadIdentifications);
+		buttonsPanel.add(createIdentifications);
+		buttonsPanel.add(resetIdentifications);
 
 		buttonsPanel.add(previousButton);
 		buttonsPanel.add(Box.createGlue());
