@@ -2,8 +2,8 @@ package org.proteosuite.gui.analyse;
 
 import java.awt.BorderLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 /**
  * 
@@ -12,7 +12,6 @@ import javax.swing.border.EmptyBorder;
 public class AnalyseDynamicTab extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private static AnalyseDynamicTab instance = null;
-	private final BorderLayout layout = new BorderLayout();
 	public static final JPanel RAW_DATA_AND_MULTIPLEXING_STEP = new RawDataAndMultiplexingStep();
 	public static final JPanel DEFINE_CONDITIONS_STEP = new DefineConditionsStep();
 	public static final JPanel CREATE_OR_LOAD_IDENTIFICATIONS_STEP = new CreateOrLoadIdentificationsStep();
@@ -22,7 +21,7 @@ public class AnalyseDynamicTab extends JPanel {
 	private static final AnalyseStatusPanel analysisStatusPanel = new AnalyseStatusPanel();
 
 	private AnalyseDynamicTab() {
-		setLayout(layout);
+		super(new BorderLayout());
 		moveToStep(RAW_DATA_AND_MULTIPLEXING_STEP);
 	}
 
@@ -37,9 +36,8 @@ public class AnalyseDynamicTab extends JPanel {
 	public void moveToStep(JPanel panel) {
 		removeAll();
 		add(analysisStatusPanel, BorderLayout.PAGE_START);
-		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+		panel.setBorder(BorderFactory.createEmptyBorder());
 		add(panel, BorderLayout.CENTER);
-		repaint();
 	}
 
 	public AnalyseStatusPanel getAnalyseStatusPanel() {

@@ -24,7 +24,7 @@ public class InspectRaw extends JPanel implements ListSelectionListener {
 			.getInspectModel();
 
 	public InspectRaw() {
-		setLayout(new GridLayout(1, 2));
+		super(new GridLayout(1, 2));
 		add(chartPanel);
 		add(new JScrollPane(jTable));
 

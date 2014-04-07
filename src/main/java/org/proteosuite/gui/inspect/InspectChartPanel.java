@@ -19,6 +19,7 @@ public class InspectChartPanel extends JTabbedPane {
     public void setChromatogram(ChromatogramPanel chromPanel) {
         this.chromPanel = chromPanel;
         refreshTabView(0);
+		setTabPlacement(JTabbedPane.BOTTOM);
     }
     
     public void setSpectrum(SpectrumPanel specPanel) {

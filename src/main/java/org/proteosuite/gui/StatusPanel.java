@@ -16,7 +16,7 @@ public class StatusPanel extends JPanel {
 	public StatusPanel()
 	{
 		setBorder(new BevelBorder(BevelBorder.LOWERED));
-		setPreferredSize(new Dimension(800, 16));
+		setPreferredSize(new Dimension(800, 20));
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
 		JLabel versionLabel = new JLabel("ProteoSuite " + ProteoSuiteView.PROTEOSUITE_VERSION);
