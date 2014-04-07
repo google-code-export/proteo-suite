@@ -14,7 +14,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 
-public class ChartSpectrum {
+public class ChartSpectrum extends AbstractChart {
 
 	/**
 	 * Display MS spectrum
@@ -38,11 +38,7 @@ public class ChartSpectrum {
 			return null;
 
 		// Reading CvParam to identify the MS level (1, 2)
-		byte msLevel = -1;
-		for (CVParam lCVParam : spectrum.getCvParam()) {
-			if (lCVParam.getAccession().equals("MS:1000511"))
-				msLevel = Byte.parseByte(lCVParam.getValue().trim());
-		}
+		byte msLevel = getMSLevel(spectrum.getCvParam());
 
 		float parIonMz = 0;
 		int parCharge = 0;
@@ -82,8 +78,10 @@ public class ChartSpectrum {
 			for (CVParam cvp : cvpList) {
 				if (cvp.getAccession().equals("MS:1000514")) {
 					mzNumbers = bda.getBinaryDataAsNumberArray();
+					break;
 				} else if (cvp.getAccession().equals("MS:1000515")) {
 					intenNumbers = bda.getBinaryDataAsNumberArray();
+					break;
 				}
 			}
 		}
