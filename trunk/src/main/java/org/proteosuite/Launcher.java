@@ -9,6 +9,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import org.proteosuite.quantitation.OpenMSLabelFreeWrapper;
+import org.proteosuite.utils.ExceptionCatcher;
 import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.UpdateCheck;
 
@@ -35,7 +36,7 @@ public class Launcher {
 				| IllegalAccessException | UnsupportedLookAndFeelException exception) {
 			exception.printStackTrace();
 		}
-		
+
 		if (!OpenMSLabelFreeWrapper.checkIsInstalled()) {
 			int result = JOptionPane
 					.showConfirmDialog(
@@ -56,7 +57,18 @@ public class Launcher {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new ProteoSuite().setVisible(true);
+				try {
+					new ProteoSuite().setVisible(true);
+				} catch (Exception e) {
+					try {
+						ExceptionCatcher.reportException(e);
+						JOptionPane.showMessageDialog(null, "ProteoSuite has crashed with: " + e.getMessage(), "OH NO!", JOptionPane.ERROR_MESSAGE);
+						System.exit(1);
+					} catch (Exception ignore) {
+						// Most likely no Internet connection, do nothing!
+						// Though we lost debug info :(
+					}
+				}
 			}
 		});
 	}

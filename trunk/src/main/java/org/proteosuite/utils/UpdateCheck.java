@@ -42,6 +42,7 @@ public class UpdateCheck {
 			
 			data.append((char) read);
 		}
+		urlStream.close();
 		String newVersion = data.toString();
 		
 		if (newVersion.equalsIgnoreCase(NO_NEW_VERSION))

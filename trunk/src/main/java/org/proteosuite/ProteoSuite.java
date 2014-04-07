@@ -18,13 +18,10 @@ import java.util.Locale;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 import org.proteosuite.gui.MenuBar;
 import org.proteosuite.gui.StatusPanel;
 import org.proteosuite.gui.TabbedMainPanel;
-import org.proteosuite.quantitation.OpenMSLabelFreeWrapper;
-import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.SystemUtils;
 
 /**
