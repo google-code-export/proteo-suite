@@ -4,8 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
+import org.proteosuite.gui.analyse.CleanIdentificationsStep;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.analyse.DefineConditionsStep;
+import org.proteosuite.gui.analyse.ITRAQStep;
+import org.proteosuite.gui.analyse.LabelFreeStep;
 import org.proteosuite.gui.tables.DefineConditionsTable;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.RawDataFile;
@@ -45,6 +48,10 @@ public class PreviousButtonListener implements ActionListener {
             parent.moveToStep(AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP);            
         } else if (panel instanceof CreateOrLoadIdentificationsStep) {
             parent.moveToStep(AnalyseDynamicTab.DEFINE_CONDITIONS_STEP);
+        } else if (panel instanceof CleanIdentificationsStep) {
+            parent.moveToStep(AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP);
+        } else if (panel instanceof LabelFreeStep || panel instanceof ITRAQStep) {
+            parent.moveToStep(AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP);
         }
     }  
 }

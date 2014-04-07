@@ -21,7 +21,7 @@ public class CleanIdentificationsTable extends JTable {
         
         model.addColumn("File Name");       
         model.addColumn("Peptide Spectrum Matches (PSMs) Passing Threshold");
-        model.addColumn("Peptide Spectrum Matches (PSMs Not Passing Threshold)");
+        model.addColumn("Peptide Spectrum Matches (PSMs) Not Passing Threshold");
         model.addColumn("Peptides");
         model.addColumn("Thresholding Used");
         model.addColumn("Apply Thresholding");
