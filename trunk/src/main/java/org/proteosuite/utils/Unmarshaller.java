@@ -4,7 +4,7 @@ import java.io.File;
 
 import javax.swing.table.DefaultTableModel;
 
-import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.ProteoSuite;
 
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
@@ -93,7 +93,7 @@ public class Unmarshaller {
 
 		model.insertRow(model.getRowCount(), new String[] { xmlFile.getName(),
 				xmlFile.getPath().replace("\\", "/"), "mzq",
-				ProteoSuiteView.MZQUANT_VERSION});
+				ProteoSuite.MZQUANT_VERSION});
 		
 		System.out.println(SYS_UTILS.getTime() + " - (Unmarshalling) "
 				+ xmlFile.getName() + " was unmarshalled successfully!");

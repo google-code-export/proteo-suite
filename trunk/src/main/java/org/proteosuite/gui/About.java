@@ -38,7 +38,7 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
-import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.ProteoSuite;
 import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.SystemUtils;
 
@@ -116,7 +116,7 @@ public class About extends JDialog {
 			}
 		});
 		row.add(url);
-		row.add(getLabel("Version " + ProteoSuiteView.PROTEOSUITE_VERSION));
+		row.add(getLabel("Version " + ProteoSuite.PROTEOSUITE_VERSION));
 		content.add(row);
 		content.add(Box.createVerticalStrut(10));
 

@@ -11,8 +11,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import javax.swing.SwingWorker;
 import javax.xml.validation.Validator;
-import org.proteosuite.ProteoSuiteView;
-import static org.proteosuite.ProteoSuiteView.MZQ_XSD;
+import org.proteosuite.ProteoSuite;
+import static org.proteosuite.ProteoSuite.MZQ_XSD;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.model.AnalyseData;
@@ -86,14 +86,14 @@ public class XTrackerITRAQWrapper {
      */
     private boolean generateFiles(String technique) {
         // Check project name
-        String sFile = ProteoSuiteView.sProjectName;
+        String sFile = ProteoSuite.sProjectName;
         System.out.println(sysUtils.getTime()
                 + " - Generating files for the pipeline ...");
 
         if (sFile.equals("New") || sFile.equals("")) {
             sFile = "output.mzq";
 
-            ProteoSuiteView.sProjectName = sFile;
+            ProteoSuite.sProjectName = sFile;
         }
 
         // Generate mzq file
@@ -103,7 +103,7 @@ public class XTrackerITRAQWrapper {
 
         // Unmarshall mzquantml file        
         Validator validator = XMLparser.getValidator(MZQ_XSD);
-        boolean validFlag = XMLparser.validate(validator, rawData.get(0).getFile().getParent().replace("\\", "/") + "/" + ProteoSuiteView.sProjectName);
+        boolean validFlag = XMLparser.validate(validator, rawData.get(0).getFile().getParent().replace("\\", "/") + "/" + ProteoSuite.sProjectName);
         System.out.println(sysUtils.getTime() + " - Validating mzQuantML ...");
         if (!validFlag) {
             System.out.println("Invalid mzQuantML file!");
@@ -122,16 +122,16 @@ public class XTrackerITRAQWrapper {
      */
     public void writeXTrackerFiles(String technique) {
 
-        // ... Based on the technique, select the plugins that are available to
-        // perform the quantitation ...//
+        // Based on the technique, select the plugins that are available to
+        // perform the quantitation
         String[] sPipeline = PluginManager.getPlugins(technique, rawData.get(0).getFormat(), "mzIdentML", "mzQuantML");
 
-        // ... xTracker consists of 4 main plugins (read more on
-        // www.x-tracker.info) ...//
+        // xTracker consists of 4 main plugins (read more on
+        // www.x-tracker.info)
         writeXTrackerIdent(technique, sPipeline[0]);
         writeXTrackerRaw(sPipeline[1]);
         writeXTrackerQuant(sPipeline[2]);
-        writeXTrackerOutput(sPipeline[3], ProteoSuiteView.sProjectName);
+        writeXTrackerOutput(sPipeline[3], ProteoSuite.sProjectName);
     }
 
     /**
@@ -198,7 +198,7 @@ public class XTrackerITRAQWrapper {
                 out.write("    </modificationData>");
                 out.newLine();
 
-                // ... Read files using XPath xml parser ...//
+                // Read files using XPath xml parser
                 String searchScore = null;
                 switch (technique) {
                     case "iTRAQ":
@@ -295,7 +295,7 @@ public class XTrackerITRAQWrapper {
         System.out.println("Quant=" + plugin);
         String sFileName = rawData.get(0).getFile().getParent() + "\\xTracker_" + plugin + ".xtp";
 
-        // ... Read files using XPath xml parser ...//
+        // Read files using XPath xml parser
         String mzRangeMin = "", mzRangeMax = "", integrationMethod = "";
         String minPepRange = "", maxPepRange = "", searchScore = "", enzyme = "";
         List<String> alFastaFiles = new ArrayList<String>();
@@ -303,10 +303,11 @@ public class XTrackerITRAQWrapper {
         mzRangeMin = String.valueOf(ITRAQTechnique.MZ_RANGE_MINUS);
         mzRangeMax = String.valueOf(ITRAQTechnique.MZ_RANGE_PLUS);
         integrationMethod = ITRAQTechnique.INTEGRATION_METHOD;
-        for (int loopIterator = 0; loopIterator < 1; loopIterator++) { // ... This has been set up to only
+        for (int loopIterator = 0; loopIterator < 1; loopIterator++) { 
+        	// This has been set up to only
             // one iteration as x-Tracker
             // cannot cope with multiple
-            // configurations ...//
+            // configurations
 
             RawDataFile dataFile = rawData.get(loopIterator);
             for (Entry<String, String> assay : dataFile.getConditions().entrySet()) {                
@@ -324,12 +325,12 @@ public class XTrackerITRAQWrapper {
             }
         }
 
-        // ... Depending on which plugin was selected we must write the
-        // corresponding x-Tracker file ...//
+        // Depending on which plugin was selected we must write the
+        // corresponding x-Tracker file
         if (plugin.equals("SILAC")) {
 
         } else if (plugin.equals("iTraqQuantitation")) {
-            // ... Write configuration file ...//
+            // Write configuration file
             try {
                 FileWriter fstream = new FileWriter(sFileName);
                 BufferedWriter out = new BufferedWriter(fstream);
@@ -405,7 +406,7 @@ public class XTrackerITRAQWrapper {
             }
         } else if (plugin.startsWith("emPAI")) {
 
-            // ... Write configuration file ...//
+            // Write configuration file
             try {
                 FileWriter fstream = new FileWriter(sFileName);
                 BufferedWriter out = new BufferedWriter(fstream);

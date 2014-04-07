@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
-import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.ProteoSuite;
 
 public class StatusPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -19,7 +19,7 @@ public class StatusPanel extends JPanel {
 		setPreferredSize(new Dimension(800, 20));
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
-		JLabel versionLabel = new JLabel("ProteoSuite " + ProteoSuiteView.PROTEOSUITE_VERSION);
+		JLabel versionLabel = new JLabel("ProteoSuite " + ProteoSuite.PROTEOSUITE_VERSION);
 		versionLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		add(versionLabel);
 	}

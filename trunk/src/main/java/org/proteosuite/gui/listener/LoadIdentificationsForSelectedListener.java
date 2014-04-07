@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.ProteoSuite;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.tables.CreateOrLoadIdentificationsTable;
@@ -33,7 +33,7 @@ public class LoadIdentificationsForSelectedListener implements ActionListener {
         }
 
         AnalyseData data = AnalyseData.getInstance();
-        JFileChooser chooser = new JFileChooser(ProteoSuiteView.sPreviousLocation);
+        JFileChooser chooser = new JFileChooser(ProteoSuite.sPreviousLocation);
         FileNameExtensionFilter mzq_filter = new FileNameExtensionFilter(
         "Identification Data Files", "mzIdentML", "mzid");
         chooser.setFileFilter(mzq_filter);
@@ -43,8 +43,8 @@ public class LoadIdentificationsForSelectedListener implements ActionListener {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File[] files = chooser.getSelectedFiles();
 
-            if (!files[0].getParent().equals(ProteoSuiteView.sPreviousLocation)) {
-                ProteoSuiteView.sPreviousLocation = files[0].getParent();
+            if (!files[0].getParent().equals(ProteoSuite.sPreviousLocation)) {
+            	ProteoSuite.sPreviousLocation = files[0].getParent();
             }
             
             if (files.length < 2) {

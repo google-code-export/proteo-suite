@@ -7,7 +7,7 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
-import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.ProteoSuite;
 import org.proteosuite.model.RawMzMLFile;
 import org.proteosuite.utils.TwoDPlot;
 
@@ -36,7 +36,7 @@ public class ChartPlot2D {
 
 		// Check if mzML contains MS1 data
 		if (unmarshaller.getChromatogramIDs().isEmpty()) {
-			System.out.println(ProteoSuiteView.SYS_UTILS.getTime()
+			System.out.println(ProteoSuite.SYS_UTILS.getTime()
 					+ " - This mzML file doesn't contain MS2 raw data.");
 			return null;
 		}
@@ -102,7 +102,7 @@ public class ChartPlot2D {
 				System.out.println(ume.getMessage());
 			}
 		}
-		System.out.println(ProteoSuiteView.SYS_UTILS.getTime() + " - 2D view holding "
+		System.out.println(ProteoSuite.SYS_UTILS.getTime() + " - 2D view holding "
 				+ points.size() + " elements.");
 		
 		int i = 0;

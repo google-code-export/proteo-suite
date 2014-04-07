@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 import javax.swing.SwingWorker;
 
-import static org.proteosuite.ProteoSuiteView.SYS_UTILS;
+import static org.proteosuite.ProteoSuite.SYS_UTILS;
 
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
