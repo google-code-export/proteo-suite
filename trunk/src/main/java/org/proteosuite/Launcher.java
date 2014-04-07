@@ -36,7 +36,7 @@ public class Launcher {
 			exception.printStackTrace();
 		}
 		
-		if (OpenMSLabelFreeWrapper.checkIsInstalled()) {
+		if (!OpenMSLabelFreeWrapper.checkIsInstalled()) {
 			int result = JOptionPane
 					.showConfirmDialog(
 							null,
