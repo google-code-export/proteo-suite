@@ -1,5 +1,3 @@
-
-
 package org.proteosuite.gui.listener;
 
 import java.awt.event.MouseAdapter;

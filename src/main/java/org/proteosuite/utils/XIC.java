@@ -138,9 +138,9 @@ public class XIC {
 		// Storing normal values
 		if (mzNumbers != null) {
 			double previous = 0;
-			for (int iI = 0; iI < mzNumbers.length; iI++) {
-				previous = mzNumbers[iI].doubleValue() + previous;
-				mzNumbers[iI] = previous;
+			for (int i = 0; i < mzNumbers.length; i++) {
+				previous = mzNumbers[i].doubleValue() + previous;
+				mzNumbers[i] = previous;
 			}
 		}
 		return mzNumbers;
