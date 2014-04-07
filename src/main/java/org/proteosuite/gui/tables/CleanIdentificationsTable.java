@@ -33,9 +33,9 @@ public class CleanIdentificationsTable extends JTable {
         if (identFile != null) {
             model.addRow(new Object[]{
                 identFile.getFileName(),
-                identFile.getPSMCountPassingThreshold(),
-                identFile.getPSMCountNotPassingThreshold(),
-                identFile.getPeptideCountPassingThreshold(),
+                identFile.getPSMCountPassingThreshold() == -1 ? "Calculating..." : identFile.getPSMCountPassingThreshold(),
+                identFile.getPSMCountNotPassingThreshold() == -1 ? "Calculating..." : identFile.getPSMCountNotPassingThreshold(),
+                identFile.getPeptideCountPassingThreshold() == -1 ? "Calculating..." : identFile.getPeptideCountPassingThreshold(),
                 identFile.getThresholdingUsed(),
                 null
             }); 

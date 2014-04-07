@@ -102,7 +102,7 @@ public class AnalyseStatusPanel extends JPanel {
 		add(rawDataSection);
 		add(conditionsSection);
 		add(identificationsSection);
-		// add(cleanIdentificationsSection);
+		add(cleanIdentificationsSection);
 		add(quantitationSection);
 		add(mappingSection);
 		add(proteinInferenceSection);
