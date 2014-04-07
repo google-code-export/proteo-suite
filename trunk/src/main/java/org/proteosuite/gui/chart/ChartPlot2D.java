@@ -22,11 +22,12 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
  * 
  * @author Andrew Collins
  */
-public class ChartPlot2D {
+public class ChartPlot2D extends AbstractChart {
 	private static final double LOW_INTENSITY = 10;
 
 	/**
 	 * Displays the MS1 raw data as 2D plots
+	 * 
 	 * @param unmarshaller
 	 * @param sTitle
 	 * @return
@@ -45,79 +46,75 @@ public class ChartPlot2D {
 						Spectrum.class);
 
 		while (spectrumIterator.hasNext()) {
-			float rt = 0;
 			Spectrum spectrumobj = spectrumIterator.next();
 
 			// Identify MS1 data
-			String msLevel = "";
-			for (CVParam lCVParam : spectrumobj.getCvParam()) {
-				if (lCVParam.getAccession().equals("MS:1000511"))
-					msLevel = lCVParam.getValue().trim();
-			}
-			if (!msLevel.equals("1"))
+			byte msLevel = getMSLevel(spectrumobj.getCvParam());
+
+			if (msLevel != 1)
 				continue;
 
+			Spectrum spectrum = null;
 			try {
-				Spectrum spectrum = unmarshaller.getSpectrumById(spectrumobj.getId());
-				for (CVParam lCVParam : spectrum.getScanList().getScan().get(0)
-						.getCvParam()) {
-					if (!lCVParam.getAccession().equals("MS:1000016"))
-						continue;
-					
-					// Get RT
-					rt = Float.parseFloat(lCVParam.getValue().trim());
-
-					if (lCVParam.getUnitAccession().trim().equals("UO:0000031"))
-						rt *= 60;
-				}
-				Number[] mzNumbers = null;
-				Number[] intenNumbers = null;
-				// Reading mz Values
-				List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList()
-						.getBinaryDataArray();
-				for (BinaryDataArray bda : bdal) {
-					List<CVParam> cvpList = bda.getCvParam();
-					for (CVParam cvp : cvpList) {
-						if (cvp.getAccession().equals("MS:1000514"))
-							mzNumbers = bda.getBinaryDataAsNumberArray();
-						
-						if (cvp.getAccession().equals("MS:1000515"))
-							intenNumbers = bda.getBinaryDataAsNumberArray();
-					}
-				}
-				int i = 0;
-				while (i < mzNumbers.length) {
-					// Removing zero values
-					if (intenNumbers[i].doubleValue() <= LOW_INTENSITY)
-					{
-						i++;
-						continue;
-					}
-					
-					points.add(new Point2D.Float(mzNumbers[i].floatValue(), rt));
-					
-					i++;
-				}
+				spectrum = unmarshaller.getSpectrumById(spectrumobj.getId());
 			} catch (MzMLUnmarshallerException ume) {
 				System.out.println(ume.getMessage());
 			}
+
+			if (spectrum == null)
+				return null;
+
+			float rt = getRetentionTime(spectrum.getScanList().getScan().get(0)
+					.getCvParam());
+			
+			Number[] mzNumbers = null;
+			Number[] intenNumbers = null;
+			// Reading mz Values
+			List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList()
+					.getBinaryDataArray();
+
+			for (BinaryDataArray bda : bdal) {
+				List<CVParam> cvpList = bda.getCvParam();
+
+				for (CVParam cvp : cvpList) {
+					if (cvp.getAccession().equals("MS:1000514")) {
+						mzNumbers = bda.getBinaryDataAsNumberArray();
+						break;
+					} else if (cvp.getAccession().equals("MS:1000515")) {
+						intenNumbers = bda.getBinaryDataAsNumberArray();
+						break;
+					}
+				}
+			}
+
+			int i = 0;
+			while (i < mzNumbers.length) {
+				// Removing zero values
+				if (intenNumbers[i].doubleValue() <= LOW_INTENSITY) {
+					i++;
+					continue;
+				}
+
+				points.add(new Point2D.Float(mzNumbers[i].floatValue(), rt));
+
+				i++;
+			}
 		}
-		System.out.println(ProteoSuite.SYS_UTILS.getTime() + " - 2D view holding "
-				+ points.size() + " elements.");
-		
+		System.out.println(ProteoSuite.SYS_UTILS.getTime()
+				+ " - 2D view holding " + points.size() + " elements.");
+
 		int i = 0;
-    	float[][] data = new float[2][points.size()];
-		for (Point2D.Float point : points)
-		{
-            data[0][i] = point.x;
-            data[1][i] = point.y;
-            i++;
+		float[][] data = new float[2][points.size()];
+		for (Point2D.Float point : points) {
+			data[0][i] = point.x;
+			data[1][i] = point.y;
+			i++;
 		}
-		
+
 		return TwoDPlot.getTwoDPlot(data);
 	}
 
-	public static JPanel get2DPlot(RawMzMLFile dataFile) {		
+	public static JPanel get2DPlot(RawMzMLFile dataFile) {
 		return get2DPlot(dataFile.getUnmarshaller());
 	}
 }
