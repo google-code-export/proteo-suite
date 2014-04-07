@@ -168,12 +168,16 @@ public class About extends JDialog {
 	private void jbSystemInfoActionPerformed() {
 		String sMessage = "Used Memory: \t" + SYS_UTILS.getUsedMemory()
 				+ "MB\n";
-		sMessage = sMessage + "Free Memory: \t" + SYS_UTILS.getFreeMemory()
+		sMessage += "Free Memory: \t" + SYS_UTILS.getFreeMemory()
 				+ "MB\n";
-		sMessage = sMessage + "Total Memory: \t" + SYS_UTILS.getTotalMemory()
+		sMessage += "Total Memory: \t" + SYS_UTILS.getTotalMemory()
 				+ "MB\n";
-		sMessage = sMessage + "Max Memory: \t" + SYS_UTILS.getMaxMemory()
+		sMessage += "Max Memory: \t" + SYS_UTILS.getMaxMemory()
 				+ "MB\n";
+		sMessage += "Processors: \t" + SYS_UTILS.getAvailableProcessors()
+				+ "\n";
+		sMessage += "Java Version: \t" + SYS_UTILS.getRuntimeInfo()
+				+ "\n";
 		JOptionPane.showMessageDialog(this, sMessage, "Information",
 				JOptionPane.INFORMATION_MESSAGE);
 	}

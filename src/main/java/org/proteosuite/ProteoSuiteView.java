@@ -63,8 +63,6 @@ public class ProteoSuiteView extends JFrame {
 		setMinimumSize(new Dimension(1024, 768));
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-		System.out.println("User dir: " + System.getProperty("user.dir"));
-
 		setJMenuBar(new MenuBar());
 
         add(new TabbedMainPanel(), BorderLayout.CENTER);
@@ -75,20 +73,6 @@ public class ProteoSuiteView extends JFrame {
 		// Setting project icons
 		setIconImage(new ImageIcon(getClass().getClassLoader().getResource(
 				"images/icon.gif")).getImage());
-
-		// Check Java version and architecture
-		System.out.println("****************************************");
-		System.out.println("*****    P R O T E O S U I T E    ******");
-		System.out.println("****************************************");
-		SYS_UTILS.checkMemory("starting up");
-		System.out.println("Java version: "
-				+ System.getProperty("java.version"));
-		System.out.println("Architecture: "
-				+ System.getProperty("sun.arch.data.model") + "-bit");
-		System.out.println("Classpath: "
-				+ System.getProperty("java.class.path"));
-		System.out.println("****************************************");
-
 
 		// Configuring exit events
 		pack();
