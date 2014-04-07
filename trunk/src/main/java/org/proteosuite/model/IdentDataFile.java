@@ -10,9 +10,9 @@ public abstract class IdentDataFile {
     protected File file;
     private String loadingStatus = "Done";
     protected boolean computedPSMStats = false;
-    protected int psmCountPassingThreshold = 0;
-    private int psmCountNotPassingThrehsold = 0;
-    private int peptideCountPassingThreshold = 0;
+    protected int psmCountPassingThreshold = -1;
+    protected int psmCountNotPassingThrehsold = -1;
+    protected int peptideCountPassingThreshold = -1;
     public IdentDataFile(File file) {
         this.file = file;
         initiateLoading();
