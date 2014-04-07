@@ -33,19 +33,6 @@ public class SystemUtils {
 		return dateFormat.format(new Date());
 	}
 
-	public void checkMemory(String sTitle) {
-		System.out.println("Memory check at " + sTitle + " ... ");
-		System.out
-				.println("Used Memory:"
-						+ ((runtime.totalMemory() - runtime.freeMemory()) / MEGABYTE)
-						+ " MB");
-		System.out
-				.println("Free Memory:" + (runtime.freeMemory() / MEGABYTE) + " MB");
-		System.out.println("Total Memory:" + (runtime.totalMemory() / MEGABYTE)
-				+ " MB");
-		System.out.println("Max Memory:" + (runtime.maxMemory() / MEGABYTE) + " MB");
-	}
-
 	public long getUsedMemory() {
 		return (runtime.totalMemory() - runtime.freeMemory()) / MEGABYTE;
 	}
@@ -73,5 +60,13 @@ public class SystemUtils {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	public int getAvailableProcessors() {
+		return runtime.availableProcessors();
+	}
+
+	public String getRuntimeInfo() {
+		return System.getProperty("java.version") + " " + System.getProperty("os.arch");
 	}
 }
