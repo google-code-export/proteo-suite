@@ -2,6 +2,7 @@ package org.proteosuite.model;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -13,14 +14,15 @@ public abstract class RawDataFile {
     protected boolean peakPickingChecked;
     protected int spectraCount;
     protected boolean spectraCountChecked;
-    private HashMap<String, String> assayConditions = new HashMap<String, String>();
+    private Map<String, String> assayConditions = new HashMap<String, String>();
     private IdentDataFile identFile = null;
+    
     public RawDataFile(File file) {
         this.file = file;        
         initiateLoading();
     }
     
-    public HashMap<String, String> getConditions() {
+    public Map<String, String> getConditions() {
         return assayConditions;
     }
     
