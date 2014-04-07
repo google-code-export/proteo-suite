@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.xml.bind.JAXBException;
 
-import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.ProteoSuite;
 import org.proteosuite.utils.DecoyDetection;
 import org.proteosuite.utils.FileFormatUtils;
 
@@ -214,7 +214,7 @@ public class FileFormatMzIdentML implements Runnable {
 											+ ";";
 								} catch (JAXBException ex) {
 									Logger.getLogger(
-											ProteoSuiteView.class
+											ProteoSuite.class
 													.getName()).log(
 											Level.SEVERE, null, ex);
 								}
@@ -361,7 +361,7 @@ public class FileFormatMzIdentML implements Runnable {
 						}
 					} catch (JAXBException ex) {
 						Logger.getLogger(
-								ProteoSuiteView.class.getName()).log(
+								ProteoSuite.class.getName()).log(
 								Level.SEVERE, null, ex);
 					}
 				}

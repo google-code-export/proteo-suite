@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.ProteoSuite;
 import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.utils.PluginManager;
@@ -69,7 +69,7 @@ public class QuantUtils {
 		cvPSI_MS.setId("PSI-MS");
 		cvPSI_MS.setUri("http://psidev.cvs.sourceforge.net/viewvc/*checkout*/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo");
 		cvPSI_MS.setFullName("Proteomics Standards Initiative Mass Spectrometry Vocabulary");
-		cvPSI_MS.setVersion(ProteoSuiteView.PSI_MS_VERSION);
+		cvPSI_MS.setVersion(ProteoSuite.PSI_MS_VERSION);
 
 		Cv cvUO = new Cv();
 		cvUO.setId("UO");
@@ -82,7 +82,7 @@ public class QuantUtils {
 				.setUri("http://psidev.cvs.sourceforge.net/psidev/psi/mod/data/PSI-MOD.obo");
 		cvPSI_MOD
 				.setFullName("Proteomics Standards Initiative Protein Modifications");
-		cvPSI_MOD.setVersion(ProteoSuiteView.PSI_MOD_VERSION);
+		cvPSI_MOD.setVersion(ProteoSuite.PSI_MOD_VERSION);
 
 		Cv cvUNI_MOD = new Cv();
 		cvUNI_MOD.setId("UNIMOD");
@@ -330,7 +330,7 @@ public class QuantUtils {
 		Software software2 = new Software();
 		softwareList.getSoftware().add(software2);
 		software2.setId("ProteoSuite");
-		software2.setVersion(ProteoSuiteView.PROTEOSUITE_VERSION);
+		software2.setVersion(ProteoSuite.PROTEOSUITE_VERSION);
 		CvParam cvpSW2 = new CvParam();
 		cvpSW2.setAccession("MS:1002124");
 		cvpSW2.setCv(cvPSI_MS);

@@ -3,7 +3,7 @@ package org.proteosuite.gui.chart;
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import java.awt.Dimension;
 import java.util.List;
-import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.ProteoSuite;
 import org.proteosuite.model.RawMzMLFile;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
@@ -37,7 +37,7 @@ public class ChartChromatogram {
             }
         }
 
-        System.out.println(ProteoSuiteView.SYS_UTILS.getTime()
+        System.out.println(ProteoSuite.SYS_UTILS.getTime()
                 + " - This mzML file doesn't contain MS2 raw data.");
             
         return null;

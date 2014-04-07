@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
-import org.proteosuite.ProteoSuiteView;
+import org.proteosuite.ProteoSuite;
 
 import uk.ac.ebi.jmzidml.model.mzidml.PeptideEvidence;
 import uk.ac.ebi.jmzidml.model.mzidml.PeptideHypothesis;
@@ -38,7 +38,7 @@ public class DecoyDetection {
 					return true;
 				}
 			} catch (JAXBException ex) {
-				Logger.getLogger(ProteoSuiteView.class.getName()).log(
+				Logger.getLogger(ProteoSuite.class.getName()).log(
 						Level.SEVERE, null, ex);
 			}
 		}
