@@ -21,8 +21,9 @@ package org.proteosuite.utils;
  *            URL
  */
 public class OpenURL {
-	private static final String[] BROWSERS = { "firefox", "mozilla", "konqueror",
-			"opera", "links", "lynx" };
+	private static final String[] BROWSERS = { "firefox", "mozilla",
+			"konqueror", "opera", "links", "lynx" };
+
 	/**
 	 * Opens a URL in the users browser
 	 * 
@@ -30,7 +31,8 @@ public class OpenURL {
 	 *            to open
 	 */
 	public static void open(String url) {
-		final String operatingSystem = System.getProperty("os.name").toLowerCase();
+		final String operatingSystem = System.getProperty("os.name")
+				.toLowerCase();
 		final Runtime runTime = Runtime.getRuntime();
 
 		// Validate browser settings
@@ -39,7 +41,8 @@ public class OpenURL {
 				runTime.exec("rundll32 url.dll,FileProtocolHandler " + url);
 			else if (operatingSystem.indexOf("mac") != -1)
 				runTime.exec("open " + url);
-			else if (operatingSystem.indexOf("nix") != -1 || operatingSystem.indexOf("nux") != -1) {
+			else if (operatingSystem.indexOf("nix") != -1
+					|| operatingSystem.indexOf("nux") != -1) {
 
 				StringBuilder cmd = new StringBuilder();
 				for (int i = 0; i < BROWSERS.length; i++)

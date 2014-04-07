@@ -21,45 +21,57 @@ import java.util.Date;
 
 /**
  * System utilities for ProteoSuite
+ * 
  * @author fgonzalez
  */
 public class SystemUtils {
-    private int mb = 1024*1024; 
-    private Runtime runtime = Runtime.getRuntime(); 
-            
-    public String getTime(){
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");        
-        return dateFormat.format(new Date());
-    }
-    public void checkMemory(String sTitle) {                               
-        System.out.println("Memory check at " + sTitle + " ... ");         
-        System.out.println("Used Memory:" + ((runtime.totalMemory() - runtime.freeMemory()) / mb) + " MB");
-        System.out.println("Free Memory:" + (runtime.freeMemory() / mb) + " MB");
-        System.out.println("Total Memory:" + (runtime.totalMemory() / mb) + " MB");
-        System.out.println("Max Memory:" + (runtime.maxMemory() / mb) + " MB");
-    }    
-    public long getUsedMemory(){        
-        return (runtime.totalMemory() - runtime.freeMemory()) / mb;
-    }    
-    public long getFreeMemory(){        
-        return runtime.freeMemory() / mb;
-    }    
-    public long getTotalMemory(){        
-        return runtime.totalMemory() / mb;
-    }        
-    public long getMaxMemory(){        
-        return runtime.maxMemory() / mb;
-    }
-    public boolean CheckURL(String URLName){
-        try {
-            HttpURLConnection.setFollowRedirects(false);
-            HttpURLConnection con = (HttpURLConnection) new URL(URLName).openConnection();
-            con.setRequestMethod("HEAD");
-            return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }  
+	private static final int MEGABYTE = 1024 * 1024;
+	private Runtime runtime = Runtime.getRuntime();
+
+	public String getTime() {
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		return dateFormat.format(new Date());
+	}
+
+	public void checkMemory(String sTitle) {
+		System.out.println("Memory check at " + sTitle + " ... ");
+		System.out
+				.println("Used Memory:"
+						+ ((runtime.totalMemory() - runtime.freeMemory()) / MEGABYTE)
+						+ " MB");
+		System.out
+				.println("Free Memory:" + (runtime.freeMemory() / MEGABYTE) + " MB");
+		System.out.println("Total Memory:" + (runtime.totalMemory() / MEGABYTE)
+				+ " MB");
+		System.out.println("Max Memory:" + (runtime.maxMemory() / MEGABYTE) + " MB");
+	}
+
+	public long getUsedMemory() {
+		return (runtime.totalMemory() - runtime.freeMemory()) / MEGABYTE;
+	}
+
+	public long getFreeMemory() {
+		return runtime.freeMemory() / MEGABYTE;
+	}
+
+	public long getTotalMemory() {
+		return runtime.totalMemory() / MEGABYTE;
+	}
+
+	public long getMaxMemory() {
+		return runtime.maxMemory() / MEGABYTE;
+	}
+
+	public boolean CheckURL(String URLName) {
+		try {
+			HttpURLConnection.setFollowRedirects(false);
+			HttpURLConnection con = (HttpURLConnection) new URL(URLName)
+					.openConnection();
+			con.setRequestMethod("HEAD");
+			return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }
