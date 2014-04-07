@@ -14,7 +14,10 @@ package org.proteosuite.data;
 
 public class psTemplate {
     private int templateIndex;
-    private Coord[] aCoords = new Coord[54]; //... This corresponds to the 9 positions x 6 isotopes ...//
+    /**
+     *  This corresponds to the 9 positions x 6 isotopes
+     */
+    private Coord[] aCoords = new Coord[54];
 
     public psTemplate() {
         this.templateIndex=0;
@@ -51,11 +54,22 @@ public class psTemplate {
     public int getIndex(){
         return templateIndex;
     }
-    //... Fills the coordinate ...//
+    /**
+     * Fills the coordinate
+     * @param x
+     * @param y
+     * @param relInt
+     * @param iPos
+     */
     public void setCoords(int x, int y, float relInt, int iPos){
         aCoords[iPos].setCoord(x, y, relInt);
     }
-    //... Creates a 9 points template ...//
+    /**
+     * Creates a 9 points template
+     * @param iOffset
+     * @param relInt
+     * @param iIndexTemp1
+     */
     public void setCoords(int iOffset, float relInt, int iIndexTemp1){        
         float factor1 = 0.0f, factor2 = 0.0f;
         factor1 = (float)1/36;
