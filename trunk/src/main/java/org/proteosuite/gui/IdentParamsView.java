@@ -39,6 +39,7 @@ import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -51,7 +52,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
-import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.proteosuite.WorkSpace;
@@ -117,6 +117,9 @@ public class IdentParamsView extends JDialog {
 
 	public IdentParamsView(Window owner, String sMode) {
 		super(owner, "Set Identifications Parameters", Dialog.ModalityType.APPLICATION_MODAL);
+
+		setIconImage(new ImageIcon(getClass().getClassLoader().getResource(
+				"images/icon.gif")).getImage());
 		
 		Unimod2MSGPlus getMods = new Unimod2MSGPlus();
 		DefaultListModel<String> listModel = (DefaultListModel<String>) jlstUnimods
@@ -506,10 +509,8 @@ public class IdentParamsView extends JDialog {
 		hmParams.put("-addFeatures",
 				Integer.toString(jcOutput.getSelectedIndex()));
 		sRegex = jtRegex.getText();
-		Window win = SwingUtilities.getWindowAncestor(this);
-		if (win != null) {
-			win.dispose();
-		}
+
+		dispose();
 	}
 
 	private void removeMods(JList<String> modList) {

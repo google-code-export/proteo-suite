@@ -21,7 +21,7 @@ public class ITRAQStep extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	public ITRAQStep() {
-		setLayout(new BorderLayout());
+		super(new BorderLayout());
 
 		JLabel stepTitle = new JLabel(
 				"Confirm your quantitation type as iTRAQ:");
@@ -40,7 +40,8 @@ public class ITRAQStep extends JPanel {
 		mainText.setBorder(BorderFactory.createEmptyBorder());
 
 		// Dirty Hack alert!
-		// For some reason setBackground will not accept the colour object getBackground returns 
+		// For some reason setBackground will not accept the colour object
+		// getBackground returns
 		mainText.setBackground(new Color(getBackground().getRGB()));
 
 		JButton confirmButton = new JButton("Confirm");

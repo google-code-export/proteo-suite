@@ -31,6 +31,7 @@ public class RawDataAndMultiplexingStep extends JPanel {
 			new String[] { "iTRAQ 4-plex", "None (label-free)" });
 
 	public RawDataAndMultiplexingStep() {
+		super(new BorderLayout());
 		JLabel stepTitle = new JLabel("Select your raw data and multiplexing:");
 		stepTitle.setFont(new Font(stepTitle.getFont().getFontName(), stepTitle
 				.getFont().getStyle(), 72));
@@ -58,8 +59,7 @@ public class RawDataAndMultiplexingStep extends JPanel {
 
 		multiplexingBox.setSelectedIndex(1);
 
-		JPanel buttonsPanel = new JPanel();
-		buttonsPanel.setLayout(new GridLayout(2, 3));
+		JPanel buttonsPanel = new JPanel(new GridLayout(2, 3));
 
 		buttonsPanel.add(addRawDataButton);
 		buttonsPanel.add(new JLabel("Select multiplexing:"));
@@ -69,7 +69,6 @@ public class RawDataAndMultiplexingStep extends JPanel {
 		buttonsPanel.add(multiplexingBox);		
 		buttonsPanel.add(continueButton);
 
-		setLayout(new BorderLayout());
 		add(stepTitle, BorderLayout.PAGE_START);
 		add(new JScrollPane(rawDataTable), BorderLayout.CENTER);
 		add(buttonsPanel, BorderLayout.PAGE_END);

@@ -26,19 +26,20 @@ import org.proteosuite.model.RawDataFile;
  * 
  * @author SPerkins
  */
-public class CreateOrLoadIdentificationsStep extends JPanel {	
+public class CreateOrLoadIdentificationsStep extends JPanel {
+	private static final long serialVersionUID = 1L;
 	private CreateOrLoadIdentificationsTable identificationsTable = new CreateOrLoadIdentificationsTable();
-	private IdentParamsView identParamsView = new IdentParamsView((Window) this.getParent(), "execute");
+	private IdentParamsView identParamsView = new IdentParamsView(
+			(Window) this.getParent(), "execute");
 
 	public CreateOrLoadIdentificationsStep() {
-		setLayout(new BorderLayout());
+		super(new BorderLayout());
 
 		JLabel stepTitle = new JLabel("Create or load your identifications:");
 		stepTitle.setFont(new Font(stepTitle.getFont().getFontName(), stepTitle
 				.getFont().getStyle(), 72));
 
-		JPanel buttonsPanel = new JPanel();
-		buttonsPanel.setLayout(new GridLayout(2, 3));
+		JPanel buttonsPanel = new JPanel(new GridLayout(2, 3));
 
 		JButton loadIdentifications = new JButton(
 				"Load identifications for selected...");
@@ -62,7 +63,8 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
 						this));
 		identificationsTable.getSelectionModel().addListSelectionListener(
 				new RawDataTableListener(identificationsTable,
-						loadIdentifications, createIdentifications, resetIdentifications));
+						loadIdentifications, createIdentifications,
+						resetIdentifications));
 
 		JButton continueButton = new JButton("Continue");
 		JButton previousButton = new JButton("Previous");

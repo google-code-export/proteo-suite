@@ -1,6 +1,5 @@
 package org.proteosuite.gui.inspect;
 
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -10,6 +9,7 @@ import java.util.Set;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 import org.proteosuite.gui.listener.InspectComboListener;
 import org.proteosuite.model.AnalyseData;
@@ -31,14 +31,14 @@ public class InspectTab extends JPanel {
 
 	private static final int CONTENT_PANEL_INDEX = 1;
 
-	private BorderLayout layout = new BorderLayout();
 	private final JComboBox<String> dataFileComboBox = new JComboBox<String>();
 	private final InspectModel inspectModel = AnalyseData.getInstance()
 			.getInspectModel();
 	private static InspectTab instance = null;
 
 	private InspectTab() {
-		setLayout(layout);
+		setLayout(new BorderLayout());
+		setBorder(new EmptyBorder(10, 10, 10, 10));
 
 		dataFileComboBox.addItemListener(new InspectComboListener());
 
@@ -113,15 +113,13 @@ public class InspectTab extends JPanel {
 		for (QuantDataFile quantFile : inspectModel.getQuantData()) {
 			files.add(quantFile.getFileName());
 		}
-		
-		for (int i = 0; i < dataFileComboBox.getModel().getSize(); i++)
-		{
+
+		for (int i = 0; i < dataFileComboBox.getModel().getSize(); i++) {
 			files.remove(dataFileComboBox.getModel().getElementAt(i));
 		}
-		
-		for (String file : files)
-		{
-			dataFileComboBox.addItem(file);			
+
+		for (String file : files) {
+			dataFileComboBox.addItem(file);
 		}
 	}
 }

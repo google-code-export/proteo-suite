@@ -2,11 +2,14 @@ package org.proteosuite.gui.analyse;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-import javax.swing.BoxLayout;
+import java.awt.GridLayout;
+
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
 import org.proteosuite.gui.listener.ContinueButtonListener;
 import org.proteosuite.gui.listener.PreviousButtonListener;
 import org.proteosuite.gui.tables.DefineConditionsTable;
@@ -22,24 +25,23 @@ public class DefineConditionsStep extends JPanel {
 	private final DefineConditionsTable conditionsTable = new DefineConditionsTable();
 
 	public DefineConditionsStep() {
-		setLayout(new BorderLayout());
+		super(new BorderLayout());
 
 		JLabel stepTitle = new JLabel("Define your conditions:");
 		stepTitle.setFont(new Font(stepTitle.getFont().getFontName(), stepTitle
 				.getFont().getStyle(), 72));
 
-
 		JButton previousButton = new JButton("Previous");
 		JButton continueButton = new JButton("Continue");
-		
+
 		previousButton.addActionListener(new PreviousButtonListener(this));
 		continueButton.addActionListener(new ContinueButtonListener(this));
 
-		JPanel buttonsPanel = new JPanel();
-		buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+		JPanel buttonsPanel = new JPanel(new GridLayout(1, 3));
 		buttonsPanel.add(previousButton);
+		buttonsPanel.add(Box.createGlue());
 		buttonsPanel.add(continueButton);
-		
+
 		add(stepTitle, BorderLayout.PAGE_START);
 		add(new JScrollPane(conditionsTable), BorderLayout.CENTER);
 		add(buttonsPanel, BorderLayout.PAGE_END);

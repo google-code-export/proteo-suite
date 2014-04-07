@@ -17,7 +17,7 @@ public class DoneStep extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	public DoneStep() {
-		setLayout(new BorderLayout());
+		super(new BorderLayout());
 
 		JLabel stepTitle = new JLabel("You're all done!");
 		stepTitle.setFont(new Font(stepTitle.getFont().getFontName(), stepTitle
@@ -34,7 +34,8 @@ public class DoneStep extends JPanel {
 		mainText.setBorder(BorderFactory.createEmptyBorder());
 
 		// Dirty Hack alert!
-		// For some reason setBackground will not accept the colour object getBackground returns 
+		// For some reason setBackground will not accept the colour object
+		// getBackground returns
 		mainText.setBackground(new Color(getBackground().getRGB()));
 
 		add(stepTitle, BorderLayout.PAGE_START);
