@@ -2,7 +2,6 @@ package org.proteosuite.utils;
 
 public class FileFormatUtils {
 
-
 	/*------------------------------------------------
 	 * Get molecular composition from a given peptide
 	 * @param sPeptide - Peptide sequence
@@ -35,148 +34,128 @@ public class FileFormatUtils {
 		String sPeptideRet = "";
 		for (int iI = 0; iI < sPeptide.length(); iI++) {
 			switch (sPeptide.toUpperCase().charAt(iI)) {
-			case 'A': {
+			case 'A':
 				iCarb += 3;
 				iHydro += 5;
 				iNitro++;
 				iOxy++;
 				break;
-			}
-			case 'R': {
+			case 'R':
 				iCarb += 6;
 				iHydro += 12;
 				iNitro += 4;
 				iOxy++;
 				break;
-			}
-			case 'N': {
+			case 'N':
 				iCarb += 4;
 				iHydro += 6;
 				iNitro += 2;
 				iOxy += 2;
 				break;
-			}
-			case 'D': {
+			case 'D':
 				iCarb += 4;
 				iHydro += 5;
 				iNitro++;
 				iOxy += 3;
 				break;
-			}
-			case 'C': {
+			case 'C':
 				iCarb += 3;
 				iHydro += 5;
 				iNitro++;
 				iOxy++;
 				iSulf++;
 				break;
-			}
-			case 'E': {
+			case 'E':
 				iCarb += 5;
 				iHydro += 7;
 				iNitro++;
 				iOxy += 3;
 				break;
-			}
-			case 'Q': {
+			case 'Q':
 				iCarb += 5;
 				iHydro += 8;
 				iNitro += 2;
 				iOxy += 2;
 				break;
-			}
-			case 'G': {
+			case 'G':
 				iCarb += 2;
 				iHydro += 3;
 				iNitro++;
 				iOxy++;
 				break;
-			}
-			case 'H': {
+			case 'H':
 				iCarb += 6;
 				iHydro += 7;
 				iNitro += 3;
 				iOxy++;
 				break;
-			}
-			case 'I': {
+			case 'I':
 				iCarb += 6;
 				iHydro += 11;
 				iNitro++;
 				iOxy++;
 				break;
-			}
-			case 'L': {
+			case 'L':
 				iCarb += 6;
 				iHydro += 11;
 				iNitro++;
 				iOxy++;
 				break;
-			}
-			case 'K': {
+			case 'K':
 				iCarb += 6;
 				iHydro += 12;
 				iNitro += 2;
 				iOxy++;
 				break;
-			}
-			case 'M': {
+			case 'M':
 				iCarb += 5;
 				iHydro += 9;
 				iNitro++;
 				iOxy++;
 				iSulf++;
 				break;
-			}
-			case 'F': {
+			case 'F':
 				iCarb += 9;
 				iHydro += 9;
 				iNitro++;
 				iOxy++;
 				break;
-			}
-			case 'P': {
+			case 'P':
 				iCarb += 5;
 				iHydro += 7;
 				iNitro++;
 				iOxy++;
 				break;
-			}
-			case 'S': {
+			case 'S':
 				iCarb += 3;
 				iHydro += 5;
 				iNitro++;
 				iOxy += 2;
 				break;
-			}
-			case 'T': {
+			case 'T':
 				iCarb += 4;
 				iHydro += 7;
 				iNitro++;
 				iOxy += 2;
 				break;
-			}
-			case 'W': {
+			case 'W':
 				iCarb += 11;
 				iHydro += 10;
 				iNitro += 2;
 				iOxy++;
 				break;
-			}
-			case 'Y': {
+			case 'Y':
 				iCarb += 9;
 				iHydro += 9;
 				iNitro++;
 				iOxy += 2;
 				break;
-			}
-			case 'V': {
+			case 'V':
 				iCarb += 5;
 				iHydro += 9;
 				iNitro++;
 				iOxy++;
 				break;
-			}
 			}
 		}
 		if (iCarb > 0) {
