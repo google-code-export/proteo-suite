@@ -3,15 +3,14 @@ package org.proteosuite.gui.analyse;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-
 import org.proteosuite.gui.listener.ConfirmButtonListener;
+import org.proteosuite.gui.listener.PreviousButtonListener;
 
 /**
  * 
@@ -49,6 +48,9 @@ public class ITRAQStep extends JPanel {
 
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+                JButton previousButton = new JButton("Previous");
+                previousButton.addActionListener(new PreviousButtonListener(this));
+                buttonsPanel.add(previousButton);
 		buttonsPanel
 				.add(new JLabel(
 						"CLICK CONFIRM TO CONFIRM QUANTITATION TYPE AS iTRAQ AND RUN ANALYSIS"));

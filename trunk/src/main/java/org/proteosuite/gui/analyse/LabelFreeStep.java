@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import org.proteosuite.gui.listener.ConfirmButtonListener;
+import org.proteosuite.gui.listener.PreviousButtonListener;
 
 /**
  * 
@@ -49,6 +50,9 @@ public class LabelFreeStep extends JPanel {
 
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+                JButton previousButton = new JButton("Previous");
+                previousButton.addActionListener(new PreviousButtonListener(this));
+                buttonsPanel.add(previousButton);
 		buttonsPanel
 				.add(new JLabel(
 						"CLICK CONFIRM TO CONFIRM QUANTITATION TYPE AS LABEL-FREE AND RUN ANALYSIS"));

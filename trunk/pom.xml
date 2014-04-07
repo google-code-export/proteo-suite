@@ -226,7 +226,7 @@
                             </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <mainClass>org.proteosuite.ProteoSuiteView</mainClass>
+                                    <mainClass>org.proteosuite.Launcher</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>
