@@ -24,9 +24,9 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import org.proteosuite.gui.LeftColumnAndTabbedPanel;
 import org.proteosuite.gui.MenuBar;
 import org.proteosuite.gui.StatusPanel;
+import org.proteosuite.gui.TabbedMainPanel;
 import org.proteosuite.quantitation.OpenMSLabelFreeWrapper;
 import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.SystemUtils;
@@ -56,15 +56,19 @@ public class ProteoSuiteView extends JFrame {
 
 	public ProteoSuiteView() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// ISO 3166 country code - GB
+		Locale.setDefault(new Locale("en", "GB"));
+		
+		// Setting Window Height and Width
+		setMinimumSize(new Dimension(1024, 768));
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		System.out.println("User dir: " + System.getProperty("user.dir"));
 
 		setJMenuBar(new MenuBar());
-		add(new LeftColumnAndTabbedPanel(), BorderLayout.CENTER);
-		add(new StatusPanel(), BorderLayout.PAGE_END);
 
-		// ISO 3166 country code - GB
-		Locale.setDefault(new Locale("en", "GB"));
+        add(new TabbedMainPanel(), BorderLayout.CENTER);
+		add(new StatusPanel(), BorderLayout.PAGE_END);
 
 		updateTitle();
 
@@ -85,9 +89,6 @@ public class ProteoSuiteView extends JFrame {
 				+ System.getProperty("java.class.path"));
 		System.out.println("****************************************");
 
-		// Setting Window Height and Width
-		setMinimumSize(new Dimension(1024, 768));
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 		// Configuring exit events
 		pack();
