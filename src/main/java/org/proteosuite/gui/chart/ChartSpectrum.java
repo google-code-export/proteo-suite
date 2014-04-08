@@ -1,7 +1,6 @@
 package org.proteosuite.gui.chart;
 
 import java.awt.Dimension;
-import java.util.List;
 
 import javax.swing.JPanel;
 
@@ -62,45 +61,26 @@ public class ChartSpectrum extends AbstractChart {
 			}
 		}
 
-		Number[] mzNumbers = new Double[0];
-		Number[] intenNumbers = new Double[0];
-
-		// Reading mz Values
-		List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList()
-				.getBinaryDataArray();
+		double[] massCharges = null;
+		double[] intensities = null;
 
 		// Reading mz and intensity values
-		for (BinaryDataArray bda : bdal) {
-			if (bda.getBinary() == null)
+		for (BinaryDataArray binaryData : spectrum.getBinaryDataArrayList()
+				.getBinaryDataArray()) {
+			if (binaryData.getBinary() == null)
 				continue;
 
-			List<CVParam> cvpList = bda.getCvParam();
-			for (CVParam cvp : cvpList) {
-				if (cvp.getAccession().equals("MS:1000514")) {
-					mzNumbers = bda.getBinaryDataAsNumberArray();
-					break;
-				} else if (cvp.getAccession().equals("MS:1000515")) {
-					intenNumbers = bda.getBinaryDataAsNumberArray();
-					break;
-				}
-			}
-		}
-
-		double[] mz = new double[mzNumbers.length];
-		for (int i = 0; i < mzNumbers.length; i++) {
-			mz[i] = mzNumbers[i].doubleValue();
-		}
-
-		double[] intensities = new double[intenNumbers.length];
-		for (int i = 0; i < intenNumbers.length; i++) {
-			intensities[i] = intenNumbers[i].doubleValue();
+			if (massCharges == null)
+				massCharges = getDouble(getMz(binaryData));
+			
+			if (intensities == null)
+				intensities = getDouble(getIntensity(binaryData));
 		}
 
 		// Call the spectrum panel from compomics.org
-
 		JPanel spectrumPanel = null;
-		if (mz.length != 0 && intensities.length != 0) {
-			spectrumPanel = new SpectrumPanel(mz, intensities, parIonMz,
+		if (massCharges.length != 0 && intensities.length != 0) {
+			spectrumPanel = new SpectrumPanel(massCharges, intensities, parIonMz,
 					Integer.toString(parCharge), sID, 50, true, true, true,
 					msLevel);
 			spectrumPanel.setSize(new Dimension(600, 400));

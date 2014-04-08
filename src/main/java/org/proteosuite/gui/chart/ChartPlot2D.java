@@ -2,7 +2,6 @@ package org.proteosuite.gui.chart;
 
 import java.awt.geom.Point2D;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.swing.JPanel;
@@ -12,7 +11,6 @@ import org.proteosuite.model.RawMzMLFile;
 import org.proteosuite.utils.TwoDPlot;
 
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
-import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
@@ -33,7 +31,6 @@ public class ChartPlot2D extends AbstractChart {
 	 * @return
 	 */
 	public static JPanel get2DPlot(MzMLUnmarshaller unmarshaller) {
-		Set<Point2D.Float> points = new HashSet<Point2D.Float>();
 
 		// Check if mzML contains MS1 data
 		if (unmarshaller.getChromatogramIDs().isEmpty()) {
@@ -45,6 +42,7 @@ public class ChartPlot2D extends AbstractChart {
 				.unmarshalCollectionFromXpath("/run/spectrumList/spectrum",
 						Spectrum.class);
 
+		Set<Point2D.Float> points = new HashSet<Point2D.Float>();
 		while (spectrumIterator.hasNext()) {
 			Spectrum spectrumobj = spectrumIterator.next();
 
@@ -66,36 +64,29 @@ public class ChartPlot2D extends AbstractChart {
 
 			float rt = getRetentionTime(spectrum.getScanList().getScan().get(0)
 					.getCvParam());
-			
-			Number[] mzNumbers = null;
-			Number[] intenNumbers = null;
+
+			float[] massCharges = null;
+			double[] intensities = null;
+
 			// Reading mz Values
-			List<BinaryDataArray> bdal = spectrum.getBinaryDataArrayList()
-					.getBinaryDataArray();
+			for (BinaryDataArray binaryData : spectrum.getBinaryDataArrayList()
+					.getBinaryDataArray()) {
+				if (massCharges == null)
+					massCharges = getFloat(getMz(binaryData));
 
-			for (BinaryDataArray bda : bdal) {
-				List<CVParam> cvpList = bda.getCvParam();
-
-				for (CVParam cvp : cvpList) {
-					if (cvp.getAccession().equals("MS:1000514")) {
-						mzNumbers = bda.getBinaryDataAsNumberArray();
-						break;
-					} else if (cvp.getAccession().equals("MS:1000515")) {
-						intenNumbers = bda.getBinaryDataAsNumberArray();
-						break;
-					}
-				}
+				if (intensities == null)
+					intensities = getDouble(getIntensity(binaryData));
 			}
 
 			int i = 0;
-			while (i < mzNumbers.length) {
+			while (i < massCharges.length) {
 				// Removing zero values
-				if (intenNumbers[i].doubleValue() <= LOW_INTENSITY) {
+				if (intensities[i] <= LOW_INTENSITY) {
 					i++;
 					continue;
 				}
 
-				points.add(new Point2D.Float(mzNumbers[i].floatValue(), rt));
+				points.add(new Point2D.Float(massCharges[i], rt));
 
 				i++;
 			}
