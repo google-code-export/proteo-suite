@@ -39,6 +39,7 @@ public class AnalyseDynamicTab extends JPanel {
 		add(analysisStatusPanel, BorderLayout.PAGE_START);
 		panel.setBorder(new EmptyBorder(10, 10, 10, 10));
 		add(panel, BorderLayout.CENTER);
+                repaint();
 	}
 
 	public AnalyseStatusPanel getAnalyseStatusPanel() {
