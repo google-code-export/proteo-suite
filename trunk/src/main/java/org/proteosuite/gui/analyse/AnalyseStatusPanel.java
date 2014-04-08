@@ -5,6 +5,7 @@ import java.awt.Font;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import org.proteosuite.gui.listener.RawDataAndMultiplexingSectionListener;
 import org.proteosuite.model.AnalyseData;
 
 /**
@@ -106,6 +107,8 @@ public class AnalyseStatusPanel extends JPanel {
 		add(quantitationSection);
 		add(mappingSection);
 		add(proteinInferenceSection);
+                
+                rawData.addMouseListener(new RawDataAndMultiplexingSectionListener());
 	}
 
 	public void reset() {
