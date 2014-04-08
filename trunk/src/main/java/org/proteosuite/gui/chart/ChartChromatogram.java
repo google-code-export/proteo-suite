@@ -3,7 +3,6 @@ package org.proteosuite.gui.chart;
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
 
 import java.awt.Dimension;
-import java.util.List;
 
 import org.proteosuite.ProteoSuite;
 import org.proteosuite.model.RawMzMLFile;
@@ -50,36 +49,21 @@ public class ChartChromatogram extends AbstractChart {
 		return null;
 	}
 
-	private static ChromatogramPanel createChromatogramPanel(Chromatogram chrom) {
-		Number[] rtNumbers = null;
-		Number[] intenNumbers = null;
+	private static ChromatogramPanel createChromatogramPanel(final Chromatogram chromatogram) {
+		double[] retentionTimes = null;
+		double[] intensities = null;
 
-		for (BinaryDataArray bda : chrom.getBinaryDataArrayList()
+		for (BinaryDataArray binaryData : chromatogram.getBinaryDataArrayList()
 				.getBinaryDataArray()) {
-			List<CVParam> cvpList = bda.getCvParam();
-			for (CVParam cvp : cvpList) {
-				if (cvp.getAccession().equals("MS:1000595")) {
-					rtNumbers = bda.getBinaryDataAsNumberArray();
-					break;
-				}
-				if (cvp.getAccession().equals("MS:1000515")) {
-					intenNumbers = bda.getBinaryDataAsNumberArray();
-					break;
-				}
-			}
-		}
-		// Converting numbers to doubles
-		double[] rt = new double[rtNumbers.length];
-		for (int iI = 0; iI < rtNumbers.length; iI++) {
-			rt[iI] = rtNumbers[iI].doubleValue();
-		}
-		double[] intensities = new double[intenNumbers.length];
-		for (int iI = 0; iI < intenNumbers.length; iI++) {
-			intensities[iI] = intenNumbers[iI].doubleValue();
+			if (retentionTimes == null)
+				retentionTimes = getDouble(getRetentionTimes(binaryData));
+			
+			if (intensities == null)
+				intensities = getDouble(getIntensity(binaryData));
 		}
 
 		// Class chromatogram from compomics.org
-		ChromatogramPanel chromatogramPanel = new ChromatogramPanel(rt,
+		ChromatogramPanel chromatogramPanel = new ChromatogramPanel(retentionTimes,
 				intensities, "RT (mins)", "Intensity (counts)");
 		chromatogramPanel.setSize(new Dimension(600, 400));
 		chromatogramPanel.setPreferredSize(new Dimension(600, 400));

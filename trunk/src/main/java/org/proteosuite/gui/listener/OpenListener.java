@@ -3,6 +3,7 @@ package org.proteosuite.gui.listener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -34,10 +35,13 @@ public class OpenListener implements ActionListener {
 		AnalyseData data = AnalyseData.getInstance();
 		InspectModel model = AnalyseData.getInstance().getInspectModel();
 
-		if (file.getName().contains("mzq")) {
+		String name = file.getName();
+		String[] tmp = name.split(Pattern.quote("."));
+		String extension = tmp[tmp.length - 1];
+		if (extension.equalsIgnoreCase("mzq")) {
 			MzQuantMLFile quantDataFile = new MzQuantMLFile(file);
 			model.addQuantDataFile(quantDataFile);
-		} else if (file.getName().contains("mzml")) {
+		} else if (extension.equalsIgnoreCase("mzml")) {
 			RawMzMLFile rawDataFile = new RawMzMLFile(file);
 			data.addRawDataFile(rawDataFile);
 
@@ -45,6 +49,10 @@ public class OpenListener implements ActionListener {
 					.setRawDataProcessing();
 			((RawDataAndMultiplexingStep) AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP)
 					.refreshFromData();
+		}
+		else
+		{
+			System.out.println("Unknown File type");
 		}
 	}
 }
