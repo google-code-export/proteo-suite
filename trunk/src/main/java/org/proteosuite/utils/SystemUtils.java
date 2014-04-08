@@ -26,7 +26,7 @@ import java.util.Date;
  */
 public class SystemUtils {
 	private static final int MEGABYTE = 1024 * 1024;
-	private Runtime runtime = Runtime.getRuntime();
+	private static final Runtime runtime = Runtime.getRuntime();
 
 	public String getTime() {
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");

@@ -60,14 +60,11 @@ public class Launcher {
 				try {
 					new ProteoSuite().setVisible(true);
 				} catch (Exception e) {
-					try {
-						ExceptionCatcher.reportException(e);
-						JOptionPane.showMessageDialog(null, "ProteoSuite has crashed with: " + e.getMessage(), "OH NO!", JOptionPane.ERROR_MESSAGE);
-						System.exit(1);
-					} catch (Exception ignore) {
-						// Most likely no Internet connection, do nothing!
-						// Though we lost debug info :(
-					}
+					ExceptionCatcher.reportException(e);
+					JOptionPane.showMessageDialog(null,
+							"ProteoSuite has crashed with: " + e.getMessage(),
+							"OH NO!", JOptionPane.ERROR_MESSAGE);
+					System.exit(1);
 				}
 			}
 		});
