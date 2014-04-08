@@ -8,12 +8,15 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
 import org.proteosuite.gui.listener.AboutListener;
 import org.proteosuite.gui.listener.ExitListener;
+import org.proteosuite.gui.listener.MemoryChangeListener;
 import org.proteosuite.gui.listener.OpenListener;
 import org.proteosuite.gui.listener.OpenUrlListener;
+import org.proteosuite.utils.SystemUtils;
 
 /**
  * 
@@ -24,7 +27,39 @@ public class MenuBar extends JMenuBar {
 
 	public MenuBar() {
 		add(getFileMenu());
+		add(getOptionsMenu());
 		add(getCustomHelpMenu());
+	}
+
+	private JMenu getOptionsMenu() {
+		
+		JMenu memory = getMemoryMenu();
+
+		JMenu options = new JMenu("Options");
+		options.add(memory);
+
+		return options;
+	}
+
+	private JMenu getMemoryMenu() {
+		SystemUtils sys = new SystemUtils();
+		
+		JMenu memory = new JMenu("Memory");
+		
+		JMenuItem currentMemory = new JMenuItem("Current " + (sys.getMaxMemory() / 1024) + " GB");
+		currentMemory.setEnabled(false);
+		
+		memory.add(currentMemory);
+		memory.add(new JSeparator());
+		
+		for (short i = 1; i <= 128; i = (short) (i *2))
+		{
+			JMenuItem item = new JMenuItem("Set " + i + " GB");
+			item.addActionListener(new MemoryChangeListener((byte) i));
+			memory.add(item);
+		}
+		
+		return memory;
 	}
 
 	private JMenu getFileMenu() {

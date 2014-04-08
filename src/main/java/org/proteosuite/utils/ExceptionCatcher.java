@@ -15,26 +15,30 @@ public class ExceptionCatcher {
 	 * @return URL to get latest version, null if current version is latest
 	 * @throws IOException
 	 */
-	public static void reportException(Exception exception) throws IOException {
+	public static void reportException(Exception exception) {
 		String queryString = "exc=" + exception.getClass().toString();
 		queryString += "&msg=" + exception.getMessage();
-		for (StackTraceElement element : exception.getStackTrace())
-		{
+		for (StackTraceElement element : exception.getStackTrace()) {
 			queryString += "&trace[]=" + element.toString();
 		}
-		
+
 		queryString = queryString.replace(" ", "%20");
-		
+
 		String query = String.format(UPDATE_CHECK_URL, queryString);
-		URL url = new URL(query);
-		
-		InputStream urlStream = url.openStream();
-		while (true)
-		{
-			int read = urlStream.read();
-			if (read == -1)
-				break;
+		try {
+			URL url = new URL(query);
+
+			InputStream urlStream = url.openStream();
+			while (true) {
+				int read = urlStream.read();
+				if (read == -1)
+					break;
+			}
+			urlStream.close();
+
+		} catch (Exception ignore) {
+			// Most likely no Internet connection, do nothing!
+			// Though we lost debug info :(
 		}
-		urlStream.close();
 	}
 }
