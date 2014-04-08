@@ -61,6 +61,7 @@ public class ContinueButtonListener implements ActionListener {
             defineConditionsStep();
 
         } else if (panel instanceof CreateOrLoadIdentificationsStep) {
+            ((CleanIdentificationsStep) AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP).refreshFromData();
             parent.moveToStep(AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP);
         } else if (panel instanceof CleanIdentificationsStep) {
             switch (data.getMultiplexing()) {
@@ -91,6 +92,7 @@ public class ContinueButtonListener implements ActionListener {
                             JOptionPane.ERROR_MESSAGE);
             return;
         }
+
         AnalyseData data = AnalyseData.getInstance();
         AnalyseDynamicTab parent = (AnalyseDynamicTab) panel.getParent();
 

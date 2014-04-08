@@ -8,7 +8,7 @@ import java.io.File;
  */
 public abstract class IdentDataFile {
     protected File file;
-    private String loadingStatus = "Done";
+    private String loadingStatus = "Loading...";
     protected boolean computedPSMStats = false;
     protected int psmCountPassingThreshold = -1;
     protected int psmCountNotPassingThrehsold = -1;
