@@ -15,6 +15,7 @@ import javax.xml.validation.Validator;
 
 import static org.proteosuite.gui.ProteoSuite.MZQ_XSD;
 
+import org.proteosuite.WorkSpace;
 import org.proteosuite.gui.ProteoSuite;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.tasks.TasksTab;
@@ -90,14 +91,14 @@ public class XTrackerITRAQWrapper {
      */
     private boolean generateFiles(String technique) {
         // Check project name
-        String sFile = ProteoSuite.sProjectName;
+        String sFile = WorkSpace.sProjectName;
         System.out.println(sysUtils.getTime()
                 + " - Generating files for the pipeline ...");
 
         if (sFile.equals("New") || sFile.equals("")) {
             sFile = "output.mzq";
 
-            ProteoSuite.sProjectName = sFile;
+            WorkSpace.sProjectName = sFile;
         }
 
         // Generate mzq file
@@ -107,7 +108,7 @@ public class XTrackerITRAQWrapper {
 
         // Unmarshall mzquantml file        
         Validator validator = XMLparser.getValidator(MZQ_XSD);
-        boolean validFlag = XMLparser.validate(validator, rawData.get(0).getFile().getParent().replace("\\", "/") + "/" + ProteoSuite.sProjectName);
+        boolean validFlag = XMLparser.validate(validator, rawData.get(0).getFile().getParent().replace("\\", "/") + "/" + WorkSpace.sProjectName);
         System.out.println(sysUtils.getTime() + " - Validating mzQuantML ...");
         if (!validFlag) {
             System.out.println("Invalid mzQuantML file!");
@@ -135,7 +136,7 @@ public class XTrackerITRAQWrapper {
         writeXTrackerIdent(technique, sPipeline[0]);
         writeXTrackerRaw(sPipeline[1]);
         writeXTrackerQuant(sPipeline[2]);
-        writeXTrackerOutput(sPipeline[3], ProteoSuite.sProjectName);
+        writeXTrackerOutput(sPipeline[3], WorkSpace.sProjectName);
     }
 
     /**

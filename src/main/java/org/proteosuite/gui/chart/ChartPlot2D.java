@@ -6,7 +6,6 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
-import org.proteosuite.gui.ProteoSuite;
 import org.proteosuite.model.RawMzMLFile;
 import org.proteosuite.utils.TwoDPlot;
 
@@ -33,11 +32,9 @@ public class ChartPlot2D extends AbstractChart {
 	public static JPanel get2DPlot(MzMLUnmarshaller unmarshaller) {
 
 		// Check if mzML contains MS1 data
-		if (unmarshaller.getChromatogramIDs().isEmpty()) {
-			System.out.println(ProteoSuite.SYS_UTILS.getTime()
-					+ " - This mzML file doesn't contain MS2 raw data.");
+		if (unmarshaller.getChromatogramIDs().isEmpty())
 			return null;
-		}
+		
 		MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller
 				.unmarshalCollectionFromXpath("/run/spectrumList/spectrum",
 						Spectrum.class);
@@ -91,8 +88,6 @@ public class ChartPlot2D extends AbstractChart {
 				i++;
 			}
 		}
-		System.out.println(ProteoSuite.SYS_UTILS.getTime()
-				+ " - 2D view holding " + points.size() + " elements.");
 
 		int i = 0;
 		float[][] data = new float[2][points.size()];

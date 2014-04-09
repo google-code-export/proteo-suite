@@ -4,7 +4,6 @@ import com.compomics.util.gui.spectrum.ChromatogramPanel;
 
 import java.awt.Dimension;
 
-import org.proteosuite.gui.ProteoSuite;
 import org.proteosuite.model.RawMzMLFile;
 
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
@@ -42,9 +41,6 @@ public class ChartChromatogram extends AbstractChart {
 				}
 			}
 		}
-
-		System.out.println(ProteoSuite.SYS_UTILS.getTime()
-				+ " - This mzML file doesn't contain MS2 raw data.");
 
 		return null;
 	}

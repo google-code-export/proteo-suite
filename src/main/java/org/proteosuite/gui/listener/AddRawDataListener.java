@@ -7,7 +7,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.proteosuite.gui.ProteoSuite;
+import org.proteosuite.WorkSpace;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
 import org.proteosuite.model.AnalyseData;
@@ -28,7 +28,7 @@ public class AddRawDataListener implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
 		AnalyseData data = AnalyseData.getInstance();
 		JFileChooser chooser = new JFileChooser(
-				ProteoSuite.sPreviousLocation);
+				WorkSpace.sPreviousLocation);
 		chooser.setMultiSelectionEnabled(true);
 		chooser.setFileFilter(new FileNameExtensionFilter("mzML Data Files",
 				"mzML"));
@@ -38,8 +38,8 @@ public class AddRawDataListener implements ActionListener {
 			return;
 
 		File[] files = chooser.getSelectedFiles();
-		if (!files[0].getParent().equals(ProteoSuite.sPreviousLocation)) {
-			ProteoSuite.sPreviousLocation = files[0].getParent();
+		if (!files[0].getParent().equals(WorkSpace.sPreviousLocation)) {
+			WorkSpace.sPreviousLocation = files[0].getParent();
 		}
 
 		for (File f : files) {
