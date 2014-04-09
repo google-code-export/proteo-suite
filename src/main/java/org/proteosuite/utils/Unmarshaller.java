@@ -4,7 +4,7 @@ import java.io.File;
 
 import javax.swing.table.DefaultTableModel;
 
-import org.proteosuite.ProteoSuite;
+import org.proteosuite.gui.ProteoSuite;
 
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;

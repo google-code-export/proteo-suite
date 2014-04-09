@@ -6,7 +6,7 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
-import org.proteosuite.ProteoSuite;
+import org.proteosuite.gui.ProteoSuite;
 import org.proteosuite.model.RawMzMLFile;
 import org.proteosuite.utils.TwoDPlot;
 

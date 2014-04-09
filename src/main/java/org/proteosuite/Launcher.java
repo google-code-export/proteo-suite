@@ -8,6 +8,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import org.proteosuite.gui.ProteoSuite;
 import org.proteosuite.quantitation.OpenMSLabelFreeWrapper;
 import org.proteosuite.utils.ExceptionCatcher;
 import org.proteosuite.utils.OpenURL;

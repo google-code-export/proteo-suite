@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.xml.bind.JAXBException;
 
-import org.proteosuite.ProteoSuite;
+import org.proteosuite.gui.ProteoSuite;
 import org.proteosuite.utils.DecoyDetection;
 import org.proteosuite.utils.FileFormatUtils;
 

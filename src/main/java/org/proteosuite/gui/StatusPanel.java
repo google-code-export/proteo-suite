@@ -8,8 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 
-import org.proteosuite.ProteoSuite;
-
 public class StatusPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 

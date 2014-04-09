@@ -8,10 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.proteosuite.ProteoSuite;
+
+import org.proteosuite.gui.ProteoSuite;
 import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.utils.PluginManager;
+
 import uk.ac.liv.jmzqml.model.mzqml.AbstractParam;
 import uk.ac.liv.jmzqml.model.mzqml.AnalysisSummary;
 import uk.ac.liv.jmzqml.model.mzqml.Assay;

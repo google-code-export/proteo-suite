@@ -38,7 +38,6 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 
-import org.proteosuite.ProteoSuite;
 import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.SystemUtils;
 
