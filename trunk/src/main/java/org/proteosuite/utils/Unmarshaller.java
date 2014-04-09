@@ -75,29 +75,4 @@ public class Unmarshaller {
 		
 		return unmarshaller;
 	}
-
-	/**
-	 * Unmarshall mzQML files
-	 * 
-	 * @param model
-	 *            - Table model
-	 * @param xmlFile
-	 *            - File to unmarshall
-	 * @return boolean - Flag
-	 **/
-	public static MzQuantMLUnmarshaller unmarshalMzQMLFile(DefaultTableModel model,
-			File xmlFile)
-			throws Exception {
-		// Unmarshall mzquantml file
-		MzQuantMLUnmarshaller unmarshaller = new MzQuantMLUnmarshaller(xmlFile);
-
-		model.insertRow(model.getRowCount(), new String[] { xmlFile.getName(),
-				xmlFile.getPath().replace("\\", "/"), "mzq",
-				ProteoSuite.MZQUANT_VERSION});
-		
-		System.out.println(SYS_UTILS.getTime() + " - (Unmarshalling) "
-				+ xmlFile.getName() + " was unmarshalled successfully!");
-		
-		return unmarshaller;
-	}
 }

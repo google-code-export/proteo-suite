@@ -16,8 +16,6 @@ import java.util.logging.Logger;
 
 import javax.swing.SwingWorker;
 
-import static org.proteosuite.gui.ProteoSuite.SYS_UTILS;
-
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.tasks.TasksTab;
@@ -26,12 +24,14 @@ import org.proteosuite.model.MzIdentMLFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.model.Task;
 import org.proteosuite.utils.RetentionTimeHelper;
+import org.proteosuite.utils.SystemUtils;
 
 /**
  *
  * @author SPerkins
  */
 public class MSGFPlusWrapper extends SearchEngineBase implements SearchEngine {
+	public static final SystemUtils SYS_UTILS = new SystemUtils();
 
     // MSGF+ param manager.
     private ParamManager paramManager;

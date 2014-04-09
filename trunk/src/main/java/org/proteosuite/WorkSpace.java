@@ -24,7 +24,9 @@ public class WorkSpace {
 	private static WorkSpace instance = null;
 
 	private String sWorkspace = "C:/temp";
-        private boolean projectModified = false;
+	private boolean projectModified = false;
+	public static String sPreviousLocation = "user.home";
+	public static String sProjectName = "";
 
 	private WorkSpace() {
 		readConfig();
@@ -44,14 +46,14 @@ public class WorkSpace {
 	public void setWorkSpace(String string) {
 		sWorkspace = string;
 	}
-        
-        public boolean isProjectModified() {
-            return projectModified;
-        }
-        
-        public void setProjectModifiedTag(boolean tag) {
-            this.projectModified = tag;
-        }
+
+	public boolean isProjectModified() {
+		return projectModified;
+	}
+
+	public void setProjectModifiedTag(boolean tag) {
+		this.projectModified = tag;
+	}
 
 	/**
 	 * Checks if the working space is valid
@@ -60,7 +62,7 @@ public class WorkSpace {
 	 * @return true/false
 	 */
 	public boolean isValidWorkSpace() {
-		
+
 		// Check if default workspace is valid
 		boolean exists = new File(getWorkSpace()).exists();
 		if (!exists) {
@@ -74,9 +76,8 @@ public class WorkSpace {
 
 		return true;
 	}
-	
-	private void readConfig()
-	{
+
+	private void readConfig() {
 		// Validate if config file exists
 		if (!isValidConfigFile())
 			return;
@@ -112,17 +113,16 @@ public class WorkSpace {
 		}
 	}
 
-	public boolean isValidConfigFile()
-	{
+	public boolean isValidConfigFile() {
 		return new File(CONFIG_FILE).exists();
 	}
-	
+
 	/**
 	 * TODO
 	 **/
 	private void writeConfigFile(String sFileName, JTable jtRawFiles) {
 		String sProjectName = "TO DO";
-		
+
 		if (sFileName.indexOf(".psx") <= 0) {
 			sFileName = sFileName + ".psx";
 		}
@@ -134,8 +134,7 @@ public class WorkSpace {
 			out.newLine();
 			out.write("<ProteoSuiteProject xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" ");
 			out.write("xsi:schemaLocation=\"ProteoSuite.xsd\" name=\""
-					+ sProjectName + "\" workspace=\""
-					+ getWorkSpace() + "\">");
+					+ sProjectName + "\" workspace=\"" + getWorkSpace() + "\">");
 			out.newLine();
 			out.write(" <configSettings>");
 			out.newLine();
