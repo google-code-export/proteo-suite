@@ -154,7 +154,7 @@ public class MSGFPlusWrapper extends SearchEngineBase implements SearchEngine {
 
                             rawDataFile
                                     .setIdentificationDataFile(new MzIdentMLFile(
-                                                    new File(correctedRtFile)));
+                                                    new File(correctedRtFile), rawDataFile));
                             ((CreateOrLoadIdentificationsStep) AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)
                                     .refreshFromData();
                             
