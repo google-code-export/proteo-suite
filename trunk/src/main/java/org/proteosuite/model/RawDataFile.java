@@ -16,6 +16,7 @@ public abstract class RawDataFile {
     protected boolean spectraCountChecked;
     private Map<String, String> assayConditions = new HashMap<String, String>();
     private IdentDataFile identFile = null;
+    private String identStatus = "<None>";
     
     public RawDataFile(File file) {
         this.file = file;        
@@ -24,6 +25,14 @@ public abstract class RawDataFile {
     
     public Map<String, String> getConditions() {
         return assayConditions;
+    }
+    
+    public String getIdentStatus() {
+        return identStatus;
+    }
+    
+    public void setIdentStatus(String identStatus) {
+        this.identStatus = identStatus;
     }
     
     public void resetAssay() {
@@ -39,7 +48,7 @@ public abstract class RawDataFile {
     }
     
     public void setIdentificationDataFile(IdentDataFile identFile) {
-        this.identFile = identFile;
+        this.identFile = identFile;        
     }
     
     public IdentDataFile getIdentificationDataFile() {

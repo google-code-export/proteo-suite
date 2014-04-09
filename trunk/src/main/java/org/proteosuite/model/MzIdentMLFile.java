@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import javax.swing.SwingWorker;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CleanIdentificationsStep;
+import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.tasks.TasksTab;
 import uk.ac.ebi.jmzidml.MzIdentMLElement;
@@ -24,8 +25,8 @@ public class MzIdentMLFile extends IdentDataFile {
 
     private MzIdentMLUnmarshaller unmarshaller;
 
-    public MzIdentMLFile(File file) {
-        super(file);
+    public MzIdentMLFile(File file, RawDataFile parent) {
+        super(file, parent);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class MzIdentMLFile extends IdentDataFile {
     }
 
     @Override
-    public int getPSMCountNotPassingThreshold() {       
+    public int getPSMCountNotPassingThreshold() {
         return this.psmCountNotPassingThrehsold;
     }
 
@@ -94,17 +95,17 @@ public class MzIdentMLFile extends IdentDataFile {
                     int[] computationResult = get();
                     psmCountPassingThreshold = computationResult[0];
                     psmCountNotPassingThrehsold = computationResult[1];
-                    peptideCountPassingThreshold = computationResult[2];                    
+                    peptideCountPassingThreshold = computationResult[2];
                     computedPSMStats = true;
-                    
-                    ((CleanIdentificationsStep)AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP).refreshFromData();
-                    
+
+                    ((CleanIdentificationsStep) AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP).refreshFromData();
+
                 } catch (InterruptedException | ExecutionException ex) {
                     System.out.println(ex.getLocalizedMessage());
                 }
             }
         };
-        
+
         AnalyseData.getInstance().getExecutor().submit(worker);
     }
 
@@ -112,6 +113,9 @@ public class MzIdentMLFile extends IdentDataFile {
     protected void initiateLoading() {
         AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Loading Identifications"));
         TasksTab.getInstance().refreshFromTasksModel();
+
+        MzIdentMLFile.this.getParent().setIdentStatus("Loading...");
+        ((CreateOrLoadIdentificationsStep) (AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)).refreshFromData();
 
         ExecutorService executor = AnalyseData.getInstance().getExecutor();
         SwingWorker<MzIdentMLUnmarshaller, Void> mzIdentMLWorker = new SwingWorker<MzIdentMLUnmarshaller, Void>() {
@@ -131,6 +135,9 @@ public class MzIdentMLFile extends IdentDataFile {
                     TasksTab.getInstance().refreshFromTasksModel();
 
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().checkAndUpdateIdentificationsStatus();
+
+                    MzIdentMLFile.this.getParent().setIdentStatus("Done");
+                    ((CreateOrLoadIdentificationsStep) (AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)).refreshFromData();
 
                     computePSMStats();
 

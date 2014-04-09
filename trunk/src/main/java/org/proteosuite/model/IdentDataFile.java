@@ -7,20 +7,17 @@ import java.io.File;
  * @author SPerkins
  */
 public abstract class IdentDataFile {
-    protected File file;
-    private String loadingStatus = "Loading...";
+    protected RawDataFile parent;
+    protected File file;    
     protected boolean computedPSMStats = false;
     protected int psmCountPassingThreshold = -1;
     protected int psmCountNotPassingThrehsold = -1;
     protected int peptideCountPassingThreshold = -1;
-    public IdentDataFile(File file) {
+    public IdentDataFile(File file, RawDataFile parent) {
         this.file = file;
+        this.parent = parent;
         initiateLoading();
-    }
-    
-    public String getLoadingStatus() {
-        return loadingStatus;
-    }
+    } 
     
     public String getAbsoluteFileName() {
         return file.getAbsolutePath();
@@ -28,6 +25,10 @@ public abstract class IdentDataFile {
     
     public String getFileName() {
         return file.getName();
+    }   
+    
+    public RawDataFile getParent() {
+        return parent;
     }
     
     public abstract String getFormat();

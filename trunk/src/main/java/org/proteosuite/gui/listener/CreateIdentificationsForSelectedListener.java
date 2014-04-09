@@ -29,9 +29,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent event) {
-		JTable identTable = step
-				.getIdentificationsTable();
+	public void actionPerformed(ActionEvent event) {		
 		AnalyseData data = AnalyseData.getInstance();
 
 		// Get the identParamsView.
@@ -60,9 +58,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
 		int[] selectedRawFiles = step.getIdentificationsTable()
 				.getSelectedRows();
 		for (int fileIndex = 0; fileIndex < selectedRawFiles.length; fileIndex++) {
-
-			identTable
-					.setValueAt("Creating...", selectedRawFiles[fileIndex], 1);
+			
 			Map<String, String> runParams = identParamsExecute.getParams();
 
 			// Inject thread setting.
@@ -75,6 +71,8 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
 			// this run.
 			RawDataFile rawDataFile = data
 					.getRawDataFile(selectedRawFiles[fileIndex]);
+                        rawDataFile.setIdentStatus("Creating...");
+                        step.refreshFromData();
 
 			// Set the spectrum file as the input to MSGF+
 			msgf.setInputSpectrum(rawDataFile);
