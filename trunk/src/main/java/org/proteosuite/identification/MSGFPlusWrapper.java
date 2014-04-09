@@ -44,6 +44,8 @@ public class MSGFPlusWrapper extends SearchEngineBase implements SearchEngine {
     private String modificationFileName = null;
 
     private String outputFileName = null;
+    
+    private String correctedRtFile = null;
 
     // Map to store MSGF+ command line options.
     private Map<String, String> map;
@@ -120,6 +122,9 @@ public class MSGFPlusWrapper extends SearchEngineBase implements SearchEngine {
                             Level.SEVERE, null, ex);
                 }
                 String searchError = MSGFPlus.runMSGFPlus(paramManager);
+                correctedRtFile = RetentionTimeHelper.fill(
+                                    inputSpectrum.getAbsoluteFileName(),
+                                    outputFileName);
                 return searchError;
                 // return null;
             }
@@ -145,17 +150,15 @@ public class MSGFPlusWrapper extends SearchEngineBase implements SearchEngine {
 
                             if (!rawDataFile.equals(inputSpectrum)) {
                                 continue;
-                            }
-
-                            String correctedRtFile = RetentionTimeHelper.fill(
-                                    rawDataFile.getAbsoluteFileName(),
-                                    outputFileName);
+                            }                            
 
                             rawDataFile
                                     .setIdentificationDataFile(new MzIdentMLFile(
                                                     new File(correctedRtFile)));
                             ((CreateOrLoadIdentificationsStep) AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)
                                     .refreshFromData();
+                            
+                            break;
                         }
                     }
 
