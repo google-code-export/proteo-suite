@@ -26,11 +26,9 @@ public class FileFormatUtils {
 		 * 163.2 C9H9NO2 Valine Val V 99.06841 99.13 C5H9NO
 		 * --------------------------------------------------------------
 		 */
-
-		int iCarb = 0, iHydro = 3, iNitro = 0, iOxy = 1, iSulf = 0; // ... Water
-																	// molecule
-																	// (H2O) +
-																	// H1 ...//
+		
+		 // Water molecule (H2O) + H1
+		int iCarb = 0, iHydro = 3, iNitro = 0, iOxy = 1, iSulf = 0;
 		String sPeptideRet = "";
 		for (int iI = 0; iI < sPeptide.length(); iI++) {
 			switch (sPeptide.toUpperCase().charAt(iI)) {

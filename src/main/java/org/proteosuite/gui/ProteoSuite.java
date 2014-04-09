@@ -33,7 +33,6 @@ public class ProteoSuite extends JFrame {
 	public static final String PROTEOSUITE_VERSION = "1.0.0 ALPHA";
 
 	public static final String MZQ_XSD = "mzQuantML_1_0_0.xsd";
-	//public static final String MZQUANT_VERSION = "1.0.0";
 	public static final String PSI_MS_VERSION = "3.37.0";
 	public static final String PSI_MOD_VERSION = "1.2";
 
