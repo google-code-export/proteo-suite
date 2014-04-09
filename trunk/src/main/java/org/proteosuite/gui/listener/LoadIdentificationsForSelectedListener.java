@@ -3,9 +3,11 @@ package org.proteosuite.gui.listener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.proteosuite.ProteoSuite;
+
+import org.proteosuite.gui.ProteoSuite;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.tables.CreateOrLoadIdentificationsTable;

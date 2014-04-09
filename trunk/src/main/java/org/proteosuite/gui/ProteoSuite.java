@@ -10,7 +10,7 @@
  * http://www.proteosuite.org/
  * --------------------------------------------------------------------------
  */
-package org.proteosuite;
+package org.proteosuite.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -19,9 +19,7 @@ import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
-import org.proteosuite.gui.MenuBar;
-import org.proteosuite.gui.StatusPanel;
-import org.proteosuite.gui.TabbedMainPanel;
+import org.proteosuite.WorkSpace;
 import org.proteosuite.utils.SystemUtils;
 
 /**

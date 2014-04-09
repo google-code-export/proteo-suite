@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
-import org.proteosuite.ProteoSuite;
+import org.proteosuite.gui.ProteoSuite;
 
 import uk.ac.ebi.jmzidml.model.mzidml.PeptideEvidence;
 import uk.ac.ebi.jmzidml.model.mzidml.PeptideHypothesis;

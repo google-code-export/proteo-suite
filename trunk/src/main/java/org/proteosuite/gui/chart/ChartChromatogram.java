@@ -4,7 +4,7 @@ import com.compomics.util.gui.spectrum.ChromatogramPanel;
 
 import java.awt.Dimension;
 
-import org.proteosuite.ProteoSuite;
+import org.proteosuite.gui.ProteoSuite;
 import org.proteosuite.model.RawMzMLFile;
 
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;

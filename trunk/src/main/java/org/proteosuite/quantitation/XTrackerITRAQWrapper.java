@@ -9,10 +9,13 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+
 import javax.swing.SwingWorker;
 import javax.xml.validation.Validator;
-import org.proteosuite.ProteoSuite;
-import static org.proteosuite.ProteoSuite.MZQ_XSD;
+
+import static org.proteosuite.gui.ProteoSuite.MZQ_XSD;
+
+import org.proteosuite.gui.ProteoSuite;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.model.AnalyseData;
@@ -23,6 +26,7 @@ import org.proteosuite.utils.PluginManager;
 import org.proteosuite.utils.ProteinInferenceHelper;
 import org.proteosuite.utils.SystemUtils;
 import org.w3c.dom.DOMException;
+
 import uk.ac.cranfield.xTracker.utils.XMLparser;
 import uk.ac.cranfield.xTracker.xTracker;
 
