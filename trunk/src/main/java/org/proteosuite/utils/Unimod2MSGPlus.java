@@ -99,12 +99,12 @@ public class Unimod2MSGPlus {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		Collections.sort(alMods, new ArrayList2DComparator());
+		Collections.sort(alMods, new List2DComparator());
 		return alMods;
 	}
 
 	// Sorting array
-	private static class ArrayList2DComparator implements
+	private static class List2DComparator implements
 			Comparator<List<String>> {
 		@Override
 		public int compare(List<String> P, List<String> Q) {

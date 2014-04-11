@@ -26,10 +26,10 @@ public abstract class OpenMSAbstractExecutor extends Executor implements
 		String configPath = ""; // TODO: Perhaps assign this to system temp?
 		writeConfig(configPath);
 
-		boolean state = callExe("-in " + inputPath + " -out " + outputPath
-				+ " -ini " + configPath);
+		//boolean state = callExe("-in " + inputPath + " -out " + outputPath
+		//		+ " -ini " + configPath);
 
-		return state;
+		return false;
 	}
 
 	/**

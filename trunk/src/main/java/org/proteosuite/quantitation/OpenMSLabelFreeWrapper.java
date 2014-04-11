@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+
 import javax.swing.SwingWorker;
 import javax.xml.bind.JAXBException;
+
+import org.proteosuite.executor.Executor;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.utils.MappingHelper;
 import org.proteosuite.gui.tasks.TasksTab;
@@ -19,7 +22,7 @@ import org.proteosuite.model.MzQuantMLFile;
 import org.proteosuite.model.QuantDataFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.model.Task;
-import org.proteosuite.utils.CommandExecutor;
+
 import uk.ac.liv.mzqlib.consensusxml.convertor.ConsensusXMLProcessor;
 import uk.ac.liv.mzqlib.consensusxml.convertor.ConsensusXMLProcessorFactory;
 
@@ -37,13 +40,18 @@ public class OpenMSLabelFreeWrapper {
 	private static String systemExecutableExtension;
 
 	public static boolean checkIsInstalled() {
-		if (CommandExecutor.outputContains("FeatureFinderCentroided",
-				"No options given. Aborting!")) {
+		Executor exec = new Executor("FeatureFinderCentroided");
+		exec.callExe();
+		String output = exec.getOutput();
+
+		if (output.contains("No options given. Aborting!")) {
 			return true;
 		}
 
-		if (CommandExecutor.outputContains("FeatureFinderCentroided.exe",
-				"No options given. Aborting!")) {
+		exec = new Executor("FeatureFinderCentroided.exe");
+		exec.callExe();
+		output = exec.getOutput();
+		if (output.contains("No options given. Aborting!")) {
 			return true;
 		}
 
