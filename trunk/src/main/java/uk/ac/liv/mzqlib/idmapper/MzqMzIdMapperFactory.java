@@ -1,8 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 //Commented out 216 and 272 ish.
 package uk.ac.liv.mzqlib.idmapper;
 
@@ -20,7 +15,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
-import org.proteosuite.utils.FileUtils;
 import uk.ac.ebi.jmzidml.model.mzidml.*;
 import uk.ac.liv.jmzqml.MzQuantMLElement;
 import uk.ac.liv.jmzqml.model.mzqml.*;
@@ -382,7 +376,8 @@ public class MzqMzIdMapperFactory {
                 IdentificationFile idFile = new IdentificationFile();
                 idFile.setFileFormat(ff);
                 //String id = "idfile_" + count;
-                idFile.setId(mzidFnToFileIdMap.get(FileUtils.getFileNameFromFullPath(mzidFn)));
+                String fileName = new File(mzidFn).getName();
+                idFile.setId(mzidFnToFileIdMap.get(fileName));
                 //count++;
                 File f = new File(mzidFn);
                 idFile.setLocation(f.getAbsolutePath());

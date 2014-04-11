@@ -39,11 +39,11 @@ public class ProteinInferenceHelper {
             public Void doInBackground() {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
                         .setProteinInferenceProcessing();
+                String fileName = new File(inputFile).getName();
                 AnalyseData
                         .getInstance()
                         .getTasksModel()
-                        .set(new Task(FileUtils
-                                        .getFileNameFromFullPath(inputFile),
+                        .set(new Task(fileName,
                                         "Inferring Proteins"));
                 TasksTab.getInstance().refreshFromTasksModel();
                 outputFile = inputFile.replaceAll(".mzq",
@@ -75,11 +75,11 @@ public class ProteinInferenceHelper {
 
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
                             .setProteinInferenceDone();
+                    String fileName = new File(inputFile).getName();
                     AnalyseData
                             .getInstance()
                             .getTasksModel()
-                            .set(new Task(FileUtils
-                                            .getFileNameFromFullPath(inputFile),
+                            .set(new Task(fileName,
                                             "Inferring Proteins", "Complete"));
                     TasksTab.getInstance().refreshFromTasksModel();
 

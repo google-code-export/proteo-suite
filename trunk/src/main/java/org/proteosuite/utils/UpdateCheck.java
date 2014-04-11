@@ -26,7 +26,6 @@ public class UpdateCheck {
 		currentVersionInfo += "&sysproc=" + Runtime.getRuntime().availableProcessors();
 		currentVersionInfo += "&sysmem=" + Runtime.getRuntime().maxMemory();		
 		
-		
 		currentVersionInfo = currentVersionInfo.replace(" ", "%20");
 		
 		String query = String.format(UPDATE_CHECK_URL, currentVersionInfo);
