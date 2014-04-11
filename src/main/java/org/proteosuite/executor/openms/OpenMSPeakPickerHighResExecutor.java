@@ -17,7 +17,7 @@ public class OpenMSPeakPickerHighResExecutor extends OpenMSAbstractExecutor
 	private static final String INI_TEMPLATE = "<XML_TEMPLATE>";
 
 	public OpenMSPeakPickerHighResExecutor(String exePath) {
-		super(exePath);
+		super("PeakPickerHighRes", exePath);
 	}
 
 	@Override

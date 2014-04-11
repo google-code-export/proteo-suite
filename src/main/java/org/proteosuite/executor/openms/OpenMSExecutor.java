@@ -44,4 +44,6 @@ public interface OpenMSExecutor {
 	 * @return config values
 	 */
 	public Map<String, Map<String, String>> getConfig();
+
+	public Map<String, Object> getDefaultConfig();
 }

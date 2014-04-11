@@ -10,13 +10,13 @@ import java.util.Map;
  * @author Andrew Collins
  * 
  */
-public class OpenMSFeatureLinkerUnlabledQT extends OpenMSAbstractExecutor
+public class OpenMSFeatureLinkerUnlabledQTExecutor extends OpenMSAbstractExecutor
 		implements OpenMSExecutor {
 
 	private static final String INI_TEMPLATE = "<XML_TEMPLATE>";
 
-	public OpenMSFeatureLinkerUnlabledQT(String exePath) {
-		super(exePath);
+	public OpenMSFeatureLinkerUnlabledQTExecutor() {
+		super("FeatureLinkerUnlabledQT", null);
 	}
 
 	@Override
