@@ -18,17 +18,6 @@ public class Utils {
 		return original.replace("_", "-");
 	}
 
-	public static String join(List<String> stringArray) {
-		StringBuilder builder = new StringBuilder();
-
-		for (String value : stringArray) {
-			builder.append(value);
-			builder.append(" ");
-		}
-
-		return builder.toString().trim();
-	}
-
 	public static String getLinuxVersion() {		
 		List<String> versionOutput = getCommandOutput("uname -a");
 		if (versionOutput.size() > 0) {
