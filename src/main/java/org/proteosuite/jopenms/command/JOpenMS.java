@@ -42,24 +42,24 @@ public class JOpenMS {
 				systemExecutableExtension);
 
 		Map<String, Object> cfgMap = module.getCfgMap();
+
 		setConfig(cfgMap, openMSExecutable.getName() + "$1$in",
-				Utils.join(inputFiles));
+				String.join(" ", inputFiles));
 		setConfig(cfgMap, openMSExecutable.getName() + "$1$out",
-				Utils.join(outputFiles));
+				String.join(" ", outputFiles));
 
 		File cfgFile = generateConfigFile(openMSExecutable.getName(), module,
 				cfgMap);
 
-
 		String[] args = new String[2];
 		args[0] = "-ini";
 		args[1] = cfgFile.getAbsolutePath();
-		
+
 		Executor e = new Executor(openMSExecutable.getName());
 		e.callExe(args);
 		System.out.println(e.getOutput());
 		System.out.println(e.getError());
-		
+
 		cfgFile.delete();
 	}
 
@@ -68,8 +68,7 @@ public class JOpenMS {
 		File newCfgFile = null;
 		try {
 			File dir = new File(System.getProperty("user.dir"));
-			newCfgFile = File.createTempFile(
-					command + System.currentTimeMillis(), ".ini", dir);
+			newCfgFile = File.createTempFile(command, ".ini", dir);
 			writeConfigFile(module.getUnmarshaller(), module.getMarshaller(),
 					newCfgFile, cfgMap);
 		} catch (IOException | JAXBException ex) {
@@ -92,45 +91,46 @@ public class JOpenMS {
 	private static void setConfig(Map<String, Object> cfMap, String key,
 			String newValue) {
 
-		if (key.contains(OpenMSModule.SEPARATOR)) {
-			String[] keys = key.split("\\" + OpenMSModule.SEPARATOR, 2);
-			if (!keys[1].contains(OpenMSModule.SEPARATOR)) {
-				Map<String, Object> subMap = (Map<String, Object>) cfMap
-						.get(keys[0]);
-				if (subMap == null) {
-					subMap = (Map<String, Object>) cfMap.get(Utils
-							.nameDecode(keys[0]));
-				}
+		if (!key.contains(OpenMSModule.SEPARATOR))
+			return;
 
-				if (subMap != null) {
-					String oldValue = (String) subMap.get(keys[1]);
+		String[] keys = key.split("\\" + OpenMSModule.SEPARATOR, 2);
+		if (!keys[1].contains(OpenMSModule.SEPARATOR)) {
+			Map<String, Object> subMap = (Map<String, Object>) cfMap
+					.get(keys[0]);
+			if (subMap == null) {
+				subMap = (Map<String, Object>) cfMap.get(Utils
+						.nameDecode(keys[0]));
+			}
 
-					// when the default value contains "::", it indicate that
-					// this is ITEMLIST
-					if (oldValue.contains("::")) {
-						// replace the user input space separating by "::"
-						// separating
-						subMap.put(keys[1], newValue.replace(" ", "::"));
-					} else {
-						subMap.put(keys[1], newValue);
-					}
+			if (subMap != null) {
+				String oldValue = (String) subMap.get(keys[1]);
+
+				// when the default value contains "::", it indicate that
+				// this is ITEMLIST
+				if (oldValue.contains("::")) {
+					// replace the user input space separating by "::"
+					// separating
+					subMap.put(keys[1], newValue.replace(" ", "::"));
 				} else {
-					System.out.println("Can't not set value \"" + newValue
-							+ "\". Run with the other settings.");
+					subMap.put(keys[1], newValue);
 				}
 			} else {
-				Map<String, Object> subMap = (Map<String, Object>) cfMap
-						.get(keys[0]);
-				if (subMap == null) {
-					subMap = (Map<String, Object>) cfMap.get(Utils
-							.nameDecode(keys[0]));
-				}
-				if (subMap != null) {
-					setConfig(subMap, keys[1], newValue);
-				} else {
-					System.out.println("Can't not set value \"" + newValue
-							+ "\". Run with the other settings.");
-				}
+				System.out.println("Can't not set value \"" + newValue
+						+ "\". Run with the other settings.");
+			}
+		} else {
+			Map<String, Object> subMap = (Map<String, Object>) cfMap
+					.get(keys[0]);
+			if (subMap == null) {
+				subMap = (Map<String, Object>) cfMap.get(Utils
+						.nameDecode(keys[0]));
+			}
+			if (subMap != null) {
+				setConfig(subMap, keys[1], newValue);
+			} else {
+				System.out.println("Can't not set value \"" + newValue
+						+ "\". Run with the other settings.");
 			}
 		}
 	}
