@@ -2,11 +2,13 @@ package org.proteosuite.utils;
 
 public class FileFormatUtils {
 
-	/*------------------------------------------------
+	/**
 	 * Get molecular composition from a given peptide
-	 * @param sPeptide - Peptide sequence
+	 * 
+	 * @param sPeptide
+	 *            Peptide sequence
 	 * @return Molecular composition
-	 -------------------------------------------------*/
+	 */
 	public static String getResidueComposition(String sPeptide) {
 		/*
 		 * -------------------------------------------------------------- Name
@@ -26,8 +28,8 @@ public class FileFormatUtils {
 		 * 163.2 C9H9NO2 Valine Val V 99.06841 99.13 C5H9NO
 		 * --------------------------------------------------------------
 		 */
-		
-		 // Water molecule (H2O) + H1
+
+		// Water molecule (H2O) + H1
 		int iCarb = 0, iHydro = 3, iNitro = 0, iOxy = 1, iSulf = 0;
 		String sPeptideRet = "";
 		for (int iI = 0; iI < sPeptide.length(); iI++) {
