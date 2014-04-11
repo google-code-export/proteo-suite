@@ -15,8 +15,8 @@ public class OpenMSFeatureFinderCentroidedExecutor extends
 
 	private static final String INI_TEMPLATE = "<XML_TEMPLATE>";
 
-	public OpenMSFeatureFinderCentroidedExecutor(String exePath) {
-		super(exePath);
+	public OpenMSFeatureFinderCentroidedExecutor() {
+		super("FeatureFinderCentroided", null);
 
 		setConfig("section_one", "mz_tolerance", "0.03");
 		setConfig("section_one", "min_spectra", "10");

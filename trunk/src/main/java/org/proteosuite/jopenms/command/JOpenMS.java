@@ -12,7 +12,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.proteosuite.executor.Executor;
-import org.proteosuite.jopenms.OpenMSExecutable;
+import org.proteosuite.executor.openms.OpenMSExecutor;
+import org.proteosuite.executor.openms.OpenMSFactory;
 import org.proteosuite.jopenms.OpenMSModule;
 import org.proteosuite.jopenms.config.jaxb.AbstractITEM;
 import org.proteosuite.jopenms.config.jaxb.ITEM;
@@ -36,26 +37,28 @@ public class JOpenMS {
 	public static void performOpenMSTask(String systemExecutableExtension,
 			String openMSCommand, List<String> inputFiles,
 			List<String> outputFiles) {
-		OpenMSExecutable openMSExecutable = OpenMSExecutable
-				.valueOf(openMSCommand);
-		OpenMSModule module = new OpenMSModule(openMSExecutable,
+		
+		//OpenMSExecutor openMSExecutor = OpenMSFactory.getExecutor(openMSCommand);
+		//Map<String, Object> cfgMap = openMSExecutor.getDefaultConfig();
+		
+		
+		OpenMSModule module = new OpenMSModule(openMSCommand,
 				systemExecutableExtension);
-
 		Map<String, Object> cfgMap = module.getCfgMap();
 
-		setConfig(cfgMap, openMSExecutable.getName() + "$1$in",
+		setConfig(cfgMap, openMSCommand + "$1$in",
 				String.join(" ", inputFiles));
-		setConfig(cfgMap, openMSExecutable.getName() + "$1$out",
+		setConfig(cfgMap, openMSCommand + "$1$out",
 				String.join(" ", outputFiles));
 
-		File cfgFile = generateConfigFile(openMSExecutable.getName(), module,
+		File cfgFile = generateConfigFile(openMSCommand, module,
 				cfgMap);
 
 		String[] args = new String[2];
 		args[0] = "-ini";
 		args[1] = cfgFile.getAbsolutePath();
 
-		Executor e = new Executor(openMSExecutable.getName());
+		Executor e = new Executor(openMSCommand);
 		e.callExe(args);
 		System.out.println(e.getOutput());
 		System.out.println(e.getError());

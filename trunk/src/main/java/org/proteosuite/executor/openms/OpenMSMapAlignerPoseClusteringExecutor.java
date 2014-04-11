@@ -16,8 +16,8 @@ public class OpenMSMapAlignerPoseClusteringExecutor extends
 
 	private static final String INI_TEMPLATE = "<XML_TEMPLATE>";
 
-	public OpenMSMapAlignerPoseClusteringExecutor(String exePath) {
-		super(exePath);
+	public OpenMSMapAlignerPoseClusteringExecutor() {
+		super("MapAlignerPoseClustering", null);
 	}
 
 	@Override

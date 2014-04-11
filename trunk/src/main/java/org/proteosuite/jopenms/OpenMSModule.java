@@ -32,21 +32,21 @@ public class OpenMSModule {
 
 	// private static Options options;
 	private static Map<String, Object> cfgMap;
-	private static OpenMSExecutable openMSExe;
+	private static String openMSExe;
 	private String desc;
 	private static File cfgFile;
 	private static Unmarshaller unmarsh;
 	private static Marshaller marsh;
 	public static final String SEPARATOR = "$";
 
-	public OpenMSModule(OpenMSExecutable omse, String systemExecutableExtension) {
+	public OpenMSModule(String omse, String systemExecutableExtension) {
 		try {
 			openMSExe = omse;
 			
 			// create a default config file using "-write_ini <file>" argument
-			cfgFile = File.createTempFile(openMSExe.getName(), ".ini");
+			cfgFile = File.createTempFile(openMSExe, ".ini");
 
-			Executor exe = new Executor(openMSExe.getName() + systemExecutableExtension);
+			Executor exe = new Executor(openMSExe + systemExecutableExtension);
 			String[] args = new String[2];
 			args[0] = "-write_ini";
 			args[1] = cfgFile.getAbsolutePath();
@@ -127,7 +127,7 @@ public class OpenMSModule {
 			List<NODE> nodes = parameters.getNODE();
 			if (nodes != null) {
 				for (NODE node : nodes) {
-					if (node.getName().equalsIgnoreCase(openMSExe.getName())) {
+					if (node.getName().equalsIgnoreCase(openMSExe)) {
 						desc = node.getDescription(); // store description
 					}
 					putInConfigMap(configMap, node.getName(),
@@ -183,7 +183,7 @@ public class OpenMSModule {
 					}
 				} else if (obj instanceof NODE) {
 					NODE node = (NODE) obj;
-					if (node.getName().equalsIgnoreCase(openMSExe.getName())) {
+					if (node.getName().equalsIgnoreCase(openMSExe)) {
 						desc = node.getDescription(); // store description
 					}
 					Map<String, Object> subMap;
