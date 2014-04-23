@@ -42,8 +42,11 @@ public class Launcher {
 			int result = JOptionPane
 					.showConfirmDialog(
 							null,
-							"You do not appear to have openMS installed.\nYou need to install openMS in able to use the label-free quantiation feature.\n"
-									+ "OpenMS is available at:\nhttp://open-ms.sourceforge.net/\nTo install now, click \"Yes\" to be directed to the openMS web site.",
+							"You do not appear to have openMS installed.\n"
+                                                                + "You need to install openMS in able to use the label-free quantitation feature.\n"
+                                                                + "openMS features will be disabled for now.\n"
+									+ "OpenMS is available at:\nhttp://open-ms.sourceforge.net/\nTo install now, click \"Yes\" to be directed to the openMS web site.\n"
+                                                                + "Once installed you will need to restart Proteosuite to use openMS features.",
 							"openMS Not Installed!", JOptionPane.YES_NO_OPTION);
 			if (result == JOptionPane.YES_OPTION) {
 				OpenURL.open("http://open-ms.sourceforge.net/");

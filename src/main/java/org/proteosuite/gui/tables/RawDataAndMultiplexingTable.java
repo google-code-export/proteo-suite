@@ -36,8 +36,11 @@ public class RawDataAndMultiplexingTable extends JTable {
 
     public void addRawFileRow(RawDataFile rawDataFile) {
         boolean[] peakPicked = rawDataFile.getPeakPicking();
+        boolean[] msLevelPresence = rawDataFile.getMSLevelPresence();
         String ms1PeakPicked = peakPicked[0] ? "Yes" : "No";
+        ms1PeakPicked = !msLevelPresence[0] ? "No spectra" : ms1PeakPicked;
         String ms2PeakPicked = peakPicked[1] ? "Yes" : "No";
+        ms2PeakPicked = !msLevelPresence[1] ? "No spectra" : ms2PeakPicked;
         model.addRow(new Object[]{rawDataFile.getFileName(), rawDataFile.getFileSize(), rawDataFile.getFormat(), "Unknown", ms1PeakPicked, ms2PeakPicked, rawDataFile.getSpectraCount()});        
     }
 
