@@ -91,7 +91,7 @@ public class RawMzMLFile extends RawDataFile {
         spectraCount = 0;
         spectraCountChecked = true;
         return spectraCount;
-    }
+    }   
 
     @Override
     public boolean[] getPeakPicking() {
@@ -157,9 +157,10 @@ public class RawMzMLFile extends RawDataFile {
                             }
                         } else {
                             if ((checkedSpectrum[0] && checkedSpectrum[1])
-                                    || spectraSeen > 100) {
+                                    || spectraSeen > 1000) {
                                 reader.close();
                                 this.peakPickingChecked = true;
+                                this.msLevelPresence = checkedSpectrum;
                                 return this.peakPicking;
                             }
 

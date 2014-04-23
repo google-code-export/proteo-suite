@@ -44,14 +44,14 @@ public class OpenMSLabelFreeWrapper {
 		exec.callExe();
 		String output = exec.getOutput();
 
-		if (output.contains("No options given. Aborting!")) {
+		if (output != null && output.contains("No options given. Aborting!")) {
 			return true;
 		}
 
 		exec = new Executor("FeatureFinderCentroided.exe");
 		exec.callExe();
 		output = exec.getOutput();
-		if (output.contains("No options given. Aborting!")) {
+		if (output != null && output.contains("No options given. Aborting!")) {
 			return true;
 		}
 
@@ -91,8 +91,8 @@ public class OpenMSLabelFreeWrapper {
 		AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
 				.setQuantitationProcessing();
 
-		List<String> featureFinderCentroidedFiles = new ArrayList<String>();
-		List<String> mapAlignerPoseClusteringFiles = new ArrayList<String>();
+		List<String> featureFinderCentroidedFiles = new ArrayList<>();
+		List<String> mapAlignerPoseClusteringFiles = new ArrayList<>();
 		int featureFinderExecutionDelay = 0;
 		for (RawDataFile dataFile : rawDataFiles) {
 			String featureFinderCentroidedFile = dataFile.getAbsoluteFileName()

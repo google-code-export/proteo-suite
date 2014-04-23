@@ -3,13 +3,11 @@ package org.proteosuite.gui.analyse;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
 import org.proteosuite.gui.listener.AddRawDataListener;
 import org.proteosuite.gui.listener.ClearAllRawFileButtonListener;
 import org.proteosuite.gui.listener.ContinueButtonListener;
@@ -18,6 +16,7 @@ import org.proteosuite.gui.listener.RawDataTableListener;
 import org.proteosuite.gui.tables.RawDataAndMultiplexingTable;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.RawDataFile;
+import org.proteosuite.quantitation.OpenMSLabelFreeWrapper;
 
 /**
  * 
@@ -27,10 +26,10 @@ public class RawDataAndMultiplexingStep extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private RawDataAndMultiplexingTable rawDataTable = new RawDataAndMultiplexingTable();
-	private JComboBox<String> multiplexingBox = new JComboBox<String>(
-			new String[] { "iTRAQ 4-plex", "None (label-free)" });
+	private JComboBox<String> multiplexingBox = new JComboBox<String>();        
 
 	public RawDataAndMultiplexingStep() {
+            
 		super(new BorderLayout());
 		JLabel stepTitle = new JLabel("Select your raw data and multiplexing:");
 		stepTitle.setFont(new Font(stepTitle.getFont().getFontName(), stepTitle
@@ -56,8 +55,14 @@ public class RawDataAndMultiplexingStep extends JPanel {
 		rawDataTable.getModel().addTableModelListener(
 				new RawDataTableListener(deleteSelectedButton, clearAllButton,
 						continueButton));
-
-		multiplexingBox.setSelectedIndex(1);
+                
+                multiplexingBox.addItem("iTRAQ 4-plex");
+                if (OpenMSLabelFreeWrapper.checkIsInstalled()) {
+                    multiplexingBox.addItem("None (label-free)");
+                    multiplexingBox.setSelectedIndex(1);                    
+                } else {
+                    multiplexingBox.setSelectedIndex(0);
+                }		
 
 		JPanel buttonsPanel = new JPanel(new GridLayout(2, 3));
 

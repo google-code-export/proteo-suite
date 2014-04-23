@@ -39,8 +39,19 @@ public class ContinueButtonListener implements ActionListener {
                     .getMultiplexing());
             data.setMultiplexing((String) ((RawDataAndMultiplexingStep) panel)
                     .getMultiplexingBox().getSelectedItem());
+            boolean allMS1PeakPicked = true;
+            boolean allMS1Present = true;
             for (int i = 0; i < data.getRawDataCount(); i++) {
                 RawDataFile file = data.getRawDataFile(i);
+                // Check if this file is not MS1 peak picked.
+                if (!file.getPeakPicking()[0]) {
+                    allMS1PeakPicked = false;
+                }
+                
+                if (!file.getMSLevelPresence()[0]) {
+                    allMS1Present = false;
+                }
+
                 if (multiplexChange) {
                     file.resetAssay();
                 }
@@ -51,6 +62,33 @@ public class ContinueButtonListener implements ActionListener {
                     file.setAssays(new String[]{""});
                 }
             }
+            
+            if (data.getMultiplexing().equals("None (label-free)")) {
+                if (!allMS1Present) {
+                    JOptionPane
+                        .showConfirmDialog(
+                                panel,
+                                "You have chosen \"None (label-free)\" as your multiplexing, but not all files appear to contain MS1 data.\n"
+                                        + "This detection is based on a sampling and may be incorrect.\n"
+                                        + "Raw MS1 data must be present before a label-free analysis can be performed.\n"                                        
+                                        + "Please correct this before moving to the next stage.",
+                                "Raw MS1 Data Not Present", JOptionPane.PLAIN_MESSAGE,
+                                JOptionPane.ERROR_MESSAGE);
+                return;
+                }
+                
+                if (!allMS1PeakPicked) {
+                    JOptionPane
+                        .showConfirmDialog(
+                                panel,
+                                "You have chosen \"None (label-free)\" as your multiplexing, but not all MS1 data is peak-picked.\n"
+                                        + "\"This detection is based on a sampling and may be incorrect.\n"
+                                        + "Raw MS1 data must already be peak picked before a label-free analysis can be performed.\nPlease correct this before moving to the next stage.",
+                                "Raw MS1 Data Not Peak Picked", JOptionPane.PLAIN_MESSAGE,
+                                JOptionPane.ERROR_MESSAGE);
+                return;
+                }
+            }           
 
             ((DefineConditionsStep) AnalyseDynamicTab.DEFINE_CONDITIONS_STEP)
                     .refreshFromData();

@@ -13,6 +13,7 @@ public abstract class RawDataFile {
     protected boolean[] peakPicking = {false, false};
     protected boolean peakPickingChecked;
     protected int spectraCount;
+    protected boolean[] msLevelPresence = {false, false};
     protected boolean spectraCountChecked;
     private Map<String, String> assayConditions = new HashMap<String, String>();
     private IdentDataFile identFile = null;
@@ -65,10 +66,19 @@ public abstract class RawDataFile {
         return (int)megabytes;
     }
     
+    public boolean[] getMSLevelPresence() {
+        if (!peakPickingChecked) {
+            this.getPeakPicking();
+        }
+        
+        return msLevelPresence;
+    }
+    
     public abstract boolean isLoaded();
     public abstract String getFormat();
-    public abstract int getSpectraCount();
+    public abstract int getSpectraCount();    
     public abstract boolean[] getPeakPicking();    
+    
     
     public String getFileName() {
         return file.getName();

@@ -44,27 +44,27 @@ public class Executor {
 			while ((value = is.read()) != -1) {
 				output.append((char) value);
 			}
+                        
 			outputMessage = output.toString();
 
 			StringBuilder error = new StringBuilder();
 			while ((value = errIs.read()) != -1) {
 				error.append((char) value);
 			}
+                        
 			errorMessage = error.toString();
 
 			// destroy the process
 			process.destroy();
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		if (process == null)
 			return false;
+		}	
 		
 		int exitValue = process.exitValue();
 		
-		if (exitValue == 0)
-			return true;
+		if (exitValue == 0) {		
+                    return true;
+                }
 		
 		return false;
 	}
