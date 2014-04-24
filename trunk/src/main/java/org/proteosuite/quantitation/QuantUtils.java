@@ -512,16 +512,26 @@ public class QuantUtils {
 		assays.setId("AssayList1");
 		List<Assay> assayList = assays.getAssay();
 		// This will be used in StudyVariableList
-		Map<String, List<Assay>> studyVarAssayID = new HashMap<String, List<Assay>>();
+		Map<String, List<Assay>> studyVarAssayID = new HashMap<>();
 
-		if (technique.contains("iTRAQ")) {
+		if (technique.contains("iTRAQ") || technique.contains("TMT")) {
 			for (int rawDataFileIndex = 0; rawDataFileIndex < rawData.size(); rawDataFileIndex++) {
 				RawDataFile dataFile = rawData.get(rawDataFileIndex);
 				Map<String, String> conditions = dataFile.getConditions();
 
 				for (Entry<String, String> condition : conditions.entrySet()) {
-					ITRAQReagent reagent = ITRAQReagent.getReagent(techniqueVariation.equals("4plex"),
+                                        IsobaricReagent reagent = null;
+                                        if (technique.contains("iTRAQ")) {
+                                            reagent = ITRAQReagent.getReagent(techniqueVariation.equals("4-plex"),
 							condition.getKey());
+                                        } else if (technique.contains("TMT")) {
+                                            reagent = TMTReagent.getReagent(techniqueVariation.equals("6-plex") ? TMTReagent.SIX_PLEX : techniqueVariation.equals("8-plex") ? TMTReagent.EIGHT_PLEX : TMTReagent.TEN_PLEX, condition.getKey());
+                                        }
+                                        
+                                        if (reagent == null) {
+                                            continue;
+                                        }
+					
 					Assay assay = new Assay();
 					assay.setName(reagent.getId());
 					assay.setId("i" + (rawDataFileIndex + 1) + "_"
@@ -532,7 +542,7 @@ public class QuantUtils {
 
 					List<Assay> al;
 					if (!studyVarAssayID.containsKey(sStudyVariable)) {
-						al = new ArrayList<Assay>();
+						al = new ArrayList<>();
 					} else {
 						al = studyVarAssayID.get(sStudyVariable);
 					}
@@ -564,15 +574,13 @@ public class QuantUtils {
 					List<ModParam> modParams = label.getModification();
 					ModParam modParam = new ModParam();
 					modParam.setCvParam(labelCvParam);
-					modParam.setMassDelta(145.0f);
+					modParam.setMassDelta((float)reagent.getMassDelta());
 					modParams.add(modParam);
 					assay.setLabel(label);
 					assayList.add(assay);
 				}
 			}
-		}
-
-		if (technique.contains("emPAI")) {
+		} else if (technique.contains("emPAI")) {
 			// Check the rawFileGroup associated to that assay
 			int iK = 0;
 			for (RawFilesGroup rfg : rawFilesGroupList) {
@@ -602,7 +610,7 @@ public class QuantUtils {
 		List<StudyVariable> studyVariableList = studyVariables
 				.getStudyVariable();
 
-		if (technique.contains("iTRAQ")) {
+		if (technique.contains("iTRAQ") || technique.contains("TMT")) {
 			for (Entry<String, List<Assay>> pairs : studyVarAssayID.entrySet()) {
 				String group = pairs.getKey();
 				List<Assay> al = pairs.getValue();

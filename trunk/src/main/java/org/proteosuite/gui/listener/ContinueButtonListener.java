@@ -11,6 +11,7 @@ import org.proteosuite.gui.analyse.DefineConditionsStep;
 import org.proteosuite.gui.analyse.ITRAQStep;
 import org.proteosuite.gui.analyse.LabelFreeStep;
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
+import org.proteosuite.gui.analyse.TMTStep;
 import org.proteosuite.gui.tables.DefineConditionsTable;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.RawDataFile;
@@ -62,6 +63,15 @@ public class ContinueButtonListener implements ActionListener {
                         break;
                     case "iTRAQ 8-plex":
                         file.setAssays(new String[]{"113", "114", "115", "116", "117", "118", "119", "121"});
+                        break;
+                    case "TMT 6-plex":
+                        file.setAssays(new String[]{"126", "127", "128", "129", "130", "131"});
+                        break;
+                    case "TMT 8-plex":
+                        file.setAssays(new String[]{"126", "127a", "127b", "128", "129a", "129b", "130", "131"});
+                        break;
+                    case "TMT 10-plex":
+                        file.setAssays(new String[]{"126", "127a", "127b", "128a", "128b", "129a", "129b", "130a", "130b", "131"});
                         break;
                     case "None (label-free)":
                         file.setAssays(new String[]{""});
@@ -117,7 +127,13 @@ public class ContinueButtonListener implements ActionListener {
                 case "iTRAQ 8-plex":
                     ((ITRAQStep) AnalyseDynamicTab.ITRAQ_STEP).refreshFromData();
                     parent.moveToStep(AnalyseDynamicTab.ITRAQ_STEP);
-                    break;                
+                    break;
+                case "TMT 6-plex":
+                case "TMT 8-plex":
+                case "TMT 10-plex":
+                    ((TMTStep) AnalyseDynamicTab.TMT_STEP).refreshFromData();
+                    parent.moveToStep(AnalyseDynamicTab.TMT_STEP);
+                    break;
             }
         }
     }

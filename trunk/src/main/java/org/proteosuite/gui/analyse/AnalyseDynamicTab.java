@@ -18,6 +18,7 @@ public class AnalyseDynamicTab extends JPanel {
         public static final JPanel CLEAN_IDENTIFICATIONS_STEP = new CleanIdentificationsStep();
 	public static final JPanel LABEL_FREE_STEP = new LabelFreeStep();
 	public static final JPanel ITRAQ_STEP = new ITRAQStep();
+        public static final JPanel TMT_STEP = new TMTStep();
 	public static final JPanel DONE_STEP = new DoneStep();
 	private static final AnalyseStatusPanel analysisStatusPanel = new AnalyseStatusPanel();
 
