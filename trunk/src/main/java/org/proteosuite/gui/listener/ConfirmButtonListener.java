@@ -27,7 +27,7 @@ public class ConfirmButtonListener implements ActionListener {
     public void actionPerformed(ActionEvent event) {
         AnalyseDynamicTab parent = (AnalyseDynamicTab) panel.getParent();
         if (panel instanceof LabelFreeStep) {
-            List<RawDataFile> dataFiles = new ArrayList<RawDataFile>();
+            List<RawDataFile> dataFiles = new ArrayList<>();
             for (int i = 0; i < AnalyseData.getInstance().getRawDataCount(); i++) {
                 dataFiles.add(AnalyseData.getInstance().getRawDataFile(i));
             }
@@ -38,7 +38,7 @@ public class ConfirmButtonListener implements ActionListener {
             labelFree.compute();
             parent.moveToStep(AnalyseDynamicTab.DONE_STEP);
         } else if (panel instanceof ITRAQStep) {
-            List<RawDataFile> dataFiles = new ArrayList<RawDataFile>();
+            List<RawDataFile> dataFiles = new ArrayList<>();
             for (int i = 0; i < AnalyseData.getInstance().getRawDataCount(); i++) {
                 dataFiles.add(AnalyseData.getInstance().getRawDataFile(i));
             }

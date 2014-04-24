@@ -16,7 +16,6 @@ import javax.xml.validation.Validator;
 import static org.proteosuite.gui.ProteoSuite.MZQ_XSD;
 
 import org.proteosuite.WorkSpace;
-import org.proteosuite.gui.ProteoSuite;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.model.AnalyseData;
@@ -39,12 +38,14 @@ public class XTrackerITRAQWrapper {
 
     private List<RawDataFile> rawData;
     private static ExecutorService executor;
+    private static boolean fourPlex = true;
     private static SystemUtils sysUtils = new SystemUtils();
     private String outputPath = null;
 
     public XTrackerITRAQWrapper(List<RawDataFile> rawData) {
         this.rawData = rawData;
         executor = AnalyseData.getInstance().getExecutor();
+        fourPlex = !AnalyseData.getInstance().getMultiplexing().equals("iTRAQ 8-plex");
     }
 
     public void compute() {
@@ -54,9 +55,8 @@ public class XTrackerITRAQWrapper {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationProcessing();
                 AnalyseData.getInstance().getTasksModel().set(new Task(rawData.get(0).getFileName(), "Quantitating iTRAQ Data"));
                 TasksTab.getInstance().refreshFromTasksModel();
-                generateFiles("iTRAQ");
-                new xTracker(outputPath, rawData.get(0).getFile().getParent());
-                
+                generateFiles();
+                new xTracker(outputPath, rawData.get(0).getFile().getParent());                
                 return null;
             }
             
@@ -70,9 +70,7 @@ public class XTrackerITRAQWrapper {
                     AnalyseData.getInstance().getTasksModel().set(new Task(rawData.get(0).getFileName(), "Quantitating iTRAQ Data", "Complete"));
                     TasksTab.getInstance().refreshFromTasksModel();
                     ProteinInferenceHelper.infer(outputPath, "iTRAQ 4-plex", ProteinInferenceHelper.REPORTER_ION_INTENSITY, "sum");
-                } catch (InterruptedException ex) {
-                    ex.printStackTrace();
-                } catch (ExecutionException ex) {
+                } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
                 }
             }
@@ -89,7 +87,7 @@ public class XTrackerITRAQWrapper {
      * @param void
      * @return true/false
      */
-    private boolean generateFiles(String technique) {
+    private boolean generateFiles() {
         // Check project name
         String sFile = WorkSpace.sProjectName;
         System.out.println(sysUtils.getTime()
@@ -104,7 +102,7 @@ public class XTrackerITRAQWrapper {
         // Generate mzq file
         System.out.println(sysUtils.getTime() + " - Generating mzq file ...");
 
-        outputPath = QuantUtils.writeMzQuantML(technique, sFile, rawData);
+        outputPath = QuantUtils.writeMzQuantML("iTRAQ", fourPlex ? "4plex" : "8plex", sFile, rawData);
 
         // Unmarshall mzquantml file        
         Validator validator = XMLparser.getValidator(MZQ_XSD);
@@ -114,7 +112,7 @@ public class XTrackerITRAQWrapper {
             System.out.println("Invalid mzQuantML file!");
         } else {
             // Modify the mzQuantML structure according to the experiment            
-            writeXTrackerFiles(technique);
+            writeXTrackerFiles("iTRAQ");
         }
 
         return true;
@@ -316,7 +314,7 @@ public class XTrackerITRAQWrapper {
 
             RawDataFile dataFile = rawData.get(loopIterator);
             for (Entry<String, String> assay : dataFile.getConditions().entrySet()) {                
-                ITRAQReagent reagent = ITRAQReagent.getReagent(true, assay.getKey());
+                ITRAQReagent reagent = ITRAQReagent.getReagent(fourPlex, assay.getKey());
                 String assayName = reagent.getName();
                 String mzValue = String.valueOf(reagent.getMz());
                 double[] correctionFactorsDoubles = reagent.getCorrectionFactors();
@@ -324,8 +322,7 @@ public class XTrackerITRAQWrapper {
                 for (int i = 0; i < correctionFactors.length; i++) {
                     correctionFactors[i] = String.valueOf(correctionFactorsDoubles[i]);
                 }
-
-                // This line needs to change, hard coded to 4plex.
+                
                 twoDim.add(Arrays.asList(assayName, mzValue, correctionFactors[0], correctionFactors[1], correctionFactors[2], correctionFactors[3]));
             }
         }

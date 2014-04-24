@@ -56,11 +56,17 @@ public class ContinueButtonListener implements ActionListener {
                     file.resetAssay();
                 }
 
-                if (data.getMultiplexing().equals("iTRAQ 4-plex")) {
-                    file.setAssays(new String[]{"114", "115", "116", "117"});
-                } else if (data.getMultiplexing().equals("None (label-free)")) {
-                    file.setAssays(new String[]{""});
-                }
+                switch (data.getMultiplexing()) {
+                    case "iTRAQ 4-plex":
+                        file.setAssays(new String[]{"114", "115", "116", "117"});
+                        break;
+                    case "iTRAQ 8-plex":
+                        file.setAssays(new String[]{"113", "114", "115", "116", "117", "118", "119", "121"});
+                        break;
+                    case "None (label-free)":
+                        file.setAssays(new String[]{""});
+                        break;
+                }                
             }
             
             if (data.getMultiplexing().equals("None (label-free)")) {
@@ -97,7 +103,6 @@ public class ContinueButtonListener implements ActionListener {
 
         } else if (panel instanceof DefineConditionsStep) {
             defineConditionsStep();
-
         } else if (panel instanceof CreateOrLoadIdentificationsStep) {
             ((CleanIdentificationsStep) AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP).refreshFromData();
             parent.moveToStep(AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP);
@@ -109,11 +114,10 @@ public class ContinueButtonListener implements ActionListener {
                     parent.moveToStep(AnalyseDynamicTab.LABEL_FREE_STEP);
                     break;
                 case "iTRAQ 4-plex":
+                case "iTRAQ 8-plex":
                     ((ITRAQStep) AnalyseDynamicTab.ITRAQ_STEP).refreshFromData();
                     parent.moveToStep(AnalyseDynamicTab.ITRAQ_STEP);
-                    break;
-                case "iTRAQ 8-plex":
-                    break;
+                    break;                
             }
         }
     }
