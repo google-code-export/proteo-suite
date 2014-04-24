@@ -4,34 +4,18 @@ package org.proteosuite.quantitation;
  *
  * @author SPerkins
  */
-public class ITRAQReagent {
-    private final String id;
-    private final String name;
-    private final double mz;
-    private final double[] correctionFactors;
+public class ITRAQReagent extends IsobaricReagent {    
     private ITRAQReagent(String reagentId, String reagentName, double reagentMz, double[] reagentCorrectionFactors) {
         this.id = reagentId;
         this.name = reagentName;
         this.mz = reagentMz;
         this.correctionFactors = reagentCorrectionFactors;
-    }
+    }   
     
-    public String getId() {
-        return id;
+    @Override
+    public double getMassDelta() {
+        return 145.0;
     }
-    
-    public String getName() {
-        return name;
-    }
-    
-    public double getMz() {
-        return mz;
-    }
-    
-    public double[] getCorrectionFactors() {
-        return correctionFactors;
-    }
-    
 
     public static ITRAQReagent getReagent(boolean fourPlex, String simpleName) {
         if (fourPlex) {

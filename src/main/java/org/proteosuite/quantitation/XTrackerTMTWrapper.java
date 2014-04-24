@@ -6,16 +6,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-
 import javax.swing.SwingWorker;
 import javax.xml.validation.Validator;
-
-import static org.proteosuite.gui.ProteoSuite.MZQ_XSD;
-
 import org.proteosuite.WorkSpace;
+import static org.proteosuite.gui.ProteoSuite.MZQ_XSD;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.model.AnalyseData;
@@ -26,7 +23,6 @@ import org.proteosuite.utils.PluginManager;
 import org.proteosuite.utils.ProteinInferenceHelper;
 import org.proteosuite.utils.SystemUtils;
 import org.w3c.dom.DOMException;
-
 import uk.ac.cranfield.xTracker.utils.XMLparser;
 import uk.ac.cranfield.xTracker.xTracker;
 
@@ -34,49 +30,49 @@ import uk.ac.cranfield.xTracker.xTracker;
  *
  * @author SPerkins
  */
-public class XTrackerITRAQWrapper {
+public class XTrackerTMTWrapper {
 
     private List<RawDataFile> rawData;
     private static ExecutorService executor;
-    private static boolean fourPlex = true;
+    private static String plex;
     private static SystemUtils sysUtils = new SystemUtils();
     private String outputPath = null;
 
-    public XTrackerITRAQWrapper(List<RawDataFile> rawData) {
+    public XTrackerTMTWrapper(List<RawDataFile> rawData) {
         this.rawData = rawData;
         executor = AnalyseData.getInstance().getExecutor();
-        fourPlex = !AnalyseData.getInstance().getMultiplexing().equals("iTRAQ 8-plex");
+        plex = AnalyseData.getInstance().getMultiplexing();
     }
 
     public void compute() {
-        SwingWorker<Void, Void> iTRAQWorker = new SwingWorker<Void, Void>() {
+        SwingWorker<Void, Void> TMTWorker = new SwingWorker<Void, Void>() {
             @Override
             public Void doInBackground() {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationProcessing();
-                AnalyseData.getInstance().getTasksModel().set(new Task(rawData.get(0).getFileName(), "Quantitating iTRAQ Data"));
+                AnalyseData.getInstance().getTasksModel().set(new Task(rawData.get(0).getFileName(), "Quantitating TMT Data"));
                 TasksTab.getInstance().refreshFromTasksModel();
                 generateFiles();
-                new xTracker(outputPath, rawData.get(0).getFile().getParent());                
+                new xTracker(outputPath, rawData.get(0).getFile().getParent());
                 return null;
             }
-            
+
             @Override
             public void done() {
                 try {
                     get();
-                    
+
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationDone();
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setMappingDone();
-                    AnalyseData.getInstance().getTasksModel().set(new Task(rawData.get(0).getFileName(), "Quantitating iTRAQ Data", "Complete"));
+                    AnalyseData.getInstance().getTasksModel().set(new Task(rawData.get(0).getFileName(), "Quantitating TMT Data", "Complete"));
                     TasksTab.getInstance().refreshFromTasksModel();
-                    ProteinInferenceHelper.infer(outputPath, fourPlex ? "iTRAQ 4plex" : "iTRAQ 8plex", ProteinInferenceHelper.REPORTER_ION_INTENSITY, "sum");
+                    ProteinInferenceHelper.infer(outputPath, plex, ProteinInferenceHelper.REPORTER_ION_INTENSITY, "sum");
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
                 }
             }
         };
 
-        executor.submit(iTRAQWorker);
+        executor.submit(TMTWorker);
     }
 
     /**
@@ -102,7 +98,7 @@ public class XTrackerITRAQWrapper {
         // Generate mzq file
         System.out.println(sysUtils.getTime() + " - Generating mzq file ...");
 
-        outputPath = QuantUtils.writeMzQuantML("iTRAQ", fourPlex ? "4-plex" : "8-plex", sFile, rawData);
+        outputPath = QuantUtils.writeMzQuantML("TMT", plex.contains("6-plex") ? "6-plex" : plex.contains("8-plex") ? "8-plex" : "10-plex", sFile, rawData);
 
         // Unmarshall mzquantml file        
         Validator validator = XMLparser.getValidator(MZQ_XSD);
@@ -112,7 +108,7 @@ public class XTrackerITRAQWrapper {
             System.out.println("Invalid mzQuantML file!");
         } else {
             // Modify the mzQuantML structure according to the experiment            
-            writeXTrackerFiles("iTRAQ");
+            writeXTrackerFiles("TMT");
         }
 
         return true;
@@ -131,7 +127,7 @@ public class XTrackerITRAQWrapper {
 
         // xTracker consists of 4 main plugins (read more on
         // www.x-tracker.info)
-        writeXTrackerIdent(technique, sPipeline[0]);
+        writeXTrackerIdent(sPipeline[0]);
         writeXTrackerRaw(sPipeline[1]);
         writeXTrackerQuant(sPipeline[2]);
         writeXTrackerOutput(sPipeline[3], WorkSpace.sProjectName);
@@ -145,7 +141,7 @@ public class XTrackerITRAQWrapper {
      * @return void
      *
      */
-    private void writeXTrackerIdent(String technique, String plugin) {
+    private void writeXTrackerIdent(String plugin) {
         String sFileName = rawData.get(0).getFile().getParent() + "\\xTracker_" + plugin + ".xtp";
         try {
             FileWriter fstream = new FileWriter(sFileName);
@@ -202,7 +198,7 @@ public class XTrackerITRAQWrapper {
                 out.newLine();
 
                 // Read files using XPath xml parser
-                String searchScore = String.valueOf(ITRAQTechnique.SEARCH_SCORE);                        
+                String searchScore = String.valueOf(TMTTechnique.SEARCH_SCORE);
 
                 out.write("    <pep_score_threshold>" + searchScore
                         + "</pep_score_threshold>");
@@ -291,22 +287,20 @@ public class XTrackerITRAQWrapper {
         String sFileName = rawData.get(0).getFile().getParent() + "\\xTracker_" + plugin + ".xtp";
 
         // Read files using XPath xml parser
-        String mzRangeMin = "", mzRangeMax = "", integrationMethod = "";
-        String minPepRange = "", maxPepRange = "", searchScore = "", enzyme = "";
-        List<String> alFastaFiles = new ArrayList<String>();
+        String mzRangeMin = "", mzRangeMax = "", integrationMethod = "";       
         List<List<String>> twoDim = new ArrayList<List<String>>();
-        mzRangeMin = String.valueOf(ITRAQTechnique.MZ_RANGE_MINUS);
-        mzRangeMax = String.valueOf(ITRAQTechnique.MZ_RANGE_PLUS);
-        integrationMethod = ITRAQTechnique.INTEGRATION_METHOD;
-        for (int loopIterator = 0; loopIterator < 1; loopIterator++) { 
-        	// This has been set up to only
+        mzRangeMin = String.valueOf(TMTTechnique.MZ_RANGE_MINUS);
+        mzRangeMax = String.valueOf(TMTTechnique.MZ_RANGE_PLUS);
+        integrationMethod = TMTTechnique.INTEGRATION_METHOD;
+        for (int loopIterator = 0; loopIterator < 1; loopIterator++) {
+            // This has been set up to only
             // one iteration as x-Tracker
             // cannot cope with multiple
             // configurations
 
             RawDataFile dataFile = rawData.get(loopIterator);
-            for (Entry<String, String> assay : dataFile.getConditions().entrySet()) {                
-                ITRAQReagent reagent = ITRAQReagent.getReagent(fourPlex, assay.getKey());
+            for (Map.Entry<String, String> assay : dataFile.getConditions().entrySet()) {
+                TMTReagent reagent = TMTReagent.getReagent(plex.contains("6plex") ? TMTReagent.SIX_PLEX : plex.contains("8plex") ? TMTReagent.EIGHT_PLEX : TMTReagent.TEN_PLEX, assay.getKey());
                 String assayName = reagent.getName();
                 String mzValue = String.valueOf(reagent.getMz());
                 double[] correctionFactorsDoubles = reagent.getCorrectionFactors();
@@ -314,7 +308,7 @@ public class XTrackerITRAQWrapper {
                 for (int i = 0; i < correctionFactors.length; i++) {
                     correctionFactors[i] = String.valueOf(correctionFactorsDoubles[i]);
                 }
-                
+
                 twoDim.add(Arrays.asList(assayName, mzValue, correctionFactors[0], correctionFactors[1], correctionFactors[2], correctionFactors[3]));
             }
         }
@@ -346,7 +340,7 @@ public class XTrackerITRAQWrapper {
                 for (List<String> twoDimValue : twoDim) {
                     out.write("		<AssayParam>");
                     out.newLine();
-                    
+
                     out.write("			<AssayName>" + twoDimValue.get(0)
                             + "</AssayName>");
                     out.newLine();
@@ -396,52 +390,6 @@ public class XTrackerITRAQWrapper {
             } catch (IOException io) {
                 System.err.println("Error: " + io.getMessage());
             }
-        } else if (plugin.startsWith("emPAI")) {
-
-            // Write configuration file
-            try {
-                FileWriter fstream = new FileWriter(sFileName);
-                BufferedWriter out = new BufferedWriter(fstream);
-                out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-                out.newLine();
-                out.write("<!-- ");
-                out.newLine();
-                out.write("    *** FILE GENERATED VIA PROTEOSUITE ***");
-                out.newLine();
-                out.write("    This plugin allows the specification of the parameters used for the quantitation process in iTRAQ. Here, we");
-                out.newLine();
-                out.write("    specify the quantitation method and the correction factors used for the reporter ions.");
-                out.newLine();
-                out.write("-->");
-                out.newLine();
-                out.write("<emPaiQuantitation xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"Plugins/emPaiQuantitation.xsd\">");
-                out.newLine();
-                out.write("    <!--the molecular weight of observable peptide-->");
-                out.newLine();
-                out.write("    <peptideMwRange>");
-                out.newLine();
-                out.write("        <minimum>" + minPepRange + "</minimum>");
-                out.newLine();
-                out.write("        <maximum>" + maxPepRange + "</maximum>");
-                out.newLine();
-                out.write("    </peptideMwRange>");
-                out.newLine();
-                out.write("    <fastaFiles>");
-                out.newLine();
-                for (String alFastaFile : alFastaFiles) {
-                    out.write("        <fastaFile>" + alFastaFile + "</fastaFile>");
-                    out.newLine();
-                }
-                out.write("    </fastaFiles>");
-                out.newLine();
-                out.write("    <enzyme>" + enzyme + "</enzyme>");
-                out.newLine();
-                out.write("</emPaiQuantitation>");
-                out.newLine();
-                out.close();
-            } catch (IOException e) {
-                System.err.println("Error: " + e.getMessage());
-            }
         }
     }
 
@@ -468,8 +416,8 @@ public class XTrackerITRAQWrapper {
             out.write("    This plugin allows the specification of the output format. ");
             out.newLine();
             out.write("-->");
-            out.newLine();            
-            
+            out.newLine();
+
             out.write("<output xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"Plugins/outputGeneral.xsd\">");
             out.newLine();
             out.write("<    outputFilename>");
@@ -488,7 +436,7 @@ public class XTrackerITRAQWrapper {
             out.newLine();
             out.write("</output>");
             out.newLine();
-            
+
             out.close();
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
