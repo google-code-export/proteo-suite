@@ -48,7 +48,7 @@ public class QuantUtils {
 	private QuantUtils() {
 	}
 
-	public static String writeMzQuantML(String technique, String quantFileName,
+	public static String writeMzQuantML(String technique, String techniqueVariation, String quantFileName,
 			List<RawDataFile> rawData) {
 
 		String directory = rawData.get(0).getFile().getParent()
@@ -520,7 +520,7 @@ public class QuantUtils {
 				Map<String, String> conditions = dataFile.getConditions();
 
 				for (Entry<String, String> condition : conditions.entrySet()) {
-					ITRAQReagent reagent = ITRAQReagent.getReagent(true,
+					ITRAQReagent reagent = ITRAQReagent.getReagent(techniqueVariation.equals("4plex"),
 							condition.getKey());
 					Assay assay = new Assay();
 					assay.setName(reagent.getId());
