@@ -58,12 +58,13 @@ public class RawDataAndMultiplexingStep extends JPanel {
                 
                 multiplexingBox.addItem("iTRAQ 4-plex");
                 multiplexingBox.addItem("iTRAQ 8-plex");
+                multiplexingBox.addItem("TMT 2-plex");
                 multiplexingBox.addItem("TMT 6-plex");
                 multiplexingBox.addItem("TMT 8-plex");
                 multiplexingBox.addItem("TMT 10-plex");
                 if (OpenMSLabelFreeWrapper.checkIsInstalled()) {
                     multiplexingBox.addItem("None (label-free)");
-                    multiplexingBox.setSelectedIndex(5);                    
+                    multiplexingBox.setSelectedIndex(6);                    
                 } else {
                     multiplexingBox.setSelectedIndex(0);
                 }		

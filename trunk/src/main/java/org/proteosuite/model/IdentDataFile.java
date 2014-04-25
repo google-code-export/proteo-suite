@@ -13,6 +13,7 @@ public abstract class IdentDataFile {
     protected int psmCountPassingThreshold = -1;
     protected int psmCountNotPassingThrehsold = -1;
     protected int peptideCountPassingThreshold = -1;
+    protected String thresholdingUsed = "";
     public IdentDataFile(File file, RawDataFile parent) {
         this.file = file;
         this.parent = parent;

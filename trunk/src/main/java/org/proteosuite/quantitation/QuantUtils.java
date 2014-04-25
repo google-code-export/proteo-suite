@@ -525,7 +525,10 @@ public class QuantUtils {
                                             reagent = ITRAQReagent.getReagent(techniqueVariation.equals("4-plex"),
 							condition.getKey());
                                         } else if (technique.contains("TMT")) {
-                                            reagent = TMTReagent.getReagent(techniqueVariation.equals("6-plex") ? TMTReagent.SIX_PLEX : techniqueVariation.equals("8-plex") ? TMTReagent.EIGHT_PLEX : TMTReagent.TEN_PLEX, condition.getKey());
+                                            reagent = TMTReagent.getReagent(
+                                                    techniqueVariation.equals("2-plex") ? TMTReagent.TWO_PLEX :
+                                                    techniqueVariation.equals("6-plex") ? TMTReagent.SIX_PLEX :
+                                                            techniqueVariation.equals("8-plex") ? TMTReagent.EIGHT_PLEX : TMTReagent.TEN_PLEX, condition.getKey());
                                         }
                                         
                                         if (reagent == null) {
@@ -569,12 +572,12 @@ public class QuantUtils {
 					CvParam labelCvParam = new CvParam();
 					labelCvParam.setAccession("");
 					labelCvParam.setName(reagent.getName());
-					labelCvParam.setValue(String.valueOf(reagent.getMz()));
+					labelCvParam.setValue(String.valueOf(reagent.getReporterMz()));
 					labelCvParam.setCv(cvPSI_MOD);
 					List<ModParam> modParams = label.getModification();
 					ModParam modParam = new ModParam();
 					modParam.setCvParam(labelCvParam);
-					modParam.setMassDelta((float)reagent.getMassDelta());
+					modParam.setMassDelta((float)reagent.getTagMz());
 					modParams.add(modParam);
 					assay.setLabel(label);
 					assayList.add(assay);

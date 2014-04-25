@@ -1,8 +1,10 @@
 package org.proteosuite.model;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -13,7 +15,9 @@ import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.tasks.TasksTab;
 import uk.ac.ebi.jmzidml.MzIdentMLElement;
+import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
+import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationProtocol;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 
@@ -60,17 +64,26 @@ public class MzIdentMLFile extends IdentDataFile {
 
     @Override
     public String getThresholdingUsed() {
-        return "";
+        return this.thresholdingUsed;
     }
 
     @Override
     protected synchronized void computePSMStats() {
-        SwingWorker<int[], Void> worker = new SwingWorker<int[], Void>() {
+        SwingWorker<String[], Void> worker = new SwingWorker<String[], Void>() {
             @Override
-            protected int[] doInBackground() {
+            protected String[] doInBackground() {                
+                SpectrumIdentificationProtocol protocol = unmarshaller.unmarshal(MzIdentMLElement.SpectrumIdentificationProtocol);
+                List<CvParam> thresholdingParams = protocol.getThreshold().getCvParam();
+                List<String> thresholdTerms = new ArrayList<>();
+                for (CvParam param : thresholdingParams) {
+                    thresholdTerms.add(param.getName());
+                }
+                
+                String thresholding = String.join(", ", thresholdTerms);
+                
                 int psmPassingThreshold = 0;
                 int psmNotPassingThreshold = 0;
-                Set<String> peptidesPassingThreshold = new HashSet<String>();
+                Set<String> peptidesPassingThreshold = new HashSet<>();
                 if (unmarshaller != null) {
                     Iterator<SpectrumIdentificationResult> spectrumIdentificationResultIterator = unmarshaller.unmarshalCollectionFromXpath(MzIdentMLElement.SpectrumIdentificationResult);
                     while (spectrumIdentificationResultIterator.hasNext()) {
@@ -86,16 +99,17 @@ public class MzIdentMLFile extends IdentDataFile {
                     }
                 }
 
-                return new int[]{psmPassingThreshold, psmNotPassingThreshold, peptidesPassingThreshold.size()};
+                return new String[]{String.valueOf(psmPassingThreshold), String.valueOf(psmNotPassingThreshold), String.valueOf(peptidesPassingThreshold.size()), thresholding};
             }
 
             @Override
             protected void done() {
                 try {
-                    int[] computationResult = get();
-                    psmCountPassingThreshold = computationResult[0];
-                    psmCountNotPassingThrehsold = computationResult[1];
-                    peptideCountPassingThreshold = computationResult[2];
+                    String[] computationResult = get();
+                    psmCountPassingThreshold = Integer.parseInt(computationResult[0]);
+                    psmCountNotPassingThrehsold = Integer.parseInt(computationResult[1]);
+                    peptideCountPassingThreshold = Integer.parseInt(computationResult[2]);
+                    thresholdingUsed = computationResult[3];
                     computedPSMStats = true;
 
                     ((CleanIdentificationsStep) AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP).refreshFromData();
