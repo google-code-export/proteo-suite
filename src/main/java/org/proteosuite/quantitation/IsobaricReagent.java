@@ -10,10 +10,11 @@ package org.proteosuite.quantitation;
  *
  * @author SPerkins
  */
-public abstract class IsobaricReagent {
+public class IsobaricReagent {
     protected String id;
     protected String name;
-    protected double mz;
+    protected double reporterMz;
+    protected double tagMz;
     protected double[] correctionFactors;
     
     public String getId() {
@@ -24,13 +25,15 @@ public abstract class IsobaricReagent {
         return name;
     }
     
-    public double getMz() {
-        return mz;
+    public double getReporterMz() {
+        return reporterMz;
+    }
+    
+    public double getTagMz() {
+        return tagMz;
     }
     
     public double[] getCorrectionFactors() {
         return correctionFactors;
-    }
-    
-    public abstract double getMassDelta();
+    }    
 }

@@ -69,7 +69,7 @@ public class XTrackerITRAQWrapper {
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setMappingDone();
                     AnalyseData.getInstance().getTasksModel().set(new Task(rawData.get(0).getFileName(), "Quantitating iTRAQ Data", "Complete"));
                     TasksTab.getInstance().refreshFromTasksModel();
-                    ProteinInferenceHelper.infer(outputPath, fourPlex ? "iTRAQ 4plex" : "iTRAQ 8plex", ProteinInferenceHelper.REPORTER_ION_INTENSITY, "sum");
+                    ProteinInferenceHelper.infer(outputPath, fourPlex ? "iTRAQ 4-plex" : "iTRAQ 8-plex", ProteinInferenceHelper.REPORTER_ION_INTENSITY, "sum");
                 } catch (InterruptedException | ExecutionException ex) {
                     ex.printStackTrace();
                 }
@@ -308,7 +308,7 @@ public class XTrackerITRAQWrapper {
             for (Entry<String, String> assay : dataFile.getConditions().entrySet()) {                
                 ITRAQReagent reagent = ITRAQReagent.getReagent(fourPlex, assay.getKey());
                 String assayName = reagent.getName();
-                String mzValue = String.valueOf(reagent.getMz());
+                String mzValue = String.valueOf(reagent.getReporterMz());
                 double[] correctionFactorsDoubles = reagent.getCorrectionFactors();
                 String[] correctionFactors = new String[correctionFactorsDoubles.length];
                 for (int i = 0; i < correctionFactors.length; i++) {

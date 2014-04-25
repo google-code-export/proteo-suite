@@ -64,14 +64,17 @@ public class ContinueButtonListener implements ActionListener {
                     case "iTRAQ 8-plex":
                         file.setAssays(new String[]{"113", "114", "115", "116", "117", "118", "119", "121"});
                         break;
+                    case "TMT 2-plex":
+                        file.setAssays(new String[]{"126", "127"});
+                        break;
                     case "TMT 6-plex":
                         file.setAssays(new String[]{"126", "127", "128", "129", "130", "131"});
                         break;
                     case "TMT 8-plex":
-                        file.setAssays(new String[]{"126", "127a", "127b", "128", "129a", "129b", "130", "131"});
+                        file.setAssays(new String[]{"126", "127N", "127C", "128", "129N", "129C", "130", "131"});
                         break;
                     case "TMT 10-plex":
-                        file.setAssays(new String[]{"126", "127a", "127b", "128a", "128b", "129a", "129b", "130a", "130b", "131"});
+                        file.setAssays(new String[]{"126", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131"});
                         break;
                     case "None (label-free)":
                         file.setAssays(new String[]{""});
@@ -128,6 +131,7 @@ public class ContinueButtonListener implements ActionListener {
                     ((ITRAQStep) AnalyseDynamicTab.ITRAQ_STEP).refreshFromData();
                     parent.moveToStep(AnalyseDynamicTab.ITRAQ_STEP);
                     break;
+                case "TMT 2-plex":
                 case "TMT 6-plex":
                 case "TMT 8-plex":
                 case "TMT 10-plex":

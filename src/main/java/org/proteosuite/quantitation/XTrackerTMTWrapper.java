@@ -98,7 +98,7 @@ public class XTrackerTMTWrapper {
         // Generate mzq file
         System.out.println(sysUtils.getTime() + " - Generating mzq file ...");
 
-        outputPath = QuantUtils.writeMzQuantML("TMT", plex.contains("6-plex") ? "6-plex" : plex.contains("8-plex") ? "8-plex" : "10-plex", sFile, rawData);
+        outputPath = QuantUtils.writeMzQuantML("TMT", plex.contains("2-plex") ? "2-plex" : plex.contains("6-plex") ? "6-plex" : plex.contains("8-plex") ? "8-plex" : "10-plex", sFile, rawData);
 
         // Unmarshall mzquantml file        
         Validator validator = XMLparser.getValidator(MZQ_XSD);
@@ -300,9 +300,9 @@ public class XTrackerTMTWrapper {
 
             RawDataFile dataFile = rawData.get(loopIterator);
             for (Map.Entry<String, String> assay : dataFile.getConditions().entrySet()) {
-                TMTReagent reagent = TMTReagent.getReagent(plex.contains("6plex") ? TMTReagent.SIX_PLEX : plex.contains("8plex") ? TMTReagent.EIGHT_PLEX : TMTReagent.TEN_PLEX, assay.getKey());
+                TMTReagent reagent = TMTReagent.getReagent(plex.contains("2-plex") ? TMTReagent.TWO_PLEX : plex.contains("6-plex") ? TMTReagent.SIX_PLEX : plex.contains("8-plex") ? TMTReagent.EIGHT_PLEX : TMTReagent.TEN_PLEX, assay.getKey());
                 String assayName = reagent.getName();
-                String mzValue = String.valueOf(reagent.getMz());
+                String mzValue = String.valueOf(reagent.getReporterMz());
                 double[] correctionFactorsDoubles = reagent.getCorrectionFactors();
                 String[] correctionFactors = new String[correctionFactorsDoubles.length];
                 for (int i = 0; i < correctionFactors.length; i++) {
