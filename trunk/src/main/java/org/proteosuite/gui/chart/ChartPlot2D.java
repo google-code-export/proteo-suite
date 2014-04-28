@@ -1,6 +1,7 @@
 package org.proteosuite.gui.chart;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Float;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +14,6 @@ import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.Spectrum;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshallerException;
 
 /**
  * 
@@ -41,23 +41,13 @@ public class ChartPlot2D extends AbstractChart {
 
 		Set<Point2D.Float> points = new HashSet<Point2D.Float>();
 		while (spectrumIterator.hasNext()) {
-			Spectrum spectrumobj = spectrumIterator.next();
+			Spectrum spectrum = spectrumIterator.next();
 
 			// Identify MS1 data
-			byte msLevel = getMSLevel(spectrumobj.getCvParam());
+			byte msLevel = getMSLevel(spectrum.getCvParam());
 
 			if (msLevel != 1)
 				continue;
-
-			Spectrum spectrum = null;
-			try {
-				spectrum = unmarshaller.getSpectrumById(spectrumobj.getId());
-			} catch (MzMLUnmarshallerException ume) {
-				System.out.println(ume.getMessage());
-			}
-
-			if (spectrum == null)
-				return null;
 
 			float rt = getRetentionTime(spectrum.getScanList().getScan().get(0)
 					.getCvParam());
@@ -75,20 +65,15 @@ public class ChartPlot2D extends AbstractChart {
 					intensities = getDouble(getIntensity(binaryData));
 			}
 
-			int i = 0;
-			while (i < massCharges.length) {
-				// Removing zero values
-				if (intensities[i] <= LOW_INTENSITY) {
-					i++;
-					continue;
-				}
-
-				points.add(new Point2D.Float(massCharges[i], rt));
-
-				i++;
-			}
+			addPoints(points, rt, massCharges, intensities);
 		}
 
+		float[][] data = convertPoints(points);
+
+		return TwoDPlot.getTwoDPlot(data);
+	}
+
+	private static float[][] convertPoints(Set<Float> points) {
 		int i = 0;
 		float[][] data = new float[2][points.size()];
 		for (Point2D.Float point : points) {
@@ -96,8 +81,19 @@ public class ChartPlot2D extends AbstractChart {
 			data[1][i] = point.y;
 			i++;
 		}
+		
+		return data;
+	}
 
-		return TwoDPlot.getTwoDPlot(data);
+	private static void addPoints(final Set<Float> points, float rt,
+			float[] massCharges, double[] intensities) {
+		for (int i = 0; i < massCharges.length; i++) {
+			// Removing low values
+			if (intensities[i] <= LOW_INTENSITY)
+				continue;
+
+			points.add(new Point2D.Float(massCharges[i], rt));
+		}
 	}
 
 	public static JPanel get2DPlot(RawMzMLFile dataFile) {
