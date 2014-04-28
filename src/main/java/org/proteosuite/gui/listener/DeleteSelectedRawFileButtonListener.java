@@ -3,9 +3,14 @@ package org.proteosuite.gui.listener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+
 import javax.swing.JOptionPane;
+
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
+import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.InspectModel;
+import org.proteosuite.model.RawDataFile;
 
 /**
  * 
@@ -21,6 +26,8 @@ public class DeleteSelectedRawFileButtonListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		AnalyseData data = AnalyseData.getInstance();
+		InspectModel model = data.getInspectModel();
+		
 		int result = JOptionPane
 				.showConfirmDialog(
 						step,
@@ -31,10 +38,13 @@ public class DeleteSelectedRawFileButtonListener implements ActionListener {
 			int[] selectedRows = step.getRawDataTable().getSelectedRows();
 			Arrays.sort(selectedRows);
 			for (int i = selectedRows.length - 1; i >= 0; i--) {
+				RawDataFile rawDataFile = data.getRawDataFile(selectedRows[i]);
 				data.deleteRawDataFile(selectedRows[i]);
+				model.removeRawDataFile(rawDataFile);
 			}
 
 			step.refreshFromData();
 		}
+        InspectTab.getInstance().refreshComboBox();
 	}
 }
