@@ -74,12 +74,7 @@
              
         =============================================================================
     -->  
-    <dependencies>
-        <dependency>
-            <groupId>com.compomics</groupId>
-            <artifactId>utilities</artifactId>
-            <version>3.26.6</version>
-        </dependency>  
+    <dependencies>  
         <dependency>
             <groupId>uk.ac.liv</groupId>
             <artifactId>jmzquantml</artifactId>
@@ -146,6 +141,11 @@
             <groupId>MzidLib</groupId>
             <artifactId>mzidentml-lib</artifactId>
             <version>1.6.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.compomics</groupId>
+            <artifactId>utilities</artifactId>
+            <version>3.26.26</version>
         </dependency>
     </dependencies>
     
