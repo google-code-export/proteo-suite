@@ -12,8 +12,6 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.proteosuite.executor.Executor;
-import org.proteosuite.executor.openms.OpenMSExecutor;
-import org.proteosuite.executor.openms.OpenMSFactory;
 import org.proteosuite.jopenms.OpenMSModule;
 import org.proteosuite.jopenms.config.jaxb.AbstractITEM;
 import org.proteosuite.jopenms.config.jaxb.ITEM;

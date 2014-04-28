@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import java.util.Map;
 
 import javax.swing.JFrame;
-import javax.swing.JTable;
 
 import org.proteosuite.gui.IdentParamsView;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;

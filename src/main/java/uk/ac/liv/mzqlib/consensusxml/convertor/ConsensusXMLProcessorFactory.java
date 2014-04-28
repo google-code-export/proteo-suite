@@ -61,7 +61,7 @@ public class ConsensusXMLProcessorFactory {
         PeptideConsensusList pepConList = new PeptideConsensusList();
         AssayList assays = new AssayList();
         Cv cv;
-        List<RawFilesGroup> rgList = new ArrayList();
+        List<RawFilesGroup> rgList = new ArrayList<RawFilesGroup>();
         Map<String, Assay> rgIdToAssayMap = new HashMap<>();
         Map<String, RawFilesGroup> rgIdToRgObjectMap = new HashMap<>();
         /*

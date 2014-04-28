@@ -3,7 +3,6 @@ package org.proteosuite.gui.tables;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import org.proteosuite.model.IdentDataFile;
-import org.proteosuite.model.RawDataFile;
 
 /**
  *

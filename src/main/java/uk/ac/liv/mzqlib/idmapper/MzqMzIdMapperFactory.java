@@ -55,7 +55,7 @@ public class MzqMzIdMapperFactory {
     }
 
     public MzqMzIdMapper buildMzqMzIdMapper(MzQuantMLUnmarshaller mzqUm,
-                                            Map rawToMzidMap)
+                                            Map<String, String> rawToMzidMap)
             throws JAXBException {
         return new MzqMzIdMapperImpl(mzqUm, rawToMzidMap);
     }
@@ -72,7 +72,7 @@ public class MzqMzIdMapperFactory {
         private Map<String, String> pepConOldIdToNewIdMap = new HashMap<>();
         private Map<String, String> rawToMzidMap = null;
         private Map<String, String> mzidFnToFileIdMap = new HashMap<>();
-        List<PeptideConsensusList> pepConLists = new ArrayList();
+        List<PeptideConsensusList> pepConLists = new ArrayList<PeptideConsensusList>();
         private Map<String, List<String>> pepConNewIdToProtAccsMap = new HashMap<>();
         private Map<String, List<String>> protAccToPepConNewIdsMap = new HashMap<>();
         private SearchDatabase searchDB = new SearchDatabase();
@@ -81,7 +81,7 @@ public class MzqMzIdMapperFactory {
          * Constructor
          */
         private MzqMzIdMapperImpl(MzQuantMLUnmarshaller mzqUm,
-                                  Map rawToMzidMap)
+                                  Map<String, String> rawToMzidMap)
                 throws JAXBException {
 
             this.mzqUm = mzqUm;
@@ -96,7 +96,7 @@ public class MzqMzIdMapperFactory {
 
             Map<String, List<SIIData>> combPepModStringToSIIsMap = this.mzqProc.getCombinedPepModStringToSIIsMap();
 
-            Map<String, List<String>> pepConIdToProtAccsMap = new HashMap<>();
+            Map<String, List<String>> pepConIdToProtAccsMap = new HashMap<String, List<String>>();
 
             int pepIdCount = 0; // new id count for pepCon
 
@@ -129,7 +129,7 @@ public class MzqMzIdMapperFactory {
                             for (SIIData sd : ftSIIDataList) {
                                 ftList = pepModStringToFeaturesMap.get(sd.getPeptideModString());
                                 if (ftList == null) {
-                                    ftList = new ArrayList();
+                                    ftList = new ArrayList<String>();
                                     pepModStringToFeaturesMap.put(sd.getPeptideModString(), ftList);
                                 }
                                 ftList.add(ftRef);
@@ -138,7 +138,7 @@ public class MzqMzIdMapperFactory {
                     }
 
                     // sort siiDataToFeaturesMap by the number of feature in descending order
-                    List<Entry<String, List<String>>> entryList = new ArrayList(pepModStringToFeaturesMap.entrySet());
+                    List<Entry<String, List<String>>> entryList = new ArrayList<Entry<String, List<String>>>(pepModStringToFeaturesMap.entrySet());
                     Collections.sort(entryList, new Comparator<Entry<String, List<String>>>() {
 
                         @Override
@@ -162,7 +162,7 @@ public class MzqMzIdMapperFactory {
 //                        pepSeqList.add(sd.getSequence());
 
                         if (pepModStringList == null) {
-                            pepModStringList = new ArrayList();
+                            pepModStringList = new ArrayList<String>();
                             pepConOldToPepModStringsMap.put(pepConIdOld, pepModStringList);
                         }
                         pepModStringList.add(pepModString);
@@ -245,7 +245,7 @@ public class MzqMzIdMapperFactory {
                                 DBSequence dbSeq = siiData.getUnmarshaller().unmarshal(uk.ac.ebi.jmzidml.model.mzidml.DBSequence.class, pepEvd.getDBSequenceRef());
                                 String protAcc = dbSeq.getAccession();
                                 if (protAccs == null) {
-                                    protAccs = new ArrayList();
+                                    protAccs = new ArrayList<String>();
                                     pepConNewIdToProtAccsMap.put(pepConIdNew, protAccs);
                                 }
                                 protAccs.add(protAcc);
@@ -523,7 +523,7 @@ public class MzqMzIdMapperFactory {
                     for (String prot : protAccs) {
                         List<String> pepConNewIds = protAccToPepConNewIdsMap.get(prot);
                         if (pepConNewIds == null) {
-                            pepConNewIds = new ArrayList();
+                            pepConNewIds = new ArrayList<String>();
                             protAccToPepConNewIdsMap.put(prot, pepConNewIds);
                         }
                         pepConNewIds.add(pepConNewId);
