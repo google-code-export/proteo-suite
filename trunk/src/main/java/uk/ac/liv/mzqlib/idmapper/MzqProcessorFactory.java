@@ -5,13 +5,16 @@
 package uk.ac.liv.mzqlib.idmapper;
 
 import gnu.trove.map.TIntObjectMap;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.bind.JAXBException;
+
 import uk.ac.liv.jmzqml.MzQuantMLElement;
 import uk.ac.liv.jmzqml.model.mzqml.Feature;
 import uk.ac.liv.jmzqml.model.mzqml.FeatureList;
@@ -40,7 +43,7 @@ public class MzqProcessorFactory {
     }
 
     public MzqProcessor buildMzqProcessor(MzQuantMLUnmarshaller mzqUm,
-            Map rawToMzidMap)
+            Map<String, String> rawToMzidMap)
             throws JAXBException {
         return new MzqProcessorImpl(mzqUm, rawToMzidMap);
     }
@@ -106,7 +109,7 @@ public class MzqProcessorFactory {
                                 // determine if rt and mz of the SIIData is in the mass trace of the feature
                                 if (isInRange(siiExpMz, exFt.getLMZ(), exFt.getRMZ()) && isInRange(siiRt, exFt.getBRT(), exFt.getURT())) {
                                     if (ftSIIDataList == null) {
-                                        ftSIIDataList = new ArrayList();
+                                        ftSIIDataList = new ArrayList<SIIData>();
                                         featureToSIIsMap.put(ft.getId(), ftSIIDataList);
                                     }
                                     ftSIIDataList.add(sd);
@@ -121,7 +124,7 @@ public class MzqProcessorFactory {
                     for (String pepModString : pepModStringToSIIsMap.keySet()) {
                         List<SIIData> combSIIsList = combinedPepModStringToSIIsMap.get(pepModString);
                         if (combSIIsList == null) {
-                            combSIIsList = new ArrayList();
+                            combSIIsList = new ArrayList<SIIData>();
                             combinedPepModStringToSIIsMap.put(pepModString, combSIIsList);
                             //Deliberately bring this inside the loop to reduce memory usage
                             combSIIsList.addAll(pepModStringToSIIsMap.get(pepModString));

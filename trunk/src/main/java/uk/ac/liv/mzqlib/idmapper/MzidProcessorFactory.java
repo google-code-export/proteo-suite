@@ -7,12 +7,14 @@ package uk.ac.liv.mzqlib.idmapper;
 
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import uk.ac.ebi.jmzidml.MzIdentMLElement;
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
 import uk.ac.ebi.jmzidml.model.mzidml.SearchDatabase;
@@ -114,7 +116,7 @@ public class MzidProcessorFactory {
                         if (pepModString != null) {
                             pepSiiDataList = pepModStringToSIIsMap.get(pepModString);
                             if (pepSiiDataList == null) {
-                                pepSiiDataList = new ArrayList();
+                                pepSiiDataList = new ArrayList<SIIData>();
                                 pepModStringToSIIsMap.put(pepModString, pepSiiDataList);
                             }
                             pepSiiDataList.add(sd);
@@ -125,7 +127,7 @@ public class MzidProcessorFactory {
                         if (rt != Double.NaN) {
                             rtSiiDataList = RtToSIIsMap.get(intRt);
                             if (rtSiiDataList == null) {
-                                rtSiiDataList = new ArrayList();
+                                rtSiiDataList = new ArrayList<SIIData>();
                                 RtToSIIsMap.put(intRt, rtSiiDataList);
                             }
                             rtSiiDataList.add(sd);
@@ -142,7 +144,7 @@ public class MzidProcessorFactory {
         }
 
         @Override
-        public Map getPeptideModStringToSIIsMap() {
+        public Map<String, List<SIIData>> getPeptideModStringToSIIsMap() {
             return pepModStringToSIIsMap;
         }
 
@@ -177,7 +179,7 @@ public class MzidProcessorFactory {
 //            return pepModStringToProtAccsMap;
 //        }
         @Override
-        public TIntObjectMap getRtToSIIsMap() {
+        public TIntObjectMap<List<SIIData>> getRtToSIIsMap() {
             return RtToSIIsMap;
         }
 

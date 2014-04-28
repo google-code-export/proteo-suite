@@ -21,9 +21,9 @@ public interface MzqProcessor {
 
     public Map<String, List<SIIData>> getFeatureToSIIsMap();
 
-    public Map getCombPepModStringToProtAccessionsMap();
+    public Map<String, List<String>> getCombPepModStringToProtAccessionsMap();
 
-    public Map getCombinedPepModStringToSIIsMap();
+    public Map<String, List<SIIData>> getCombinedPepModStringToSIIsMap();
     
     public SearchDatabase getSearchDatabase();
 

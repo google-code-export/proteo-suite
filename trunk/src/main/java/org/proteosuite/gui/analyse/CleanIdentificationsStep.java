@@ -13,7 +13,6 @@ import org.proteosuite.gui.listener.PreviousButtonListener;
 import org.proteosuite.gui.tables.CleanIdentificationsTable;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.IdentDataFile;
-import org.proteosuite.model.RawDataFile;
 
 /**
  * 
