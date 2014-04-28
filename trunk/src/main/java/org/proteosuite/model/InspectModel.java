@@ -12,15 +12,19 @@ import javax.swing.JPanel;
  * @author SPerkins
  */
 public class InspectModel {
-
-    private final List<RawDataFile> rawData = new ArrayList<RawDataFile>();
     private final Map<String, ChromatogramPanel> cachedChromatograms = new HashMap<String, ChromatogramPanel>();
     private final Map<String, JPanel> cached2DViews = new HashMap<String, JPanel>();
+
+    private final List<RawDataFile> rawData = new ArrayList<RawDataFile>();
     private final List<IdentDataFile> identData = new ArrayList<IdentDataFile>();
     private final List<QuantDataFile> quantData = new ArrayList<QuantDataFile>();
 
     public synchronized void addRawDataFile(RawDataFile rawDataFile) {
         rawData.add(rawDataFile);
+    }
+
+    public synchronized void removeRawDataFile(RawDataFile rawDataFile) {
+        rawData.remove(rawDataFile);
     }
 
     public synchronized List<RawDataFile> getRawData() {

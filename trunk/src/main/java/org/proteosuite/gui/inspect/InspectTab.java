@@ -114,8 +114,15 @@ public class InspectTab extends JPanel {
 			files.add(quantFile.getFileName());
 		}
 
-		for (int i = 0; i < dataFileComboBox.getModel().getSize(); i++) {
-			files.remove(dataFileComboBox.getModel().getElementAt(i));
+		for (int i = 0; i < dataFileComboBox.getItemCount(); i++) {
+			String item = dataFileComboBox.getItemAt(i);
+			if (files.contains(item))
+				files.remove(item);
+			else
+			{
+				dataFileComboBox.removeItemAt(i);
+				i--;
+			}			
 		}
 
 		for (String file : files) {

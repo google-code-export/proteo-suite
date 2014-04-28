@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
+import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.model.AnalyseData;
 
 /**
@@ -27,5 +28,6 @@ public class ClearAllRawFileButtonListener implements ActionListener {
         	
         AnalyseData.getInstance().clear();
         step.refreshFromData();
+        InspectTab.getInstance().refreshComboBox();
     }
 }
