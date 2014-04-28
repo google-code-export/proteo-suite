@@ -3,16 +3,19 @@ package org.proteosuite.gui.analyse;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+
 import org.proteosuite.gui.listener.AddRawDataListener;
 import org.proteosuite.gui.listener.ClearAllRawFileButtonListener;
 import org.proteosuite.gui.listener.ContinueButtonListener;
 import org.proteosuite.gui.listener.DeleteSelectedRawFileButtonListener;
 import org.proteosuite.gui.listener.RawDataTableListener;
+import org.proteosuite.gui.listener.TableButtonToggleListener;
 import org.proteosuite.gui.tables.RawDataAndMultiplexingTable;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.RawDataFile;
@@ -50,10 +53,12 @@ public class RawDataAndMultiplexingStep extends JPanel {
 		clearAllButton
 				.addActionListener(new ClearAllRawFileButtonListener(this));
 		continueButton.addActionListener(new ContinueButtonListener(this));
+		
 		rawDataTable.getSelectionModel().addListSelectionListener(
-				new RawDataTableListener(rawDataTable, deleteSelectedButton));
+				new TableButtonToggleListener(rawDataTable, deleteSelectedButton));
+		
 		rawDataTable.getModel().addTableModelListener(
-				new RawDataTableListener(deleteSelectedButton, clearAllButton,
+				new RawDataTableListener(rawDataTable, deleteSelectedButton, clearAllButton,
 						continueButton));
                 
                 multiplexingBox.addItem("iTRAQ 4-plex");
