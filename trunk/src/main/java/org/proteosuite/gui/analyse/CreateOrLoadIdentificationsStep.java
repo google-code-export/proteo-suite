@@ -16,8 +16,8 @@ import org.proteosuite.gui.listener.ContinueButtonListener;
 import org.proteosuite.gui.listener.CreateIdentificationsForSelectedListener;
 import org.proteosuite.gui.listener.LoadIdentificationsForSelectedListener;
 import org.proteosuite.gui.listener.PreviousButtonListener;
-import org.proteosuite.gui.listener.RawDataTableListener;
 import org.proteosuite.gui.listener.ResetIdentificationsForSelectedListener;
+import org.proteosuite.gui.listener.TableButtonToggleListener;
 import org.proteosuite.gui.tables.CreateOrLoadIdentificationsTable;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.RawDataFile;
@@ -62,7 +62,7 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
 				.addActionListener(new ResetIdentificationsForSelectedListener(
 						this));
 		identificationsTable.getSelectionModel().addListSelectionListener(
-				new RawDataTableListener(identificationsTable,
+				new TableButtonToggleListener(identificationsTable,
 						loadIdentifications, createIdentifications,
 						resetIdentifications));
 
