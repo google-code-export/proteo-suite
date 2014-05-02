@@ -2,7 +2,9 @@ package uk.ac.man.mzqlib.postprocessing;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+
 import static java.lang.System.exit;
+
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,7 +16,9 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.xml.bind.JAXBException;
+
 import uk.ac.liv.jmzqml.MzQuantMLElement;
 //import static uk.ac.liv.jmzqml.MzQuantMLElement.MzQuantML;
 import uk.ac.liv.jmzqml.model.mzqml.*;
@@ -294,7 +298,7 @@ public final class ProteinAbundanceInference {
         PeptideToProtein(proteinToPeptide);
 
         if (quantLayerType.equals("AssayQuantLayer")) {
-            List<QuantLayer> assayQLs = AssayQLs(infile_um);
+            List<QuantLayer<IdOnly>> assayQLs = AssayQLs(infile_um);
             
             String assayQuantLayerId_pep = AssayQuantLayerId(infile_um, inputPepDTCA);
             assayQuantLayerId = "PGL_" + assayQuantLayerId_pep;
@@ -322,7 +326,7 @@ public final class ProteinAbundanceInference {
 
         } else if (quantLayerType.equals("StudyVariableQuantLayer")) {
 
-            List<QuantLayer> studyVariableQLs = StudyVariableQLs(infile_um);
+            List<QuantLayer<IdOnly>> studyVariableQLs = StudyVariableQLs(infile_um);
             String assayQuantLayerId_pep = AssayQuantLayerId(infile_um, inputPepDTCA);
             assayQuantLayerId = "PGL_" + assayQuantLayerId_pep;
 
@@ -380,8 +384,8 @@ public final class ProteinAbundanceInference {
 //        File mzqFile = new File(in_file);
 //        MzQuantMLUnmarshaller um = new MzQuantMLUnmarshaller(mzqFile);
         PeptideConsensusList pepConList = in_file_um.unmarshal(MzQuantMLElement.PeptideConsensusList);
-        List<QuantLayer> assayQLs = pepConList.getAssayQuantLayer();
-        for (QuantLayer assayQL : assayQLs) {
+        List<QuantLayer<IdOnly>> assayQLs = pepConList.getAssayQuantLayer();
+        for (QuantLayer<IdOnly> assayQL : assayQLs) {
             if ((assayQL.getDataType().getCvParam().getAccession()).equalsIgnoreCase(inputPeptideDTCA)) {
 
                 DataMatrix assayDM = assayQL.getDataMatrix();
@@ -501,10 +505,10 @@ public final class ProteinAbundanceInference {
      * @param in_file_um
      * @return
      */
-    private List<QuantLayer> AssayQLs(MzQuantMLUnmarshaller in_file_um) {
+    private List<QuantLayer<IdOnly>> AssayQLs(MzQuantMLUnmarshaller in_file_um) {
 
         PeptideConsensusList pepConList = in_file_um.unmarshal(MzQuantMLElement.PeptideConsensusList);
-        List<QuantLayer> assayQLs = pepConList.getAssayQuantLayer();
+        List<QuantLayer<IdOnly>> assayQLs = pepConList.getAssayQuantLayer();
         return assayQLs;
     }
 
@@ -513,10 +517,10 @@ public final class ProteinAbundanceInference {
      * @param in_file_um
      * @return 
      */
-    private List<QuantLayer> StudyVariableQLs(MzQuantMLUnmarshaller in_file_um) {
+    private List<QuantLayer<IdOnly>> StudyVariableQLs(MzQuantMLUnmarshaller in_file_um) {
 
         PeptideConsensusList pepConList = in_file_um.unmarshal(MzQuantMLElement.PeptideConsensusList);
-        List<QuantLayer> sVQLs = pepConList.getStudyVariableQuantLayer();
+        List<QuantLayer<IdOnly>> sVQLs = pepConList.getStudyVariableQuantLayer();
         return sVQLs;
     }
 
@@ -551,9 +555,9 @@ public final class ProteinAbundanceInference {
         String assayQLID = null;
         PeptideConsensusList pepConList = in_file_um.unmarshal(MzQuantMLElement.PeptideConsensusList);
 
-        List<QuantLayer> assayQLs = pepConList.getAssayQuantLayer();
+        List<QuantLayer<IdOnly>> assayQLs = pepConList.getAssayQuantLayer();
 
-        for (QuantLayer assayQL : assayQLs) {
+        for (QuantLayer<IdOnly> assayQL : assayQLs) {
             if ((assayQL.getDataType().getCvParam().getAccession()).equalsIgnoreCase(inputPeptideDTCA)) {
                 assayQLID = assayQL.getId();
                 break;
@@ -579,7 +583,7 @@ public final class ProteinAbundanceInference {
      * @return a boolean value for checking whether the output of MZQ format is
      * valid
      */
-    private boolean MzqOutput(MzQuantML mzq, List<QuantLayer> assayQLs, String operation,
+    private boolean MzqOutput(MzQuantML mzq, List<QuantLayer<IdOnly>> assayQLs, String operation,
             Map<String, HashSet<String>> uniSetGr, Map<String, HashSet<String>> sameSetGr,
             Map<String, HashSet<String>> subSetGr, String assayQlId, String inputPeptideDTCA, String outFile) {
 
@@ -1123,11 +1127,11 @@ public final class ProteinAbundanceInference {
      * @return a boolean value for checking whether the layers of assay quant
      * are created correctly
      */
-    private boolean AssayQuantLayers(ProteinGroupList protGroList, List<QuantLayer> aQLs, String assayQI,
+    private boolean AssayQuantLayers(ProteinGroupList protGroList, List<QuantLayer<IdOnly>> aQLs, String assayQI,
             String inputPepDTCA, Map<String, List<String>> protAbun, Map<String, String> groupInOrd) {
         boolean first_layer = false;
-        List<QuantLayer> assayQuantLayers = protGroList.getAssayQuantLayer();
-        QuantLayer assayQuantLayer = new QuantLayer();
+        List<QuantLayer<IdOnly>> assayQuantLayers = protGroList.getAssayQuantLayer();
+        QuantLayer<IdOnly> assayQuantLayer = new QuantLayer<IdOnly>();
         assayQuantLayer.setId(assayQI);
 
         /**
@@ -1150,10 +1154,10 @@ public final class ProteinAbundanceInference {
          * Get the column indices from the QuantLayer in the original file and
          * then add these to the generated QuantLayer in ProteinGroup
          */
-        for (QuantLayer assayQL : aQLs) {
+        for (QuantLayer<IdOnly> assayQL : aQLs) {
             if ((assayQL.getDataType().getCvParam().getAccession()).equalsIgnoreCase(inputPepDTCA)) {
 
-                List<String> assayCI = (List<String>) assayQL.getColumnIndex();
+                List<String> assayCI = assayQL.getColumnIndex();
                 int nCI = assayCI.size();
                 for (int i = 0; i < nCI; i++) {
                     assayQuantLayer.getColumnIndex().add(assayCI.get(i));
