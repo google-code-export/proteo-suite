@@ -2,9 +2,12 @@ package org.proteosuite.model;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -66,6 +69,11 @@ public class MzIdentMLFile extends IdentDataFile {
     public String getThresholdingUsed() {
         return this.thresholdingUsed;
     }
+    
+    @Override
+    public Map<String, String> getThresholdables() {
+        return this.thresholdables;
+    }
 
     @Override
     protected synchronized void computePSMStats() {
@@ -83,6 +91,7 @@ public class MzIdentMLFile extends IdentDataFile {
                 
                 int psmPassingThreshold = 0;
                 int psmNotPassingThreshold = 0;
+                Map<String, String> thresholdTypes = new HashMap<>();
                 Set<String> peptidesPassingThreshold = new HashSet<>();
                 if (unmarshaller != null) {
                     Iterator<SpectrumIdentificationResult> spectrumIdentificationResultIterator = unmarshaller.unmarshalCollectionFromXpath(MzIdentMLElement.SpectrumIdentificationResult);
@@ -95,11 +104,27 @@ public class MzIdentMLFile extends IdentDataFile {
                             } else {
                                 psmNotPassingThreshold++;
                             }
+                            
+                            for (CvParam param : item.getCvParam()) {
+                                if (param.getName().toUpperCase().contains("SCORE") || param.getName().toUpperCase().contains("VALUE")) {
+                                    thresholdTypes.put(param.getName(), param.getAccession());
+                                }
+                            }
                         }
                     }
                 }
+                
+                // Need to pack threshold types as a string.
+                StringBuilder thresholdsBuilder = new StringBuilder();
+                for (Entry<String, String> entry : thresholdTypes.entrySet()) {
+                    thresholdsBuilder.append(entry.getKey());
+                    thresholdsBuilder.append(",");
+                    thresholdsBuilder.append(entry.getValue());
+                    thresholdsBuilder.append(";");
+                }                
 
-                return new String[]{String.valueOf(psmPassingThreshold), String.valueOf(psmNotPassingThreshold), String.valueOf(peptidesPassingThreshold.size()), thresholding};
+                return new String[]{String.valueOf(psmPassingThreshold), String.valueOf(psmNotPassingThreshold),
+                    String.valueOf(peptidesPassingThreshold.size()), thresholding, thresholdsBuilder.toString()};
             }
 
             @Override
@@ -110,6 +135,13 @@ public class MzIdentMLFile extends IdentDataFile {
                     psmCountNotPassingThrehsold = Integer.parseInt(computationResult[1]);
                     peptideCountPassingThreshold = Integer.parseInt(computationResult[2]);
                     thresholdingUsed = computationResult[3];
+                    String thresholdablesPacked = computationResult[4];
+                    String[] thresholdablesEntriesUnpacked = thresholdablesPacked.split(";");
+                    for (String thresholdableEntry : thresholdablesEntriesUnpacked) {
+                        String[] thresholdableEntryUnpacked = thresholdableEntry.split(",");
+                        thresholdables.put(thresholdableEntryUnpacked[0], thresholdableEntryUnpacked[1]);
+                    }
+                    
                     computedPSMStats = true;
 
                     ((CleanIdentificationsStep) AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP).refreshFromData();

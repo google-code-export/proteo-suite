@@ -34,6 +34,10 @@ public class InspectModel {
     public synchronized void addIdentDataFile(IdentDataFile identDataFile) {
         identData.add(identDataFile);
     }
+    
+    public synchronized void removeIdentDataFile(IdentDataFile identDataFile) {
+        identData.remove(identDataFile);
+    }
 
     public synchronized List<IdentDataFile> getIdentData() {
         return identData;

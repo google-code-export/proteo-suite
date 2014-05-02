@@ -1,6 +1,8 @@
 package org.proteosuite.model;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -14,6 +16,7 @@ public abstract class IdentDataFile {
     protected int psmCountNotPassingThrehsold = -1;
     protected int peptideCountPassingThreshold = -1;
     protected String thresholdingUsed = "";
+    protected Map<String, String> thresholdables = new HashMap<String, String>(); 
     public IdentDataFile(File file, RawDataFile parent) {
         this.file = file;
         this.parent = parent;
@@ -41,4 +44,5 @@ public abstract class IdentDataFile {
     public abstract int getPSMCountNotPassingThreshold();
     public abstract int getPeptideCountPassingThreshold();
     public abstract String getThresholdingUsed();
+    public abstract Map<String, String> getThresholdables();
 }

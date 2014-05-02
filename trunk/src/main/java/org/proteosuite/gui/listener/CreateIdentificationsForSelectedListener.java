@@ -32,13 +32,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
 		AnalyseData data = AnalyseData.getInstance();
 
 		// Get the identParamsView.
-		final IdentParamsView identParamsExecute = step.getIdentParamsView();
-
-		// Create a dialog for the view, while finding the parent JFrame.
-		Component parent = step.getParent();
-		while (!(parent instanceof JFrame)) {
-			parent = parent.getParent();
-		}
+		final IdentParamsView identParamsExecute = step.getIdentParamsView();		
 
 		// Add the view to the content pane.
 		identParamsExecute.setVisible(true);
