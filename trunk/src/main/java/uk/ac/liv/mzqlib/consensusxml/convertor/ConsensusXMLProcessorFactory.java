@@ -140,7 +140,7 @@ public class ConsensusXMLProcessorFactory {
                 rgIdToAssayMap.put(rgId, assay);
             }
             
-            QuantLayer assayQL = new QuantLayer();
+            QuantLayer<IdOnly> assayQL = new QuantLayer<IdOnly>();
             DataMatrix dm = new DataMatrix();
             String[] columnIndex = new String[mapCount];
             

@@ -277,8 +277,8 @@ public class MzqMzIdMapperFactory {
                 }
 
                 // change the object id in each row
-                List<QuantLayer> assayQLs = pepConList.getAssayQuantLayer();
-                for (QuantLayer assayQL : assayQLs) {
+                List<QuantLayer<IdOnly>> assayQLs = pepConList.getAssayQuantLayer();
+                for (QuantLayer<IdOnly> assayQL : assayQLs) {
                     List<Row> rows = assayQL.getDataMatrix().getRow();
                     if (rows != null) {
                         for (Row row : rows) {
@@ -297,8 +297,8 @@ public class MzqMzIdMapperFactory {
                     }
                 }
 
-                List<QuantLayer> svQLs = pepConList.getStudyVariableQuantLayer();
-                for (QuantLayer svQL : svQLs) {
+                List<QuantLayer<IdOnly>> svQLs = pepConList.getStudyVariableQuantLayer();
+                for (QuantLayer<IdOnly> svQL : svQLs) {
                     List<Row> rows = svQL.getDataMatrix().getRow();
                     if (rows != null) {
                         for (Row row : rows) {
