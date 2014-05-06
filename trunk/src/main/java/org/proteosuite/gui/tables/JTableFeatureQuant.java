@@ -15,6 +15,8 @@ import uk.ac.liv.jmzqml.model.mzqml.MzQuantML;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 
 public class JTableFeatureQuant extends JTableDefault {
+	private static final long serialVersionUID = 1L;
+
 	public boolean isCellEditable(int rowIndex, int colIndex) {
 		return false;
 	}
@@ -28,6 +30,8 @@ public class JTableFeatureQuant extends JTableDefault {
 
 	public void showData(MzQuantMLFile dataFile) {
 		DefaultTableModel featureModel = new DefaultTableModel() {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean isCellEditable(int row, int col) {
 				return false;

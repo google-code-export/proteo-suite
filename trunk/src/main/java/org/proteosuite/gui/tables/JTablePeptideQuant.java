@@ -19,6 +19,8 @@ import uk.ac.liv.jmzqml.model.mzqml.Row;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 
 public class JTablePeptideQuant extends JTableDefault {
+	private static final long serialVersionUID = 1L;
+
 	public boolean isCellEditable(int rowIndex, int colIndex) {
 		return false;
 	}
@@ -32,6 +34,8 @@ public class JTablePeptideQuant extends JTableDefault {
 
 	public void showData(MzQuantMLFile dataFile) {
 		DefaultTableModel peptideModel = new DefaultTableModel() {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean isCellEditable(int row, int col) {
 				return false;

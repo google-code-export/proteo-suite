@@ -12,7 +12,9 @@ public class TasksTable extends JTable {
 	private final DefaultTableModel model;
     public TasksTable() {
         model = new DefaultTableModel() {
-            @Override
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean isCellEditable(int row, int col) {
                 return false;
             }

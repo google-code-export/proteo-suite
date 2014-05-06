@@ -14,8 +14,8 @@ import uk.ac.liv.jmzqml.model.mzqml.Feature;
  * @time 06-Mar-2014 11:24:28
  */
 public class ExtendedFeature extends Feature {
-
-    private double lmz; // left boundary of mz
+	private static final long serialVersionUID = 1L;
+	private double lmz; // left boundary of mz
     private double rmz; // right boundary of mz
     private double urt; // up boundary of rt (min)
     private double brt; // bottom boundary of rt (min)

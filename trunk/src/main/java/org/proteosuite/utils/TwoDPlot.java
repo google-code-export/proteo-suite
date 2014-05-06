@@ -33,7 +33,9 @@ import org.jfree.chart.plot.FastScatterPlot;
  * This class corresponds to 2D Visualisation of MS raw data.
  */
 public class TwoDPlot extends JInternalFrame implements MouseMotionListener {
-    /**
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Generate chart from raw data
      * @param data
      * @return

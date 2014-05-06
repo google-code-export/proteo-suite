@@ -9,10 +9,13 @@ import org.proteosuite.model.IdentDataFile;
  * @author SPerkins
  */
 public class CleanIdentificationsTable extends JTable {
-    private DefaultTableModel model;
+	private static final long serialVersionUID = 1L;
+	private DefaultTableModel model;
     public CleanIdentificationsTable() {
         model = new DefaultTableModel(){
-            @Override
+			private static final long serialVersionUID = 1L;
+
+			@Override
             public boolean isCellEditable(int row, int col) {
                 return false;
             }

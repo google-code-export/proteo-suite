@@ -219,7 +219,9 @@ public class MzMLNumpress extends MzMLCompressorBase implements MzMLCompressor {
     }
     
     public static class NumpressDecodeException extends Exception {
-        public NumpressDecodeException() {
+		private static final long serialVersionUID = 1L;
+
+		public NumpressDecodeException() {
             this("Data length decoded did not match data length decoded.");
         }
         

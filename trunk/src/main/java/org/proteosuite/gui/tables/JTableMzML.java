@@ -151,6 +151,7 @@ public class JTableMzML extends JTableDefault {
 	@Override
 	public void reset() {
 		model = new DefaultTableModel() {
+			private static final long serialVersionUID = 1L;
 			Class<?>[] types = new Class[] { Integer.class, String.class,
 					Byte.class, Float.class, Float.class, Float.class,
 					String.class };

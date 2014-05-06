@@ -7,7 +7,9 @@ import java.util.HashSet;
  * @author SPerkins
  */
 public class TasksModel extends HashSet<Task> {
-    public TasksModel() {
+	private static final long serialVersionUID = 1L;
+
+	public TasksModel() {
         super();
     }    
     

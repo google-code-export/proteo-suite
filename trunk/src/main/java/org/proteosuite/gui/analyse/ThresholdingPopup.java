@@ -33,8 +33,8 @@ import javax.swing.border.EmptyBorder;
  * @author SPerkins
  */
 public class ThresholdingPopup extends JDialog {
-
-    private JComboBox<String> thresholdingChoice;
+	private static final long serialVersionUID = 1L;
+	private JComboBox<String> thresholdingChoice;
     private JComboBox<String> thresholdingOperator;
     private JTextField thresholdingValue;
     private final Map<String, String> thresholdables;
@@ -73,7 +73,7 @@ public class ThresholdingPopup extends JDialog {
             thresholdingChoice.addItem(entry.getKey());
         }
 
-        thresholdingOperator = new JComboBox(new String[]{">", "<"});
+        thresholdingOperator = new JComboBox<String>(new String[]{">", "<"});
 
         JButton thresholdButton = new JButton("Threshold!");
         thresholdButton.setAlignmentX(Component.CENTER_ALIGNMENT);

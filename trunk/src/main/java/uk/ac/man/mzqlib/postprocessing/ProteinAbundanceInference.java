@@ -1177,6 +1177,7 @@ public final class ProteinAbundanceInference {
          * Create the part of DataMatrix
          */
         DataMatrix dm = new DataMatrix() {
+			private static final long serialVersionUID = 1L;
         };
 
         /**
