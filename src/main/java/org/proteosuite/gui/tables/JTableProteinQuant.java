@@ -30,6 +30,7 @@ import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
  * @author Andrew Collins
  */
 public class JTableProteinQuant extends JTableDefault {
+	private static final long serialVersionUID = 1L;
 
 	public boolean isCellEditable(int rowIndex, int colIndex) {
 		return false;
@@ -44,6 +45,8 @@ public class JTableProteinQuant extends JTableDefault {
 
 	public void showData(MzQuantMLFile dataFile) {
 		DefaultTableModel proteinModel = new DefaultTableModel() {
+			private static final long serialVersionUID = 1L;
+
 			@Override
 			public boolean isCellEditable(int row, int col) {
 				return false;

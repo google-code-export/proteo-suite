@@ -118,7 +118,9 @@ public final class DeltaConversion {
 
     public static class DeltaEncodedDataFormatException extends Exception {
 
-        public DeltaEncodedDataFormatException() {
+		private static final long serialVersionUID = 1L;
+
+		public DeltaEncodedDataFormatException() {
             super("Delta data contains negative values. The array may now be corrupt.");
         }
     }

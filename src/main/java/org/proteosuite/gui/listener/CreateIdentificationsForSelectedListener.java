@@ -1,11 +1,8 @@
 package org.proteosuite.gui.listener;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
-
-import javax.swing.JFrame;
 
 import org.proteosuite.gui.IdentParamsView;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
