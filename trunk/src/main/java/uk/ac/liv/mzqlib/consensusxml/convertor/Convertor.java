@@ -1,4 +1,3 @@
-
 package uk.ac.liv.mzqlib.consensusxml.convertor;
 
 import java.io.File;
