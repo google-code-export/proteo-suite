@@ -80,6 +80,14 @@ public class AnalyseData {
 	public void setMultiplexing(String multiplexing) {
 		this.multiplexing = multiplexing;
 	}
+        
+        public void setGenomeAnnotationMode(boolean genomeAnnotationMode) {
+            this.supportGenomeAnnotation = genomeAnnotationMode;
+        }
+        
+        public boolean getGenomeAnnotationMode() {
+            return this.supportGenomeAnnotation;
+        }
 
 	public String getMultiplexing() {
 		return multiplexing;

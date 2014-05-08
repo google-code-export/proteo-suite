@@ -23,97 +23,19 @@ import org.proteosuite.model.RawDataFile;
 public class ContinueButtonListener implements ActionListener {
 
     private JPanel panel;
+    private AnalyseData data;
+    private AnalyseDynamicTab parent;
 
     public ContinueButtonListener(JPanel panel) {
         this.panel = panel;
+        data = AnalyseData.getInstance();
     }
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        AnalyseDynamicTab parent = (AnalyseDynamicTab) panel.getParent();
-        AnalyseData data = AnalyseData.getInstance();
-
+        parent = (AnalyseDynamicTab) panel.getParent();
         if (panel instanceof RawDataAndMultiplexingStep) {
-            String selectedMultiplexing = (String) ((RawDataAndMultiplexingStep) panel)
-                    .getMultiplexingBox().getSelectedItem();
-            boolean multiplexChange = !selectedMultiplexing.equals(data
-                    .getMultiplexing());
-            data.setMultiplexing((String) ((RawDataAndMultiplexingStep) panel)
-                    .getMultiplexingBox().getSelectedItem());
-            boolean allMS1PeakPicked = true;
-            boolean allMS1Present = true;
-            for (int i = 0; i < data.getRawDataCount(); i++) {
-                RawDataFile file = data.getRawDataFile(i);
-                // Check if this file is not MS1 peak picked.
-                if (!file.getPeakPicking()[0]) {
-                    allMS1PeakPicked = false;
-                }
-                
-                if (!file.getMSLevelPresence()[0]) {
-                    allMS1Present = false;
-                }
-
-                if (multiplexChange) {
-                    file.resetAssay();
-                }
-
-                switch (data.getMultiplexing()) {
-                    case "iTRAQ 4-plex":
-                        file.setAssays(new String[]{"114", "115", "116", "117"});
-                        break;
-                    case "iTRAQ 8-plex":
-                        file.setAssays(new String[]{"113", "114", "115", "116", "117", "118", "119", "121"});
-                        break;
-                    case "TMT 2-plex":
-                        file.setAssays(new String[]{"126", "127"});
-                        break;
-                    case "TMT 6-plex":
-                        file.setAssays(new String[]{"126", "127", "128", "129", "130", "131"});
-                        break;
-                    case "TMT 8-plex":
-                        file.setAssays(new String[]{"126", "127N", "127C", "128", "129N", "129C", "130", "131"});
-                        break;
-                    case "TMT 10-plex":
-                        file.setAssays(new String[]{"126", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131"});
-                        break;
-                    case "None (label-free)":
-                        file.setAssays(new String[]{""});
-                        break;
-                }                
-            }
-            
-            if (data.getMultiplexing().equals("None (label-free)")) {
-                if (!allMS1Present) {
-                    JOptionPane
-                        .showConfirmDialog(
-                                panel,
-                                "You have chosen \"None (label-free)\" as your multiplexing, but not all files appear to contain MS1 data.\n"
-                                        + "This detection is based on a sampling and may be incorrect.\n"
-                                        + "Raw MS1 data must be present before a label-free analysis can be performed.\n"                                        
-                                        + "Please correct this before moving to the next stage.",
-                                "Raw MS1 Data Not Present", JOptionPane.PLAIN_MESSAGE,
-                                JOptionPane.ERROR_MESSAGE);
-                return;
-                }
-                
-                if (!allMS1PeakPicked) {
-                    JOptionPane
-                        .showConfirmDialog(
-                                panel,
-                                "You have chosen \"None (label-free)\" as your multiplexing, but not all MS1 data is peak-picked.\n"
-                                        + "\"This detection is based on a sampling and may be incorrect.\n"
-                                        + "Raw MS1 data must already be peak picked before a label-free analysis can be performed.\nPlease correct this before moving to the next stage.",
-                                "Raw MS1 Data Not Peak Picked", JOptionPane.PLAIN_MESSAGE,
-                                JOptionPane.ERROR_MESSAGE);
-                return;
-                }
-            }           
-
-            ((DefineConditionsStep) AnalyseDynamicTab.DEFINE_CONDITIONS_STEP)
-                    .refreshFromData();
-
-            parent.moveToStep(AnalyseDynamicTab.DEFINE_CONDITIONS_STEP);
-
+            rawDataAndMultiplexingStep();
         } else if (panel instanceof DefineConditionsStep) {
             defineConditionsStep();
         } else if (panel instanceof CreateOrLoadIdentificationsStep) {
@@ -140,6 +62,138 @@ public class ContinueButtonListener implements ActionListener {
                     break;
             }
         }
+    }
+
+    private void rawDataAndMultiplexingStep() {
+        String selectedMultiplexing = (String) ((RawDataAndMultiplexingStep) panel)
+                .getMultiplexingBox().getSelectedItem();
+        boolean multiplexChange = !selectedMultiplexing.equals(data
+                .getMultiplexing());
+        data.setMultiplexing((String) ((RawDataAndMultiplexingStep) panel)
+                .getMultiplexingBox().getSelectedItem());
+        data.setGenomeAnnotationMode(((RawDataAndMultiplexingStep) panel).getGenomeAnnotationBox().isSelected());
+        boolean allMS1PeakPicked = true;
+        boolean allMS1Present = true;
+        for (int i = 0; i < data.getRawDataCount(); i++) {
+            RawDataFile file = data.getRawDataFile(i);
+            // Check if this file is not MS1 peak picked.
+            if (!file.getPeakPicking()[0]) {
+                allMS1PeakPicked = false;
+            }
+
+            if (!file.getMSLevelPresence()[0]) {
+                allMS1Present = false;
+            }
+
+            if (multiplexChange) {
+                file.resetAssay();
+            }
+
+            switch (data.getMultiplexing()) {
+                case "iTRAQ 4-plex":
+                    file.setAssays(new String[]{"114", "115", "116", "117"});
+                    break;
+                case "iTRAQ 8-plex":
+                    file.setAssays(new String[]{"113", "114", "115", "116", "117", "118", "119", "121"});
+                    break;
+                case "TMT 2-plex":
+                    file.setAssays(new String[]{"126", "127"});
+                    break;
+                case "TMT 6-plex":
+                    file.setAssays(new String[]{"126", "127", "128", "129", "130", "131"});
+                    break;
+                case "TMT 8-plex":
+                    file.setAssays(new String[]{"126", "127N", "127C", "128", "129N", "129C", "130", "131"});
+                    break;
+                case "TMT 10-plex":
+                    file.setAssays(new String[]{"126", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131"});
+                    break;
+                case "None (label-free)":
+                    file.setAssays(new String[]{""});
+                    break;
+            }
+        }
+
+        boolean mzmlPresent = false;
+        boolean mgfPresent = false;
+        for (int i = 0; i < data.getRawDataCount(); i++) {
+            RawDataFile dataFile = data.getRawDataFile(i);
+            switch (dataFile.getFormat().toUpperCase()) {
+                case "MZML":
+                    mzmlPresent = true;
+                    break;
+                case "MGF":
+                    mgfPresent = true;
+                    break;
+            }
+        }
+
+        if (data.getGenomeAnnotationMode()) {
+            if (mzmlPresent) {
+                JOptionPane
+                        .showConfirmDialog(
+                                panel,
+                                "You have chosen to do a genome annotation run, but your raw data contains mzML files.\n"
+                                + "ProteoSuite does not currently support genome annotation with mzML files.\n"
+                                + "This may change at a later date.\n"
+                                + "Please remove the mzML data to continue to the next stage.",
+                                "mzML Data Present In Genome Annotation Run", JOptionPane.PLAIN_MESSAGE,
+                                JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        } else {
+            if (mgfPresent) {
+                JOptionPane
+                        .showConfirmDialog(
+                                panel,
+                                "You have not chosen to do a genome annotation run, but your raw data contains MGF files.\n"
+                                + "ProteoSuite does not currently support MGF files when not doing genome annotation.\n"
+                                + "This may change at a later date.\n"
+                                + "Please remove the MGF data to continue to the next stage.",
+                                "MGF Data Present", JOptionPane.PLAIN_MESSAGE,
+                                JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        if (data.getMultiplexing().equals("None (label-free)")) {
+            if (!allMS1Present) {
+                JOptionPane
+                        .showConfirmDialog(
+                                panel,
+                                "You have chosen \"None (label-free)\" as your multiplexing, but not all files appear to contain MS1 data.\n"
+                                + "This detection is based on a sampling and may be incorrect.\n"
+                                + "Raw MS1 data must be present before a label-free analysis can be performed.\n"
+                                + "Please correct this before moving to the next stage.",
+                                "Raw MS1 Data Not Present", JOptionPane.PLAIN_MESSAGE,
+                                JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!allMS1PeakPicked) {
+                JOptionPane
+                        .showConfirmDialog(
+                                panel,
+                                "You have chosen \"None (label-free)\" as your multiplexing, but not all MS1 data is peak-picked.\n"
+                                + "\"This detection is based on a sampling and may be incorrect.\n"
+                                + "Raw MS1 data must already be peak picked before a label-free analysis can be performed.\nPlease correct this before moving to the next stage.",
+                                "Raw MS1 Data Not Peak Picked", JOptionPane.PLAIN_MESSAGE,
+                                JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        
+
+        if (data.getGenomeAnnotationMode()) {
+            ((CreateOrLoadIdentificationsStep) AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)
+                .refreshFromData();
+            parent.moveToStep(AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP);
+        } else {
+            ((DefineConditionsStep) AnalyseDynamicTab.DEFINE_CONDITIONS_STEP)
+                .refreshFromData();
+            parent.moveToStep(AnalyseDynamicTab.DEFINE_CONDITIONS_STEP);
+        }       
     }
 
     private void defineConditionsStep() {
