@@ -3,14 +3,13 @@ package org.proteosuite.gui.listener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
 import org.proteosuite.WorkSpace;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
 import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.MascotGenericFormatFile;
 import org.proteosuite.model.RawMzMLFile;
 
 /**
@@ -30,8 +29,8 @@ public class AddRawDataListener implements ActionListener {
 		JFileChooser chooser = new JFileChooser(
 				WorkSpace.sPreviousLocation);
 		chooser.setMultiSelectionEnabled(true);
-		chooser.setFileFilter(new FileNameExtensionFilter("mzML Data Files",
-				"mzML"));
+		chooser.setFileFilter(new FileNameExtensionFilter("mzML/MGF Data Files",
+				"mzML", "mgf"));
 		chooser.setAcceptAllFileFilterUsed(false);
 		int returnVal = chooser.showOpenDialog(step);
 		if (returnVal != JFileChooser.APPROVE_OPTION)
@@ -43,7 +42,11 @@ public class AddRawDataListener implements ActionListener {
 		}
 
 		for (File f : files) {
-			data.addRawDataFile(new RawMzMLFile(f));
+                        if (f.getName().toUpperCase().endsWith("MGF")) {
+                            data.addRawDataFile(new MascotGenericFormatFile(f));
+                        } else if (f.getName().toUpperCase().endsWith("MZML")) {
+                            data.addRawDataFile(new RawMzMLFile(f));
+                        }			
 		}
 
 		AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()

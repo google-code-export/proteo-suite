@@ -1,15 +1,18 @@
 package org.proteosuite.gui.analyse;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
-
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
 import org.proteosuite.gui.listener.AddRawDataListener;
 import org.proteosuite.gui.listener.ClearAllRawFileButtonListener;
 import org.proteosuite.gui.listener.ContinueButtonListener;
@@ -29,9 +32,11 @@ public class RawDataAndMultiplexingStep extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private RawDataAndMultiplexingTable rawDataTable = new RawDataAndMultiplexingTable();
-	private JComboBox<String> multiplexingBox = new JComboBox<String>();        
+	private final JComboBox<String> multiplexingBox = new JComboBox<>(); 
+        private JCheckBox genomeAnnotationBox = new JCheckBox();
+        private static RawDataAndMultiplexingStep INSTANCE;
 
-	public RawDataAndMultiplexingStep() {
+	private RawDataAndMultiplexingStep() {
             
 		super(new BorderLayout());
 		JLabel stepTitle = new JLabel("Select your raw data and multiplexing:");
@@ -77,11 +82,11 @@ public class RawDataAndMultiplexingStep extends JPanel {
 		JPanel buttonsPanel = new JPanel(new GridLayout(2, 3));
 
 		buttonsPanel.add(addRawDataButton);
-		buttonsPanel.add(new JLabel("Select multiplexing:"));
+		buttonsPanel.add(getRow(new JLabel("Select multiplexing:"), multiplexingBox));
 		buttonsPanel.add(clearAllButton);
 		
 		buttonsPanel.add(deleteSelectedButton);
-		buttonsPanel.add(multiplexingBox);		
+		buttonsPanel.add(getRow(new JLabel("Genome Annotation Run?"), genomeAnnotationBox));		
 		buttonsPanel.add(continueButton);
 
 		add(stepTitle, BorderLayout.PAGE_START);
@@ -89,7 +94,15 @@ public class RawDataAndMultiplexingStep extends JPanel {
 		add(buttonsPanel, BorderLayout.PAGE_END);
 	}
 
-	public void refreshFromData() {
+	public static RawDataAndMultiplexingStep getInstance() {
+            if (INSTANCE == null) {
+                INSTANCE = new RawDataAndMultiplexingStep();
+            }
+            
+            return INSTANCE;
+        }
+        
+        public void refreshFromData() {
 		AnalyseData data = AnalyseData.getInstance();
 		rawDataTable.clear();
 		for (int i = 0; i < data.getRawDataCount(); i++) {
@@ -105,4 +118,20 @@ public class RawDataAndMultiplexingStep extends JPanel {
 	public JComboBox<String> getMultiplexingBox() {
 		return multiplexingBox;
 	}
+        
+        public JCheckBox getGenomeAnnotationBox() {
+            return genomeAnnotationBox;
+        }
+        
+        private JPanel getRow(Component... components) {
+        JPanel row = new JPanel();
+        row.setBorder(BorderFactory.createEmptyBorder());
+        row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
+
+        for (Component c : components) {
+            row.add(c);
+        }
+
+        return row;
+    }
 }

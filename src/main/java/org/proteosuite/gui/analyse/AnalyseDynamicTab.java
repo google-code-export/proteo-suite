@@ -12,7 +12,7 @@ import javax.swing.border.EmptyBorder;
 public class AnalyseDynamicTab extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private static AnalyseDynamicTab instance = null;
-	public static final JPanel RAW_DATA_AND_MULTIPLEXING_STEP = new RawDataAndMultiplexingStep();
+	public static final JPanel RAW_DATA_AND_MULTIPLEXING_STEP = RawDataAndMultiplexingStep.getInstance();
 	public static final JPanel DEFINE_CONDITIONS_STEP = new DefineConditionsStep();
 	public static final JPanel CREATE_OR_LOAD_IDENTIFICATIONS_STEP = new CreateOrLoadIdentificationsStep();
         public static final JPanel CLEAN_IDENTIFICATIONS_STEP = new CleanIdentificationsStep();
