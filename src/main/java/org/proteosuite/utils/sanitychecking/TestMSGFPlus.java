@@ -17,7 +17,7 @@ public class TestMSGFPlus {
 				"mam_042408o_CPTAC_study6_6E004.mzML" };
 
 		final IdentParamsView identParamsExecute = new IdentParamsView(null,
-				"execute");
+				false);
 
 		// Add the view to the content pane.
 		identParamsExecute.setVisible(true);

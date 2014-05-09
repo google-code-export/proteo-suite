@@ -36,7 +36,6 @@ public class ChartPlot2D extends AbstractChart {
 	 * Displays the MS1 raw data as 2D plots
 	 * 
 	 * @param unmarshaller
-	 * @param sTitle
 	 * @return
 	 */
 	public static JPanel get2DPlot(MzMLUnmarshaller unmarshaller) {
@@ -117,18 +116,18 @@ public class ChartPlot2D extends AbstractChart {
 	}
 
 	// TODO: Make this a bit more sane
-	private static JPanel getButtonPanel(JPanel fullPanel, RawMzMLFile dataFile) {
+	private static JPanel getButtonPanel(final JPanel fullPanel, final RawMzMLFile dataFile) {
 		JPanel panel = new JPanel(new FlowLayout());
 
 		panel.add(new JLabel("MS Level:"));
-		JComboBox<Integer> msLevel = new JComboBox<>();
+		final JComboBox<Integer> msLevel = new JComboBox<>();
 		msLevel.addItem(1);
 		msLevel.addItem(2);
 		msLevel.setSelectedIndex(MS_LEVEL - 1);
 
 		panel.add(msLevel);
 
-		JTextField threshold = new JTextField(String.valueOf(LOW_INTENSITY), 5);
+		final JTextField threshold = new JTextField(String.valueOf(LOW_INTENSITY), 5);
 
 		panel.add(new JLabel("Minimum Intensity:"));
 		panel.add(threshold);
@@ -153,6 +152,7 @@ public class ChartPlot2D extends AbstractChart {
 				fullPanel.revalidate();
 			}
 		});
+                
 		panel.add(refresh);
 
 		return panel;

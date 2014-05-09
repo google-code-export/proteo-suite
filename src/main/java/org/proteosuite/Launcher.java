@@ -1,13 +1,12 @@
 package org.proteosuite;
 
 import java.awt.EventQueue;
-
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
-
+import org.proteosuite.gui.IdentParamsView;
 import org.proteosuite.gui.ProteoSuite;
 import org.proteosuite.quantitation.OpenMSLabelFreeWrapper;
 import org.proteosuite.utils.ExceptionCatcher;
@@ -53,6 +52,9 @@ public class Launcher {
 				return;
 			}
 		}
+                
+                // Pre-load the searchGUI modifications.
+                IdentParamsView.readInPossibleMods();
 
 		SwingWorker<String, String> checkVersion = new UpdateWorker();
 		checkVersion.execute();
