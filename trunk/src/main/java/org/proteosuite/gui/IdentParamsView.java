@@ -31,7 +31,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -68,26 +67,26 @@ import org.proteosuite.WorkSpace;
 public class IdentParamsView extends JDialog {
 
     private static final long serialVersionUID = 1L;
-    private static final Pattern possibleModsFilePattern = Pattern.compile("(.+)\\(.+\\)");
-    private static final Set<String> possibleMods = new TreeSet<String>();
+    private static final Pattern possibleModsFilePattern = Pattern.compile("(.+)\\(.+\\)");    
     private static final WorkSpace workSpace = WorkSpace.getInstance();
     private static final String NO_MODS_SELECTED = "--- none selected ---";
+    private static Set<String> possibleMods = null;
 
     private boolean genomeAnnotationMode = false;
     private String sRegex = "";
-    private Map<String, String> hmParams = new HashMap<String, String>();
-    private Map<String, String> hmUniModsFixed = new HashMap<String, String>();
-    private Map<String, String> hmUniModsVar = new HashMap<String, String>();
+    private Map<String, String> hmParams = new HashMap<>();
+    private Map<String, String> hmUniModsFixed = new HashMap<>();
+    private Map<String, String> hmUniModsVar = new HashMap<>();
     private boolean bRun = false;
     private File modificationFile;
 
-    JComboBox<String> jcFragMethod = new JComboBox<String>(new String[]{
+    JComboBox<String> jcFragMethod = new JComboBox<>(new String[]{
         "Default", "CID", "ETD", "HCD"});
 
-    JComboBox<String> jcInstrument = new JComboBox<String>(new String[]{
+    JComboBox<String> jcInstrument = new JComboBox<>(new String[]{
         "Low-res LCQ/LTQ", "High-res LTQ", "TOF", "Q-Exactive"});
 
-    JComboBox<String> jcMSTol = new JComboBox<String>(new String[]{"ppm",
+    JComboBox<String> jcMSTol = new JComboBox<>(new String[]{"ppm",
         "Da"});
 
     JComboBox<String> jcMaxMissedCleavage = new JComboBox<String>(new String[]{
@@ -119,15 +118,17 @@ public class IdentParamsView extends JDialog {
     JTextField jtRegex = new JTextField("XXX");
     JTextField jtSpectraMatches = new JTextField("1");
 
-    public IdentParamsView(Window owner, String mode) {
+    public IdentParamsView(Window owner, boolean genomeAnnotationMode) {
         super(owner, "Set Identifications Parameters", Dialog.ModalityType.APPLICATION_MODAL);
 
-        this.genomeAnnotationMode = mode.toUpperCase().equals("ANNOTATION");
+        this.genomeAnnotationMode = genomeAnnotationMode;
 
         setIconImage(new ImageIcon(getClass().getClassLoader().getResource(
                 "images/icon.gif")).getImage());
 
-        readInPossibleMods();
+        if (possibleMods == null) {
+            readInPossibleMods();
+        }       
 
         DefaultListModel<String> listModel = (DefaultListModel<String>) jlstUnimods
                 .getModel();
@@ -167,12 +168,13 @@ public class IdentParamsView extends JDialog {
             }
         });
 
-        getContentPane().add(createInterface(mode));
+        getContentPane().add(createInterface());
         pack();
     }
 
-    private void readInPossibleMods() {
-        File possibleModsFile = new File(getClass().getClassLoader().getResource("config/possibleMods.txt").getFile());
+    public static void readInPossibleMods() {
+        possibleMods = new TreeSet<>();
+        File possibleModsFile = new File(IdentParamsView.class.getClassLoader().getResource("config/possibleMods.txt").getFile());
         try {
             BufferedReader reader = new BufferedReader(new FileReader(possibleModsFile));
             String line = null;
@@ -187,9 +189,9 @@ public class IdentParamsView extends JDialog {
         }
     }
 
-    private Component createInterface(String sMode) {
+    private Component createInterface() {
         JPanel content = new JPanel();
-        final JComboBox<String> jcEnzyme = new JComboBox<String>(new String[]{
+        final JComboBox<String> jcEnzyme = new JComboBox<>(new String[]{
             "Arg-C", "Arg-N", "Asp-N (DE)", "Asp-N + Glu-C",
             "CNBr", "Chymotrypsin (FYWL)", "Chymotrypsin, no P rule (FYWL)", "Formic Acid", "Glu-C",
             "Glu-C (DE)", "Lys-C", "Lys-C, no P rule", "Lys-N (K)", "No Enzyme", "Pepsin A",
@@ -208,6 +210,7 @@ public class IdentParamsView extends JDialog {
         setMinimumSize(new Dimension(792, 648));
 
         run.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 jbRunActionPerformed(jtDatabaseFile.getText(),
                         jlstFixedMods.getModel(), jlstVarMods.getModel(),
@@ -283,6 +286,7 @@ public class IdentParamsView extends JDialog {
             final JList<String> jlstVarMods) {
         JButton addMods = new JButton(">");
         addMods.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 addMods(jlstUnimods.getSelectedValuesList(),
                         (DefaultListModel<String>) jlstVarMods.getModel());
@@ -291,6 +295,7 @@ public class IdentParamsView extends JDialog {
 
         JButton removeMods = new JButton("<");
         removeMods.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent evt) {
                 removeMods(jlstVarMods);
             }
@@ -314,7 +319,7 @@ public class IdentParamsView extends JDialog {
     private JPanel getDatabasePanel() {
         JPanel databasePanel = new JPanel();
         databasePanel.setBorder(BorderFactory.createTitledBorder("Databases:"));
-        databasePanel.add(DatabaseSelection.getDatabaseSection(genomeAnnotationMode, this));
+        databasePanel.add(new DatabasePanel(genomeAnnotationMode, this));
         
         return databasePanel;
     }

@@ -1,16 +1,16 @@
 package org.proteosuite.gui.analyse;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Window;
-
 import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
 import org.proteosuite.gui.IdentParamsView;
 import org.proteosuite.gui.listener.ContinueButtonListener;
 import org.proteosuite.gui.listener.CreateIdentificationsForSelectedListener;
@@ -23,82 +23,91 @@ import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.RawDataFile;
 
 /**
- * 
+ *
  * @author SPerkins
  */
 public class CreateOrLoadIdentificationsStep extends JPanel {
-	private static final long serialVersionUID = 1L;
-	private CreateOrLoadIdentificationsTable identificationsTable = new CreateOrLoadIdentificationsTable();
-	private IdentParamsView identParamsView = new IdentParamsView(
-			(Window) this.getParent(), "execute");
 
-	public CreateOrLoadIdentificationsStep() {
-		super(new BorderLayout());
+    private static final long serialVersionUID = 1L;
+    private final CreateOrLoadIdentificationsTable identificationsTable = new CreateOrLoadIdentificationsTable();
+    private IdentParamsView identParamsView = null;
+    private final static AnalyseData data = AnalyseData.getInstance();
 
-		JLabel stepTitle = new JLabel("Create or load your identifications:");
-		stepTitle.setFont(new Font(stepTitle.getFont().getFontName(), stepTitle
-				.getFont().getStyle(), 72));
+    public CreateOrLoadIdentificationsStep() {
+        super(new BorderLayout());
 
-		JPanel buttonsPanel = new JPanel(new GridLayout(2, 3));
+        JLabel stepTitle = new JLabel("Create or load your identifications:");
+        stepTitle.setFont(new Font(stepTitle.getFont().getFontName(), stepTitle
+                .getFont().getStyle(), 72));
 
-		JButton loadIdentifications = new JButton(
-				"Load identifications for selected...");
-		JButton createIdentifications = new JButton(
-				"Create identifications for selected...");
-		JButton resetIdentifications = new JButton(
-				"Reset status for selected...");
+        JPanel buttonsPanel = new JPanel(new GridLayout(2, 3));
 
-		loadIdentifications.setEnabled(false);
-		createIdentifications.setEnabled(false);
-		resetIdentifications.setEnabled(false);
+        JButton loadIdentifications = new JButton(
+                "Load identifications for selected...");
+        JButton createIdentifications = new JButton(
+                "Create identifications for selected...");
+        JButton resetIdentifications = new JButton(
+                "Reset status for selected...");
 
-		loadIdentifications
-				.addActionListener(new LoadIdentificationsForSelectedListener(
-						this));
-		createIdentifications
-				.addActionListener(new CreateIdentificationsForSelectedListener(
-						this));
-		resetIdentifications
-				.addActionListener(new ResetIdentificationsForSelectedListener(
-						this));
-		identificationsTable.getSelectionModel().addListSelectionListener(
-				new TableButtonToggleListener(identificationsTable,
-						loadIdentifications, createIdentifications,
-						resetIdentifications));
+        loadIdentifications.setEnabled(false);
+        createIdentifications.setEnabled(false);
+        resetIdentifications.setEnabled(false);
 
-		JButton continueButton = new JButton("Continue");
-		JButton previousButton = new JButton("Previous");
+        loadIdentifications
+                .addActionListener(new LoadIdentificationsForSelectedListener(
+                                this));
+        createIdentifications
+                .addActionListener(new CreateIdentificationsForSelectedListener(
+                                this));
+        resetIdentifications
+                .addActionListener(new ResetIdentificationsForSelectedListener(
+                                this));
+        identificationsTable.getSelectionModel().addListSelectionListener(
+                new TableButtonToggleListener(identificationsTable,
+                        loadIdentifications, createIdentifications,
+                        resetIdentifications));
 
-		previousButton.addActionListener(new PreviousButtonListener(this));
-		continueButton.addActionListener(new ContinueButtonListener(this));
+        JButton continueButton = new JButton("Continue");
+        JButton previousButton = new JButton("Previous");
 
-		buttonsPanel.add(loadIdentifications);
-		buttonsPanel.add(createIdentifications);
-		buttonsPanel.add(resetIdentifications);
+        previousButton.addActionListener(new PreviousButtonListener(this));
+        continueButton.addActionListener(new ContinueButtonListener(this));
 
-		buttonsPanel.add(previousButton);
-		buttonsPanel.add(Box.createGlue());
-		buttonsPanel.add(continueButton);
+        buttonsPanel.add(loadIdentifications);
+        buttonsPanel.add(createIdentifications);
+        buttonsPanel.add(resetIdentifications);
 
-		add(stepTitle, BorderLayout.PAGE_START);
-		add(new JScrollPane(identificationsTable), BorderLayout.CENTER);
-		add(buttonsPanel, BorderLayout.PAGE_END);
-	}
+        buttonsPanel.add(previousButton);
+        buttonsPanel.add(Box.createGlue());
+        buttonsPanel.add(continueButton);
 
-	public CreateOrLoadIdentificationsTable getIdentificationsTable() {
-		return identificationsTable;
-	}
+        add(stepTitle, BorderLayout.PAGE_START);
+        add(new JScrollPane(identificationsTable), BorderLayout.CENTER);
+        add(buttonsPanel, BorderLayout.PAGE_END);
+    }
 
-	public IdentParamsView getIdentParamsView() {
-		return identParamsView;
-	}
+    public CreateOrLoadIdentificationsTable getIdentificationsTable() {
+        return identificationsTable;
+    }
 
-	public synchronized void refreshFromData() {
-		identificationsTable.clear();
-		AnalyseData data = AnalyseData.getInstance();
-		for (int i = 0; i < data.getRawDataCount(); i++) {
-			RawDataFile dataFile = data.getRawDataFile(i);
-			identificationsTable.addRawFileRow(dataFile);
-		}
-	}
+    public IdentParamsView getIdentParamsView() {
+        if (identParamsView == null) {
+            Component parent = this.getParent();
+            while (!(parent instanceof JFrame)) {
+                parent = parent.getParent();
+            }
+            
+            identParamsView = new IdentParamsView(
+                    (Window) parent, data.getGenomeAnnotationMode());
+        }
+        return identParamsView;
+    }
+
+    public synchronized void refreshFromData() {
+        identificationsTable.clear();        
+        for (int i = 0; i < data.getRawDataCount(); i++) {
+            RawDataFile dataFile = data.getRawDataFile(i);
+            identificationsTable.addRawFileRow(dataFile);
+        }
+    }
 }
