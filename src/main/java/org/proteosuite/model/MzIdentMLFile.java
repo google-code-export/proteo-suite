@@ -17,6 +17,7 @@ import org.proteosuite.gui.analyse.CleanIdentificationsStep;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.tasks.TasksTab;
+import org.proteosuite.utils.StringUtils;
 import uk.ac.ebi.jmzidml.MzIdentMLElement;
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
@@ -87,7 +88,7 @@ public class MzIdentMLFile extends IdentDataFile {
                     thresholdTerms.add(param.getName());
                 }
                 
-                String thresholding = String.join(", ", thresholdTerms);
+                String thresholding = StringUtils.join(", ", thresholdTerms);
                 
                 int psmPassingThreshold = 0;
                 int psmNotPassingThreshold = 0;

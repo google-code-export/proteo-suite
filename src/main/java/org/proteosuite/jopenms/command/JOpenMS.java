@@ -6,11 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-
 import org.proteosuite.executor.Executor;
 import org.proteosuite.jopenms.OpenMSModule;
 import org.proteosuite.jopenms.config.jaxb.AbstractITEM;
@@ -20,6 +18,7 @@ import org.proteosuite.jopenms.config.jaxb.LISTITEM;
 import org.proteosuite.jopenms.config.jaxb.NODE;
 import org.proteosuite.jopenms.config.jaxb.PARAMETERS;
 import org.proteosuite.jopenms.util.Utils;
+import org.proteosuite.utils.StringUtils;
 
 /**
  * 
@@ -45,9 +44,9 @@ public class JOpenMS {
 		Map<String, Object> cfgMap = module.getCfgMap();
 
 		setConfig(cfgMap, openMSCommand + "$1$in",
-				String.join(" ", inputFiles));
+				StringUtils.join(" ", inputFiles));
 		setConfig(cfgMap, openMSCommand + "$1$out",
-				String.join(" ", outputFiles));
+				StringUtils.join(" ", outputFiles));
 
 		File cfgFile = generateConfigFile(openMSCommand, module,
 				cfgMap);

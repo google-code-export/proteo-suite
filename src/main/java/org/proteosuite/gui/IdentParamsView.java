@@ -25,19 +25,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -48,7 +46,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -56,8 +53,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.proteosuite.WorkSpace;
+import org.proteosuite.utils.NumericalUtils;
+import org.proteosuite.utils.StringUtils;
 
 /**
  * This forms allows to specify different parameters for the search.
@@ -67,59 +65,58 @@ import org.proteosuite.WorkSpace;
 public class IdentParamsView extends JDialog {
 
     private static final long serialVersionUID = 1L;
-    private static final Pattern possibleModsFilePattern = Pattern.compile("(.+)\\(.+\\)");    
+    private static final Pattern possibleModsFilePattern = Pattern.compile("(.+)\\(.+\\)");
     private static final WorkSpace workSpace = WorkSpace.getInstance();
     private static final String NO_MODS_SELECTED = "--- none selected ---";
     private static Set<String> possibleMods = null;
 
     private boolean genomeAnnotationMode = false;
-    private String sRegex = "";
-    private Map<String, String> hmParams = new HashMap<>();
-    private Map<String, String> hmUniModsFixed = new HashMap<>();
-    private Map<String, String> hmUniModsVar = new HashMap<>();
-    private boolean bRun = false;
+
+    private boolean hasRunSuccessfully = false;
     private File modificationFile;
 
-    JComboBox<String> jcFragMethod = new JComboBox<>(new String[]{
-        "Default", "CID", "ETD", "HCD"});
-
-    JComboBox<String> jcInstrument = new JComboBox<>(new String[]{
-        "Low-res LCQ/LTQ", "High-res LTQ", "TOF", "Q-Exactive"});
-
-    JComboBox<String> jcMSTol = new JComboBox<>(new String[]{"ppm",
+    private final JComboBox<String> jcPrecursorToleranceUnits = new JComboBox<>(new String[]{"ppm",
+        "Da"});
+    
+    private final JComboBox<String> jcFragmentToleranceUnits = new JComboBox<>(new String[]{"ppm",
         "Da"});
 
-    JComboBox<String> jcMaxMissedCleavage = new JComboBox<String>(new String[]{
-        "non-tryptic", "semi-tryptic", "fully-tryptic peptides only"});
+    private final JComboBox<Integer> jcMaxMissedCleavages = new JComboBox<>(new Integer[]{0, 1, 2, 3, 4, 5,});
 
-    JComboBox<String> jcOutput = new JComboBox<String>(new String[]{
+    JComboBox<String> jcOutput = new JComboBox<>(new String[]{
         "Basic scores only", "Additional features"});
 
-    JComboBox<String> jcProtocol = new JComboBox<String>(new String[]{
-        "Default", "Phosphorylation", "iTRAQ", "iTRAQPhospo"});
-
-    JList<String> jlstFixedMods = new JList<String>(
+    private final JList<String> jlstFixedMods = new JList<>(
             new DefaultListModel<String>());
 
-    JList<String> jlstUnimods = new JList<String>(
+    private final JList<String> jlstUnimods = new JList<>(
             new DefaultListModel<String>());
 
-    JList<String> jlstVarMods = new JList<String>(
+    private JList<String> jlstVarMods = new JList<>(
             new DefaultListModel<String>());
 
-    JTextField jtDatabaseFile = new JTextField(50);
-    JTextField jtErrorRange = new JTextField("0,1");
-    JTextField jtMSTol = new JTextField("10");
-    JTextField jtMSMSTol = new JTextField("0.5");
-    JTextField jtMaxCharge = new JTextField("3");
-    JTextField jtMaxPepLen = new JTextField("40");
-    JTextField jtMinCharge = new JTextField("2");
-    JTextField jtMinPepLen = new JTextField("6");
-    JTextField jtRegex = new JTextField("XXX");
-    JTextField jtSpectraMatches = new JTextField("1");
+    private JTextField jtDatabaseFile = new JTextField(50);
+    private JTextField jtErrorRange = new JTextField("0,1");
+    private JTextField jtMSTolerance;
+    private JTextField jtMSMSTolerance;
+    private JComboBox<Integer> jcMinCharge;
+    private JComboBox<Integer> jcMaxCharge;
+    private JTextField jtMaxCharge = new JTextField("3");
+    private JTextField jtMaxPepLen = new JTextField("40");
+    private JTextField jtMinCharge = new JTextField("2");
+    private JTextField jtMinPepLen = new JTextField("6");
+    private JTextField jtRegex = new JTextField("XXX");
+    private JTextField jtSpectraMatches = new JTextField("1");
+    private JComboBox<Character> jcFragmentIonTypesABC;
+    private JComboBox<Character> jcFragmentIonTypesXYZ;
+    private JCheckBox jcDoProteoGrouper;
+    private JCheckBox jcDoEmPAI; 
+    private JComboBox<String> jcEnzyme;
+    
+    private DatabasePanel databasePanel;
 
     public IdentParamsView(Window owner, boolean genomeAnnotationMode) {
-        super(owner, "Set Identifications Parameters", Dialog.ModalityType.APPLICATION_MODAL);
+        super(owner, "Set Identifications Parameters", Dialog.ModalityType.APPLICATION_MODAL);        
 
         this.genomeAnnotationMode = genomeAnnotationMode;
 
@@ -128,7 +125,7 @@ public class IdentParamsView extends JDialog {
 
         if (possibleMods == null) {
             readInPossibleMods();
-        }       
+        }
 
         DefaultListModel<String> listModel = (DefaultListModel<String>) jlstUnimods
                 .getModel();
@@ -143,10 +140,9 @@ public class IdentParamsView extends JDialog {
                 .addElement("carbamidomethyl c");
 
         // Getting total available processors for multithreading
-        jcMaxMissedCleavage.setSelectedIndex(2);
+        jcMaxMissedCleavages.setSelectedIndex(1);
 
-        jtMSTol
-                .setToolTipText("Precursor Mass Tolerance (E.g. +/- 2.5Da, +/- 20ppm, etc.), Use commas for asymetric values (e.g. 0.5,2.5)");
+        
         jtDatabaseFile.setToolTipText("Enter the path to the database file");
         jtErrorRange
                 .setToolTipText("Range of allowed isotope peak errors (E.g. 0,1)");
@@ -163,7 +159,7 @@ public class IdentParamsView extends JDialog {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                setRun(false);
+                hasRunSuccessfully = false;
                 dispose();
             }
         });
@@ -190,15 +186,7 @@ public class IdentParamsView extends JDialog {
     }
 
     private Component createInterface() {
-        JPanel content = new JPanel();
-        final JComboBox<String> jcEnzyme = new JComboBox<>(new String[]{
-            "Arg-C", "Arg-N", "Asp-N (DE)", "Asp-N + Glu-C",
-            "CNBr", "Chymotrypsin (FYWL)", "Chymotrypsin, no P rule (FYWL)", "Formic Acid", "Glu-C",
-            "Glu-C (DE)", "Lys-C", "Lys-C, no P rule", "Lys-N (K)", "No Enzyme", "Pepsin A",
-            "Semi-Chyomotrypsin (FYWL)", "Semi-Glu-C", "Semi-Tryptic", "Thermolysin, no P rule",
-            "Top-Down", "Trypsin", "Trypsin + CNBr", "Trypsin + Chymotrypsin (FYWLKR)", "Trypsin, no P rule",
-            "Whole Protein"});
-        jcEnzyme.setSelectedIndex(20);
+        JPanel content = new JPanel();        
 
         JButton run = new JButton("Run");
 
@@ -213,22 +201,17 @@ public class IdentParamsView extends JDialog {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 jbRunActionPerformed(jtDatabaseFile.getText(),
-                        jlstFixedMods.getModel(), jlstVarMods.getModel(),
-                        jcFragMethod.getSelectedIndex(),
-                        jcInstrument.getSelectedIndex(),
-                        jcEnzyme.getSelectedIndex(),
-                        jcProtocol.getSelectedIndex(),
-                        jcMaxMissedCleavage.getSelectedIndex(),
+                        jlstFixedMods.getModel(), jlstVarMods.getModel(),                        
+                        jcMaxMissedCleavages.getSelectedIndex(),
                         jchbSearchDecoy.isSelected());
             }
         });
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(getDatabasePanel());
-        content.add(getParametersPanel(jcEnzyme, jchbSearchDecoy));
+        content.add(getParametersPanel(jchbSearchDecoy));
         content.add(getModificationsPanel());
-        content.add(getRow(new JLabel("Regex:"), jtRegex,
-                new JLabel("Press escape (ESC) to cancel"), run));
+        content.add(getRow(run));
 
         return content;
     }
@@ -244,7 +227,7 @@ public class IdentParamsView extends JDialog {
             modsModel.removeAllElements();
         }
 
-        SortedSet<String> allMods = new TreeSet<String>(selectedMods);
+        SortedSet<String> allMods = new TreeSet<>(selectedMods);
         for (int i = 0; i < modsModel.getSize(); i++) {
             allMods.add(modsModel.getElementAt(i));
         }
@@ -264,7 +247,7 @@ public class IdentParamsView extends JDialog {
         jPanel.setBorder(BorderFactory.createTitledBorder("Modifications:"));
 
         jPanel.setLayout(new GridLayout(1, 2));
-        jPanel.add(getUniModPanel());
+        jPanel.add(getPossibleModsPanel());
         jPanel.add(getModsPanel());
 
         return jPanel;
@@ -314,57 +297,68 @@ public class IdentParamsView extends JDialog {
         modsPanel.add(new JScrollPane(jlstVarMods), BorderLayout.CENTER);
 
         return modsPanel;
-    }    
-    
-    private JPanel getDatabasePanel() {
-        JPanel databasePanel = new JPanel();
-        databasePanel.setBorder(BorderFactory.createTitledBorder("Databases:"));
-        databasePanel.add(new DatabasePanel(genomeAnnotationMode, this));
-        
-        return databasePanel;
     }
 
-    private JPanel getParametersPanel(JComboBox<String> jcEnzyme,
-            JCheckBox jchbSearchDecoy) {
+    private JPanel getDatabasePanel() {
+        JPanel panel = new JPanel();
+        panel.setBorder(BorderFactory.createTitledBorder("Databases:"));
+        this.databasePanel = new DatabasePanel(genomeAnnotationMode, this);
+        panel.add(this.databasePanel);
+
+        return panel;
+    }
+
+    private JPanel getParametersPanel(JCheckBox jchbSearchDecoy) {
 
         JPanel jPanel = new JPanel();
         jPanel.setBorder(BorderFactory.createTitledBorder("Parameters:"));
 
-        jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));        
+        jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
+        
+        this.jcEnzyme = new JComboBox<>(new String[]{
+            "Arg-C", "Arg-N", "Asp-N (DE)", "Asp-N + Glu-C",
+            "CNBr", "Chymotrypsin (FYWL)", "Chymotrypsin, no P rule (FYWL)", "Formic Acid", "Glu-C",
+            "Glu-C (DE)", "Lys-C", "Lys-C, no P rule", "Lys-N (K)", "No Enzyme", "Pepsin A",
+            "Semi-Chyomotrypsin (FYWL)", "Semi-Glu-C", "Semi-Tryptic", "Thermolysin, no P rule",
+            "Top-Down", "Trypsin", "Trypsin + CNBr", "Trypsin + Chymotrypsin (FYWLKR)", "Trypsin, no P rule",
+            "Whole Protein"});
+        jcEnzyme.setSelectedIndex(20);
+        
+        this.jcFragmentIonTypesXYZ = new JComboBox<>(new Character[]{'x', 'y', 'z'});
+        this.jcFragmentIonTypesXYZ.setSelectedIndex(1);
+        this.jcFragmentIonTypesABC = new JComboBox<>(new Character[]{'a', 'b', 'c'});
+        this.jcFragmentIonTypesABC.setSelectedIndex(1);
+        this.jtMSMSTolerance = new JTextField("0.5");
+        this.jtMSTolerance = new JTextField("10");
+        this.jcMinCharge = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
+        this.jcMinCharge.setSelectedIndex(1);
+        this.jcMaxCharge = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
+        this.jcMaxCharge.setSelectedIndex(3);
+        this.jcDoProteoGrouper = new JCheckBox();
+        this.jcDoEmPAI = new JCheckBox();
+        jtMSTolerance
+                .setToolTipText("Precursor Mass Tolerance (E.g. +/- 2.5Da, +/- 20ppm)");
+        
 
         // Tolerances
-        jPanel.add(getRow(new JLabel("<html>Precursor MS tolerance &plusmn;</html>"), jtMSTol, jcMSTol, new JLabel("<html>Fragment MS/MS tolerance &plusmn; (Da)</html>"),
-                jtMSMSTol, jchbSearchDecoy));
-
-        // Error Range
-        jPanel.add(getRow(new JLabel("Error Range:"), jtErrorRange, new JLabel(
-                "Fragmentation Method:"), jcFragMethod, new JLabel(
-                        "Instrument:"), jcInstrument));
+        jPanel.add(getRow(new JLabel("<html>Precursor MS tolerance &plusmn;</html>"), jtMSTolerance, jcPrecursorToleranceUnits, jchbSearchDecoy));
+        
+        jPanel.add(getRow(new JLabel("<html>Fragment MS/MS tolerance &plusmn;</html>"),
+                jtMSMSTolerance, jcFragmentToleranceUnits));
+        
+        jPanel.add(getRow(new JLabel("Fragment Ion Types:"), jcFragmentIonTypesABC, jcFragmentIonTypesXYZ));       
 
         // Enzyme
-        jPanel.add(getRow(new JLabel("Enzyme:"), jcEnzyme, new JLabel(
-                "Protocol:"), jcProtocol, new JLabel("Tryptic peptides:"),
-                jcMaxMissedCleavage));
+        jPanel.add(getRow(new JLabel("Enzyme:"), jcEnzyme, new JLabel("Maximum missed cleavages:"),
+                jcMaxMissedCleavages));
 
-        // Min Peptide Length
-        jPanel.add(getRow(new JLabel("Min Peptide Length:"), jtMinPepLen,
-                new JLabel("Min Charge:"), jtMinCharge, new JLabel(
-                        "Matches per spectra:"), jtSpectraMatches));
-
-        // Min Peptide Length
-        jPanel.add(getRow(new JLabel("Max Peptide Length:"), jtMaxPepLen,
-                new JLabel("Max Charge:"), jtMaxCharge, new JLabel("Output:"),
-                jcOutput));
+        jPanel.add(getRow(new JLabel("Precursor Charge Range:"), jcMinCharge, new JLabel("-"), jcMaxCharge));
+        
+        if (!this.genomeAnnotationMode) {
+            jPanel.add(getRow(new JLabel("Group Proteins?"), jcDoProteoGrouper, new JLabel("Calculate emPAI?"), jcDoEmPAI));
+        }
 
         return jPanel;
-    }
-
-    public Map<String, String> getParams() {
-        return hmParams;
-    }
-
-    public String getRegex() {
-        return sRegex;
     }
 
     private JPanel getRow(Component... components) {
@@ -378,11 +372,11 @@ public class IdentParamsView extends JDialog {
         return row;
     }
 
-    public boolean getRun() {
-        return bRun;
+    public boolean hasRunSuccessfully() {
+        return hasRunSuccessfully;
     }
 
-    private JPanel getUniModPanel() {
+    private JPanel getPossibleModsPanel() {
         JPanel uniMod = new JPanel();
         uniMod.setLayout(new BorderLayout());
 
@@ -392,149 +386,78 @@ public class IdentParamsView extends JDialog {
         return uniMod;
     }
 
-    private String getValueUniModFixed(String sValue) {
-        return hmUniModsFixed.get(sValue);
-    }
-
-    private String getValueUniModVar(String sValue) {
-        return hmUniModsVar.get(sValue);
-    }
-
-    private void jbAddDatabaseFileActionPerformed(JTextField databaseFile) {
-        // Adding files
-        JFileChooser chooser = new JFileChooser(workSpace.getWorkSpace());
-        chooser.setDialogTitle("Select the database file");
-        chooser.setAcceptAllFileFilterUsed(false);
-
-        // Applying file extension filters
-        chooser.setFileFilter(new FileNameExtensionFilter(
-                "Fasta Files (*.fasta, *.fa)", "fasta", "fa"));
-
-        // Disable multiple file selection
-        chooser.setMultiSelectionEnabled(false);
-
-        int returnVal = chooser.showOpenDialog(this);
-
-        if (returnVal != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
-
-        File file = chooser.getSelectedFile();
-        if (file == null) {
-            return;
-        }
-
-        if (file.getName().indexOf(".fasta") == -1) {
-            JOptionPane
-                    .showMessageDialog(
-                            this,
-                            "Incorrect file extension. Please select a valid fasta file (*.fasta)",
-                            "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        databaseFile.setText(file.getPath());
-    }
-
     private void jbRunActionPerformed(String databaseFile,
             ListModel<String> fixedModsModel, ListModel<String> varModsModel,
-            int fragMethod, int instrument, int enzyme, int protocol,
             int maxMissedCleavages, boolean searchDecoy) {
+        
         // Validate entries
-        if ((databaseFile.isEmpty())
-                || (!databaseFile.toLowerCase().endsWith(".fasta"))) {
+        Set<String> validationErrors = validateFields();
+        if (validationErrors.size() > 0) {
             JOptionPane.showMessageDialog(this,
-                    "Please select a valid fasta file (*.fasta)", "Error",
+                    StringUtils.join("\n", validationErrors), "Invalid Parameters",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
-        // Save current values
-        bRun = true;
-        hmParams.clear();
-		// Spectrum File
-        // 0 - Database File Output File
-        hmParams.put("-d", databaseFile);
-        // 1 - Precursor Mass Tolerance
-        hmParams.put("-t", jtMSMSTol.getText()
-                + jcMSTol.getSelectedItem().toString());
-        // 2 - Isotope Error Range
-        hmParams.put("-ti", jtErrorRange.getText());
-        // 4 - TDA
-        if (searchDecoy) {
-            hmParams.put("-tda", "1");
-        } else {
-            hmParams.put("-tda", "0");
-        }
-        // 5 - Fragment Method
-        hmParams.put("-m", Integer.toString(fragMethod));
-        // 6 - Instrument ID
-        hmParams.put("-inst", Integer.toString(instrument));
-        // 7 - Enzyme
-        hmParams.put("-e", Integer.toString(enzyme));
-        // 8 - Protocol ID
-        hmParams.put("-protocol", Integer.toString(protocol));
-        // 9 - Number of tolerable termini
-        hmParams.put("-ntt", Integer.toString(maxMissedCleavages));
 
-        // 10 - Modification file name
-        int iSizeFixed = fixedModsModel.getSize();
-        int iSizeVar = varModsModel.getSize();
-        if (iSizeFixed > 0 || iSizeVar > 0) {
-            // Write file
-            FileWriter fileStream = null;
-            BufferedWriter out = null;
-            modificationFile = new File("Mods.txt");
-            try {
-                fileStream = new FileWriter(modificationFile);
-
-                out = new BufferedWriter(fileStream);
-                out.write("NumMods=" + (iSizeFixed + iSizeVar));
-                out.newLine();
-                for (int i = 0; i < iSizeFixed; i++) {
-                    out.write(getValueUniModFixed(fixedModsModel
-                            .getElementAt(i)));
-                    out.newLine();
-                }
-                for (int i = 0; i < iSizeVar; i++) {
-                    out.write(getValueUniModVar(varModsModel.getElementAt(i)));
-                    out.newLine();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(IdentParamsView.class.getName()).log(
-                        Level.SEVERE, null, ex);
-            } finally {
-                try {
-                    if (out != null) {
-                        out.close();
-                    }
-                    if (fileStream != null) {
-                        fileStream.close();
-                    }
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        // 11 - Min peptide length
-        hmParams.put("-minLength", jtMinPepLen.getText());
-        // 12 - Max peptide length
-        hmParams.put("-maxLength", jtMaxPepLen.getText());
-        // 13 - Min charge
-        hmParams.put("-minCharge", jtMinCharge.getText());
-        // 14 - Max charge
-        hmParams.put("-maxCharge", jtMaxCharge.getText());
-        // 15 - Num matches per spectrum
-        hmParams.put("-n", jtSpectraMatches.getText());
-        // 16 - Additional features
-        hmParams.put("-addFeatures",
-                Integer.toString(jcOutput.getSelectedIndex()));
-        sRegex = jtRegex.getText();
-
+        hasRunSuccessfully = true;
         dispose();
     }
+    
+    public Map<String, String> getSearchGUIParameterSet() {
+        Map<String, String> parameterSet = new HashMap<>();
+        parameterSet.put("prec_ppm", ((String)jcPrecursorToleranceUnits.getSelectedItem()).equals("ppm") ? "1" : "2");
+        parameterSet.put("prec_tol", jtMSTolerance.getText());
+        parameterSet.put("frag_ppm", ((String)jcFragmentToleranceUnits.getSelectedItem()).equals("ppm") ? "1" : "2");
+        parameterSet.put("frag_tol", jtMSTolerance.getText());
+        parameterSet.put("enzyme", (String)jcEnzyme.getSelectedItem());
+        parameterSet.put("min_charge", (String)jcMinCharge.getSelectedItem());
+        parameterSet.put("max_charge", (String)jcMaxCharge.getSelectedItem());
+        parameterSet.put("mc", (String)jcMaxMissedCleavages.getSelectedItem());
+        parameterSet.put("fi", (String)jcFragmentIonTypesABC.getSelectedItem());
+        parameterSet.put("ri", (String)jcFragmentIonTypesXYZ.getSelectedItem());        
+        parameterSet.put("fixed_mods", StringUtils.join(", ", jlstFixedMods.getModel()));
+        parameterSet.put("variable_mods", StringUtils.join(", ", jlstVarMods.getModel()));
+        
+        return parameterSet;      
+    }
+    
+    public Map<String, String> getOtherGeneModels() {
+        return databasePanel.getOtherGeneModels();       
+    }
+    
+    public String[] getGeneModel() {
+        return databasePanel.getGeneModel();
+    }
+    
+    public boolean isRequestingProteoGrouper() {
+        return jcDoProteoGrouper.isSelected();
+    }
+    
+    public boolean isRequestingEmPAI() {
+        return jcDoEmPAI.isSelected();
+    }
 
+    private Set<String> validateFields() {
+        Set<String> validationErrors = new HashSet<>();
+        if (jtDatabaseFile.getText().isEmpty() || (!jtDatabaseFile.getText().toUpperCase().endsWith(".FASTA"))) {
+            validationErrors.add("FastA file has not been correctly set. Please amend.");
+        }
+        
+        if (!NumericalUtils.isDouble(jtMSTolerance.getText())) {
+            validationErrors.add("Precursor MS tolerance is not a valid number. Please amend.");
+        }
+        
+        if (!NumericalUtils.isDouble(jtMSMSTolerance.getText())) {
+            validationErrors.add("Fragment MS/MS tolerance is not a valid number. Please amend.");
+        }
+        
+        if ((Integer)jcMinCharge.getSelectedItem() > (Integer)jcMaxCharge.getSelectedItem()) {
+            validationErrors.add("Minimum charge is higher than maximum charge. Please amend.");
+        }
+        
+        return validationErrors;
+    }
+    
     private void removeMods(JList<String> modList) {
         // Remove Modifications
         DefaultListModel<String> modsModel = (DefaultListModel<String>) modList
@@ -549,7 +472,5 @@ public class IdentParamsView extends JDialog {
         }
     }
 
-    public void setRun(boolean bRun) {
-        this.bRun = bRun;
-    }
+    
 }
