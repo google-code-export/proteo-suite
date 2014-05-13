@@ -35,7 +35,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
 		identParamsExecute.setVisible(true);
 
 		// Check if we're okay to run identifications..
-		boolean paramsSetOkay = identParamsExecute.getRun();
+		boolean paramsSetOkay = identParamsExecute.hasRunSuccessfully();
 		
 		if (!paramsSetOkay)
 			return;
@@ -49,7 +49,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
 				.getSelectedRows();
 		for (int fileIndex = 0; fileIndex < selectedRawFiles.length; fileIndex++) {
 			
-			Map<String, String> runParams = identParamsExecute.getParams();
+			Map<String, String> runParams = identParamsExecute.getSearchGUIParameterSet();
 
 			// Inject thread setting.
 			runParams.put("-thread", String.valueOf(AnalyseData.MAX_THREADS));

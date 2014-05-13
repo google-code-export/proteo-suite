@@ -22,14 +22,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import org.proteosuite.utils.NumericalUtils;
 
 /**
  *
  * @author SPerkins
  */
 public class ThresholdingPopup extends JDialog {
-	private static final long serialVersionUID = 1L;
-	private JComboBox<String> thresholdingChoice;
+
+    private static final long serialVersionUID = 1L;
+    private JComboBox<String> thresholdingChoice;
     private JComboBox<String> thresholdingOperator;
     private JTextField thresholdingValue;
     private final Map<String, String> thresholdables;
@@ -59,41 +61,40 @@ public class ThresholdingPopup extends JDialog {
         JPanel panel = new JPanel();
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        
+
         JLabel message = new JLabel("Choose a metric on which to apply thresholding:");
         message.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
+
         thresholdingChoice = new JComboBox<>();
         for (Entry<String, String> entry : thresholdables.entrySet()) {
             thresholdingChoice.addItem(entry.getKey());
         }
 
-        thresholdingOperator = new JComboBox<String>(new String[]{">", "<"});
+        thresholdingOperator = new JComboBox<>(new String[]{">", "<"});
 
         JButton thresholdButton = new JButton("Threshold!");
         thresholdButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         thresholdButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                try {
-                    double validatedDouble = Double.parseDouble(thresholdingValue.getText());
+                if (NumericalUtils.isDouble(thresholdingValue.getText())) {
                     setVisible(false);
-                    dispose();                    
-                } catch (NumberFormatException ex) {
+                    dispose();
+                } else {
                     JOptionPane.showConfirmDialog(
-                                    ThresholdingPopup.this,
-                                    "You have entered an invalid number for the thresholding value.\n"
-                                    + "Please enter a valid number to proceed.",
-                                    "Invalid Thresholding Value", JOptionPane.PLAIN_MESSAGE,
-                                    JOptionPane.ERROR_MESSAGE);
-                }                
+                            ThresholdingPopup.this,
+                            "You have entered an invalid number for the thresholding value.\n"
+                            + "Please enter a valid number to proceed.",
+                            "Invalid Thresholding Value", JOptionPane.PLAIN_MESSAGE,
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
         thresholdingValue = new JTextField("0.0");
-        
+
         panel.add(message);
-        
+
         JPanel theGrid = new JPanel();
         theGrid.setLayout(new GridLayout(3, 2));
         JLabel thresholdOnLabel = new JLabel("Threshold On:");
@@ -111,17 +112,17 @@ public class ThresholdingPopup extends JDialog {
 
         return panel;
     }
-    
+
     private JPanel getRow(Component... components) {
-		JPanel row = new JPanel();
-		row.setLayout(new FlowLayout(FlowLayout.LEFT));
+        JPanel row = new JPanel();
+        row.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		for (Component c : components) {
-			row.add(c);
-		}
+        for (Component c : components) {
+            row.add(c);
+        }
 
-		return row;
-	}
+        return row;
+    }
 
     public String[] getThresholdingChosen() {
         return new String[]{thresholdables.get((String) thresholdingChoice.getSelectedItem()), (String) thresholdingOperator.getSelectedItem(), thresholdingValue.getText()};
