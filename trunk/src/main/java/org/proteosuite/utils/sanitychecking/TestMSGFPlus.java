@@ -23,7 +23,7 @@ public class TestMSGFPlus {
 		identParamsExecute.setVisible(true);
 
 		// Check if we're okay to run identifications..
-		boolean paramsSetOkay = identParamsExecute.getRun();
+		boolean paramsSetOkay = identParamsExecute.hasRunSuccessfully();
 
 		int executionDelay = 5;
 
@@ -31,7 +31,7 @@ public class TestMSGFPlus {
 
 			// Create an MSGFPlusWrapper from the view's params.
 			MSGFPlusWrapper msgf = new MSGFPlusWrapper(
-					identParamsExecute.getParams());
+					identParamsExecute.getSearchGUIParameterSet());
 
 			// First get the spectrum file we want to run identifications for in
 			// this run.
