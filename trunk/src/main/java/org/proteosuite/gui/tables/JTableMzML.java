@@ -1,8 +1,6 @@
 package org.proteosuite.gui.tables;
 
 import java.awt.Component;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.JTable;
@@ -24,8 +22,6 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
  */
 public class JTableMzML extends JTableDefault {
 	private static final long serialVersionUID = 1L;
-
-	private static Map<RawMzMLFile, DefaultTableModel> cache = new HashMap<RawMzMLFile, DefaultTableModel>();
 	
 	private DefaultTableModel model;
 
@@ -34,29 +30,20 @@ public class JTableMzML extends JTableDefault {
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	}
 
-	public void showData(RawMzMLFile mzml) {
-		if (cache.containsKey(mzml))
-		{
-			this.model = cache.get(mzml);
-			setModel(model);
-			return;
-		}
-		else
-			cache.put(mzml, model);
-			
+	public void showData(RawMzMLFile mzml, byte msLevelThreshold, double lowIntensityThreshold) {			
 		MzMLUnmarshaller unmarshaller = mzml.getUnmarshaller();
 
 		// Reading spectrum data
 		MzMLObjectIterator<Spectrum> spectrumIterator = unmarshaller
 				.unmarshalCollectionFromXpath("/run/spectrumList/spectrum",
 						Spectrum.class);
-		byte msLevel = 0;
-		float basePeakMZ = 0;
-		float basePeakInt = 0;
-		String unitRT = "";
-		float rt = 0;
 
 		while (spectrumIterator.hasNext()) {
+			byte msLevel = 0;
+			float rt = 0;
+			String unitRT = "";
+			float basePeakMZ = 0;
+			float basePeakInt = 0;
 			// Reading MS data
 			Spectrum spectrum = spectrumIterator.next();
 
@@ -70,6 +57,12 @@ public class JTableMzML extends JTableDefault {
 				if (lCVParam.getAccession().equals("MS:1000505"))
 					basePeakInt = Float.parseFloat(lCVParam.getValue().trim());
 			}
+			
+			if (msLevel != msLevelThreshold)
+				continue;
+			
+			if (basePeakInt < lowIntensityThreshold)
+				continue;
 
 			for (CVParam lCVParam : spectrum.getScanList().getScan().get(0)
 					.getCvParam()) {
@@ -103,27 +96,26 @@ public class JTableMzML extends JTableDefault {
 				model.insertRow(
 						model.getRowCount(),
 						new Object[] {
-								Integer.parseInt(spectrum.getIndex().toString()),
-								spectrum.getId().toString(),
+								spectrum.getIndex(),
+								spectrum.getId(),
 								msLevel,
-								Float.parseFloat(String.format("%.2f",
-										basePeakMZ)),
-								Float.parseFloat(String.format("%.2f",
-										basePeakInt)),
-								Float.parseFloat(String.format("%.2f", rt)),
-								String.format("%.4f", precursMz) });
+								basePeakMZ,
+								basePeakInt,
+								rt,
+								precursMz
+						});
 			} else {
 				model.insertRow(
 						model.getRowCount(),
 						new Object[] {
-								Integer.parseInt(spectrum.getIndex().toString()),
-								spectrum.getId().toString(),
+								spectrum.getIndex().toString(),
+								spectrum.getId(),
 								msLevel,
-								Float.parseFloat(String.format("%.2f",
-										basePeakMZ)),
-								Float.parseFloat(String.format("%.2f",
-										basePeakInt)),
-								Float.parseFloat(String.format("%.2f", rt)), "" });
+								basePeakMZ,
+								basePeakInt,
+								rt,
+								""
+						});
 			}
 			// jtMzML.setDefaultRenderer(Color.class, new
 			// MSLevelRender(true, msLevel));

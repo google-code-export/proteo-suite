@@ -4,8 +4,6 @@ import com.compomics.util.gui.spectrum.ChromatogramPanel;
 
 import java.awt.Dimension;
 
-import org.proteosuite.model.RawMzMLFile;
-
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.Chromatogram;
@@ -20,8 +18,7 @@ public class ChartChromatogram extends AbstractChart {
 	 * @param unmarshaller
 	 * @return
 	 */
-	public static ChromatogramPanel getChromatogram(RawMzMLFile dataFile) {
-		MzMLUnmarshaller unmarshaller = dataFile.getUnmarshaller();
+	public static ChromatogramPanel getChromatogram(MzMLUnmarshaller unmarshaller) {
 		MzMLObjectIterator<Chromatogram> iterator = unmarshaller
 				.unmarshalCollectionFromXpath(
 						"/run/chromatogramList/chromatogram",

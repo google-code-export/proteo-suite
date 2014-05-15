@@ -1,6 +1,5 @@
 package org.proteosuite.gui.listener;
 
-import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
@@ -8,16 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.proteosuite.gui.chart.ChartChromatogram;
-import org.proteosuite.gui.chart.ChartPlot2D;
 import org.proteosuite.gui.inspect.InspectQuant;
 import org.proteosuite.gui.inspect.InspectRaw;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.tables.JTableFeatureQuant;
-import org.proteosuite.gui.tables.JTableMzML;
 import org.proteosuite.gui.tables.JTablePeptideQuant;
 import org.proteosuite.gui.tables.JTableProteinQuant;
 import org.proteosuite.model.AnalyseData;
@@ -85,33 +80,10 @@ public class InspectComboListener implements ItemListener {
 
 		RawMzMLFile dataFile = (RawMzMLFile) inspectModel
 				.getRawDataFile(fileChosen);
-		JTableMzML rawData = new JTableMzML();
-		rawData.showData(dataFile);
 
 		InspectRaw rawPanel = (InspectRaw) InspectTab.getInstance()
 				.getContentPanel();
-
-		JTable jTable = rawPanel.getTablePanel();
-		jTable.removeAll();
-		jTable.setModel(rawData.getModel());
-
-		rawData.getSelectionModel().addListSelectionListener(rawPanel);
-                ChromatogramPanel cachedChromatogram = inspectModel.getCachedChromatogramOrNull(fileChosen);
-                if (cachedChromatogram == null) {
-                    cachedChromatogram = ChartChromatogram.getChromatogram(dataFile);
-                    inspectModel.addCachedChromatogram(fileChosen, cachedChromatogram);
-                }
-                
-		rawPanel.getChartPanel().setChromatogram(
-				cachedChromatogram);
-                
-                JPanel cached2DView = inspectModel.getCached2DViewOrNull(fileChosen);
-                if (cached2DView == null) {
-                    cached2DView = ChartPlot2D.get2DPlot(dataFile);
-                    inspectModel.addCached2DView(fileChosen, cached2DView);
-                }
-                
-		rawPanel.getChartPanel().set2D(cached2DView);
+		rawPanel.setData(dataFile);
 	}
 
 	private void openIdentFile(String fileChosen) {
