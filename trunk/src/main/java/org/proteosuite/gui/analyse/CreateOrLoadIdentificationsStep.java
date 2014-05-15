@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.proteosuite.gui.IdentParamsView;
 import org.proteosuite.gui.listener.ContinueButtonListener;
 import org.proteosuite.gui.listener.CreateIdentificationsForSelectedListener;
@@ -31,6 +33,8 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
     private static final long serialVersionUID = 1L;
     private final CreateOrLoadIdentificationsTable identificationsTable = new CreateOrLoadIdentificationsTable();
     private IdentParamsView identParamsView = null;
+    private final JButton createIdentifications;
+    private final JButton loadIdentifications;
     private final static AnalyseData data = AnalyseData.getInstance();
 
     public CreateOrLoadIdentificationsStep() {
@@ -42,9 +46,9 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
 
         JPanel buttonsPanel = new JPanel(new GridLayout(2, 3));
 
-        JButton loadIdentifications = new JButton(
+        loadIdentifications = new JButton(
                 "Load identifications for selected...");
-        JButton createIdentifications = new JButton(
+        createIdentifications = new JButton(
                 "Create identifications for selected...");
         JButton resetIdentifications = new JButton(
                 "Reset status for selected...");
@@ -108,6 +112,23 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
         for (int i = 0; i < data.getRawDataCount(); i++) {
             RawDataFile dataFile = data.getRawDataFile(i);
             identificationsTable.addRawFileRow(dataFile);
+        }
+        
+        
+        
+        if (data.getGenomeAnnotationMode()) {
+            identificationsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent e) {
+                    if (identificationsTable.getSelectedRows().length > 0) {
+                        identificationsTable.clearSelection();
+                    }
+                }
+            });
+            
+            createIdentifications.setText("Create identifications for all...");
+            loadIdentifications.setText("Load identifications for all...");
+            loadIdentifications.setEnabled(false);
         }
     }
 }

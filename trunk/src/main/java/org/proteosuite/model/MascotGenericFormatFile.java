@@ -9,22 +9,22 @@ package org.proteosuite.model;
 import java.io.File;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingWorker;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
-import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.tasks.TasksTab;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
 import uk.ac.ebi.pride.tools.mgf_parser.MgfFile;
 
 public class MascotGenericFormatFile extends RawDataFile {
-    private MgfFile mgf = null;
+    private MgfFile mgf = null;    
     
     public MascotGenericFormatFile(File file) {
         super(file);
+    }
+    
+    public MascotGenericFormatFile(File file, boolean guiInteraction) {
+        super(file, guiInteraction);        
     }
 
     @Override
@@ -70,6 +70,10 @@ public class MascotGenericFormatFile extends RawDataFile {
                     mgf = get();
                     if (mgf == null) {
                         throw new RuntimeException("MGF file not read in correctly.");
+                    }
+                    
+                    if (!MascotGenericFormatFile.this.guiInteraction) {
+                        return;
                     }
                     
                     RawDataAndMultiplexingStep.getInstance().refreshFromData();

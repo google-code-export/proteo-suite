@@ -15,12 +15,18 @@ public abstract class RawDataFile {
     protected int spectraCount;
     protected boolean[] msLevelPresence = {false, false};
     protected boolean spectraCountChecked;
+    protected boolean guiInteraction = true;
     private Map<String, String> assayConditions = new HashMap<String, String>();
     private IdentDataFile identFile = null;
-    private String identStatus = "<None>";
+    private String identStatus = "<None>";  
     
     public RawDataFile(File file) {
-        this.file = file;        
+        this(file, true);        
+    }
+    
+    public RawDataFile(File file, boolean guiInteraction) {
+        this.guiInteraction = guiInteraction;
+        this.file = file;
         initiateLoading();
     }
     

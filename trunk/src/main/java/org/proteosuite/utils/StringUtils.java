@@ -14,8 +14,13 @@ import javax.swing.ListModel;
  * @author SPerkins
  */
 public class StringUtils {
+    private static final String emptyString = "";
 
     private StringUtils() {
+    }
+    
+    public static String emptyString() {
+        return emptyString;
     }
 
     public static String join(String delimiter, Iterable<String> elements) {
