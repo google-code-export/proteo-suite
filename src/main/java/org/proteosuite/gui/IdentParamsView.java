@@ -421,6 +421,10 @@ public class IdentParamsView extends JDialog {
         return parameterSet;      
     }
     
+    public String getSingleDatabasePath() {
+        return databasePanel.getSingleDatabasePath();
+    }
+    
     public Map<String, String> getOtherGeneModels() {
         return databasePanel.getOtherGeneModels();       
     }

@@ -13,6 +13,8 @@ import javax.swing.SwingWorker;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.tasks.TasksTab;
+import org.proteosuite.utils.FileFormatUtils;
+import org.proteosuite.utils.StringUtils;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 /**
@@ -225,5 +227,17 @@ public class RawMzMLFile extends RawDataFile {
         };
 
         executor.submit(mzMLWorker);
+    }
+    
+    public MascotGenericFormatFile getAsMGF() {
+        if (this.isLoaded()) {
+            String output = this.getAbsoluteFileName().replace("\\.mzML$", ".mgf").replace("\\.mzml$", ".mgf");
+            boolean successfulConversion = FileFormatUtils.mzMLToMGF(unmarshaller, output);
+            if (successfulConversion) {
+                return new MascotGenericFormatFile(new File(output), false);
+            }            
+        }      
+        
+        return null;
     }
 }
