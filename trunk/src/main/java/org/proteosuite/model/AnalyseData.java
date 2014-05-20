@@ -11,11 +11,12 @@ import org.proteosuite.gui.analyse.AnalyseDynamicTab;
  * @author SPerkins
  */
 public class AnalyseData {
-	private ExecutorService msgfExecutor;
-	private ExecutorService executor;
-	private InspectModel inspectModel = new InspectModel();
-	private TasksModel tasksModel = new TasksModel();
-	private List<RawDataFile> rawDataFiles = new ArrayList<RawDataFile>();
+	private ExecutorService searchGUIExecutor;
+	private ExecutorService genericExecutor;
+        private ExecutorService openMSExecutor;
+	private final InspectModel inspectModel = new InspectModel();
+	private final TasksModel tasksModel = new TasksModel();
+	private final List<RawDataFile> rawDataFiles = new ArrayList<>();
 	private String multiplexing = "";
 	private boolean supportGenomeAnnotation = false;
 	public static int MAX_THREADS = computeOptimumThreads();
@@ -24,8 +25,9 @@ public class AnalyseData {
 
 	private AnalyseData() {
 		// Should really calculate most efficient number of threads to use.
-		executor = Executors.newFixedThreadPool(MAX_THREADS);
-		msgfExecutor = Executors.newSingleThreadExecutor();
+		genericExecutor = Executors.newFixedThreadPool((int)Math.floor((double)MAX_THREADS / 2.0) - 1);
+		searchGUIExecutor = Executors.newSingleThreadExecutor();
+                openMSExecutor = Executors.newFixedThreadPool((int)Math.floor((double)MAX_THREADS / 2.0));
 	}
 
 	public static AnalyseData getInstance() {
@@ -36,13 +38,17 @@ public class AnalyseData {
 		return instance;
 	}
 
-	public ExecutorService getExecutor() {
-		return executor;
+	public ExecutorService getGenericExecutor() {
+		return genericExecutor;
 	}
 
-	public ExecutorService getMSGFPlusExecutor() {
-		return msgfExecutor;
+	public ExecutorService getSearchGUIExecutor() {
+		return searchGUIExecutor;
 	}
+        
+        public ExecutorService getOpenMSExecutor() {
+            return openMSExecutor;
+        }
 
 	public InspectModel getInspectModel() {
 		return inspectModel;
@@ -99,10 +105,12 @@ public class AnalyseData {
 		tasksModel.clear();
 		inspectModel.clear();
 		supportGenomeAnnotation = false;
-		msgfExecutor.shutdownNow();
-		msgfExecutor = Executors.newSingleThreadExecutor();
-		executor.shutdownNow();
-		executor = Executors.newFixedThreadPool(MAX_THREADS);
+                openMSExecutor.shutdownNow();
+                openMSExecutor = Executors.newFixedThreadPool((int)Math.floor((double)MAX_THREADS / 2.0));
+		searchGUIExecutor.shutdownNow();
+		searchGUIExecutor = Executors.newSingleThreadExecutor();
+                genericExecutor.shutdownNow();
+                genericExecutor = Executors.newFixedThreadPool((int)Math.floor((double)MAX_THREADS / 2.0) - 1);		
 		AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().reset();
 	}
 

@@ -95,6 +95,6 @@ public class ProteinInferenceHelper {
             }
         };
 
-        AnalyseData.getInstance().getExecutor().submit(worker);
+        AnalyseData.getInstance().getGenericExecutor().submit(worker);
     }
 }

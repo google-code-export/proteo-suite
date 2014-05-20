@@ -25,9 +25,12 @@ public class DatabasePanel extends JPanel {
     private boolean fullMode = false;
     private int otherModelsSize = 0;
     private final JDialog searchDialog;
-    private static final Map<Component, GridBagConstraints> staticStartComponents = new HashMap<>();
+    private static final Map<Component, GridBagConstraints> staticStartComponents = new LinkedHashMap<>();
     private final Map<Component, GridBagConstraints> dynamicComponents = new LinkedHashMap<>();
     private final Map<Component, GridBagConstraints> staticEndComponents = new HashMap<>();
+    private static final String fastATargetsOnlyTooltip = "FastA should contain target proteins only; no decoy proteins.";    
+    private static final String fastaTooltip = "FastA is not mandatory if GFF contains protein sequences.";
+    private static final String gffTooltip = "GFF is always mandatory.";
     
     private JTextField databaseText;
 
@@ -41,11 +44,15 @@ public class DatabasePanel extends JPanel {
         if (this.fullMode) {
             rebuildFullModeInterface();
         } else {
-            add(new JLabel("Database file:"));
+            JLabel databaseLabel = new JLabel("Database file:");
+            databaseLabel.setToolTipText(fastATargetsOnlyTooltip);
+            add(databaseLabel);
             databaseText = new JTextField(50);
+            databaseText.setToolTipText(fastATargetsOnlyTooltip);
             add(databaseText);
 
             JButton databaseButton = new JButton("...");
+            databaseButton.setToolTipText(fastATargetsOnlyTooltip);
             databaseButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent evt) {
@@ -64,50 +71,30 @@ public class DatabasePanel extends JPanel {
             return;
         }
 
-        GridBagConstraints geneModelFastaLabelConstraints = new GridBagConstraints();
-        geneModelFastaLabelConstraints.gridx = 0;
-        geneModelFastaLabelConstraints.gridy = 0;
-        geneModelFastaLabelConstraints.anchor = GridBagConstraints.WEST;
-        JLabel geneModelFastaLabel = new JLabel("Gene Model FastA:");
-        staticStartComponents.put(geneModelFastaLabel, geneModelFastaLabelConstraints);
-
         GridBagConstraints geneModelGffLabelConstraints = new GridBagConstraints();
-        geneModelGffLabelConstraints.gridx = 5;
+        geneModelGffLabelConstraints.gridx = 0;
         geneModelGffLabelConstraints.gridy = 0;
+        geneModelGffLabelConstraints.anchor = GridBagConstraints.WEST;
         JLabel geneModelGffLabel = new JLabel("Gene Model GFF:");
+        geneModelGffLabel.setToolTipText(gffTooltip);
         staticStartComponents.put(geneModelGffLabel, geneModelGffLabelConstraints);
 
-        GridBagConstraints geneModelFastaTextConstraints = new GridBagConstraints();
-        geneModelFastaTextConstraints.gridx = 0;
-        geneModelFastaTextConstraints.gridy = 2;
-        geneModelFastaTextConstraints.gridwidth = 4;
-        final JTextField geneModelFastaTextField = new JTextField(30);
-        staticStartComponents.put(geneModelFastaTextField, geneModelFastaTextConstraints);
-
-        GridBagConstraints geneModelFastaButtonConstraints = new GridBagConstraints();
-        geneModelFastaButtonConstraints.gridx = 4;
-        geneModelFastaButtonConstraints.gridy = 2;
-        geneModelFastaButtonConstraints.gridwidth = 1;
-        geneModelFastaButtonConstraints.gridheight = 2;
-        final JButton geneModelFastaButton = new JButton("...");
-        geneModelFastaButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setDatabaseButtonClicked(geneModelFastaTextField, DatabasePanel.this.searchDialog, true);
-            }
-        });
-        
-        staticStartComponents.put(geneModelFastaButton, geneModelFastaButtonConstraints);
+        GridBagConstraints geneModelFastaLabelConstraints = new GridBagConstraints();
+        geneModelFastaLabelConstraints.gridx = 5;
+        geneModelFastaLabelConstraints.gridy = 0;
+        JLabel geneModelFastaLabel = new JLabel("Gene Model FastA:");
+        geneModelFastaLabel.setToolTipText(fastaTooltip);
+        staticStartComponents.put(geneModelFastaLabel, geneModelFastaLabelConstraints);
 
         GridBagConstraints geneModelGffTextConstraints = new GridBagConstraints();
-        geneModelGffTextConstraints.gridx = 5;
+        geneModelGffTextConstraints.gridx = 0;
         geneModelGffTextConstraints.gridy = 2;
         geneModelGffTextConstraints.gridwidth = 4;
         final JTextField geneModelGffTextField = new JTextField(30);
         staticStartComponents.put(geneModelGffTextField, geneModelGffTextConstraints);
 
         GridBagConstraints geneModelGffButtonConstraints = new GridBagConstraints();
-        geneModelGffButtonConstraints.gridx = 9;
+        geneModelGffButtonConstraints.gridx = 4;
         geneModelGffButtonConstraints.gridy = 2;
         geneModelGffButtonConstraints.gridwidth = 1;
         geneModelGffButtonConstraints.gridheight = 2;
@@ -120,6 +107,30 @@ public class DatabasePanel extends JPanel {
         });
         
         staticStartComponents.put(geneModelGffButton, geneModelGffButtonConstraints);
+
+        GridBagConstraints geneModelFastaTextConstraints = new GridBagConstraints();
+        geneModelFastaTextConstraints.gridx = 5;
+        geneModelFastaTextConstraints.gridy = 2;
+        geneModelFastaTextConstraints.gridwidth = 4;
+        final JTextField geneModelFastaTextField = new JTextField(30);
+        geneModelFastaTextField.setToolTipText(fastATargetsOnlyTooltip);
+        staticStartComponents.put(geneModelFastaTextField, geneModelFastaTextConstraints);
+
+        GridBagConstraints geneModelFastaButtonConstraints = new GridBagConstraints();
+        geneModelFastaButtonConstraints.gridx = 9;
+        geneModelFastaButtonConstraints.gridy = 2;
+        geneModelFastaButtonConstraints.gridwidth = 1;
+        geneModelFastaButtonConstraints.gridheight = 2;
+        final JButton geneModelFastaButton = new JButton("...");
+        geneModelFastaButton.setToolTipText(fastATargetsOnlyTooltip);
+        geneModelFastaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setDatabaseButtonClicked(geneModelFastaTextField, DatabasePanel.this.searchDialog, true);
+            }
+        });
+        
+        staticStartComponents.put(geneModelFastaButton, geneModelFastaButtonConstraints);
     }
 
     private int buildDynamicComponents() {
@@ -131,70 +142,49 @@ public class DatabasePanel extends JPanel {
             return 4;
         }
 
+        GridBagConstraints otherGffLabelConstraints = new GridBagConstraints();
+        otherGffLabelConstraints.gridx = 0;
+        otherGffLabelConstraints.gridy = 4;
+        otherGffLabelConstraints.anchor = GridBagConstraints.WEST;
+        JLabel otherGffLabel = new JLabel("Other GFF:");
+        otherGffLabel.setToolTipText(gffTooltip);
+        dynamicComponents.put(otherGffLabel, otherGffLabelConstraints);
+
         GridBagConstraints otherFastaLabelConstraints = new GridBagConstraints();
-        otherFastaLabelConstraints.gridx = 0;
+        otherFastaLabelConstraints.gridx = 5;
         otherFastaLabelConstraints.gridy = 4;
         otherFastaLabelConstraints.anchor = GridBagConstraints.WEST;
         JLabel otherFastaLabel = new JLabel("Other FastA:");
+        otherFastaLabel.setToolTipText(fastaTooltip);
         dynamicComponents.put(otherFastaLabel, otherFastaLabelConstraints);
-
-        GridBagConstraints otherGffLabelConstraints = new GridBagConstraints();
-        otherGffLabelConstraints.gridx = 5;
-        otherGffLabelConstraints.gridy = 4;
-        JLabel otherGffLabel = new JLabel("Other GFF3:");
-        dynamicComponents.put(otherGffLabel, otherGffLabelConstraints);
 
         int yOffset = 6;
         
         Iterator<Entry<String, String>> iterator = currentModel.entrySet().iterator();
         for (int i = 0; i < otherModelsSize; i++) {
-            String fasta = "", gff = "";
+            String gff = "", fasta = "";
             if (iterator.hasNext()) {
                 Entry<String, String> entry = iterator.next();
-                fasta = entry.getKey();
-                gff = entry.getValue();
+                gff = entry.getKey();
+                fasta = entry.getValue();
             }
             
-            GridBagConstraints otherFastaTextConstraints = new GridBagConstraints();
-            otherFastaTextConstraints.gridx = 0;
-            otherFastaTextConstraints.gridy = yOffset;
-            otherFastaTextConstraints.gridwidth = 4;
-            otherFastaTextConstraints.gridheight = 2;
-            otherFastaTextConstraints.anchor = GridBagConstraints.WEST;
-            final JTextField otherFastaText = new JTextField(30);
-            otherFastaText.setText(fasta);
-            dynamicComponents.put(otherFastaText, otherFastaTextConstraints);
-
-            GridBagConstraints otherFastaButtonConstraints = new GridBagConstraints();
-            otherFastaButtonConstraints.gridx = 4;
-            otherFastaButtonConstraints.gridy = yOffset;
-            otherFastaButtonConstraints.gridwidth = 1;
-            otherFastaButtonConstraints.gridheight = 2;
-            otherFastaButtonConstraints.anchor = GridBagConstraints.WEST;
-            final JButton otherFastaButton = new JButton("...");
-            otherFastaButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    setDatabaseButtonClicked(otherFastaText, DatabasePanel.this.searchDialog, true);
-                }
-            });
-            
-            dynamicComponents.put(otherFastaButton, otherFastaButtonConstraints);
-
-            GridBagConstraints gffTextConstraints = new GridBagConstraints();
-            gffTextConstraints.gridx = 5;
-            gffTextConstraints.gridy = yOffset;
-            gffTextConstraints.gridwidth = 4;
-            gffTextConstraints.gridheight = 2;            
+            GridBagConstraints otherGffTextConstraints = new GridBagConstraints();
+            otherGffTextConstraints.gridx = 0;
+            otherGffTextConstraints.gridy = yOffset;
+            otherGffTextConstraints.gridwidth = 4;
+            otherGffTextConstraints.gridheight = 2;
+            otherGffTextConstraints.anchor = GridBagConstraints.WEST;
             final JTextField otherGffText = new JTextField(30);
             otherGffText.setText(gff);
-            dynamicComponents.put(otherGffText, gffTextConstraints);
+            dynamicComponents.put(otherGffText, otherGffTextConstraints);
 
             GridBagConstraints otherGffButtonConstraints = new GridBagConstraints();
-            otherGffButtonConstraints.gridx = 9;
+            otherGffButtonConstraints.gridx = 4;
             otherGffButtonConstraints.gridy = yOffset;
             otherGffButtonConstraints.gridwidth = 1;
             otherGffButtonConstraints.gridheight = 2;
+            otherGffButtonConstraints.anchor = GridBagConstraints.WEST;
             final JButton otherGffButton = new JButton("...");
             otherGffButton.addActionListener(new ActionListener() {
                 @Override
@@ -204,6 +194,32 @@ public class DatabasePanel extends JPanel {
             });
             
             dynamicComponents.put(otherGffButton, otherGffButtonConstraints);
+
+            GridBagConstraints fastaTextConstraints = new GridBagConstraints();
+            fastaTextConstraints.gridx = 5;
+            fastaTextConstraints.gridy = yOffset;
+            fastaTextConstraints.gridwidth = 4;
+            fastaTextConstraints.gridheight = 2;            
+            final JTextField otherFastaText = new JTextField(30);
+            otherFastaText.setText(fasta);
+            otherFastaText.setToolTipText(fastATargetsOnlyTooltip);
+            dynamicComponents.put(otherFastaText, fastaTextConstraints);
+
+            GridBagConstraints otherFastaButtonConstraints = new GridBagConstraints();
+            otherFastaButtonConstraints.gridx = 9;
+            otherFastaButtonConstraints.gridy = yOffset;
+            otherFastaButtonConstraints.gridwidth = 1;
+            otherFastaButtonConstraints.gridheight = 2;
+            final JButton otherFastaButton = new JButton("...");
+            otherFastaButton.setToolTipText(fastATargetsOnlyTooltip);
+            otherFastaButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    setDatabaseButtonClicked(otherFastaText, DatabasePanel.this.searchDialog, true);
+                }
+            });
+            
+            dynamicComponents.put(otherFastaButton, otherFastaButtonConstraints);
             
             yOffset += 2;
         }
@@ -220,7 +236,7 @@ public class DatabasePanel extends JPanel {
         
         newPairingConstraints.gridy = yOffset;        
         newPairingConstraints.anchor = GridBagConstraints.WEST;       
-        JButton newPairingButton = new JButton("New FastA-GFF Pairing");
+        JButton newPairingButton = new JButton("New GFF-FastA Pairing");
         if (otherModelsSize == 5) {
             newPairingButton.setEnabled(false);
         }
@@ -240,7 +256,7 @@ public class DatabasePanel extends JPanel {
         deletePairingConstraints.gridx = 2;
         deletePairingConstraints.gridy = yOffset;        
         
-        JButton deletePairingButton = new JButton("Delete FastA-GFF Pairing");
+        JButton deletePairingButton = new JButton("Delete GFF-FastA Pairing");
         if (otherModelsSize == 0) {
             deletePairingButton.setEnabled(false);
         }
@@ -273,21 +289,21 @@ public class DatabasePanel extends JPanel {
     private Map<String, String> getCurrentDynamicModel() {
         Map<String, String> currentModel = new LinkedHashMap<>();        
         
-        String fasta = null, gff = null;
-        boolean fastaFound = false;
+        String gff = null, fasta = null;
+        boolean gffFound = false;
         for (Component component : dynamicComponents.keySet()) {
             if (!(component instanceof JTextField)) {
                 continue;
             }
 
             String fieldText = ((JTextField) component).getText();
-            if (!fastaFound) {
-                fasta = fieldText;
-                fastaFound = true;
-            } else {
+            if (!gffFound) {
                 gff = fieldText;
-                currentModel.put(fasta, gff);
-                fastaFound = false;
+                gffFound = true;
+            } else {
+                fasta = fieldText;
+                currentModel.put(gff, fasta);
+                gffFound = false;
             }
         }
 
@@ -305,7 +321,7 @@ public class DatabasePanel extends JPanel {
         for (Entry<String, String> entry : currentGUIModel.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            if (key.isEmpty() || value.isEmpty()) {
+            if (key.isEmpty()) {
                 continue;
             }
             

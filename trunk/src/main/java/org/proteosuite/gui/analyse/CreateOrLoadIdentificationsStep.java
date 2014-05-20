@@ -66,6 +66,7 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
         resetIdentifications
                 .addActionListener(new ResetIdentificationsForSelectedListener(
                                 this));
+
         identificationsTable.getSelectionModel().addListSelectionListener(
                 new TableButtonToggleListener(identificationsTable,
                         loadIdentifications, createIdentifications,
@@ -100,7 +101,7 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
             while (!(parent instanceof JFrame)) {
                 parent = parent.getParent();
             }
-            
+
             identParamsView = new IdentParamsView(
                     (Window) parent, data.getGenomeAnnotationMode());
         }
@@ -108,14 +109,12 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
     }
 
     public synchronized void refreshFromData() {
-        identificationsTable.clear();        
+        identificationsTable.clear();
         for (int i = 0; i < data.getRawDataCount(); i++) {
             RawDataFile dataFile = data.getRawDataFile(i);
             identificationsTable.addRawFileRow(dataFile);
         }
-        
-        
-        
+
         if (data.getGenomeAnnotationMode()) {
             identificationsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
                 @Override
@@ -125,10 +124,11 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
                     }
                 }
             });
-            
+
             createIdentifications.setText("Create identifications for all...");
+            createIdentifications.setEnabled(true);
             loadIdentifications.setText("Load identifications for all...");
-            loadIdentifications.setEnabled(false);
+            
         }
     }
 }

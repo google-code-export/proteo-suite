@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -77,14 +78,11 @@ public class IdentParamsView extends JDialog {
 
     private final JComboBox<String> jcPrecursorToleranceUnits = new JComboBox<>(new String[]{"ppm",
         "Da"});
-    
+
     private final JComboBox<String> jcFragmentToleranceUnits = new JComboBox<>(new String[]{"ppm",
         "Da"});
 
-    private final JComboBox<Integer> jcMaxMissedCleavages = new JComboBox<>(new Integer[]{0, 1, 2, 3, 4, 5,});
-
-    JComboBox<String> jcOutput = new JComboBox<>(new String[]{
-        "Basic scores only", "Additional features"});
+    private final JComboBox<Integer> jcMaxMissedCleavages = new JComboBox<>(new Integer[]{0, 1, 2, 3, 4, 5,});  
 
     private final JList<String> jlstFixedMods = new JList<>(
             new DefaultListModel<String>());
@@ -92,31 +90,28 @@ public class IdentParamsView extends JDialog {
     private final JList<String> jlstUnimods = new JList<>(
             new DefaultListModel<String>());
 
-    private JList<String> jlstVarMods = new JList<>(
+    private final JList<String> jlstVarMods = new JList<>(
             new DefaultListModel<String>());
 
-    private JTextField jtDatabaseFile = new JTextField(50);
-    private JTextField jtErrorRange = new JTextField("0,1");
+    private final JTextField jtDatabaseFile = new JTextField(50);
+    
+    private final JTextField jtPrefix = new JTextField(10);
+    
     private JTextField jtMSTolerance;
     private JTextField jtMSMSTolerance;
     private JComboBox<Integer> jcMinCharge;
-    private JComboBox<Integer> jcMaxCharge;
-    private JTextField jtMaxCharge = new JTextField("3");
-    private JTextField jtMaxPepLen = new JTextField("40");
-    private JTextField jtMinCharge = new JTextField("2");
-    private JTextField jtMinPepLen = new JTextField("6");
-    private JTextField jtRegex = new JTextField("XXX");
-    private JTextField jtSpectraMatches = new JTextField("1");
+    private JComboBox<Integer> jcMaxCharge;    
+ 
     private JComboBox<Character> jcFragmentIonTypesABC;
     private JComboBox<Character> jcFragmentIonTypesXYZ;
     private JCheckBox jcDoProteoGrouper;
-    private JCheckBox jcDoEmPAI; 
+    private JCheckBox jcDoEmPAI;
     private JComboBox<String> jcEnzyme;
-    
+
     private DatabasePanel databasePanel;
 
     public IdentParamsView(Window owner, boolean genomeAnnotationMode) {
-        super(owner, "Set Identifications Parameters", Dialog.ModalityType.APPLICATION_MODAL);        
+        super(owner, "Set Identifications Parameters", Dialog.ModalityType.APPLICATION_MODAL);
 
         this.genomeAnnotationMode = genomeAnnotationMode;
 
@@ -142,19 +137,7 @@ public class IdentParamsView extends JDialog {
         // Getting total available processors for multithreading
         jcMaxMissedCleavages.setSelectedIndex(1);
 
-        
-        jtDatabaseFile.setToolTipText("Enter the path to the database file");
-        jtErrorRange
-                .setToolTipText("Range of allowed isotope peak errors (E.g. 0,1)");
-
-        jtMaxPepLen.setToolTipText("Maximum peptide length to consider");
-        jtMinPepLen.setToolTipText("Minimum peptide length to consider");
-        jtMinCharge
-                .setToolTipText("Minimum precursor charge to consider if charges are not specified in the spectrum file");
-        jtMaxCharge
-                .setToolTipText("Maximum precursor charge to consider if charges are not specified in the spectrum file");
-        jtSpectraMatches
-                .setToolTipText("Number of matches per spectrum to be reported");
+        jtDatabaseFile.setToolTipText("Enter the path to the database file");        
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -186,13 +169,13 @@ public class IdentParamsView extends JDialog {
     }
 
     private Component createInterface() {
-        JPanel content = new JPanel();        
+        JPanel content = new JPanel();
 
         JButton run = new JButton("Run");
 
         run.setVisible(true);
 
-        final JCheckBox jchbSearchDecoy = new JCheckBox("Search Decoy");
+        
 
         setMaximumSize(new Dimension(792, 648));
         setMinimumSize(new Dimension(792, 648));
@@ -201,15 +184,14 @@ public class IdentParamsView extends JDialog {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 jbRunActionPerformed(jtDatabaseFile.getText(),
-                        jlstFixedMods.getModel(), jlstVarMods.getModel(),                        
-                        jcMaxMissedCleavages.getSelectedIndex(),
-                        jchbSearchDecoy.isSelected());
+                        jlstFixedMods.getModel(), jlstVarMods.getModel(),
+                        jcMaxMissedCleavages.getSelectedIndex());
             }
         });
 
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.add(getDatabasePanel());
-        content.add(getParametersPanel(jchbSearchDecoy));
+        content.add(getParametersPanel());
         content.add(getModificationsPanel());
         content.add(getRow(run));
 
@@ -308,13 +290,13 @@ public class IdentParamsView extends JDialog {
         return panel;
     }
 
-    private JPanel getParametersPanel(JCheckBox jchbSearchDecoy) {
+    private JPanel getParametersPanel() {
 
         JPanel jPanel = new JPanel();
         jPanel.setBorder(BorderFactory.createTitledBorder("Parameters:"));
 
         jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
-        
+
         this.jcEnzyme = new JComboBox<>(new String[]{
             "Arg-C", "Arg-N", "Asp-N (DE)", "Asp-N + Glu-C",
             "CNBr", "Chymotrypsin (FYWL)", "Chymotrypsin, no P rule (FYWL)", "Formic Acid", "Glu-C",
@@ -323,30 +305,29 @@ public class IdentParamsView extends JDialog {
             "Top-Down", "Trypsin", "Trypsin + CNBr", "Trypsin + Chymotrypsin (FYWLKR)", "Trypsin, no P rule",
             "Whole Protein"});
         jcEnzyme.setSelectedIndex(20);
-        
+
         this.jcFragmentIonTypesXYZ = new JComboBox<>(new Character[]{'x', 'y', 'z'});
         this.jcFragmentIonTypesXYZ.setSelectedIndex(1);
         this.jcFragmentIonTypesABC = new JComboBox<>(new Character[]{'a', 'b', 'c'});
         this.jcFragmentIonTypesABC.setSelectedIndex(1);
-        this.jtMSMSTolerance = new JTextField("0.5");
+        this.jtMSMSTolerance = new JTextField("5");
         this.jtMSTolerance = new JTextField("10");
         this.jcMinCharge = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
         this.jcMinCharge.setSelectedIndex(1);
         this.jcMaxCharge = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
         this.jcMaxCharge.setSelectedIndex(3);
-        this.jcDoProteoGrouper = new JCheckBox();
-        this.jcDoEmPAI = new JCheckBox();
+        this.jcDoProteoGrouper = new JCheckBox("Group Proteins?");
+        this.jcDoEmPAI = new JCheckBox("Calculate emPAI?");
         jtMSTolerance
                 .setToolTipText("Precursor Mass Tolerance (E.g. +/- 2.5Da, +/- 20ppm)");
-        
 
         // Tolerances
-        jPanel.add(getRow(new JLabel("<html>Precursor MS tolerance &plusmn;</html>"), jtMSTolerance, jcPrecursorToleranceUnits, jchbSearchDecoy));
-        
+        jPanel.add(getRow(new JLabel("<html>Precursor MS tolerance &plusmn;</html>"), jtMSTolerance, jcPrecursorToleranceUnits));
+
         jPanel.add(getRow(new JLabel("<html>Fragment MS/MS tolerance &plusmn;</html>"),
                 jtMSMSTolerance, jcFragmentToleranceUnits));
-        
-        jPanel.add(getRow(new JLabel("Fragment Ion Types:"), jcFragmentIonTypesABC, jcFragmentIonTypesXYZ));       
+
+        jPanel.add(getRow(new JLabel("Fragment Ion Types:"), jcFragmentIonTypesABC, jcFragmentIonTypesXYZ));
 
         // Enzyme
         jPanel.add(getRow(new JLabel("Enzyme:"), jcEnzyme, new JLabel("Maximum missed cleavages:"),
@@ -354,8 +335,10 @@ public class IdentParamsView extends JDialog {
 
         jPanel.add(getRow(new JLabel("Precursor Charge Range:"), jcMinCharge, new JLabel("-"), jcMaxCharge));
         
+        jPanel.add(getRow(new JLabel("Output File Prefix:"), jtPrefix));
+
         if (!this.genomeAnnotationMode) {
-            jPanel.add(getRow(new JLabel("Group Proteins?"), jcDoProteoGrouper, new JLabel("Calculate emPAI?"), jcDoEmPAI));
+            jPanel.add(getRow(jcDoProteoGrouper, jcDoEmPAI));
         }
 
         return jPanel;
@@ -388,8 +371,8 @@ public class IdentParamsView extends JDialog {
 
     private void jbRunActionPerformed(String databaseFile,
             ListModel<String> fixedModsModel, ListModel<String> varModsModel,
-            int maxMissedCleavages, boolean searchDecoy) {
-        
+            int maxMissedCleavages) {
+
         // Validate entries
         Set<String> validationErrors = validateFields();
         if (validationErrors.size() > 0) {
@@ -403,65 +386,92 @@ public class IdentParamsView extends JDialog {
         dispose();
     }
     
+    public String getOutputFilePrefix() {
+        return jtPrefix.getText();
+    }
+
     public Map<String, String> getSearchGUIParameterSet() {
         Map<String, String> parameterSet = new HashMap<>();
-        parameterSet.put("prec_ppm", ((String)jcPrecursorToleranceUnits.getSelectedItem()).equals("ppm") ? "1" : "2");
+        parameterSet.put("prec_ppm", ((String) jcPrecursorToleranceUnits.getSelectedItem()).equals("ppm") ? "1" : "2");
         parameterSet.put("prec_tol", jtMSTolerance.getText());
-        parameterSet.put("frag_ppm", ((String)jcFragmentToleranceUnits.getSelectedItem()).equals("ppm") ? "1" : "2");
+        parameterSet.put("frag_ppm", ((String) jcFragmentToleranceUnits.getSelectedItem()).equals("ppm") ? "1" : "2");
         parameterSet.put("frag_tol", jtMSTolerance.getText());
-        parameterSet.put("enzyme", (String)jcEnzyme.getSelectedItem());
-        parameterSet.put("min_charge", (String)jcMinCharge.getSelectedItem());
-        parameterSet.put("max_charge", (String)jcMaxCharge.getSelectedItem());
-        parameterSet.put("mc", (String)jcMaxMissedCleavages.getSelectedItem());
-        parameterSet.put("fi", (String)jcFragmentIonTypesABC.getSelectedItem());
-        parameterSet.put("ri", (String)jcFragmentIonTypesXYZ.getSelectedItem());        
+        parameterSet.put("enzyme", (String) jcEnzyme.getSelectedItem());
+        parameterSet.put("min_charge", String.valueOf((Integer)jcMinCharge.getSelectedItem()));
+        parameterSet.put("max_charge", String.valueOf((Integer)jcMaxCharge.getSelectedItem()));
+        parameterSet.put("mc", (String) String.valueOf((Integer)jcMaxMissedCleavages.getSelectedItem()));
+        parameterSet.put("fi", String.valueOf(jcFragmentIonTypesABC.getSelectedItem()));
+        parameterSet.put("ri", String.valueOf(jcFragmentIonTypesXYZ.getSelectedItem()));
         parameterSet.put("fixed_mods", StringUtils.join(", ", jlstFixedMods.getModel()));
         parameterSet.put("variable_mods", StringUtils.join(", ", jlstVarMods.getModel()));
-        
-        return parameterSet;      
+
+        return parameterSet;
     }
-    
+
     public String getSingleDatabasePath() {
         return databasePanel.getSingleDatabasePath();
     }
-    
+
     public Map<String, String> getOtherGeneModels() {
-        return databasePanel.getOtherGeneModels();       
+        return databasePanel.getOtherGeneModels();
     }
-    
+
     public String[] getGeneModel() {
         return databasePanel.getGeneModel();
     }
-    
+
     public boolean isRequestingProteoGrouper() {
         return jcDoProteoGrouper.isSelected();
     }
-    
+
     public boolean isRequestingEmPAI() {
         return jcDoEmPAI.isSelected();
     }
 
     private Set<String> validateFields() {
         Set<String> validationErrors = new HashSet<>();
-        if (jtDatabaseFile.getText().isEmpty() || (!jtDatabaseFile.getText().toUpperCase().endsWith(".FASTA"))) {
-            validationErrors.add("FastA file has not been correctly set. Please amend.");
+
+        if (this.genomeAnnotationMode) {
+            String[] geneModels = this.getGeneModel();
+            if (geneModels[0] == null || geneModels[0].isEmpty()) {
+                validationErrors.add("GFF file is mandatory. FastA is optional. Please amend.");
+            } else {
+                if (!geneModels[0].toUpperCase().endsWith(".GFF")) {
+                    validationErrors.add("GFF file has not been correctly set. Please amend.");
+                }
+                
+                if (geneModels[1] != null && !geneModels[1].isEmpty() && !geneModels[1].toUpperCase().endsWith(".FASTA")) {
+                    validationErrors.add("FastA file has not been correctly set. Please amend.");
+                }
+            }
+            
+            Map<String, String> otherModels = this.getOtherGeneModels();
+            for (Entry<String, String> otherModel : otherModels.entrySet()) {
+                if (otherModel.getKey() == null || otherModel.getKey().isEmpty()) {
+                    validationErrors.add("GFF file is mandatory for other gene models. FastA is optional. Please amend.");
+                }
+            }
+        } else {
+            if (jtDatabaseFile.getText().isEmpty() || (!jtDatabaseFile.getText().toUpperCase().endsWith(".FASTA"))) {
+                validationErrors.add("FastA file has not been correctly set. Please amend.");
+            }
         }
-        
+
         if (!NumericalUtils.isDouble(jtMSTolerance.getText())) {
             validationErrors.add("Precursor MS tolerance is not a valid number. Please amend.");
         }
-        
+
         if (!NumericalUtils.isDouble(jtMSMSTolerance.getText())) {
             validationErrors.add("Fragment MS/MS tolerance is not a valid number. Please amend.");
         }
-        
-        if ((Integer)jcMinCharge.getSelectedItem() > (Integer)jcMaxCharge.getSelectedItem()) {
+
+        if ((Integer) jcMinCharge.getSelectedItem() > (Integer) jcMaxCharge.getSelectedItem()) {
             validationErrors.add("Minimum charge is higher than maximum charge. Please amend.");
         }
-        
+
         return validationErrors;
     }
-    
+
     private void removeMods(JList<String> modList) {
         // Remove Modifications
         DefaultListModel<String> modsModel = (DefaultListModel<String>) modList
@@ -476,5 +486,4 @@ public class IdentParamsView extends JDialog {
         }
     }
 
-    
 }

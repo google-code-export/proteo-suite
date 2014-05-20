@@ -15,12 +15,17 @@ import javax.swing.ListModel;
  */
 public class StringUtils {
     private static final String emptyString = "";
+    private static final String space = " ";
 
     private StringUtils() {
     }
     
     public static String emptyString() {
         return emptyString;
+    }
+    
+    public static String space() {
+        return space;
     }
 
     public static String join(String delimiter, Iterable<String> elements) {
@@ -48,6 +53,6 @@ public class StringUtils {
             }
         }        
         
-        return "";
+        return builder.toString();
     }
 }

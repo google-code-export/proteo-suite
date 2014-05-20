@@ -44,7 +44,7 @@ public class XTrackerITRAQWrapper {
 
     public XTrackerITRAQWrapper(List<RawDataFile> rawData) {
         this.rawData = rawData;
-        executor = AnalyseData.getInstance().getExecutor();
+        executor = AnalyseData.getInstance().getGenericExecutor();
         fourPlex = !AnalyseData.getInstance().getMultiplexing().equals("iTRAQ 8-plex");
     }
 

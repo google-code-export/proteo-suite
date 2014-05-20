@@ -40,7 +40,7 @@ public class XTrackerTMTWrapper {
 
     public XTrackerTMTWrapper(List<RawDataFile> rawData) {
         this.rawData = rawData;
-        executor = AnalyseData.getInstance().getExecutor();
+        executor = AnalyseData.getInstance().getGenericExecutor();
         plex = AnalyseData.getInstance().getMultiplexing();
     }
 

@@ -92,6 +92,6 @@ public class PerformThresholdingForSelectedListener implements ActionListener {
             }        
         };
         
-        data.getExecutor().submit(thresholdWorker); 
+        data.getGenericExecutor().submit(thresholdWorker); 
     }
 }

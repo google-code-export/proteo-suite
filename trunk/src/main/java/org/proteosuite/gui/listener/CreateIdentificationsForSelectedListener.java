@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.swing.JOptionPane;
 import org.proteosuite.gui.IdentParamsView;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
@@ -53,13 +54,26 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
                 rawDataFiles.add((MascotGenericFormatFile) data.getRawDataFile(i));
             }
             
+            if (rawDataFiles.size() > 1) {
+                JOptionPane
+                        .showConfirmDialog(
+                                step,
+                                "You have selected more than one MGF file for analysis.\n"
+                                + "Your MGF files will be  merged.\n"
+                                + "This is because the pipeline currently only supports a single MGF file for analysis.\n",
+                                "Mutiple MGF Files : Merge Warning", JOptionPane.PLAIN_MESSAGE,
+                                JOptionPane.INFORMATION_MESSAGE);
+            }
+            
             SearchGuiViaMzidLibWrapper wrapper = new SearchGuiViaMzidLibWrapper(
                         rawDataFiles,
                         identDialog.getGeneModel(),
                         identDialog.getOtherGeneModels(),
-                        runParams);
+                        runParams,
+            identDialog.getOutputFilePrefix());
             
-            wrapper.compute();
+            wrapper.printDebugInfo();
+            //wrapper.compute();
         } else {
             // Get the selected raw files from the table to know which ones to run
             // ident for.

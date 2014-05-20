@@ -87,8 +87,7 @@ public class MSGFPlusWrapper extends SearchEngineBase implements SearchEngine {
     }
 
     public void performSearch(final int executionDelay) {
-        ExecutorService executor = AnalyseData.getInstance()
-                .getMSGFPlusExecutor();
+        ExecutorService executor = AnalyseData.getInstance().getSearchGUIExecutor();
 
         AnalyseData
                 .getInstance()

@@ -33,7 +33,7 @@ public class MzQuantMLFile extends QuantDataFile {
         AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Load Quantitation Data"));
         TasksTab.getInstance().refreshFromTasksModel();
         
-        ExecutorService executor = AnalyseData.getInstance().getExecutor();
+        ExecutorService executor = AnalyseData.getInstance().getGenericExecutor();
         
         SwingWorker<MzQuantMLUnmarshaller, Void> mzMLWorker = new SwingWorker<MzQuantMLUnmarshaller, Void>() {
             @Override
