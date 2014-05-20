@@ -5,36 +5,43 @@ import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.proteosuite.model.AnalyseData;
 
 public class TableButtonToggleListener implements ListSelectionListener {
-	private final JTable table;
-	private final JButton[] toggleButtons;
-	
 
-	public TableButtonToggleListener(JTable table, JButton... toggleButtons) {
-		this.table = table;
-		this.toggleButtons = toggleButtons;
-	}
+    private final JTable table;
+    private final JButton[] toggleButtons;
 
-	@Override
-	public void valueChanged(ListSelectionEvent e) {
-		if (e.getValueIsAdjusting())
-			return;
+    public TableButtonToggleListener(JTable table, JButton... toggleButtons) {
+        this.table = table;
+        this.toggleButtons = toggleButtons;
+    }
 
-		DefaultListSelectionModel model = (DefaultListSelectionModel) e
-				.getSource();
-		
-		boolean state = true;
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        if (AnalyseData.getInstance().getGenomeAnnotationMode()) {
+            return;
+        }
+        
+        if (e.getValueIsAdjusting()) {
+            return;
+        }
 
-		if (model.getAnchorSelectionIndex() == -1)
-			state = false;
+        DefaultListSelectionModel model = (DefaultListSelectionModel) e
+                .getSource();
 
-		if (table.getRowCount() == 0)
-			state  = false;
-		
-		for (JButton button : toggleButtons)
-		{
-			button.setEnabled(state);
-		}
-	}
+        boolean state = true;
+
+        if (model.getAnchorSelectionIndex() == -1) {
+            state = false;
+        }
+
+        if (table.getRowCount() == 0) {
+            state = false;
+        }
+
+        for (JButton button : toggleButtons) {
+            button.setEnabled(state);
+        }
+    }
 }

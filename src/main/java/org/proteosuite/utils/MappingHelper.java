@@ -76,6 +76,6 @@ public class MappingHelper {
             }
         };
 
-        AnalyseData.getInstance().getExecutor().submit(worker);
+        AnalyseData.getInstance().getGenericExecutor().submit(worker);
     }
 }

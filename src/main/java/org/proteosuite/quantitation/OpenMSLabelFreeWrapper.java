@@ -80,7 +80,7 @@ public class OpenMSLabelFreeWrapper {
 			}
 		}
 
-		this.executor = AnalyseData.getInstance().getExecutor();
+		this.executor = AnalyseData.getInstance().getOpenMSExecutor();
 		this.rawDataFiles = rawDataFiles;
 		featureFinderCentroidedLatch = new CountDownLatch(rawDataFiles.size());
 		mapAlignerPoseClusteringLatch = new CountDownLatch(1);

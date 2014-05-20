@@ -189,7 +189,7 @@ public class RawMzMLFile extends RawDataFile {
                 .set(new Task(file.getName(), "Load Raw Data"));
         TasksTab.getInstance().refreshFromTasksModel();
 
-        ExecutorService executor = AnalyseData.getInstance().getExecutor();
+        ExecutorService executor = AnalyseData.getInstance().getGenericExecutor();
         SwingWorker<MzMLUnmarshaller, Void> mzMLWorker = new SwingWorker<MzMLUnmarshaller, Void>() {
             @Override
             protected MzMLUnmarshaller doInBackground() {

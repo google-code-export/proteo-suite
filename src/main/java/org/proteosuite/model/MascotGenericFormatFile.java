@@ -50,7 +50,7 @@ public class MascotGenericFormatFile extends RawDataFile {
 
     @Override
     protected void initiateLoading() {
-        ExecutorService executor = AnalyseData.getInstance().getExecutor();
+        ExecutorService executor = AnalyseData.getInstance().getGenericExecutor();
         
         SwingWorker<MgfFile, Void> mgfWorker = new SwingWorker<MgfFile, Void>() {
             @Override

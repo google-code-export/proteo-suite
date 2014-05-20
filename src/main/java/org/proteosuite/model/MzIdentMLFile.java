@@ -153,7 +153,7 @@ public class MzIdentMLFile extends IdentDataFile {
             }
         };
 
-        AnalyseData.getInstance().getExecutor().submit(worker);
+        AnalyseData.getInstance().getGenericExecutor().submit(worker);
     }
 
     @Override
@@ -164,7 +164,7 @@ public class MzIdentMLFile extends IdentDataFile {
         MzIdentMLFile.this.getParent().setIdentStatus("Loading...");
         ((CreateOrLoadIdentificationsStep) (AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)).refreshFromData();
 
-        ExecutorService executor = AnalyseData.getInstance().getExecutor();
+        ExecutorService executor = AnalyseData.getInstance().getGenericExecutor();
         SwingWorker<MzIdentMLUnmarshaller, Void> mzIdentMLWorker = new SwingWorker<MzIdentMLUnmarshaller, Void>() {
             @Override
             protected MzIdentMLUnmarshaller doInBackground() {

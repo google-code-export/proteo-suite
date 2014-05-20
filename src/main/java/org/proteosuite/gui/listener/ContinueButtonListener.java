@@ -148,6 +148,7 @@ public class ContinueButtonListener implements ActionListener {
                                 panel,
                                 "You have not chosen to do a genome annotation run, but your raw data contains MGF files.\n"
                                 + "ProteoSuite does not currently support MGF files when not doing genome annotation.\n"
+                                + "We currently only support mzML.\n"
                                 + "This may change at a later date.\n"
                                 + "Please remove the MGF data to continue to the next stage.",
                                 "MGF Data Present", JOptionPane.PLAIN_MESSAGE,

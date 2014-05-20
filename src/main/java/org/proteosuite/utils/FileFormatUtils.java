@@ -1,11 +1,18 @@
 package org.proteosuite.utils;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
+import org.proteosuite.model.MascotGenericFormatFile;
 import org.proteosuite.model.RawMzMLFile;
 import static org.proteosuite.utils.StringUtils.emptyString;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
@@ -21,6 +28,46 @@ public class FileFormatUtils {
     
     public static boolean mzMLToMGF(RawMzMLFile input, String output) {
         return mzMLToMGF(input.getUnmarshaller(), output);
+    }
+    
+    public static MascotGenericFormatFile merge(Set<MascotGenericFormatFile> setToMerge) {
+        Set<String> setToMergeAsStrings = new HashSet<>();
+        String outputFile = null;
+        for (MascotGenericFormatFile file : setToMerge) {
+            setToMergeAsStrings.add(file.getAbsoluteFileName());
+            if (outputFile == null) {
+                outputFile = file.getAbsoluteFileName().replaceFirst(".mgf", "_merge.mgf");
+            }
+        }       
+        
+        if (mergeMGF(setToMergeAsStrings, outputFile)) {
+            return new MascotGenericFormatFile(new File(outputFile), false);
+        }
+        
+        return null;
+    }
+    
+    public static boolean mergeMGF(Set<String> setToMerge, String outputPath) {
+        try {
+            final BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
+            for (String mgfFile : setToMerge) {
+                final BufferedReader reader = new BufferedReader(new FileReader(mgfFile));
+                String line = null;
+                while ((line = reader.readLine()) != null) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+                
+                reader.close();
+            }
+            
+            writer.close();
+        } catch (IOException ex) {
+            System.out.println("Exception merging MGF files.");
+            return false;
+        }
+        
+        return true;
     }
     
     public static boolean mzMLToMGF(MzMLUnmarshaller input, String output) {

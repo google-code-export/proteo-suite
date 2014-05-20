@@ -31,7 +31,7 @@ public class ITRAQStep extends JPanel {
 				"Your identifications will be automatically created and/or loaded in the background.\n"
 						+ "Additionally your raw data files are (or have) been loaded for inspection in the Inspect tab. This tab will"
 						+ " also become populated with quantitation data after you click confirm below.\n\n"
-						+ "Identifications created in Proteosuite are provided by MSGF+.\n"
+						+ "Identifications created in Proteosuite are provided by SearchGUI (through mzidentml-lib).\n"
 						+ "iTRAQ quantitation is provided by xTracker.");
 		mainText.setEditable(false);
 		mainText.setLineWrap(true);
