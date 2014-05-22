@@ -17,7 +17,6 @@ import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
 import uk.ac.ebi.jmzidml.model.mzidml.DBSequence;
 import uk.ac.ebi.jmzidml.model.mzidml.ProteinAmbiguityGroup;
 import uk.ac.ebi.jmzidml.model.mzidml.ProteinDetectionHypothesis;
-import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.util.IdViewerUtils;
 
@@ -29,22 +28,19 @@ public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
 	private final JTable proteinAmbiguityGroupTable;
 	private final JTable spectrumIdentificationItemProteinViewTable;
 	private final JTable proteinDetectionHypothesisTable;
-	private final MzIdentMLUnmarshaller mzIdentMLUnmarshaller;
 
 	public proteinAmbiguityGroupTableMouseClicked(
 			ProteoIDViewer proteoIDViewer, JTextPane jProteinSequenceTextPane,
 			JLabel jScientificNameValueLabel,
 			JTable proteinAmbiguityGroupTable,
 			JTable spectrumIdentificationItemProteinViewTable,
-			JTable proteinDetectionHypothesisTable,
-			MzIdentMLUnmarshaller mzIdentMLUnmarshaller) {
+			JTable proteinDetectionHypothesisTable) {
 		this.proteoIDViewer = proteoIDViewer;
 		this.jProteinSequenceTextPane = jProteinSequenceTextPane;
 		this.jScientificNameValueLabel = jScientificNameValueLabel;
 		this.proteinAmbiguityGroupTable = proteinAmbiguityGroupTable;
 		this.spectrumIdentificationItemProteinViewTable = spectrumIdentificationItemProteinViewTable;
 		this.proteinDetectionHypothesisTable = proteinDetectionHypothesisTable;
-		this.mzIdentMLUnmarshaller = mzIdentMLUnmarshaller;
 	}
 
 	@Override
@@ -64,7 +60,7 @@ public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
 				String pag_id = (String) proteinAmbiguityGroupTable.getModel()
 						.getValueAt(row, 0);
 
-				ProteinAmbiguityGroup proteinAmbiguityGroup = mzIdentMLUnmarshaller
+				ProteinAmbiguityGroup proteinAmbiguityGroup = proteoIDViewer.mzIdentMLUnmarshaller
 						.unmarshal(ProteinAmbiguityGroup.class, pag_id);
 
 				List<ProteinDetectionHypothesis> proteinDetectionHypothesisList = proteinAmbiguityGroup
@@ -74,7 +70,7 @@ public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
 
 						ProteinDetectionHypothesis proteinDetectionHypothesis = proteinDetectionHypothesisList
 								.get(i);
-						DBSequence dBSequence = mzIdentMLUnmarshaller
+						DBSequence dBSequence = proteoIDViewer.mzIdentMLUnmarshaller
 								.unmarshal(DBSequence.class,
 										proteinDetectionHypothesis
 												.getDBSequenceRef());
