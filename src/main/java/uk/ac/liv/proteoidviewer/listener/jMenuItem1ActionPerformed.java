@@ -12,21 +12,22 @@ import uk.ac.liv.mzidlib.MzIdentMLToCSV;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.util.CsvFileFilter;
 
-public class jMenuItem3ActionPerformed implements ActionListener {
+public class jMenuItem1ActionPerformed implements ActionListener {
 
 	private final ProteoIDViewer proteoIDViewer;
 
-	public jMenuItem3ActionPerformed(ProteoIDViewer proteoIDViewer) {
+	public jMenuItem1ActionPerformed(ProteoIDViewer proteoIDViewer) {
 		this.proteoIDViewer = proteoIDViewer;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+
 		MzIdentMLToCSV mzidToCsv = new MzIdentMLToCSV();
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new CsvFileFilter());
 		chooser.setMultiSelectionEnabled(false);
-		chooser.setDialogTitle("Export PSMs");
+		chooser.setDialogTitle("Export Proteins Only");
 
 		File selectedFile;
 
@@ -50,7 +51,7 @@ public class jMenuItem3ActionPerformed implements ActionListener {
 					chooser = new JFileChooser();
 					chooser.setFileFilter(new CsvFileFilter());
 					chooser.setMultiSelectionEnabled(false);
-					chooser.setDialogTitle("Export PSMs");
+					chooser.setDialogTitle("Export Proteins Only");
 
 					returnVal = chooser.showSaveDialog(proteoIDViewer);
 
@@ -86,7 +87,7 @@ public class jMenuItem3ActionPerformed implements ActionListener {
 				}
 
 				mzidToCsv.useMzIdentMLToCSV(proteoIDViewer.mzIdentMLUnmarshaller,
-						selectedFile.getPath(), "exportPSMs", false);
+						selectedFile.getPath(), "exportProteinsOnly", false);
 
 			} catch (Exception ex) {
 				JOptionPane
@@ -98,7 +99,6 @@ public class jMenuItem3ActionPerformed implements ActionListener {
 
 			proteoIDViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
-		
 	}
 
 }

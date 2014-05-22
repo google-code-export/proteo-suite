@@ -73,7 +73,7 @@ public class PerformThresholdingForSelectedListener implements ActionListener {
         SwingWorker<Void, Void> thresholdWorker = new SwingWorker<Void, Void>() {
 
             @Override
-            protected Void doInBackground() {                
+            protected Void doInBackground() {  
                 new ThresholdMzid(identData.getAbsoluteFileName(), outputPath, true, thresholdToPerform[0], Double.parseDouble(thresholdToPerform[2]), thresholdToPerform.equals("<"), false);
                 return null;
             }

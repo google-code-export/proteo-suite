@@ -27,23 +27,21 @@ import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationList;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationProtocol;
 import uk.ac.ebi.jmzidml.model.mzidml.Tolerance;
-import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.util.ProgressBarDialog;
 
 public class mainTabbedPaneMouseClicked implements MouseListener {
 
 	private final JTabbedPane mainTabbedPane;
-	private final MzIdentMLUnmarshaller mzIdentMLUnmarshaller;
 	private final ProteoIDViewer proteoIDViewer;
 	private final JComboBox<String> siiComboBox;
 	private final List<SpectrumIdentificationItem> sIIListPassThreshold;
 	private final JTextPane protocalTextPane;
 
-	public mainTabbedPaneMouseClicked(ProteoIDViewer proteoIDViewer, JTabbedPane mainTabbedPane, MzIdentMLUnmarshaller mzIdentMLUnmarshaller, JComboBox<String> siiComboBox, List<SpectrumIdentificationItem>  sIIListPassThreshold, JTextPane protocalTextPane) {
+	public mainTabbedPaneMouseClicked(ProteoIDViewer proteoIDViewer, JTabbedPane mainTabbedPane, JComboBox<String> siiComboBox, 
+			List<SpectrumIdentificationItem>  sIIListPassThreshold, JTextPane protocalTextPane) {
 		this.proteoIDViewer = proteoIDViewer;
 		this.mainTabbedPane = mainTabbedPane;
-		this.mzIdentMLUnmarshaller = mzIdentMLUnmarshaller;
 		this.siiComboBox = siiComboBox;
 		this.sIIListPassThreshold = sIIListPassThreshold;
 		this.protocalTextPane = protocalTextPane;
@@ -54,7 +52,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 		// compare which tab is selected & boolean
 
 		if (mainTabbedPane.getSelectedIndex() == 1 && !proteoIDViewer.secondTab
-				&& mzIdentMLUnmarshaller != null) {
+				&& proteoIDViewer.mzIdentMLUnmarshaller != null) {
 			ProgressBarDialog progressBarDialog = new ProgressBarDialog(proteoIDViewer,
 					true);
 			final Thread thread = new Thread(new Runnable() {
@@ -81,7 +79,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 		}
 
 		if (mainTabbedPane.getSelectedIndex() == 2 && !proteoIDViewer.thirdTab
-				&& mzIdentMLUnmarshaller != null) {
+				&& proteoIDViewer.mzIdentMLUnmarshaller != null) {
 
 			ProgressBarDialog progressBarDialog = new ProgressBarDialog(proteoIDViewer,
 					true);
@@ -110,7 +108,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 		}
 
 		if (mainTabbedPane.getSelectedIndex() == 3 && !proteoIDViewer.fourthTab
-				&& mzIdentMLUnmarshaller != null) {
+				&& proteoIDViewer.mzIdentMLUnmarshaller != null) {
 			ProgressBarDialog progressBarDialog = new ProgressBarDialog(proteoIDViewer,
 					true);
 			final Thread thread = new Thread(new Runnable() {
@@ -138,7 +136,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 		}
 
 		if (mainTabbedPane.getSelectedIndex() == 4 && !proteoIDViewer.fifthTab
-				&& mzIdentMLUnmarshaller != null) {
+				&& proteoIDViewer.mzIdentMLUnmarshaller != null) {
 			ProgressBarDialog progressBarDialog = new ProgressBarDialog(proteoIDViewer,
 					true);
 			final Thread thread = new Thread(new Runnable() {
@@ -166,7 +164,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 		}
 
 		if (mainTabbedPane.getSelectedIndex() == 5 && !proteoIDViewer.sixthTab
-				&& mzIdentMLUnmarshaller != null) {
+				&& proteoIDViewer.mzIdentMLUnmarshaller != null) {
 			ProgressBarDialog progressBarDialog = new ProgressBarDialog(proteoIDViewer,
 					true);
 			final Thread thread = new Thread(new Runnable() {
@@ -196,7 +194,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 	}
 
 	private void loadSummaryStats() {
-		Iterator<SpectrumIdentificationList> iterspectrumIdentificationList = mzIdentMLUnmarshaller.unmarshalCollectionFromXpath(MzIdentMLElement.SpectrumIdentificationList);
+		Iterator<SpectrumIdentificationList> iterspectrumIdentificationList = proteoIDViewer.mzIdentMLUnmarshaller.unmarshalCollectionFromXpath(MzIdentMLElement.SpectrumIdentificationList);
 		while (iterspectrumIdentificationList.hasNext()) {
 			SpectrumIdentificationList spectrumIdentificationList1 = iterspectrumIdentificationList
 					.next();
@@ -217,7 +215,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 		analysisSoftwareHashMap = new HashMap<>();
 
-		Iterator<AnalysisSoftware> iterAnalysisSoftware = mzIdentMLUnmarshaller
+		Iterator<AnalysisSoftware> iterAnalysisSoftware = proteoIDViewer.mzIdentMLUnmarshaller
 				.unmarshalCollectionFromXpath(MzIdentMLElement.AnalysisSoftware);
 		while (iterAnalysisSoftware.hasNext()) {
 			AnalysisSoftware analysisSoftware = iterAnalysisSoftware.next();
@@ -226,7 +224,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 		}
 
-		analysisProtocolCollection = mzIdentMLUnmarshaller
+		analysisProtocolCollection = proteoIDViewer.mzIdentMLUnmarshaller
 				.unmarshal(MzIdentMLElement.AnalysisProtocolCollection);
 
 		spectrumIdentificationProtocol = analysisProtocolCollection
