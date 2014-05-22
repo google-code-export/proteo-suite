@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
 import uk.ac.ebi.jmzidml.model.mzidml.DBSequence;
@@ -4458,8 +4457,7 @@ public class ProteoIDViewer extends JFrame {
 									.getChargeState()),
 							spectrumIdentificationItem.getName());
 					spectrumPanel
-							.setAnnotations(new Vector<SpectrumAnnotation>(
-									peakAnnotation));
+							.setAnnotations(peakAnnotation);
 					jGraph.setLayout(new BorderLayout());
 					jGraph.setLayout(new BoxLayout(jGraph, BoxLayout.LINE_AXIS));
 					jGraph.add(spectrumPanel);
@@ -4482,8 +4480,7 @@ public class ProteoIDViewer extends JFrame {
 								.getChargeState()),
 						spectrumIdentificationItem.getName());
 
-				spectrumPanel.setAnnotations(new Vector<SpectrumAnnotation>(
-						peakAnnotation));
+				spectrumPanel.setAnnotations(peakAnnotation);
 
 				jGraph.setLayout(new BorderLayout());
 				jGraph.setLayout(new BoxLayout(jGraph, BoxLayout.LINE_AXIS));
@@ -4669,8 +4666,7 @@ public class ProteoIDViewer extends JFrame {
 										.getChargeState()),
 								spectrumIdentificationItem.getName());
 						spectrumPanel1
-								.setAnnotations(new Vector<SpectrumAnnotation>(
-										peakAnnotation1));
+								.setAnnotations(peakAnnotation1);
 						jGraph1.setLayout(new BorderLayout());
 						jGraph1.setLayout(new BoxLayout(jGraph1,
 								BoxLayout.LINE_AXIS));
@@ -4695,8 +4691,7 @@ public class ProteoIDViewer extends JFrame {
 							spectrumIdentificationItem.getName());
 
 					spectrumPanel1
-							.setAnnotations(new Vector<SpectrumAnnotation>(
-									peakAnnotation1));
+							.setAnnotations(peakAnnotation1);
 
 					jGraph1.setLayout(new BorderLayout());
 					jGraph1.setLayout(new BoxLayout(jGraph1,
@@ -4783,8 +4778,7 @@ public class ProteoIDViewer extends JFrame {
 					SpectrumPanel spectrumPanel = new SpectrumPanel(mz,
 							intensities, 0.0, "", "");
 					spectrumPanel
-							.setAnnotations(new Vector<SpectrumAnnotation>(
-									peakAnnotation));
+							.setAnnotations(peakAnnotation);
 					jGraph.setLayout(new BorderLayout());
 					jGraph.setLayout(new BoxLayout(jGraph, BoxLayout.LINE_AXIS));
 					jGraph.add(spectrumPanel);
