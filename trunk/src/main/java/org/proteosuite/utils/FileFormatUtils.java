@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import org.proteosuite.model.MascotGenericFormatFile;
 import org.proteosuite.model.RawMzMLFile;
@@ -29,6 +27,18 @@ public class FileFormatUtils {
     public static boolean mzMLToMGF(RawMzMLFile input, String output) {
         return mzMLToMGF(input.getUnmarshaller(), output);
     }
+    
+    public static MascotGenericFormatFile merge(Set<MascotGenericFormatFile> setToMerge, long mergeLimit) {        
+        Set<MascotGenericFormatFile> mergeableSet = new HashSet<>();
+        for (MascotGenericFormatFile thisFile : setToMerge) {
+            if (thisFile.getFile().length() <= mergeLimit) {
+                mergeableSet.add(thisFile);
+                mergeLimit -= thisFile.getFile().length();
+            }
+        }
+        
+        return merge(mergeableSet);
+    }    
     
     public static MascotGenericFormatFile merge(Set<MascotGenericFormatFile> setToMerge) {
         Set<String> setToMergeAsStrings = new HashSet<>();

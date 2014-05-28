@@ -20,7 +20,7 @@ public class AnalyseDynamicTab extends JPanel {
 	public static final JPanel ITRAQ_STEP = new ITRAQStep();
         public static final JPanel TMT_STEP = new TMTStep();
 	public static final JPanel DONE_STEP = new DoneStep();
-	private static final AnalyseStatusPanel analysisStatusPanel = new AnalyseStatusPanel();
+	private static final AnalyseStatusPanel analysisStatusPanel = AnalyseStatusPanel.getInstance();
 
 	private AnalyseDynamicTab() {
 		super(new BorderLayout());

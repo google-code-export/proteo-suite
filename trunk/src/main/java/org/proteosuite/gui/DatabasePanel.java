@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.proteosuite.WorkSpace;
 
 public class DatabasePanel extends JPanel {
 
@@ -28,10 +29,10 @@ public class DatabasePanel extends JPanel {
     private static final Map<Component, GridBagConstraints> staticStartComponents = new LinkedHashMap<>();
     private final Map<Component, GridBagConstraints> dynamicComponents = new LinkedHashMap<>();
     private final Map<Component, GridBagConstraints> staticEndComponents = new HashMap<>();
-    private static final String fastATargetsOnlyTooltip = "FastA should contain target proteins only; no decoy proteins.";    
+    private static final String fastATargetsOnlyTooltip = "FastA should contain target proteins only; no decoy proteins.";
     private static final String fastaTooltip = "FastA is not mandatory if GFF contains protein sequences.";
     private static final String gffTooltip = "GFF is always mandatory.";
-    
+
     private JTextField databaseText;
 
     public DatabasePanel(boolean genomeAnnotationMode, final JDialog searchSettingsDialog) {
@@ -66,7 +67,7 @@ public class DatabasePanel extends JPanel {
 
     private void buildStaticStartComponents() {
         // Static section, containing gene model fastA and GFF.  
-        
+
         if (staticStartComponents.size() > 0) {
             return;
         }
@@ -105,7 +106,7 @@ public class DatabasePanel extends JPanel {
                 setDatabaseButtonClicked(geneModelGffTextField, DatabasePanel.this.searchDialog, false);
             }
         });
-        
+
         staticStartComponents.put(geneModelGffButton, geneModelGffButtonConstraints);
 
         GridBagConstraints geneModelFastaTextConstraints = new GridBagConstraints();
@@ -129,7 +130,7 @@ public class DatabasePanel extends JPanel {
                 setDatabaseButtonClicked(geneModelFastaTextField, DatabasePanel.this.searchDialog, true);
             }
         });
-        
+
         staticStartComponents.put(geneModelFastaButton, geneModelFastaButtonConstraints);
     }
 
@@ -159,7 +160,7 @@ public class DatabasePanel extends JPanel {
         dynamicComponents.put(otherFastaLabel, otherFastaLabelConstraints);
 
         int yOffset = 6;
-        
+
         Iterator<Entry<String, String>> iterator = currentModel.entrySet().iterator();
         for (int i = 0; i < otherModelsSize; i++) {
             String gff = "", fasta = "";
@@ -168,7 +169,7 @@ public class DatabasePanel extends JPanel {
                 gff = entry.getKey();
                 fasta = entry.getValue();
             }
-            
+
             GridBagConstraints otherGffTextConstraints = new GridBagConstraints();
             otherGffTextConstraints.gridx = 0;
             otherGffTextConstraints.gridy = yOffset;
@@ -192,14 +193,14 @@ public class DatabasePanel extends JPanel {
                     setDatabaseButtonClicked(otherGffText, DatabasePanel.this.searchDialog, false);
                 }
             });
-            
+
             dynamicComponents.put(otherGffButton, otherGffButtonConstraints);
 
             GridBagConstraints fastaTextConstraints = new GridBagConstraints();
             fastaTextConstraints.gridx = 5;
             fastaTextConstraints.gridy = yOffset;
             fastaTextConstraints.gridwidth = 4;
-            fastaTextConstraints.gridheight = 2;            
+            fastaTextConstraints.gridheight = 2;
             final JTextField otherFastaText = new JTextField(30);
             otherFastaText.setText(fasta);
             otherFastaText.setToolTipText(fastATargetsOnlyTooltip);
@@ -218,29 +219,29 @@ public class DatabasePanel extends JPanel {
                     setDatabaseButtonClicked(otherFastaText, DatabasePanel.this.searchDialog, true);
                 }
             });
-            
+
             dynamicComponents.put(otherFastaButton, otherFastaButtonConstraints);
-            
+
             yOffset += 2;
         }
 
         return yOffset;
     }
-    
+
     private void buildStaticEndComponents(int yOffset) {
-        
+
         staticEndComponents.clear();
-        
+
         GridBagConstraints newPairingConstraints = new GridBagConstraints();
         newPairingConstraints.gridx = 0;
-        
-        newPairingConstraints.gridy = yOffset;        
-        newPairingConstraints.anchor = GridBagConstraints.WEST;       
+
+        newPairingConstraints.gridy = yOffset;
+        newPairingConstraints.anchor = GridBagConstraints.WEST;
         JButton newPairingButton = new JButton("New GFF-FastA Pairing");
         if (otherModelsSize == 5) {
             newPairingButton.setEnabled(false);
         }
-        
+
         newPairingButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -250,17 +251,16 @@ public class DatabasePanel extends JPanel {
         });
 
         staticEndComponents.put(newPairingButton, newPairingConstraints);
-        
-        
+
         GridBagConstraints deletePairingConstraints = new GridBagConstraints();
         deletePairingConstraints.gridx = 2;
-        deletePairingConstraints.gridy = yOffset;        
-        
+        deletePairingConstraints.gridy = yOffset;
+
         JButton deletePairingButton = new JButton("Delete GFF-FastA Pairing");
         if (otherModelsSize == 0) {
             deletePairingButton.setEnabled(false);
         }
-        
+
         deletePairingButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -279,16 +279,16 @@ public class DatabasePanel extends JPanel {
             if (!(component instanceof JTextField)) {
                 continue;
             }
-            
-            geneModelItems[index++] = ((JTextField) component).getText();            
-        }     
-        
+
+            geneModelItems[index++] = ((JTextField) component).getText();
+        }
+
         return geneModelItems;
     }
-    
+
     private Map<String, String> getCurrentDynamicModel() {
-        Map<String, String> currentModel = new LinkedHashMap<>();        
-        
+        Map<String, String> currentModel = new LinkedHashMap<>();
+
         String gff = null, fasta = null;
         boolean gffFound = false;
         for (Component component : dynamicComponents.keySet()) {
@@ -309,12 +309,11 @@ public class DatabasePanel extends JPanel {
 
         return currentModel;
     }
-    
-    
+
     public String getSingleDatabasePath() {
         return databaseText.getText();
     }
-    
+
     public Map<String, String> getOtherGeneModels() {
         Map<String, String> currentGUIModel = this.getCurrentDynamicModel();
         Map<String, String> curatedModel = new HashMap<>();
@@ -324,16 +323,16 @@ public class DatabasePanel extends JPanel {
             if (key.isEmpty()) {
                 continue;
             }
-            
+
             curatedModel.put(key, value);
         }
-        
+
         return curatedModel;
     }
 
     private void rebuildFullModeInterface() {
-        setLayout(new GridBagLayout());       
-        
+        setLayout(new GridBagLayout());
+
         removeAll();
 
         buildStaticStartComponents();
@@ -343,40 +342,39 @@ public class DatabasePanel extends JPanel {
         }
 
         int yOffset = buildDynamicComponents();
-        
+
         for (Entry<Component, GridBagConstraints> entry : dynamicComponents.entrySet()) {
             add(entry.getKey(), entry.getValue());
         }
-        
+
         buildStaticEndComponents(yOffset);
-        
+
         for (Entry<Component, GridBagConstraints> entry : staticEndComponents.entrySet()) {
             add(entry.getKey(), entry.getValue());
         }
-        
+
         revalidate();
-    }    
+    }
 
     private static void setDatabaseButtonClicked(JTextField databaseFile, JDialog searchSettingsDialog, boolean fastaDialog) {
         // Adding files
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser = new JFileChooser(WorkSpace.sPreviousLocation);
         if (fastaDialog) {
             chooser.setDialogTitle("Select the fastA database file:");
         } else {
             chooser.setDialogTitle("Select the GFF file:");
         }
-        
+
         chooser.setAcceptAllFileFilterUsed(false);
 
         // Applying file extension filters
         if (fastaDialog) {
             chooser.setFileFilter(new FileNameExtensionFilter(
-                "FastA Files (*.fasta, *.fa, *.fsa)", "fasta", "fa", "fsa"));
+                    "FastA Files (*.fasta, *.fa, *.fsa, *.aa)", "fasta", "fa", "fsa", "aa"));
         } else {
             chooser.setFileFilter(new FileNameExtensionFilter(
-                "GFF Files (*.gff, *.gff3)", "gff", "gff3"));
+                    "GFF Files (*.gff, *.gff3)", "gff", "gff3"));
         }
-        
 
         // Disable multiple file selection
         chooser.setMultiSelectionEnabled(false);
@@ -390,7 +388,11 @@ public class DatabasePanel extends JPanel {
         File file = chooser.getSelectedFile();
         if (file == null) {
             return;
-        }      
+        }
+
+        if (!file.getParent().equals(WorkSpace.sPreviousLocation)) {
+            WorkSpace.sPreviousLocation = file.getParent();
+        }
 
         databaseFile.setText(file.getPath());
     }

@@ -1,5 +1,6 @@
 package org.proteosuite.gui.analyse;
 
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import javax.swing.ImageIcon;
@@ -37,11 +38,23 @@ public class AnalyseStatusPanel extends JPanel {
 	private static final JLabel proteinInference = new JLabel(
 			"Protein Inference");
 	private static final JLabel proteinInferenceStatus = new JLabel();
+        private static final JPanel resultsSection = new JPanel();
+        private static final JLabel results = new JLabel("Results");
+        private static final JLabel resultsStatus = new JLabel();
 	private static ImageIcon notDone;
 	private static ImageIcon done;
 	private static ImageIcon processing;
+        private static AnalyseStatusPanel INSTANCE = null;
+        
+        public static AnalyseStatusPanel getInstance() {
+            if (INSTANCE == null) {
+                INSTANCE = new AnalyseStatusPanel();
+            }
+            
+            return INSTANCE;
+        }
 
-	public AnalyseStatusPanel() {
+	private AnalyseStatusPanel() {
 		super(new FlowLayout(FlowLayout.CENTER, 30, 4));
 		
 		notDone = new ImageIcon(getClass().getClassLoader().getResource(
@@ -51,20 +64,22 @@ public class AnalyseStatusPanel extends JPanel {
 		processing = new ImageIcon(getClass().getClassLoader().getResource(
 				"images/loading.gif"));
 
-		rawData.setFont(new Font(rawData.getFont().getFontName(), rawData
+		rawData.setFont(new Font(rawData.getFont().getFamily(), rawData
 				.getFont().getStyle(), 20));
-		conditions.setFont(new Font(conditions.getFont().getFontName(),
+		conditions.setFont(new Font(conditions.getFont().getFamily(),
 				conditions.getFont().getStyle(), 20));
 		identifications.setFont(new Font(identifications.getFont()
-				.getFontName(), identifications.getFont().getStyle(), 20));
+				.getFamily(), identifications.getFont().getStyle(), 20));
 		cleanIdentifications.setFont(new Font(cleanIdentifications.getFont()
 				.getName(), cleanIdentifications.getFont().getStyle(), 20));
-		quantitation.setFont(new Font(quantitation.getFont().getFontName(),
+		quantitation.setFont(new Font(quantitation.getFont().getFamily(),
 				quantitation.getFont().getStyle(), 20));
-		mapping.setFont(new Font(mapping.getFont().getFontName(), mapping
+		mapping.setFont(new Font(mapping.getFont().getFamily(), mapping
 				.getFont().getStyle(), 20));
 		proteinInference.setFont(new Font(proteinInference.getFont()
-				.getFontName(), proteinInference.getFont().getStyle(), 20));
+				.getFamily(), proteinInference.getFont().getStyle(), 20));
+                results.setFont(new Font(results.getFont()
+				.getFamily(), results.getFont().getStyle(), 20));
 
 		rawDataStatus.setIcon(notDone);
 		conditionsStatus.setIcon(notDone);
@@ -73,6 +88,7 @@ public class AnalyseStatusPanel extends JPanel {
 		quantitationStatus.setIcon(notDone);
 		mappingStatus.setIcon(notDone);
 		proteinInferenceStatus.setIcon(notDone);
+                resultsStatus.setIcon(notDone);
 
 		rawDataSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
 		conditionsSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
@@ -84,6 +100,7 @@ public class AnalyseStatusPanel extends JPanel {
 		mappingSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
 		proteinInferenceSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5,
 				4));
+                resultsSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
 
 		rawDataSection.add(rawDataStatus);
 		rawDataSection.add(rawData);
@@ -99,6 +116,8 @@ public class AnalyseStatusPanel extends JPanel {
 		mappingSection.add(mapping);
 		proteinInferenceSection.add(proteinInferenceStatus);
 		proteinInferenceSection.add(proteinInference);
+                resultsSection.add(resultsStatus);
+                resultsSection.add(results);
 
 		add(rawDataSection);
 		add(conditionsSection);
@@ -107,9 +126,26 @@ public class AnalyseStatusPanel extends JPanel {
 		add(quantitationSection);
 		add(mappingSection);
 		add(proteinInferenceSection);
+                add(resultsSection);
                 
                 rawData.addMouseListener(new RawDataAndMultiplexingSectionListener());
 	}
+        
+        public void setGenomeAnnotationMode() {
+            conditionsSection.remove(conditionsStatus);
+            cleanIdentificationsSection.remove(cleanIdentificationsStatus);
+            quantitationSection.remove(quantitationStatus);
+            mappingSection.remove(mappingStatus);
+            proteinInferenceSection.remove(proteinInferenceStatus);
+            
+            conditions.setForeground(Color.LIGHT_GRAY);
+            cleanIdentifications.setForeground(Color.LIGHT_GRAY);
+            quantitation.setForeground(Color.LIGHT_GRAY);
+            mapping.setForeground(Color.LIGHT_GRAY);
+            proteinInference.setForeground(Color.LIGHT_GRAY);
+            
+            this.revalidate();
+        }
 
 	public void reset() {
 		setRawDataNotDone();
@@ -119,7 +155,64 @@ public class AnalyseStatusPanel extends JPanel {
 		setQuantitationNotDone();
 		setMappingNotDone();
 		setProteinInferenceNotDone();
-	}
+                setResultsNotDone();
+	}       
+        
+        private void setAllAsPlainText() {
+            rawData.setFont(new Font(rawData.getFont()
+				.getFamily(), Font.PLAIN, 20));
+            
+            conditions.setFont(new Font(conditions.getFont()
+				.getFamily(), Font.PLAIN, 20));
+            
+            identifications.setFont(new Font(identifications.getFont()
+				.getFamily(), Font.PLAIN, 20));
+            
+            cleanIdentifications.setFont(new Font(cleanIdentifications.getFont()
+				.getFamily(), Font.PLAIN, 20));
+            
+            quantitation.setFont(new Font(quantitation.getFont()
+				.getFamily(), Font.PLAIN, 20));
+            
+            results.setFont(new Font(results.getFont()
+				.getFamily(), Font.PLAIN, 20));
+        }
+        
+        public void setRawDataAsCurrentStep() {        
+            setAllAsPlainText();
+            rawData.setFont(new Font(rawData.getFont()
+				.getFamily(), Font.BOLD, 20));
+        }
+        
+        public void setConditionsAsCurrentStep() {      
+            setAllAsPlainText();
+            conditions.setFont(new Font(conditions.getFont()
+				.getFamily(), Font.BOLD, 20));
+        }
+        
+        public void setIdentificationsAsCurrentStep() {   
+            setAllAsPlainText();
+            identifications.setFont(new Font(identifications.getFont()
+				.getFamily(), Font.BOLD, 20));
+        }
+        
+        public void setCleanConditionsAsCurrentStep() { 
+            setAllAsPlainText();
+            cleanIdentifications.setFont(new Font(cleanIdentifications.getFont()
+				.getFamily(), Font.BOLD, 20));
+        }
+        
+        public void setQuantitationAsCurrentStep() {  
+            setAllAsPlainText();
+            quantitation.setFont(new Font(quantitation.getFont()
+				.getFamily(), Font.BOLD, 20));
+        }
+        
+        public void setResultsAsCurrentStep() {
+            setAllAsPlainText();
+            results.setFont(new Font(results.getFont()
+				.getFamily(), Font.BOLD, 20));
+        }
 
 	public void setRawDataDone() {
 		rawDataStatus.setIcon(done);
@@ -203,6 +296,18 @@ public class AnalyseStatusPanel extends JPanel {
 
 	public void setProteinInferenceProcessing() {
 		proteinInferenceStatus.setIcon(processing);
+	}
+        
+        public void setResultsDone() {
+		resultsStatus.setIcon(done);
+	}
+
+	public void setResultsNotDone() {
+		resultsStatus.setIcon(notDone);
+	}
+
+	public void setResultsProcessing() {
+		results.setIcon(processing);
 	}
 
 	public synchronized void checkAndUpdateRawDataStatus() {

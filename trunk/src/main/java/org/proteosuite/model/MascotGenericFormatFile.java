@@ -16,7 +16,7 @@ import org.proteosuite.gui.tasks.TasksTab;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
 import uk.ac.ebi.pride.tools.mgf_parser.MgfFile;
 
-public class MascotGenericFormatFile extends RawDataFile {
+public class MascotGenericFormatFile extends RawDataFile implements Comparable {
     private MgfFile mgf = null;    
     
     public MascotGenericFormatFile(File file) {
@@ -106,4 +106,15 @@ public class MascotGenericFormatFile extends RawDataFile {
 
         executor.submit(mgfWorker);       
     }    
+
+    @Override
+    public int compareTo(Object that) {
+        if (this.getFile().length() > ((MascotGenericFormatFile)that).getFile().length()) {
+            return -1;
+        } else if (this.getFile().length() < ((MascotGenericFormatFile)that).getFile().length()) {
+            return 1;
+        }
+        
+        return 0;
+    }
 }

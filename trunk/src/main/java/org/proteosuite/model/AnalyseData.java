@@ -1,5 +1,6 @@
 package org.proteosuite.model;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -20,6 +21,7 @@ public class AnalyseData {
 	private String multiplexing = "";
 	private boolean supportGenomeAnnotation = false;
 	public static int MAX_THREADS = computeOptimumThreads();
+        public List<BufferedReader> logReaders = new ArrayList<>();
 
 	private static AnalyseData instance = null;
 
@@ -37,6 +39,10 @@ public class AnalyseData {
 
 		return instance;
 	}
+        
+        public List<BufferedReader> getLogReaders() {
+            return logReaders;
+        }
 
 	public ExecutorService getGenericExecutor() {
 		return genericExecutor;
