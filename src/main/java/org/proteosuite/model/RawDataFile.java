@@ -16,7 +16,7 @@ public abstract class RawDataFile {
     protected boolean[] msLevelPresence = {false, false};
     protected boolean spectraCountChecked;
     protected boolean guiInteraction = true;
-    private Map<String, String> assayConditions = new HashMap<String, String>();
+    private Map<String, String> assayConditions = new HashMap<>();
     private IdentDataFile identFile = null;
     private String identStatus = "<None>";  
     
@@ -66,7 +66,7 @@ public abstract class RawDataFile {
         return file;
     }
     
-    public int getFileSize() {
+    public int getFileSizeInMegaBytes() {
         long bytes = file.length();
         double megabytes = (double)bytes / (1024.0 * 1024.0);
         return (int)megabytes;

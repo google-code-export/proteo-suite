@@ -28,6 +28,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -37,6 +40,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -153,9 +158,11 @@ public class IdentParamsView extends JDialog {
 
     public static void readInPossibleMods() {
         possibleMods = new TreeSet<>();
-        File possibleModsFile = new File(IdentParamsView.class.getClassLoader().getResource("config/possibleMods.txt").getFile());
+        Class thisClass = IdentParamsView.class;
+        ClassLoader thisClassLoader = thisClass.getClassLoader();
+        InputStream thisResource = thisClassLoader.getResourceAsStream("config/possibleMods.txt");
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(possibleModsFile));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(thisResource));
             String line = null;
             while ((line = reader.readLine()) != null) {
                 Matcher m = possibleModsFilePattern.matcher(line);
@@ -164,7 +171,7 @@ public class IdentParamsView extends JDialog {
                 }
             }
         } catch (IOException ex) {
-            throw new RuntimeException("Problem reading possible modifications file.");
+            ex.printStackTrace();
         }
     }
 
@@ -395,7 +402,7 @@ public class IdentParamsView extends JDialog {
         parameterSet.put("prec_ppm", ((String) jcPrecursorToleranceUnits.getSelectedItem()).equals("ppm") ? "1" : "2");
         parameterSet.put("prec_tol", jtMSTolerance.getText());
         parameterSet.put("frag_ppm", ((String) jcFragmentToleranceUnits.getSelectedItem()).equals("ppm") ? "1" : "2");
-        parameterSet.put("frag_tol", jtMSTolerance.getText());
+        parameterSet.put("frag_tol", jtMSMSTolerance.getText());
         parameterSet.put("enzyme", (String) jcEnzyme.getSelectedItem());
         parameterSet.put("min_charge", String.valueOf((Integer)jcMinCharge.getSelectedItem()));
         parameterSet.put("max_charge", String.valueOf((Integer)jcMaxCharge.getSelectedItem()));

@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
+import org.proteosuite.gui.analyse.AnalyseStatusPanel;
 import org.proteosuite.gui.analyse.CleanIdentificationsStep;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.analyse.DefineConditionsStep;
@@ -39,8 +40,7 @@ public class ContinueButtonListener implements ActionListener {
         } else if (panel instanceof DefineConditionsStep) {
             defineConditionsStep();
         } else if (panel instanceof CreateOrLoadIdentificationsStep) {
-            ((CleanIdentificationsStep) AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP).refreshFromData();
-            parent.moveToStep(AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP);
+            identificationsStep();                   
         } else if (panel instanceof CleanIdentificationsStep) {
             switch (data.getMultiplexing()) {
                 case "None (label-free)":
@@ -61,6 +61,8 @@ public class ContinueButtonListener implements ActionListener {
                     parent.moveToStep(AnalyseDynamicTab.TMT_STEP);
                     break;
             }
+            
+            AnalyseStatusPanel.getInstance().setQuantitationAsCurrentStep();
         }
     }
 
@@ -190,13 +192,47 @@ public class ContinueButtonListener implements ActionListener {
             ((CreateOrLoadIdentificationsStep) AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)
                 .refreshFromData();
             parent.moveToStep(AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP);
+            AnalyseStatusPanel.getInstance().setGenomeAnnotationMode();
+            AnalyseStatusPanel.getInstance().setIdentificationsAsCurrentStep();
         } else {
             ((DefineConditionsStep) AnalyseDynamicTab.DEFINE_CONDITIONS_STEP)
                 .refreshFromData();
             parent.moveToStep(AnalyseDynamicTab.DEFINE_CONDITIONS_STEP);
+            AnalyseStatusPanel.getInstance().setConditionsAsCurrentStep();
         }       
     }
 
+    private void identificationsStep() {
+        boolean canMoveOn = true;
+        for (int i = 0; i < data.getRawDataCount(); i++) {
+            if (data.getRawDataFile(i).getIdentStatus().equals("<None>")) {
+                canMoveOn = false;
+                break;
+            }
+        }
+        
+        if (!canMoveOn) {
+            JOptionPane
+                    .showConfirmDialog(
+                            panel,
+                            "Not all raw files have identifications being loaded or created.\n"
+                                    + "Please correct this before moving to the next stage.",
+                            "Missing Identifications", JOptionPane.PLAIN_MESSAGE,
+                            JOptionPane.ERROR_MESSAGE);
+            
+            return;
+        }
+        
+        if (data.getGenomeAnnotationMode()) {
+                parent.moveToStep(AnalyseDynamicTab.DONE_STEP);
+                AnalyseStatusPanel.getInstance().setResultsAsCurrentStep();
+            } else {
+                ((CleanIdentificationsStep) AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP).refreshFromData();
+                parent.moveToStep(AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP);
+                AnalyseStatusPanel.getInstance().setCleanConditionsAsCurrentStep();
+            }   
+    }
+    
     private void defineConditionsStep() {
         DefineConditionsTable conditionsTable = ((DefineConditionsStep) panel)
                 .getConditionsTable();
@@ -240,5 +276,6 @@ public class ContinueButtonListener implements ActionListener {
         ((CreateOrLoadIdentificationsStep) AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)
                 .refreshFromData();
         parent.moveToStep(AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP);
+        AnalyseStatusPanel.getInstance().setIdentificationsAsCurrentStep();
     }
 }

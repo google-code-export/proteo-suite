@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
+import org.proteosuite.gui.analyse.AnalyseStatusPanel;
 import org.proteosuite.gui.analyse.CleanIdentificationsStep;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.analyse.DefineConditionsStep;
@@ -29,7 +30,6 @@ public class PreviousButtonListener implements ActionListener {
         AnalyseDynamicTab parent = (AnalyseDynamicTab)panel.getParent();
         if (panel instanceof DefineConditionsStep) {      
             DefineConditionsTable conditionsTable = ((DefineConditionsStep) panel).getConditionsTable();
-
             for (int i = 0; i < conditionsTable.getRowCount(); i++) {
                 String condition = (String) conditionsTable.getModel().getValueAt(i, 0);                
 
@@ -45,13 +45,22 @@ public class PreviousButtonListener implements ActionListener {
                 }
             }           
             
-            parent.moveToStep(AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP);            
+            parent.moveToStep(AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP);  
+            AnalyseStatusPanel.getInstance().setRawDataAsCurrentStep();
         } else if (panel instanceof CreateOrLoadIdentificationsStep) {
-            parent.moveToStep(AnalyseDynamicTab.DEFINE_CONDITIONS_STEP);
+            if (!data.getGenomeAnnotationMode()) {
+                parent.moveToStep(AnalyseDynamicTab.DEFINE_CONDITIONS_STEP);
+                AnalyseStatusPanel.getInstance().setConditionsAsCurrentStep();
+            } else {
+                parent.moveToStep(AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP);
+                AnalyseStatusPanel.getInstance().setRawDataAsCurrentStep();
+            }            
         } else if (panel instanceof CleanIdentificationsStep) {
             parent.moveToStep(AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP);
+            AnalyseStatusPanel.getInstance().setIdentificationsAsCurrentStep();
         } else if (panel instanceof LabelFreeStep || panel instanceof ITRAQStep) {
             parent.moveToStep(AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP);
+            AnalyseStatusPanel.getInstance().setCleanConditionsAsCurrentStep();
         }
     }  
 }

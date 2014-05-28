@@ -59,7 +59,9 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
                         .showConfirmDialog(
                                 step,
                                 "You have selected more than one MGF file for analysis.\n"
-                                + "Your MGF files will be  merged.\n"
+                                + "Your MGF files will be  merged up to a maximum size of 1GB.\n"
+                                + "Any data after this limit will be ignored.\n"
+                                + "You have been warned!\n"
                                 + "This is because the pipeline currently only supports a single MGF file for analysis.\n",
                                 "Mutiple MGF Files : Merge Warning", JOptionPane.PLAIN_MESSAGE,
                                 JOptionPane.INFORMATION_MESSAGE);
@@ -73,7 +75,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
             identDialog.getOutputFilePrefix());
             
             wrapper.printDebugInfo();
-            //wrapper.compute();
+            wrapper.compute();
         } else {
             // Get the selected raw files from the table to know which ones to run
             // ident for.
