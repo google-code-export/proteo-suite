@@ -37,6 +37,8 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -75,6 +77,7 @@ import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
@@ -215,7 +218,8 @@ public class ProteoIDViewer extends JFrame {
 	private final JLabel isDecoySiiFalseValue = new JLabel();
 	private final JLabel isDecoySiiValue = new JLabel();
 	private final JComboBox<String> jComboBox1 = new JComboBox<>();
-	private final JComboBox<String> jComboBox2 = new JComboBox<>();
+	private final JComboBox<String> jComboBox2 = new JComboBox<>(new String[] {
+			"Better scores are lower", "Better scores are higher" });
 	private final JPanel jExperimentalFilterPanel = new JPanel();
 	private final JPanel jExperimentalFilterPanel1 = new JPanel();
 	private final JPanel jFragmentationPanel = new JPanel();
@@ -260,8 +264,7 @@ public class ProteoIDViewer extends JFrame {
 		setMinimumSize(new Dimension(900, 800));
 
 		setJMenuBar(createMenuBar());
-		
-		
+
 		// Swing init components
 		initComponents();
 
@@ -337,7 +340,8 @@ public class ProteoIDViewer extends JFrame {
 
 			@Override
 			public void mouseClicked(MouseEvent evt) {
-				spectrumIdentificationItemTableMouseClicked(spectrumIdentificationItemTable.getSelectedRow());
+				spectrumIdentificationItemTableMouseClicked(spectrumIdentificationItemTable
+						.getSelectedRow());
 			}
 		});
 
@@ -718,13 +722,16 @@ public class ProteoIDViewer extends JFrame {
 		fileChooser.setCurrentDirectory(null);
 		fileChooser.addChoosableFileFilter(new MzIdentMLFilter());
 
-		final JTextPane protocalTextPane = new JTextPane();
+		final JTextPane protocolTextPane = new JTextPane();
+		protocolTextPane.setContentType("text/html");
+		protocolTextPane.setEditable(false);
+
 		mainTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		mainTabbedPane.setToolTipText("Global Statistics");
 		mainTabbedPane.setPreferredSize(new Dimension(889, 939));
 		mainTabbedPane.addMouseListener(new mainTabbedPaneMouseClicked(this,
 				mainTabbedPane, siiComboBox, sIIListPassThreshold,
-				protocalTextPane));
+				protocolTextPane));
 
 		jProteinAmbiguityGroupPanel.setBorder(BorderFactory
 				.createTitledBorder("Protein Group"));
@@ -1199,18 +1206,6 @@ public class ProteoIDViewer extends JFrame {
 		spectrumViewPanel.getAccessibleContext().setAccessibleParent(
 				mainTabbedPane);
 
-		final JPanel peptideViewPanel = new JPanel();
-		peptideViewPanel.setToolTipText("Peptide View");
-		peptideViewPanel.setPreferredSize(new Dimension(889, 939));
-
-		final JSplitPane jSplitPane2 = new JSplitPane();
-		jSplitPane2.setBorder(null);
-		jSplitPane2.setDividerLocation(500);
-
-		final JPanel jSpectrumPanel1 = new JPanel();
-		jSpectrumPanel1.setBorder(BorderFactory.createTitledBorder("Spectrum"));
-		jSpectrumPanel1.setAutoscrolls(true);
-		jSpectrumPanel1.setPreferredSize(new Dimension(362, 569));
 
 		jFragmentationPanel1.setBorder(BorderFactory
 				.createTitledBorder("Fragmentation"));
@@ -1254,42 +1249,10 @@ public class ProteoIDViewer extends JFrame {
 						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGap(0, 17, Short.MAX_VALUE));
 
-		GroupLayout jSpectrumPanel1Layout = new GroupLayout(jSpectrumPanel1);
-		jSpectrumPanel1.setLayout(jSpectrumPanel1Layout);
-		jSpectrumPanel1Layout.setHorizontalGroup(jSpectrumPanel1Layout
-				.createParallelGroup(GroupLayout.Alignment.LEADING)
-				.addComponent(jExperimentalFilterPanel1,
-						GroupLayout.Alignment.TRAILING,
-						GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-						Short.MAX_VALUE)
-				.addComponent(jFragmentationPanel1, GroupLayout.DEFAULT_SIZE,
-						905, Short.MAX_VALUE)
-				.addComponent(jGraph1, GroupLayout.DEFAULT_SIZE,
-						GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
-		jSpectrumPanel1Layout.setVerticalGroup(jSpectrumPanel1Layout
-				.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-						jSpectrumPanel1Layout
-								.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(jGraph1,
-										GroupLayout.DEFAULT_SIZE,
-										GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE)
-								.addPreferredGap(
-										LayoutStyle.ComponentPlacement.RELATED)
-								.addComponent(jExperimentalFilterPanel1,
-										GroupLayout.PREFERRED_SIZE,
-										GroupLayout.DEFAULT_SIZE,
-										GroupLayout.PREFERRED_SIZE)
-								.addGap(18, 18, 18)
-								.addComponent(jFragmentationPanel1,
-										GroupLayout.PREFERRED_SIZE, 250,
-										GroupLayout.PREFERRED_SIZE)));
+		
 
-		jSplitPane2.setRightComponent(jSpectrumPanel1);
 
-		final JLabel psmRankLabel = new JLabel(
-				"Peptide-Spectrum matches with Rank: ");
+
 
 		psmRankValue.setModel(new DefaultComboBoxModel<String>(new String[] {
 				"<=1", "<=2", "<=3", "All" }));
@@ -1331,6 +1294,126 @@ public class ProteoIDViewer extends JFrame {
 						.createParallelGroup(GroupLayout.Alignment.LEADING)
 						.addGap(0, 1124, Short.MAX_VALUE));
 
+		mainTabbedPane.addTab("Peptide Summary", createPeptideSummary());
+		mainTabbedPane.addTab("Protein DB View", createProteinDBView());
+
+		totalSIRLabelValue.setText("0");
+		totalSIIbelowThresholdLabelValue.setText("0");
+		totalSIIaboveThresholdLabelValue.setText("0");
+		totalSIIaboveThresholdRankOneLabelValue.setText("0");
+		percentIdentifiedSpectraLabelValue.setText("0");
+		totalPeptidesaboveThresholdLabelValue.setText("0");
+		totalPAGsLabelValue.setText("0");
+		totalPDHsaboveThresholdLabelValue.setText("0");
+		isDecoySiiValue.setText("0");
+		isDecoySiiFalseValue.setText("0");
+		manualDecoyPrefixValue.setText("Rev_");
+		manualDecoyPrefixValue.setEnabled(false);
+		manualDecoyRatioValue.setText("1");
+		manualDecoyRatioValue.setEnabled(false);
+		fpSiiValue.setText("0");
+		tpSiiValue.setText("0");
+		fdrSiiValue.setText("0");
+
+		manualDecoy.addActionListener(new manualDecoyActionPerformed(
+				manualDecoy, manualDecoyPrefixValue, manualDecoyRatioValue));
+
+		fdrPanel.setBorder(BorderFactory.createTitledBorder("FDR Graph"));
+		fdrPanel.setPreferredSize(new Dimension(257, 255));
+
+		GroupLayout fdrPanelLayout = new GroupLayout(fdrPanel);
+		fdrPanel.setLayout(fdrPanelLayout);
+		fdrPanelLayout.setHorizontalGroup(fdrPanelLayout.createParallelGroup(
+				GroupLayout.Alignment.LEADING).addGap(0, 0, Short.MAX_VALUE));
+		fdrPanelLayout.setVerticalGroup(fdrPanelLayout.createParallelGroup(
+				GroupLayout.Alignment.LEADING).addGap(0, 0, Short.MAX_VALUE));
+
+		tpEvaluePanel.setBorder(BorderFactory
+				.createTitledBorder("TP vs FP vs E-value"));
+		tpEvaluePanel.setPreferredSize(new Dimension(257, 255));
+
+		GroupLayout tpEvaluePanelLayout = new GroupLayout(tpEvaluePanel);
+		tpEvaluePanel.setLayout(tpEvaluePanelLayout);
+		tpEvaluePanelLayout.setHorizontalGroup(tpEvaluePanelLayout
+				.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0,
+						0, Short.MAX_VALUE));
+		tpEvaluePanelLayout.setVerticalGroup(tpEvaluePanelLayout
+				.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0,
+						917, Short.MAX_VALUE));
+
+		tpQvaluePanel.setBorder(BorderFactory
+				.createTitledBorder("TP vs Q-value"));
+		tpQvaluePanel.setPreferredSize(new Dimension(257, 255));
+
+		GroupLayout tpQvaluePanelLayout = new GroupLayout(tpQvaluePanel);
+		tpQvaluePanel.setLayout(tpQvaluePanelLayout);
+		tpQvaluePanelLayout.setHorizontalGroup(tpQvaluePanelLayout
+				.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0,
+						0, Short.MAX_VALUE));
+		tpQvaluePanelLayout.setVerticalGroup(tpQvaluePanelLayout
+				.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0,
+						918, Short.MAX_VALUE));
+
+		siiComboBox.addActionListener(new siiComboBoxActionPerformed(this,
+				siiComboBox, sIIListPassThreshold));
+		
+		mainTabbedPane.addTab("Global Statistics", null,
+				createGlobalStatisticsPanel(), "Global Statistics");
+		mainTabbedPane.addTab("Protocols",
+				createProtocolPanel(protocolTextPane));
+
+		getContentPane().add(mainTabbedPane);
+		getAccessibleContext().setAccessibleDescription("MzIdentML Viewer");
+
+		pack();
+	}
+
+	private Component createPeptideSummary() {
+
+		final JSplitPane jSplitPane2 = new JSplitPane();
+		jSplitPane2.setBorder(null);
+		jSplitPane2.setDividerLocation(500);
+		
+		final JPanel jSpectrumPanel1 = new JPanel();
+		jSpectrumPanel1.setBorder(BorderFactory.createTitledBorder("Spectrum"));
+		jSpectrumPanel1.setAutoscrolls(true);
+		jSpectrumPanel1.setPreferredSize(new Dimension(362, 569));
+		GroupLayout jSpectrumPanel1Layout = new GroupLayout(jSpectrumPanel1);
+		jSpectrumPanel1.setLayout(jSpectrumPanel1Layout);
+		jSpectrumPanel1Layout.setHorizontalGroup(jSpectrumPanel1Layout
+				.createParallelGroup(GroupLayout.Alignment.LEADING)
+				.addComponent(jExperimentalFilterPanel1,
+						GroupLayout.Alignment.TRAILING,
+						GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
+						Short.MAX_VALUE)
+				.addComponent(jFragmentationPanel1, GroupLayout.DEFAULT_SIZE,
+						905, Short.MAX_VALUE)
+				.addComponent(jGraph1, GroupLayout.DEFAULT_SIZE,
+						GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+		jSpectrumPanel1Layout.setVerticalGroup(jSpectrumPanel1Layout
+				.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
+						jSpectrumPanel1Layout
+								.createSequentialGroup()
+								.addContainerGap()
+								.addComponent(jGraph1,
+										GroupLayout.DEFAULT_SIZE,
+										GroupLayout.DEFAULT_SIZE,
+										Short.MAX_VALUE)
+								.addPreferredGap(
+										LayoutStyle.ComponentPlacement.RELATED)
+								.addComponent(jExperimentalFilterPanel1,
+										GroupLayout.PREFERRED_SIZE,
+										GroupLayout.DEFAULT_SIZE,
+										GroupLayout.PREFERRED_SIZE)
+								.addGap(18, 18, 18)
+								.addComponent(jFragmentationPanel1,
+										GroupLayout.PREFERRED_SIZE, 250,
+										GroupLayout.PREFERRED_SIZE)));
+		
+		jSplitPane2.setRightComponent(jSpectrumPanel1);
+
+		final JLabel psmRankLabel = new JLabel(
+				"Peptide-Spectrum matches with Rank: ");
 		final JPanel jPanel2 = new JPanel();
 		GroupLayout jPanel2Layout = new GroupLayout(jPanel2);
 		jPanel2.setLayout(jPanel2Layout);
@@ -1401,8 +1484,11 @@ public class ProteoIDViewer extends JFrame {
 												GroupLayout.DEFAULT_SIZE,
 												GroupLayout.DEFAULT_SIZE,
 												Short.MAX_VALUE)));
-
 		jSplitPane2.setLeftComponent(jPanel2);
+
+		final JPanel peptideViewPanel = new JPanel();
+		peptideViewPanel.setToolTipText("Peptide View");
+		peptideViewPanel.setPreferredSize(new Dimension(889, 939));
 
 		GroupLayout peptideViewPanelLayout = new GroupLayout(peptideViewPanel);
 		peptideViewPanel.setLayout(peptideViewPanelLayout);
@@ -1413,13 +1499,11 @@ public class ProteoIDViewer extends JFrame {
 		peptideViewPanelLayout.setVerticalGroup(peptideViewPanelLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING)
 				.addComponent(jSplitPane2));
+		
+		return null;
+	}
 
-		mainTabbedPane.addTab("Peptide Summary", null, peptideViewPanel,
-				"Peptide Summary");
-
-		final JPanel proteinDBViewPanel = new JPanel();
-		proteinDBViewPanel.setPreferredSize(new Dimension(889, 939));
-
+	private JPanel createProteinDBView() {
 		dBSequencePanel.setBorder(BorderFactory
 				.createTitledBorder("DB Sequence"));
 
@@ -1431,118 +1515,11 @@ public class ProteoIDViewer extends JFrame {
 		dBSequencePanelLayout.setVerticalGroup(dBSequencePanelLayout
 				.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0,
 						1486, Short.MAX_VALUE));
+		
+		return dBSequencePanel;
+	}
 
-		GroupLayout proteinDBViewPanelLayout = new GroupLayout(
-				proteinDBViewPanel);
-		proteinDBViewPanel.setLayout(proteinDBViewPanelLayout);
-		proteinDBViewPanelLayout.setHorizontalGroup(proteinDBViewPanelLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-						proteinDBViewPanelLayout
-								.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(dBSequencePanel,
-										GroupLayout.DEFAULT_SIZE,
-										GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE).addContainerGap()));
-		proteinDBViewPanelLayout.setVerticalGroup(proteinDBViewPanelLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING).addGroup(
-						proteinDBViewPanelLayout
-								.createSequentialGroup()
-								.addContainerGap()
-								.addComponent(dBSequencePanel,
-										GroupLayout.DEFAULT_SIZE,
-										GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE).addContainerGap()));
-
-		mainTabbedPane.addTab("Protein DB View", proteinDBViewPanel);
-		proteinDBViewPanel.getAccessibleContext().setAccessibleParent(
-				mainTabbedPane);
-
-		final JPanel globalStatisticsPanel = new JPanel();
-		globalStatisticsPanel.setPreferredSize(new Dimension(889, 939));
-
-		final JPanel summaryPanel = new JPanel();
-		summaryPanel.setBorder(BorderFactory.createTitledBorder("Summary"));
-
-		final JLabel totalSIRLabel = new JLabel("Total SIR:");
-
-		totalSIRLabelValue.setText("0");
-
-		final JLabel totalSIILabel = new JLabel("Total PSM:");
-		final JLabel totalSIIbelowThresholdLabel = new JLabel(
-				"Total PSM below Threshold:");
-
-		totalSIIbelowThresholdLabelValue.setText("0");
-
-		final JLabel totalSIIaboveThresholdLabel = new JLabel(
-				"Total PSM pass Threshold:");
-
-		totalSIIaboveThresholdLabelValue.setText("0");
-
-		final JLabel totalSIIaboveThresholdRankOneLabel = new JLabel(
-				"Total PSM pass Threshold and where rank=1:");
-
-		totalSIIaboveThresholdRankOneLabelValue.setText("0");
-
-		final JLabel percentIdentifiedSpectraLabel = new JLabel(
-				"Percent identified spectra:");
-
-		percentIdentifiedSpectraLabelValue.setText("0");
-
-		final JLabel totalPeptidesaboveThresholdLabel = new JLabel(
-				"Total non-redundant peptides above Threshold:");
-
-		totalPeptidesaboveThresholdLabelValue.setText("0");
-
-		final JLabel totalPAGsLabel = new JLabel("Total PAGs:");
-		final JLabel totalPDHsLabel = new JLabel("Total PDHs:");
-
-		totalPAGsLabelValue.setText("0");
-
-		final JLabel totalPDHsaboveThresholdLabel = new JLabel(
-				"Total PDH above Threshold:");
-
-		totalPDHsaboveThresholdLabelValue.setText("0");
-
-		isDecoySiiValue.setText("0");
-
-		isDecoySiiFalseValue.setText("0");
-
-		final JLabel isDecoySii = new JLabel("PSM with Decoy = true:");
-		final JLabel isDecoySiiFalse = new JLabel("PSM with Decoy = false:");
-		final JLabel manualDecoyLabel = new JLabel("Manual Decoy:");
-		final JLabel manualDecoyPrefix = new JLabel("Prefix");
-		final JLabel manualDecoyRatio = new JLabel("Ratio");
-
-		manualDecoyPrefixValue.setText("Rev_");
-		manualDecoyPrefixValue.setEnabled(false);
-
-		manualDecoyRatioValue.setText("1");
-		manualDecoyRatioValue.setEnabled(false);
-
-		manualDecoy.addActionListener(new manualDecoyActionPerformed(
-				manualDecoy, manualDecoyPrefixValue, manualDecoyRatioValue));
-
-		final JLabel fpSiiLabel = new JLabel("FP for PSM:");
-
-		fpSiiValue.setText("0");
-
-		final JLabel tpSiiLabel = new JLabel("TP for PSM:");
-
-		tpSiiValue.setText("0");
-
-		final JLabel fdrSiiLabel = new JLabel("FDR for PSM:");
-
-		fdrSiiValue.setText("0");
-
-		final JLabel fpProteinsLabel = new JLabel("FP for proteins:");
-		final JLabel tpProteinsLabel = new JLabel("TP for proteins:");
-		final JLabel fdrProteinsLabel = new JLabel("FDR for proteins:");
-
-		final JLabel fpProteinsValue = new JLabel("0");
-		final JLabel tpProteinsValue = new JLabel("0");
-		final JLabel fdrProteinsValue = new JLabel("0");
-
+	private JPanel createGlobalStatisticsPanel() {
 		final JButton manualCalculate = new JButton("Calculate / Show graphs");
 		manualCalculate.addActionListener(new manualCalculateActionPerformed(
 				this, siiComboBox, manualDecoy, manualDecoyPrefixValue,
@@ -1551,705 +1528,96 @@ public class ProteoIDViewer extends JFrame {
 				fdrPanel, jComboBox2, cvTermMap, jComboBox1, tpEvaluePanel,
 				tpQvaluePanel));
 
-		fdrPanel.setBorder(BorderFactory.createTitledBorder("FDR Graph"));
-		fdrPanel.setPreferredSize(new Dimension(257, 255));
+		final JPanel summaryPanel = new JPanel(new GridLayout(4, 1));
+		summaryPanel.setBorder(BorderFactory.createTitledBorder("Summary"));
 
-		GroupLayout fdrPanelLayout = new GroupLayout(fdrPanel);
-		fdrPanel.setLayout(fdrPanelLayout);
-		fdrPanelLayout.setHorizontalGroup(fdrPanelLayout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addGap(0, 0, Short.MAX_VALUE));
-		fdrPanelLayout.setVerticalGroup(fdrPanelLayout.createParallelGroup(
-				GroupLayout.Alignment.LEADING).addGap(0, 0, Short.MAX_VALUE));
+		JPanel leftSummary = new JPanel(new GridLayout(11, 2));
+		leftSummary.add(new JLabel("SII List:"));
+		leftSummary.add(siiComboBox);
+		leftSummary.add(new JLabel("Total SIR:"));
+		leftSummary.add(totalSIRLabelValue);
+		leftSummary.add(new JLabel("Total PSM:"));
+		leftSummary.add(Box.createGlue());
+		leftSummary.add(new JLabel("Total PSM below Threshold:"));
+		leftSummary.add(totalSIIbelowThresholdLabelValue);
+		leftSummary.add(new JLabel("Total PSM pass Threshold:"));
+		leftSummary.add(totalSIIaboveThresholdLabelValue);
+		leftSummary
+				.add(new JLabel("Total PSM pass Threshold and where rank=1:"));
+		leftSummary.add(totalSIIaboveThresholdRankOneLabelValue);
+		leftSummary.add(new JLabel("Total PAGs:"));
+		leftSummary.add(totalPAGsLabelValue);
+		leftSummary.add(new JLabel("Total PDHs:"));
+		leftSummary.add(Box.createGlue());
+		leftSummary.add(new JLabel(
+				"Total PDH above Threshold:"));
+		leftSummary.add(totalPDHsaboveThresholdLabelValue);
+		leftSummary.add(new JLabel("Percent identified spectra:"));
+		leftSummary.add(percentIdentifiedSpectraLabelValue);
+		leftSummary.add(new JLabel(
+				"Total non-redundant peptides above Threshold:"));
+		leftSummary.add(totalPeptidesaboveThresholdLabelValue);
+		summaryPanel.add(leftSummary);
 
-		tpEvaluePanel.setBorder(BorderFactory
-				.createTitledBorder("TP vs FP vs E-value"));
-		tpEvaluePanel.setPreferredSize(new Dimension(257, 255));
+		JPanel rightSummary = new JPanel(new GridLayout(11, 2));
+		rightSummary.add(new JLabel("PSM with Decoy = true:"));
+		rightSummary.add(isDecoySiiValue);
+		rightSummary.add(new JLabel("PSM with Decoy = false:"));
+		rightSummary.add(isDecoySiiFalseValue);
+		rightSummary.add(new JLabel("FP for PSM:"));
+		rightSummary.add(fpSiiValue);
+		rightSummary.add(new JLabel("TP for PSM:"));
+		rightSummary.add(tpSiiValue);
+		rightSummary.add(new JLabel("FDR for PSM:"));
+		rightSummary.add(fdrSiiValue);
+		rightSummary.add(new JLabel("FP for proteins:"));
+		rightSummary.add(new JLabel("0"));
+		rightSummary.add(new JLabel("TP for proteins:"));
+		rightSummary.add(new JLabel("0"));
+		rightSummary.add(new JLabel("FDR for proteins:"));
+		rightSummary.add(new JLabel("0"));
+		summaryPanel.add(rightSummary);
 
-		GroupLayout tpEvaluePanelLayout = new GroupLayout(tpEvaluePanel);
-		tpEvaluePanel.setLayout(tpEvaluePanelLayout);
-		tpEvaluePanelLayout.setHorizontalGroup(tpEvaluePanelLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0,
-						0, Short.MAX_VALUE));
-		tpEvaluePanelLayout.setVerticalGroup(tpEvaluePanelLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0,
-						917, Short.MAX_VALUE));
+		JPanel calculateParams = new JPanel(new FlowLayout());
+		calculateParams.add(manualDecoy);
+		calculateParams.add(new JLabel("Manual Decoy:"));
+		calculateParams.add(new JLabel("Prefix"));
+		calculateParams.add(manualDecoyPrefixValue);
+		calculateParams.add(new JLabel("Ratio"));
+		calculateParams.add(manualDecoyRatioValue);
+		calculateParams.add(jComboBox1);
+		// calculateParams.add(psmRankValue);
+		calculateParams.add(jComboBox2);
+		calculateParams.add(manualCalculate);
+		summaryPanel.add(calculateParams);
 
-		tpQvaluePanel.setBorder(BorderFactory
-				.createTitledBorder("TP vs Q-value"));
-		tpQvaluePanel.setPreferredSize(new Dimension(257, 255));
+		JPanel bottomTables = new JPanel(new GridLayout(1, 3));
+		bottomTables.add(fdrPanel);
+		bottomTables.add(tpEvaluePanel);
+		bottomTables.add(tpQvaluePanel);
+		summaryPanel.add(bottomTables);
 
-		GroupLayout tpQvaluePanelLayout = new GroupLayout(tpQvaluePanel);
-		tpQvaluePanel.setLayout(tpQvaluePanelLayout);
-		tpQvaluePanelLayout.setHorizontalGroup(tpQvaluePanelLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0,
-						0, Short.MAX_VALUE));
-		tpQvaluePanelLayout.setVerticalGroup(tpQvaluePanelLayout
-				.createParallelGroup(GroupLayout.Alignment.LEADING).addGap(0,
-						918, Short.MAX_VALUE));
-
-		final JSeparator jSeparator4 = new JSeparator();
-		jSeparator4.setOrientation(SwingConstants.VERTICAL);
-
-		siiComboBox.addActionListener(new siiComboBoxActionPerformed(this,
-				siiComboBox, sIIListPassThreshold));
-
-		final JLabel siiListLabel = new JLabel("SII List:");
-
-		jComboBox2.setModel(new DefaultComboBoxModel<String>(new String[] {
-				"Better scores are lower", "Better scores are higher" }));
-
-		GroupLayout summaryPanelLayout = new GroupLayout(summaryPanel);
-		summaryPanel.setLayout(summaryPanelLayout);
-		summaryPanelLayout
-				.setHorizontalGroup(summaryPanelLayout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(
-								summaryPanelLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addGroup(
-												summaryPanelLayout
-														.createParallelGroup(
-																GroupLayout.Alignment.LEADING)
-														.addGroup(
-																summaryPanelLayout
-																		.createSequentialGroup()
-																		.addComponent(
-																				fdrPanel,
-																				GroupLayout.DEFAULT_SIZE,
-																				450,
-																				Short.MAX_VALUE)
-																		.addPreferredGap(
-																				LayoutStyle.ComponentPlacement.UNRELATED)
-																		.addComponent(
-																				tpEvaluePanel,
-																				GroupLayout.DEFAULT_SIZE,
-																				450,
-																				Short.MAX_VALUE)
-																		.addPreferredGap(
-																				LayoutStyle.ComponentPlacement.UNRELATED)
-																		.addComponent(
-																				tpQvaluePanel,
-																				GroupLayout.DEFAULT_SIZE,
-																				450,
-																				Short.MAX_VALUE)
-																		.addContainerGap())
-														.addGroup(
-																summaryPanelLayout
-																		.createSequentialGroup()
-																		.addGroup(
-																				summaryPanelLayout
-																						.createParallelGroup(
-																								GroupLayout.Alignment.LEADING)
-																						.addComponent(
-																								percentIdentifiedSpectraLabel)
-																						.addComponent(
-																								totalPeptidesaboveThresholdLabel)
-																						.addGroup(
-																								summaryPanelLayout
-																										.createSequentialGroup()
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.LEADING)
-																														.addComponent(
-																																totalPAGsLabel)
-																														.addComponent(
-																																totalPDHsLabel))
-																										.addPreferredGap(
-																												LayoutStyle.ComponentPlacement.RELATED)
-																										.addComponent(
-																												totalPDHsaboveThresholdLabel)))
-																		.addPreferredGap(
-																				LayoutStyle.ComponentPlacement.RELATED,
-																				408,
-																				Short.MAX_VALUE)
-																		.addComponent(
-																				jSeparator4,
-																				GroupLayout.PREFERRED_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addGap(18,
-																				18,
-																				18)
-																		.addGroup(
-																				summaryPanelLayout
-																						.createParallelGroup(
-																								GroupLayout.Alignment.LEADING,
-																								false)
-																						.addGroup(
-																								summaryPanelLayout
-																										.createSequentialGroup()
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.LEADING)
-																														.addComponent(
-																																isDecoySii)
-																														.addComponent(
-																																isDecoySiiFalse))
-																										.addPreferredGap(
-																												LayoutStyle.ComponentPlacement.RELATED)
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.LEADING)
-																														.addComponent(
-																																isDecoySiiFalseValue,
-																																GroupLayout.DEFAULT_SIZE,
-																																GroupLayout.DEFAULT_SIZE,
-																																Short.MAX_VALUE)
-																														.addComponent(
-																																isDecoySiiValue,
-																																GroupLayout.DEFAULT_SIZE,
-																																GroupLayout.DEFAULT_SIZE,
-																																Short.MAX_VALUE)))
-																						.addGroup(
-																								summaryPanelLayout
-																										.createSequentialGroup()
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.LEADING)
-																														.addComponent(
-																																fpSiiLabel)
-																														.addComponent(
-																																tpSiiLabel)
-																														.addComponent(
-																																fdrSiiLabel)
-																														.addComponent(
-																																fpProteinsLabel)
-																														.addComponent(
-																																tpProteinsLabel)
-																														.addComponent(
-																																fdrProteinsLabel))
-																										.addGap(40,
-																												40,
-																												40)
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.LEADING,
-																																false)
-																														.addComponent(
-																																fpSiiValue,
-																																GroupLayout.PREFERRED_SIZE,
-																																39,
-																																GroupLayout.PREFERRED_SIZE)
-																														.addComponent(
-																																tpSiiValue,
-																																GroupLayout.DEFAULT_SIZE,
-																																GroupLayout.DEFAULT_SIZE,
-																																Short.MAX_VALUE)
-																														.addComponent(
-																																fpProteinsValue,
-																																GroupLayout.DEFAULT_SIZE,
-																																GroupLayout.DEFAULT_SIZE,
-																																Short.MAX_VALUE)
-																														.addComponent(
-																																tpProteinsValue,
-																																GroupLayout.DEFAULT_SIZE,
-																																GroupLayout.DEFAULT_SIZE,
-																																Short.MAX_VALUE)
-																														.addComponent(
-																																fdrProteinsValue,
-																																GroupLayout.DEFAULT_SIZE,
-																																GroupLayout.DEFAULT_SIZE,
-																																Short.MAX_VALUE)
-																														.addComponent(
-																																fdrSiiValue,
-																																GroupLayout.PREFERRED_SIZE,
-																																47,
-																																GroupLayout.PREFERRED_SIZE))))
-																		.addGap(552,
-																				552,
-																				552))
-														.addGroup(
-																summaryPanelLayout
-																		.createSequentialGroup()
-																		.addGroup(
-																				summaryPanelLayout
-																						.createParallelGroup(
-																								GroupLayout.Alignment.LEADING)
-																						.addGroup(
-																								summaryPanelLayout
-																										.createSequentialGroup()
-																										.addComponent(
-																												manualDecoy)
-																										.addPreferredGap(
-																												LayoutStyle.ComponentPlacement.UNRELATED)
-																										.addComponent(
-																												manualDecoyLabel)
-																										.addPreferredGap(
-																												LayoutStyle.ComponentPlacement.UNRELATED)
-																										.addComponent(
-																												manualDecoyPrefix)
-																										.addPreferredGap(
-																												LayoutStyle.ComponentPlacement.UNRELATED)
-																										.addComponent(
-																												manualDecoyPrefixValue,
-																												GroupLayout.PREFERRED_SIZE,
-																												51,
-																												GroupLayout.PREFERRED_SIZE))
-																						.addGroup(
-																								summaryPanelLayout
-																										.createSequentialGroup()
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.LEADING)
-																														.addComponent(
-																																totalSIRLabel)
-																														.addComponent(
-																																totalSIILabel)
-																														.addComponent(
-																																siiListLabel))
-																										.addPreferredGap(
-																												LayoutStyle.ComponentPlacement.RELATED)
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.LEADING)
-																														.addComponent(
-																																siiComboBox,
-																																GroupLayout.PREFERRED_SIZE,
-																																GroupLayout.DEFAULT_SIZE,
-																																GroupLayout.PREFERRED_SIZE)
-																														.addGroup(
-																																summaryPanelLayout
-																																		.createSequentialGroup()
-																																		.addGroup(
-																																				summaryPanelLayout
-																																						.createParallelGroup(
-																																								GroupLayout.Alignment.LEADING)
-																																						.addComponent(
-																																								totalSIRLabelValue)
-																																						.addComponent(
-																																								totalSIIbelowThresholdLabel)
-																																						.addComponent(
-																																								totalSIIaboveThresholdLabel)
-																																						.addComponent(
-																																								totalSIIaboveThresholdRankOneLabel))
-																																		.addGap(22,
-																																				22,
-																																				22)
-																																		.addGroup(
-																																				summaryPanelLayout
-																																						.createParallelGroup(
-																																								GroupLayout.Alignment.LEADING,
-																																								false)
-																																						.addComponent(
-																																								totalSIIbelowThresholdLabelValue,
-																																								GroupLayout.DEFAULT_SIZE,
-																																								41,
-																																								Short.MAX_VALUE)
-																																						.addComponent(
-																																								totalSIIaboveThresholdLabelValue,
-																																								GroupLayout.DEFAULT_SIZE,
-																																								GroupLayout.DEFAULT_SIZE,
-																																								Short.MAX_VALUE)
-																																						.addComponent(
-																																								totalSIIaboveThresholdRankOneLabelValue,
-																																								GroupLayout.DEFAULT_SIZE,
-																																								GroupLayout.DEFAULT_SIZE,
-																																								Short.MAX_VALUE)
-																																						.addComponent(
-																																								totalPeptidesaboveThresholdLabelValue,
-																																								GroupLayout.PREFERRED_SIZE,
-																																								27,
-																																								GroupLayout.PREFERRED_SIZE)
-																																						.addComponent(
-																																								percentIdentifiedSpectraLabelValue,
-																																								GroupLayout.DEFAULT_SIZE,
-																																								GroupLayout.DEFAULT_SIZE,
-																																								Short.MAX_VALUE)
-																																						.addComponent(
-																																								totalPDHsaboveThresholdLabelValue,
-																																								GroupLayout.DEFAULT_SIZE,
-																																								GroupLayout.DEFAULT_SIZE,
-																																								Short.MAX_VALUE)
-																																						.addComponent(
-																																								totalPAGsLabelValue,
-																																								GroupLayout.DEFAULT_SIZE,
-																																								GroupLayout.DEFAULT_SIZE,
-																																								Short.MAX_VALUE)))
-																														.addGroup(
-																																summaryPanelLayout
-																																		.createSequentialGroup()
-																																		.addGap(150,
-																																				150,
-																																				150)
-																																		.addComponent(
-																																				manualDecoyRatio,
-																																				GroupLayout.PREFERRED_SIZE,
-																																				41,
-																																				GroupLayout.PREFERRED_SIZE)
-																																		.addPreferredGap(
-																																				LayoutStyle.ComponentPlacement.RELATED)
-																																		.addComponent(
-																																				manualDecoyRatioValue,
-																																				GroupLayout.PREFERRED_SIZE,
-																																				51,
-																																				GroupLayout.PREFERRED_SIZE)
-																																		.addPreferredGap(
-																																				LayoutStyle.ComponentPlacement.UNRELATED)
-																																		.addComponent(
-																																				jComboBox1,
-																																				GroupLayout.PREFERRED_SIZE,
-																																				155,
-																																				GroupLayout.PREFERRED_SIZE)))))
-																		.addPreferredGap(
-																				LayoutStyle.ComponentPlacement.RELATED)
-																		.addComponent(
-																				jComboBox2,
-																				GroupLayout.PREFERRED_SIZE,
-																				177,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addPreferredGap(
-																				LayoutStyle.ComponentPlacement.RELATED)
-																		.addComponent(
-																				manualCalculate,
-																				GroupLayout.PREFERRED_SIZE,
-																				162,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addContainerGap()))));
-		summaryPanelLayout
-				.setVerticalGroup(summaryPanelLayout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(
-								summaryPanelLayout
-										.createSequentialGroup()
-										.addGroup(
-												summaryPanelLayout
-														.createParallelGroup(
-																GroupLayout.Alignment.LEADING)
-														.addGroup(
-																summaryPanelLayout
-																		.createSequentialGroup()
-																		.addContainerGap()
-																		.addGroup(
-																				summaryPanelLayout
-																						.createParallelGroup(
-																								GroupLayout.Alignment.LEADING)
-																						.addGroup(
-																								summaryPanelLayout
-																										.createSequentialGroup()
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.BASELINE)
-																														.addComponent(
-																																siiComboBox,
-																																GroupLayout.PREFERRED_SIZE,
-																																GroupLayout.DEFAULT_SIZE,
-																																GroupLayout.PREFERRED_SIZE)
-																														.addComponent(
-																																siiListLabel))
-																										.addGap(8,
-																												8,
-																												8)
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.BASELINE)
-																														.addComponent(
-																																totalSIRLabel)
-																														.addComponent(
-																																totalSIRLabelValue))
-																										.addPreferredGap(
-																												LayoutStyle.ComponentPlacement.RELATED)
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.BASELINE)
-																														.addComponent(
-																																totalSIILabel)
-																														.addComponent(
-																																totalSIIbelowThresholdLabel)
-																														.addComponent(
-																																totalSIIbelowThresholdLabelValue))
-																										.addPreferredGap(
-																												LayoutStyle.ComponentPlacement.RELATED)
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.BASELINE)
-																														.addComponent(
-																																totalSIIaboveThresholdLabel)
-																														.addComponent(
-																																totalSIIaboveThresholdLabelValue))
-																										.addPreferredGap(
-																												LayoutStyle.ComponentPlacement.RELATED)
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.BASELINE)
-																														.addComponent(
-																																totalSIIaboveThresholdRankOneLabel)
-																														.addComponent(
-																																totalSIIaboveThresholdRankOneLabelValue))
-																										.addPreferredGap(
-																												LayoutStyle.ComponentPlacement.RELATED)
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.TRAILING)
-																														.addGroup(
-																																summaryPanelLayout
-																																		.createSequentialGroup()
-																																		.addComponent(
-																																				totalPAGsLabel)
-																																		.addPreferredGap(
-																																				LayoutStyle.ComponentPlacement.RELATED)
-																																		.addGroup(
-																																				summaryPanelLayout
-																																						.createParallelGroup(
-																																								GroupLayout.Alignment.BASELINE)
-																																						.addComponent(
-																																								totalPDHsLabel)
-																																						.addComponent(
-																																								totalPDHsaboveThresholdLabel)))
-																														.addGroup(
-																																summaryPanelLayout
-																																		.createSequentialGroup()
-																																		.addComponent(
-																																				totalPAGsLabelValue)
-																																		.addPreferredGap(
-																																				LayoutStyle.ComponentPlacement.RELATED)
-																																		.addComponent(
-																																				totalPDHsaboveThresholdLabelValue)))
-																										.addPreferredGap(
-																												LayoutStyle.ComponentPlacement.RELATED)
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.BASELINE)
-																														.addComponent(
-																																percentIdentifiedSpectraLabelValue)
-																														.addComponent(
-																																percentIdentifiedSpectraLabel))
-																										.addPreferredGap(
-																												LayoutStyle.ComponentPlacement.RELATED)
-																										.addGroup(
-																												summaryPanelLayout
-																														.createParallelGroup(
-																																GroupLayout.Alignment.BASELINE)
-																														.addComponent(
-																																totalPeptidesaboveThresholdLabel)
-																														.addComponent(
-																																totalPeptidesaboveThresholdLabelValue)))
-																						.addComponent(
-																								jSeparator4,
-																								GroupLayout.PREFERRED_SIZE,
-																								237,
-																								GroupLayout.PREFERRED_SIZE)))
-														.addGroup(
-																summaryPanelLayout
-																		.createSequentialGroup()
-																		.addGap(22,
-																				22,
-																				22)
-																		.addGroup(
-																				summaryPanelLayout
-																						.createParallelGroup(
-																								GroupLayout.Alignment.BASELINE)
-																						.addComponent(
-																								isDecoySii)
-																						.addComponent(
-																								isDecoySiiValue))
-																		.addPreferredGap(
-																				LayoutStyle.ComponentPlacement.RELATED)
-																		.addGroup(
-																				summaryPanelLayout
-																						.createParallelGroup(
-																								GroupLayout.Alignment.BASELINE)
-																						.addComponent(
-																								isDecoySiiFalse)
-																						.addComponent(
-																								isDecoySiiFalseValue))
-																		.addPreferredGap(
-																				LayoutStyle.ComponentPlacement.RELATED)
-																		.addGroup(
-																				summaryPanelLayout
-																						.createParallelGroup(
-																								GroupLayout.Alignment.BASELINE)
-																						.addComponent(
-																								fpSiiLabel)
-																						.addComponent(
-																								fpSiiValue))
-																		.addPreferredGap(
-																				LayoutStyle.ComponentPlacement.RELATED)
-																		.addGroup(
-																				summaryPanelLayout
-																						.createParallelGroup(
-																								GroupLayout.Alignment.BASELINE)
-																						.addComponent(
-																								tpSiiLabel)
-																						.addComponent(
-																								tpSiiValue))
-																		.addPreferredGap(
-																				LayoutStyle.ComponentPlacement.RELATED)
-																		.addGroup(
-																				summaryPanelLayout
-																						.createParallelGroup(
-																								GroupLayout.Alignment.BASELINE)
-																						.addComponent(
-																								fdrSiiLabel)
-																						.addComponent(
-																								fdrSiiValue))
-																		.addPreferredGap(
-																				LayoutStyle.ComponentPlacement.RELATED)
-																		.addGroup(
-																				summaryPanelLayout
-																						.createParallelGroup(
-																								GroupLayout.Alignment.BASELINE)
-																						.addComponent(
-																								fpProteinsLabel)
-																						.addComponent(
-																								fpProteinsValue))
-																		.addPreferredGap(
-																				LayoutStyle.ComponentPlacement.RELATED)
-																		.addGroup(
-																				summaryPanelLayout
-																						.createParallelGroup(
-																								GroupLayout.Alignment.BASELINE)
-																						.addComponent(
-																								tpProteinsLabel)
-																						.addComponent(
-																								tpProteinsValue))
-																		.addPreferredGap(
-																				LayoutStyle.ComponentPlacement.RELATED)
-																		.addGroup(
-																				summaryPanelLayout
-																						.createParallelGroup(
-																								GroupLayout.Alignment.BASELINE)
-																						.addComponent(
-																								fdrProteinsLabel)
-																						.addComponent(
-																								fdrProteinsValue))))
-										.addPreferredGap(
-												LayoutStyle.ComponentPlacement.RELATED,
-												253, Short.MAX_VALUE)
-										.addGroup(
-												summaryPanelLayout
-														.createParallelGroup(
-																GroupLayout.Alignment.TRAILING)
-														.addGroup(
-																summaryPanelLayout
-																		.createParallelGroup(
-																				GroupLayout.Alignment.BASELINE)
-																		.addComponent(
-																				manualDecoyPrefix)
-																		.addComponent(
-																				manualDecoyPrefixValue,
-																				GroupLayout.PREFERRED_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addComponent(
-																				manualDecoyLabel)
-																		.addComponent(
-																				manualDecoyRatio)
-																		.addComponent(
-																				manualDecoyRatioValue,
-																				GroupLayout.PREFERRED_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addComponent(
-																				manualCalculate)
-																		.addComponent(
-																				jComboBox1,
-																				GroupLayout.PREFERRED_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.PREFERRED_SIZE)
-																		.addComponent(
-																				jComboBox2,
-																				GroupLayout.PREFERRED_SIZE,
-																				GroupLayout.DEFAULT_SIZE,
-																				GroupLayout.PREFERRED_SIZE))
-														.addComponent(
-																manualDecoy))
-										.addGap(11, 11, 11)
-										.addGroup(
-												summaryPanelLayout
-														.createParallelGroup(
-																GroupLayout.Alignment.TRAILING)
-														.addComponent(
-																tpEvaluePanel,
-																GroupLayout.DEFAULT_SIZE,
-																940,
-																Short.MAX_VALUE)
-														.addComponent(
-																tpQvaluePanel,
-																GroupLayout.DEFAULT_SIZE,
-																940,
-																Short.MAX_VALUE)
-														.addComponent(
-																fdrPanel,
-																GroupLayout.DEFAULT_SIZE,
-																940,
-																Short.MAX_VALUE))
-										.addContainerGap()));
-
-		GroupLayout globalStatisticsPanelLayout = new GroupLayout(
-				globalStatisticsPanel);
-		globalStatisticsPanel.setLayout(globalStatisticsPanelLayout);
-		globalStatisticsPanelLayout
-				.setHorizontalGroup(globalStatisticsPanelLayout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(
-								globalStatisticsPanelLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addComponent(summaryPanel,
-												GroupLayout.DEFAULT_SIZE,
-												GroupLayout.DEFAULT_SIZE,
-												Short.MAX_VALUE)
-										.addContainerGap()));
-		globalStatisticsPanelLayout
-				.setVerticalGroup(globalStatisticsPanelLayout
-						.createParallelGroup(GroupLayout.Alignment.LEADING)
-						.addGroup(
-								globalStatisticsPanelLayout
-										.createSequentialGroup()
-										.addContainerGap()
-										.addComponent(summaryPanel,
-												GroupLayout.DEFAULT_SIZE,
-												GroupLayout.DEFAULT_SIZE,
-												Short.MAX_VALUE)
-										.addContainerGap()));
-
-		mainTabbedPane.addTab("Global Statistics", null, globalStatisticsPanel,
+		summaryPanel.getAccessibleContext().setAccessibleName(
 				"Global Statistics");
-		globalStatisticsPanel.getAccessibleContext().setAccessibleName(
+		summaryPanel.getAccessibleContext().setAccessibleDescription(
 				"Global Statistics");
-		globalStatisticsPanel.getAccessibleContext().setAccessibleDescription(
-				"Global Statistics");
-		globalStatisticsPanel.getAccessibleContext().setAccessibleParent(
-				mainTabbedPane);
+		summaryPanel.getAccessibleContext().setAccessibleParent(mainTabbedPane);
 
+		return summaryPanel;
+	}
 
-		protocalTextPane.setContentType("text/html");
-		protocalTextPane.setEditable(false);
-
-		mainTabbedPane.addTab("Protocols", createProtocolPanel(protocalTextPane));
-
-		getContentPane().add(mainTabbedPane);
-		getAccessibleContext().setAccessibleDescription("MzIdentML Viewer");
-
-		pack();
-	}// </editor-fold>//GEN-END:initComponents
-
-	private JPanel createProtocolPanel(Component protocalTextPane) {		
+	private JPanel createProtocolPanel(Component protocalTextPane) {
 		final JPanel protocolSummaryPanel = new JPanel(new BorderLayout());
-		
-		protocolSummaryPanel.setBorder(BorderFactory.createTitledBorder("Summary"));
-		protocolSummaryPanel.add(new JScrollPane(protocalTextPane), BorderLayout.CENTER);
-		
+
+		protocolSummaryPanel.setBorder(BorderFactory
+				.createTitledBorder("Summary"));
+		protocolSummaryPanel.add(new JScrollPane(protocalTextPane),
+				BorderLayout.CENTER);
+
 		return protocolSummaryPanel;
 	}
 
-	private JMenuBar createMenuBar()
-	{
+	private JMenuBar createMenuBar() {
 		final JMenuBar jMenuBar = new JMenuBar();
 
 		final JMenu fileMenu = new JMenu("File");
@@ -2262,7 +1630,7 @@ public class ProteoIDViewer extends JFrame {
 				fileChooser, mainTabbedPane, proteinAmbiguityGroupTable));
 		fileMenu.add(openMenuItem);
 		fileMenu.add(new Separator());
-		
+
 		jMenuBar.add(fileMenu);
 
 		final JMenu exportMenu = new JMenu("Export");
@@ -2288,8 +1656,9 @@ public class ProteoIDViewer extends JFrame {
 		jMenuBar.add(exportMenu);
 
 		return jMenuBar;
-		
+
 	}
+
 	public void loadDBSequenceTable() {
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		Iterator<DBSequence> iterDBSequence = mzIdentMLUnmarshaller
@@ -2891,8 +2260,8 @@ public class ProteoIDViewer extends JFrame {
 					if (mzid_file.getPath().endsWith(".gz")) {
 						GZIPInputStream gin = new GZIPInputStream(
 								new FileInputStream(mzid_file));
-						File outFile = new File(mzid_file.getParent(), mzid_file
-								.getName().replaceAll("\\.gz$", ""));
+						File outFile = new File(mzid_file.getParent(),
+								mzid_file.getName().replaceAll("\\.gz$", ""));
 						FileOutputStream fos = new FileOutputStream(outFile);
 						byte[] buf = new byte[100000];
 						int len;
@@ -2902,18 +2271,19 @@ public class ProteoIDViewer extends JFrame {
 						fos.close();
 						gin.close();
 					} else if (mzid_file.getPath().endsWith(".omx")) {
-						File outFile = new File(fileChooser.getCurrentDirectory(),
-								mzid_file.getName().replaceAll(".omx", ".mzid"));
+						File outFile = new File(
+								fileChooser.getCurrentDirectory(), mzid_file
+										.getName().replaceAll(".omx", ".mzid"));
 						// TODO: Disabled - Andrew
 						// new Omssa2mzid(mzid_file.getPath(),
 						// outFile.getPath(), false);
 					} else if (mzid_file.getPath().endsWith(".xml")) {
-						File outFile =new File(fileChooser.getCurrentDirectory(),
-								mzid_file.getName().replaceAll(".omx", ".mzid"));
+						File outFile = new File(
+								fileChooser.getCurrentDirectory(), mzid_file
+										.getName().replaceAll(".omx", ".mzid"));
 						new Tandem2mzid(mzid_file.getPath(), outFile.getPath());
 					}
-					mzIdentMLUnmarshaller = new MzIdentMLUnmarshaller(
-							mzid_file);
+					mzIdentMLUnmarshaller = new MzIdentMLUnmarshaller(mzid_file);
 					fileName = mzid_file;
 
 					if (!mzIdentMLUnmarshaller.getMzIdentMLVersion()
