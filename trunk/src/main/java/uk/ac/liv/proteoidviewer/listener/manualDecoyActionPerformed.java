@@ -8,19 +8,17 @@ import javax.swing.JTextField;
 
 public class manualDecoyActionPerformed implements ActionListener {
 
-	private final JCheckBox manualDecoy;
 	private final JTextField manualDecoyPrefixValue;
 	private final JTextField manualDecoyRatioValue;
 
-	public manualDecoyActionPerformed(JCheckBox manualDecoy,
-			JTextField manualDecoyPrefixValue, JTextField manualDecoyRatioValue) {
-		this.manualDecoy = manualDecoy;
+	public manualDecoyActionPerformed(JTextField manualDecoyPrefixValue, JTextField manualDecoyRatioValue) {
 		this.manualDecoyPrefixValue = manualDecoyPrefixValue;
 		this.manualDecoyRatioValue = manualDecoyRatioValue;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		final JCheckBox manualDecoy = (JCheckBox) e.getSource();
 		if (manualDecoy.isSelected()) {
 			manualDecoyPrefixValue.setEnabled(true);
 			manualDecoyRatioValue.setEnabled(true);

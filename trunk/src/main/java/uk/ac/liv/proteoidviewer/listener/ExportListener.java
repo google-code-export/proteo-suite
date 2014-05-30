@@ -4,21 +4,47 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+import uk.ac.liv.mzidlib.MzIdentMLToCSV;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.util.CsvFileFilter;
 
-public class exportFDRActionPerformed implements ActionListener {
+/**
+ * 
+ * @author Andrew Collins
+ */
+public class ExportListener implements ActionListener {
+	public static final byte EXPORT_TYPE_PROTEIN = 0;
+	public static final byte EXPORT_TYPE_PROTEIN_GROUP = 1;
+	public static final byte EXPORT_TYPE_PSM = 2;
 
-	private ProteoIDViewer proteoIDViewer;
-
-	public exportFDRActionPerformed(ProteoIDViewer proteoIDViewer) {
+	private final ProteoIDViewer proteoIDViewer;
+	private final String title;
+	private final String option;
+	
+	public ExportListener(ProteoIDViewer proteoIDViewer, byte exportType)
+	{
 		this.proteoIDViewer = proteoIDViewer;
+		switch (exportType)
+		{
+		case EXPORT_TYPE_PROTEIN:
+			this.title = "Export Proteins Only";
+			this.option = "exportProteinsOnly";
+			break;
+		case EXPORT_TYPE_PROTEIN_GROUP:
+			this.title = "Export Protein Groups";
+			this.option = "exportProteinGroups";
+			break;
+		case EXPORT_TYPE_PSM:
+			this.title = "Export PSMs";
+			this.option = "exportPSMs";
+			break;
+			default:
+				throw new IllegalArgumentException("Unknown export type " + exportType);
+		}
 	}
 
 	@Override
@@ -26,7 +52,8 @@ public class exportFDRActionPerformed implements ActionListener {
 		JFileChooser chooser = new JFileChooser();
 		chooser.setFileFilter(new CsvFileFilter());
 		chooser.setMultiSelectionEnabled(false);
-		chooser.setDialogTitle("Export FDR");
+		chooser.setDialogTitle(title);
+		MzIdentMLToCSV mzidToCsv = new MzIdentMLToCSV();
 
 		int returnVal = chooser.showSaveDialog(proteoIDViewer);
 
@@ -41,7 +68,7 @@ public class exportFDRActionPerformed implements ActionListener {
 
 		while (selectedFile.exists()) {
 			int option = JOptionPane.showConfirmDialog(proteoIDViewer,
-					"The file " + chooser.getSelectedFile().getName()
+					"The  file " + chooser.getSelectedFile().getName()
 							+ " already exists. Replace file?",
 					"Replace File?", JOptionPane.YES_NO_CANCEL_OPTION);
 
@@ -51,7 +78,7 @@ public class exportFDRActionPerformed implements ActionListener {
 			chooser = new JFileChooser();
 			chooser.setFileFilter(new CsvFileFilter());
 			chooser.setMultiSelectionEnabled(false);
-			chooser.setDialogTitle("Export FDR");
+			chooser.setDialogTitle(title);
 
 			returnVal = chooser.showSaveDialog(proteoIDViewer);
 
@@ -63,13 +90,11 @@ public class exportFDRActionPerformed implements ActionListener {
 			if (!selectedFile.getName().toLowerCase().endsWith(".csv")) {
 				selectedFile = new File(selectedFile.getAbsolutePath() + ".csv");
 			}
-
 		}
 
 		proteoIDViewer.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
 		try {
-
 			selectedFile = chooser.getSelectedFile();
 
 			if (!selectedFile.getName().toLowerCase().endsWith(".csv")) {
@@ -80,38 +105,10 @@ public class exportFDRActionPerformed implements ActionListener {
 				selectedFile.delete();
 			}
 
-			selectedFile.createNewFile();
-			FileWriter f = new FileWriter(selectedFile);
-			String outStrHead = "sorted_spectrumResult.get(i)\tsorted_peptideNames.get(i) \t sorted_decoyOrNot.get(i) \t  sorted_evalues.get(i).toString() \t + sorted_scores.get(i).toString() \t estimated_simpleFDR.get(i) \t estimated_qvalue.get(i) \t estimated_fdrscore.get(i) \n";
-			f.write(outStrHead);
-			for (int i = 0; i < proteoIDViewer.falseDiscoveryRate
-					.getSorted_evalues().size(); i++) {
+			mzidToCsv.useMzIdentMLToCSV(proteoIDViewer.mzIdentMLUnmarshaller,
+					selectedFile.getPath(), option, false);
 
-				String outStr = proteoIDViewer.falseDiscoveryRate
-						.getSorted_spectrumResult().get(i)
-						+ "\t"
-						+ proteoIDViewer.falseDiscoveryRate
-								.getSorted_peptideNames().get(i)
-						+ "\t"
-						+ proteoIDViewer.falseDiscoveryRate
-								.getSorted_decoyOrNot().get(i)
-						+ "\t"
-						// + sorted_evalues.get(i).toString() + "\t" +
-						// sorted_scores.get(i).toString() + "\t"
-						+ proteoIDViewer.falseDiscoveryRate
-								.getSorted_simpleFDR().get(i)
-						+ "\t"
-						+ proteoIDViewer.falseDiscoveryRate.getSorted_qValues()
-								.get(i)
-						+ "\t"
-						+ proteoIDViewer.falseDiscoveryRate
-								.getSorted_estimatedFDR().get(i) + "\n";
-
-				f.write(outStr);
-			}
-			f.close();
-
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			JOptionPane
 					.showMessageDialog(
 							proteoIDViewer,
@@ -119,7 +116,6 @@ public class exportFDRActionPerformed implements ActionListener {
 							"Error Exporting", JOptionPane.ERROR_MESSAGE);
 		}
 
-		proteoIDViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-
+		proteoIDViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));	
 	}
 }

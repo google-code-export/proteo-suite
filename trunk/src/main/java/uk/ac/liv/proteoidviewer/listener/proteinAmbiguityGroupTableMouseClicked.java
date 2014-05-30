@@ -18,6 +18,7 @@ import uk.ac.ebi.jmzidml.model.mzidml.DBSequence;
 import uk.ac.ebi.jmzidml.model.mzidml.ProteinAmbiguityGroup;
 import uk.ac.ebi.jmzidml.model.mzidml.ProteinDetectionHypothesis;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
+import uk.ac.liv.proteoidviewer.tabs.ProteinView;
 import uk.ac.liv.proteoidviewer.util.IdViewerUtils;
 
 public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
@@ -26,21 +27,19 @@ public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
 	private final JTextPane jProteinSequenceTextPane;
 	private final JLabel jScientificNameValueLabel;
 	private final JTable proteinAmbiguityGroupTable;
-	private final JTable spectrumIdentificationItemProteinViewTable;
-	private final JTable proteinDetectionHypothesisTable;
+
+	private final ProteinView proteinView;
 
 	public proteinAmbiguityGroupTableMouseClicked(
 			ProteoIDViewer proteoIDViewer, JTextPane jProteinSequenceTextPane,
 			JLabel jScientificNameValueLabel,
 			JTable proteinAmbiguityGroupTable,
-			JTable spectrumIdentificationItemProteinViewTable,
-			JTable proteinDetectionHypothesisTable) {
+			ProteinView proteinView) {
 		this.proteoIDViewer = proteoIDViewer;
 		this.jProteinSequenceTextPane = jProteinSequenceTextPane;
 		this.jScientificNameValueLabel = jScientificNameValueLabel;
 		this.proteinAmbiguityGroupTable = proteinAmbiguityGroupTable;
-		this.spectrumIdentificationItemProteinViewTable = spectrumIdentificationItemProteinViewTable;
-		this.proteinDetectionHypothesisTable = proteinDetectionHypothesisTable;
+		this.proteinView = proteinView;
 	}
 
 	@Override
@@ -53,8 +52,8 @@ public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
 		if (row != -1) {
 			row = proteinAmbiguityGroupTable.convertRowIndexToModel(row);
 			try {
-				proteinDetectionHypothesisTable.removeAll();
-				spectrumIdentificationItemProteinViewTable.removeAll();
+				proteinView.getDetectionHypothesisTable().removeAll();
+				proteinView.getIdentificationItemTable().removeAll();
 				// TODO: Disabled - Andrew
 				// proteinDetectionHypothesisTable.scrollRowToVisible(0);
 				String pag_id = (String) proteinAmbiguityGroupTable.getModel()
@@ -74,8 +73,8 @@ public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
 								.unmarshal(DBSequence.class,
 										proteinDetectionHypothesis
 												.getDBSequenceRef());
-						boolean isDecoy = proteoIDViewer
-								.checkIfProteinDetectionHypothesisIsDecoy(proteinDetectionHypothesis);
+						boolean isDecoy = proteinView
+								.checkIfProteinDetectionHypothesisIsDecoy(proteinDetectionHypothesis, proteoIDViewer.mzIdentMLUnmarshaller);
 						List<CvParam> cvParamList = proteinDetectionHypothesis
 								.getCvParam();
 						String score = " ";
@@ -97,7 +96,7 @@ public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
 											.getPeptideHypothesis().size());
 						}
 
-						((DefaultTableModel) proteinDetectionHypothesisTable
+						((DefaultTableModel) proteinView.getDetectionHypothesisTable()
 								.getModel()).addRow(new Object[] {
 								proteinDetectionHypothesis.getId(),
 								dBSequenceAccession,

@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.bind.JAXBException;
 
@@ -28,6 +27,7 @@ import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
 import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
+import uk.ac.liv.proteoidviewer.tabs.PeptideSummary;
 
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.spectrum.DefaultSpectrumAnnotation;
@@ -37,44 +37,40 @@ public class spectrumIdentificationItemTablePeptideViewMouseClicked implements
 		MouseListener {
 
 	private final ProteoIDViewer proteoIDViewer;
-	private final JTable spectrumIdentificationItemTablePeptideView;
-	private final JTable fragmentationTablePeptideView;
-	private final JTable peptideEvidenceTablePeptideView;
+	private final PeptideSummary peptideSummary;
 	private final List<String> filterListIon1;
 	private final List<String> filterListCharge1;
 	private final JPanel jGraph1;
 	private final Map<String, String> siiSirMap;
 
 	public spectrumIdentificationItemTablePeptideViewMouseClicked(
-			ProteoIDViewer proteoIDViewer, JTable spectrumIdentificationItemTablePeptideView, JTable fragmentationTablePeptideView, 
-			JTable peptideEvidenceTablePeptideView, List<String> filterListIon1, 
+			ProteoIDViewer proteoIDViewer, PeptideSummary peptideSummary, 
+			List<String> filterListIon1, 
 			List<String> filterListCharge1, JPanel jGraph1, Map<String, String> siiSirMap) {
 		this.proteoIDViewer = proteoIDViewer;
-		this.spectrumIdentificationItemTablePeptideView = spectrumIdentificationItemTablePeptideView;
-		this.fragmentationTablePeptideView = fragmentationTablePeptideView;
-		this.peptideEvidenceTablePeptideView = peptideEvidenceTablePeptideView;
 		this.filterListIon1 = filterListIon1;
 		this.filterListCharge1 = filterListCharge1;
 		this.jGraph1 = jGraph1;
 		this.siiSirMap = siiSirMap;
+		this.peptideSummary = peptideSummary;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		int row = spectrumIdentificationItemTablePeptideView.getSelectedRow();
+		int row = peptideSummary.getIdentificationTable().getSelectedRow();
 		if (row == -1)
 			return;
 
 		proteoIDViewer.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		fragmentationTablePeptideView.removeAll();
-		peptideEvidenceTablePeptideView.removeAll();
+		peptideSummary.getFragmentationTable().removeAll();
+		peptideSummary.getEvidenceTable().removeAll();
 		try {
 
 			// TODO: Disabled - Andrew
 			// fragmentationTablePeptideView.scrollRowToVisible(0);
 			SpectrumIdentificationItem spectrumIdentificationItem = proteoIDViewer.mzIdentMLUnmarshaller
 					.unmarshal(SpectrumIdentificationItem.class,
-							(String) spectrumIdentificationItemTablePeptideView
+							(String) peptideSummary.getIdentificationTable()
 									.getValueAt(row, 0));
 
 			if (spectrumIdentificationItem != null) {
@@ -91,7 +87,7 @@ public class spectrumIdentificationItemTablePeptideViewMouseClicked implements
 											peptideEvidenceRef
 													.getPeptideEvidenceRef());
 
-							((DefaultTableModel) peptideEvidenceTablePeptideView
+							((DefaultTableModel) peptideSummary.getEvidenceTable()
 									.getModel()).addRow(new Object[] {
 									peptideEvidence.getStart(),
 									peptideEvidence.getEnd(),
@@ -140,7 +136,7 @@ public class spectrumIdentificationItemTablePeptideViewMouseClicked implements
 
 						if (m_mz != null && !m_mz.isEmpty()) {
 							for (int j = 0; j < m_mz.size(); j++) {
-								((DefaultTableModel) fragmentationTablePeptideView
+								((DefaultTableModel) peptideSummary.getFragmentationTable()
 										.getModel()).addRow(new Object[] {
 										m_mz.get(j), m_intensity.get(j),
 										m_error.get(j),
@@ -151,24 +147,24 @@ public class spectrumIdentificationItemTablePeptideViewMouseClicked implements
 						}
 					}
 				}
-				double[] mzValuesAsDouble = new double[fragmentationTablePeptideView
+				double[] mzValuesAsDouble = new double[peptideSummary.getFragmentationTable()
 						.getModel().getRowCount()];
-				double[] intensityValuesAsDouble = new double[fragmentationTablePeptideView
+				double[] intensityValuesAsDouble = new double[peptideSummary.getFragmentationTable()
 						.getModel().getRowCount()];
-				double[] m_errorValuesAsDouble = new double[fragmentationTablePeptideView
+				double[] m_errorValuesAsDouble = new double[peptideSummary.getFragmentationTable()
 						.getModel().getRowCount()];
 				List<SpectrumAnnotation> peakAnnotation1 = new ArrayList<>();
-				for (int k = 0; k < fragmentationTablePeptideView.getModel()
+				for (int k = 0; k < peptideSummary.getFragmentationTable().getModel()
 						.getRowCount(); k++) {
-					mzValuesAsDouble[k] = (Double) (fragmentationTablePeptideView
+					mzValuesAsDouble[k] = (double) (peptideSummary.getFragmentationTable()
 							.getModel().getValueAt(k, 0));
 
-					intensityValuesAsDouble[k] = (Double) (fragmentationTablePeptideView
+					intensityValuesAsDouble[k] = (double) (peptideSummary.getFragmentationTable()
 							.getModel().getValueAt(k, 1));
-					m_errorValuesAsDouble[k] = (Double) (fragmentationTablePeptideView
+					m_errorValuesAsDouble[k] = (double) (peptideSummary.getFragmentationTable()
 							.getModel().getValueAt(k, 2));
 
-					String type = (String) fragmentationTablePeptideView
+					String type = (String) peptideSummary.getFragmentationTable()
 							.getModel().getValueAt(k, 3);
 					type = type.replaceFirst("frag:", "");
 					type = type.replaceFirst("ion", "");
@@ -184,7 +180,7 @@ public class spectrumIdentificationItemTablePeptideViewMouseClicked implements
 					try {
 
 						String sir_id = siiSirMap
-								.get((String) spectrumIdentificationItemTablePeptideView
+								.get((String) peptideSummary.getIdentificationTable()
 										.getValueAt(row, 0));
 						SpectrumIdentificationResult spectrumIdentificationResult = proteoIDViewer.mzIdentMLUnmarshaller
 								.unmarshal(SpectrumIdentificationResult.class,
