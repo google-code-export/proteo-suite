@@ -8,10 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JComboBox;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextPane;
-
 
 import uk.ac.ebi.jmzidml.MzIdentMLElement;
 import uk.ac.ebi.jmzidml.model.mzidml.AnalysisProtocolCollection;
@@ -23,28 +20,39 @@ import uk.ac.ebi.jmzidml.model.mzidml.ModificationParams;
 import uk.ac.ebi.jmzidml.model.mzidml.Param;
 import uk.ac.ebi.jmzidml.model.mzidml.ProteinDetectionProtocol;
 import uk.ac.ebi.jmzidml.model.mzidml.SearchModification;
-import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationList;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationProtocol;
 import uk.ac.ebi.jmzidml.model.mzidml.Tolerance;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
+import uk.ac.liv.proteoidviewer.tabs.GlobalStatisticsPanel;
+import uk.ac.liv.proteoidviewer.tabs.PeptideSummary;
+import uk.ac.liv.proteoidviewer.tabs.ProteinDBView;
+import uk.ac.liv.proteoidviewer.tabs.ProtocolPanel;
+import uk.ac.liv.proteoidviewer.tabs.SpectrumSummary;
 import uk.ac.liv.proteoidviewer.util.ProgressBarDialog;
 
 public class mainTabbedPaneMouseClicked implements MouseListener {
 
 	private final JTabbedPane mainTabbedPane;
 	private final ProteoIDViewer proteoIDViewer;
-	private final JComboBox<String> siiComboBox;
-	private final List<SpectrumIdentificationItem> sIIListPassThreshold;
-	private final JTextPane protocalTextPane;
+	private final ProteinDBView proteinDBView;
+	private final SpectrumSummary spectrumSummary;
+	private final PeptideSummary peptideSummary;
+	private final GlobalStatisticsPanel globalStatisticsPanel;
+	private final ProtocolPanel protocolPanel;
 
-	public mainTabbedPaneMouseClicked(ProteoIDViewer proteoIDViewer, JTabbedPane mainTabbedPane, JComboBox<String> siiComboBox, 
-			List<SpectrumIdentificationItem>  sIIListPassThreshold, JTextPane protocalTextPane) {
+	public mainTabbedPaneMouseClicked(ProteoIDViewer proteoIDViewer,
+			JTabbedPane mainTabbedPane,
+			ProtocolPanel protocolPanel, ProteinDBView proteinDBView,
+			SpectrumSummary spectrumSummary, PeptideSummary peptideSummary,
+			GlobalStatisticsPanel globalStatisticsPanel) {
 		this.proteoIDViewer = proteoIDViewer;
 		this.mainTabbedPane = mainTabbedPane;
-		this.siiComboBox = siiComboBox;
-		this.sIIListPassThreshold = sIIListPassThreshold;
-		this.protocalTextPane = protocalTextPane;
+		this.protocolPanel = protocolPanel;
+		this.proteinDBView = proteinDBView;
+		this.spectrumSummary = spectrumSummary;
+		this.peptideSummary = peptideSummary;
+		this.globalStatisticsPanel = globalStatisticsPanel;
 	}
 
 	@Override
@@ -53,8 +61,8 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 		if (mainTabbedPane.getSelectedIndex() == 1 && !proteoIDViewer.secondTab
 				&& proteoIDViewer.mzIdentMLUnmarshaller != null) {
-			ProgressBarDialog progressBarDialog = new ProgressBarDialog(proteoIDViewer,
-					true);
+			ProgressBarDialog progressBarDialog = new ProgressBarDialog(
+					proteoIDViewer, true);
 			final Thread thread = new Thread(new Runnable() {
 
 				@Override
@@ -70,7 +78,8 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 				@Override
 				public void run() {
-					proteoIDViewer.loadSpectrumIdentificationResultTable();
+					spectrumSummary
+							.loadSpectrumIdentificationResultTable(proteoIDViewer.mzIdentMLUnmarshaller);
 					proteoIDViewer.secondTab = true;
 					progressBarDialog.setVisible(false);
 					progressBarDialog.dispose();
@@ -81,8 +90,8 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 		if (mainTabbedPane.getSelectedIndex() == 2 && !proteoIDViewer.thirdTab
 				&& proteoIDViewer.mzIdentMLUnmarshaller != null) {
 
-			ProgressBarDialog progressBarDialog = new ProgressBarDialog(proteoIDViewer,
-					true);
+			ProgressBarDialog progressBarDialog = new ProgressBarDialog(
+					proteoIDViewer, true);
 			final Thread thread = new Thread(new Runnable() {
 
 				@Override
@@ -98,7 +107,8 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 				@Override
 				public void run() {
-					proteoIDViewer.loadPeptideTable();
+					peptideSummary
+							.loadPeptideTable(proteoIDViewer.mzIdentMLUnmarshaller);
 					proteoIDViewer.thirdTab = true;
 					progressBarDialog.setVisible(false);
 					progressBarDialog.dispose();
@@ -109,8 +119,8 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 		if (mainTabbedPane.getSelectedIndex() == 3 && !proteoIDViewer.fourthTab
 				&& proteoIDViewer.mzIdentMLUnmarshaller != null) {
-			ProgressBarDialog progressBarDialog = new ProgressBarDialog(proteoIDViewer,
-					true);
+			ProgressBarDialog progressBarDialog = new ProgressBarDialog(
+					proteoIDViewer, true);
 			final Thread thread = new Thread(new Runnable() {
 
 				@Override
@@ -126,19 +136,20 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 				@Override
 				public void run() {
-					proteoIDViewer.loadSpectrumIdentificationResultTable();
-					proteoIDViewer.loadDBSequenceTable();
+					spectrumSummary
+							.loadSpectrumIdentificationResultTable(proteoIDViewer.mzIdentMLUnmarshaller);
+					proteinDBView
+							.loadDBSequenceTable(proteoIDViewer.mzIdentMLUnmarshaller);
 					proteoIDViewer.fourthTab = true;
 					progressBarDialog.dispose();
 				}
 			}.start();
-
 		}
 
 		if (mainTabbedPane.getSelectedIndex() == 4 && !proteoIDViewer.fifthTab
 				&& proteoIDViewer.mzIdentMLUnmarshaller != null) {
-			ProgressBarDialog progressBarDialog = new ProgressBarDialog(proteoIDViewer,
-					true);
+			ProgressBarDialog progressBarDialog = new ProgressBarDialog(
+					proteoIDViewer, true);
 			final Thread thread = new Thread(new Runnable() {
 
 				@Override
@@ -165,8 +176,8 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 		if (mainTabbedPane.getSelectedIndex() == 5 && !proteoIDViewer.sixthTab
 				&& proteoIDViewer.mzIdentMLUnmarshaller != null) {
-			ProgressBarDialog progressBarDialog = new ProgressBarDialog(proteoIDViewer,
-					true);
+			ProgressBarDialog progressBarDialog = new ProgressBarDialog(
+					proteoIDViewer, true);
 			final Thread thread = new Thread(new Runnable() {
 
 				@Override
@@ -194,18 +205,21 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 	}
 
 	private void loadSummaryStats() {
-		Iterator<SpectrumIdentificationList> iterspectrumIdentificationList = proteoIDViewer.mzIdentMLUnmarshaller.unmarshalCollectionFromXpath(MzIdentMLElement.SpectrumIdentificationList);
+		Iterator<SpectrumIdentificationList> iterspectrumIdentificationList = proteoIDViewer.mzIdentMLUnmarshaller
+				.unmarshalCollectionFromXpath(MzIdentMLElement.SpectrumIdentificationList);
 		while (iterspectrumIdentificationList.hasNext()) {
 			SpectrumIdentificationList spectrumIdentificationList1 = iterspectrumIdentificationList
 					.next();
 
-			siiComboBox.addItem(spectrumIdentificationList1.getId());
+			globalStatisticsPanel.getSiiComboBox().addItem(spectrumIdentificationList1.getId());
 		}
-		proteoIDViewer.loadSpectrumIdentificationList(sIIListPassThreshold);
+		proteoIDViewer.loadSpectrumIdentificationList(
+				proteoIDViewer.mzIdentMLUnmarshaller,
+				globalStatisticsPanel);
 	}
 
 	private void loadProtocolData() {
-		protocalTextPane.setText("");
+		protocolPanel.setProtocolText("");
 		String text = "";
 		proteoIDViewer.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		Map<String, AnalysisSoftware> analysisSoftwareHashMap;
@@ -359,7 +373,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 			}
 
 		}
-		protocalTextPane.setText(text);
+		protocolPanel.setProtocolText(text);
 		proteoIDViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
 

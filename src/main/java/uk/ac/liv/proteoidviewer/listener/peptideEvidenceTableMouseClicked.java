@@ -4,42 +4,43 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
+import uk.ac.liv.proteoidviewer.tabs.ProteinDBView;
+import uk.ac.liv.proteoidviewer.tabs.SpectrumSummary;
 
 public class peptideEvidenceTableMouseClicked implements MouseListener {
 
 	private final ProteoIDViewer proteoIDViewer;
-	private final JTable peptideEvidenceTable;
-	private final JTable dBSequenceTable;
+	private final SpectrumSummary spectrumSummary;
+	private final ProteinDBView proteinDBView;
 	private final JTabbedPane mainTabbedPane;
 
-	public peptideEvidenceTableMouseClicked(ProteoIDViewer proteoIDViewer, JTable peptideEvidenceTable, JTable dBSequenceTable, JTabbedPane mainTabbedPane) {
+	public peptideEvidenceTableMouseClicked(ProteoIDViewer proteoIDViewer, SpectrumSummary spectrumSummary, ProteinDBView proteinDBView, JTabbedPane mainTabbedPane) {
 		this.proteoIDViewer = proteoIDViewer;
-		this.peptideEvidenceTable = peptideEvidenceTable;
-		this.dBSequenceTable = dBSequenceTable;
+		this.spectrumSummary = spectrumSummary;
+		this.proteinDBView = proteinDBView;
 		this.mainTabbedPane = mainTabbedPane;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		int row = peptideEvidenceTable.getSelectedRow();
+		int row = spectrumSummary.getEvidenceTable().getSelectedRow();
 		if (row != -1) {
 			// row = peptideEvidenceTable.convertRowIndexToModel(row);
-			String db_ref = (String) peptideEvidenceTable.getValueAt(row, 6);
+			String db_ref = (String) spectrumSummary.getEvidenceTable().getValueAt(row, 6);
 
-			int rowCount = dBSequenceTable.getModel().getRowCount();
+			int rowCount = proteinDBView.getTable().getModel().getRowCount();
 			for (int i = 0; i < rowCount; i++) {
-				if (db_ref.equals((String) dBSequenceTable.getValueAt(i, 0))) {
+				if (db_ref.equals((String) proteinDBView.getTable().getValueAt(i, 0))) {
 
-					dBSequenceTable.setRowSelectionInterval(i, i);
+					proteinDBView.getTable().setRowSelectionInterval(i, i);
 				}
 
 			}
 		}
 		if (!proteoIDViewer.fourthTab) {
-			proteoIDViewer.loadDBSequenceTable();
+			proteinDBView.loadDBSequenceTable(proteoIDViewer.mzIdentMLUnmarshaller);
 			proteoIDViewer.fourthTab = true;
 		}
 		mainTabbedPane.setSelectedIndex(3);		

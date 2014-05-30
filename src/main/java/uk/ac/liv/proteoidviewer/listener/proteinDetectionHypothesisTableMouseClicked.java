@@ -24,13 +24,14 @@ import uk.ac.ebi.jmzidml.model.mzidml.PeptideHypothesis;
 import uk.ac.ebi.jmzidml.model.mzidml.ProteinDetectionHypothesis;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
+import uk.ac.liv.proteoidviewer.tabs.ProteinView;
 
 public class proteinDetectionHypothesisTableMouseClicked implements
 		MouseListener {
 
 	private final ProteoIDViewer proteoIDViewer;
 	private final JTable proteinDetectionHypothesisTable;
-	private final JTable spectrumIdentificationItemProteinViewTable;
+	private final ProteinView proteinView;
 	private final JLabel jScientificNameValueLabel;
 	private final JEditorPane jProteinDescriptionEditorPane;
 	private final JTextPane jProteinSequenceTextPane;
@@ -38,13 +39,13 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 	public proteinDetectionHypothesisTableMouseClicked(
 			ProteoIDViewer proteoIDViewer,
 			JTable proteinDetectionHypothesisTable,
-			JTable spectrumIdentificationItemProteinViewTable,
+			ProteinView proteinView,
 			JLabel jScientificNameValueLabel,
 			JEditorPane jProteinDescriptionEditorPane,
 			JTextPane jProteinSequenceTextPane) {
 		this.proteoIDViewer = proteoIDViewer;
 		this.proteinDetectionHypothesisTable = proteinDetectionHypothesisTable;
-		this.spectrumIdentificationItemProteinViewTable = spectrumIdentificationItemProteinViewTable;
+		this.proteinView = proteinView;
 		this.jScientificNameValueLabel = jScientificNameValueLabel;
 		this.jProteinDescriptionEditorPane = jProteinDescriptionEditorPane;
 		this.jProteinSequenceTextPane = jProteinSequenceTextPane;
@@ -61,7 +62,7 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 		// row =
 		// spectrumIdentificationItemTable.convertRowIndexToModel(row);
 		try {
-			spectrumIdentificationItemProteinViewTable.removeAll();
+			proteinView.getIdentificationItemTable().removeAll();
 			// TODO: Disabled - Andrew
 			// spectrumIdentificationItemProteinViewTable.scrollRowToVisible(0);
 			// row =
@@ -165,7 +166,7 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 											+ location;
 								}
 
-								((DefaultTableModel) spectrumIdentificationItemProteinViewTable
+								((DefaultTableModel) proteinView.getIdentificationItemTable()
 										.getModel()).addRow(new String[] {
 										peptide.getPeptideSequence(),
 										spectrumIdentificationItem2.getId(),
@@ -179,12 +180,12 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 											.get(s);
 									String newCol = cvParam.getName();
 									if (newCol.equals("mascot:score")) {
-										((DefaultTableModel) spectrumIdentificationItemProteinViewTable
+										((DefaultTableModel) proteinView.getIdentificationItemTable()
 												.getModel())
 												.setValueAt(
 														Double.valueOf(cvParam
 																.getValue()),
-														((DefaultTableModel) spectrumIdentificationItemProteinViewTable
+														((DefaultTableModel) proteinView.getIdentificationItemTable()
 																.getModel())
 																.getRowCount() - 1,
 														3);
@@ -194,24 +195,24 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 											|| accession.equals("MS:1001172")
 											|| accession.equals("MS:1001159")
 											|| accession.equals("MS:1001328")) {
-										((DefaultTableModel) spectrumIdentificationItemProteinViewTable
+										((DefaultTableModel) proteinView.getIdentificationItemTable()
 												.getModel())
 												.setValueAt(
 														Double.valueOf(cvParam
 																.getValue()),
-														((DefaultTableModel) spectrumIdentificationItemProteinViewTable
+														((DefaultTableModel) proteinView.getIdentificationItemTable()
 																.getModel())
 																.getRowCount() - 1,
 														4);
 									}
 
 								}
-								((DefaultTableModel) spectrumIdentificationItemProteinViewTable
+								((DefaultTableModel) proteinView.getIdentificationItemTable()
 										.getModel())
 										.setValueAt(
 												spectrumIdentificationItem2
 														.isPassThreshold(),
-												((DefaultTableModel) spectrumIdentificationItemProteinViewTable
+												((DefaultTableModel) proteinView.getIdentificationItemTable()
 														.getModel())
 														.getRowCount() - 1, 5);
 							}

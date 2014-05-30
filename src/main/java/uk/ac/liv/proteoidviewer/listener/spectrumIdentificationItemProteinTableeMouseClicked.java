@@ -8,29 +8,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.xml.bind.JAXBException;
 
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
+import uk.ac.liv.proteoidviewer.tabs.SpectrumSummary;
 
 public class spectrumIdentificationItemProteinTableeMouseClicked implements
 		MouseListener {
 
 	private final ProteoIDViewer proteoIDViewer;
-	private final JTable spectrumIdentificationItemProteinViewTable;
-	private final JTable spectrumIdentificationResultTable;
-	private final JTable spectrumIdentificationItemTable;
+	private final SpectrumSummary spectrumSummary;
 	private final JTabbedPane mainTabbedPane;
 
 	public spectrumIdentificationItemProteinTableeMouseClicked(
-			ProteoIDViewer proteoIDViewer, JTable spectrumIdentificationItemProteinViewTable, 
-			JTable spectrumIdentificationResultTable, JTable spectrumIdentificationItemTable, JTabbedPane mainTabbedPane) {
+			ProteoIDViewer proteoIDViewer,
+			SpectrumSummary spectrumSummary, JTabbedPane mainTabbedPane) {
 		this.proteoIDViewer = proteoIDViewer;
-		this.spectrumIdentificationItemProteinViewTable = spectrumIdentificationItemProteinViewTable;
-		this.spectrumIdentificationResultTable = spectrumIdentificationResultTable;
-		this.spectrumIdentificationItemTable = spectrumIdentificationItemTable;
+		this.spectrumSummary = spectrumSummary;
 		this.mainTabbedPane = mainTabbedPane;
 	}
 
@@ -38,14 +34,15 @@ public class spectrumIdentificationItemProteinTableeMouseClicked implements
 	public void mouseClicked(MouseEvent evt) {
 		proteoIDViewer.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
-		String sii_ref = (String) spectrumIdentificationItemProteinViewTable
-				.getValueAt(spectrumIdentificationItemProteinViewTable
+		String sii_ref = (String) spectrumSummary.getIdentificationItemTable()
+				.getValueAt(spectrumSummary.getIdentificationItemTable()
 						.getSelectedRow(), 1);
 
-		for (int i = 0; i < spectrumIdentificationResultTable.getRowCount(); i++) {
+		for (int i = 0; i < spectrumSummary.getIdentificationResultTable()
+				.getRowCount(); i++) {
 			try {
-				String sir_id = (String) spectrumIdentificationResultTable
-						.getValueAt(i, 0);
+				String sir_id = (String) spectrumSummary
+						.getIdentificationResultTable().getValueAt(i, 0);
 
 				SpectrumIdentificationResult sir = proteoIDViewer.mzIdentMLUnmarshaller
 						.unmarshal(SpectrumIdentificationResult.class, sir_id);
@@ -56,13 +53,19 @@ public class spectrumIdentificationItemProteinTableeMouseClicked implements
 							.get(j);
 					if (sii_ref.equals(spectrumIdentificationItem.getId())) {
 
-						spectrumIdentificationResultTable
+						spectrumSummary.getIdentificationResultTable()
 								.setRowSelectionInterval(i, i);
-						proteoIDViewer.spectrumIdentificationResultTableMouseClicked();
+						proteoIDViewer
+								.spectrumIdentificationResultTableMouseClicked(spectrumSummary, proteoIDViewer.mzIdentMLUnmarshaller);
 
-						spectrumIdentificationItemTable
+						spectrumSummary.getIdentificationItemTable()
 								.setRowSelectionInterval(j, j);
-						proteoIDViewer.spectrumIdentificationItemTableMouseClicked(spectrumIdentificationItemTable.getSelectedRow());
+						proteoIDViewer
+								.spectrumIdentificationItemTableMouseClicked(
+										spectrumSummary
+												.getIdentificationItemTable()
+												.getSelectedRow(),
+										spectrumSummary, proteoIDViewer.mzIdentMLUnmarshaller);
 						break;
 					}
 				}
@@ -75,7 +78,8 @@ public class spectrumIdentificationItemProteinTableeMouseClicked implements
 
 		proteoIDViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		if (!proteoIDViewer.secondTab) {
-			proteoIDViewer.loadSpectrumIdentificationResultTable();
+			spectrumSummary
+					.loadSpectrumIdentificationResultTable(proteoIDViewer.mzIdentMLUnmarshaller);
 			proteoIDViewer.secondTab = true;
 		}
 		mainTabbedPane.setSelectedIndex(1);
