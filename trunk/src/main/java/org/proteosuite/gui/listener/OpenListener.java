@@ -6,13 +6,16 @@ import java.io.File;
 import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.InspectModel;
+import org.proteosuite.model.MzIdentMLFile;
 import org.proteosuite.model.MzQuantMLFile;
+import org.proteosuite.model.RawDataFile;
 import org.proteosuite.model.RawMzMLFile;
 
 public class OpenListener implements ActionListener {
@@ -25,6 +28,8 @@ public class OpenListener implements ActionListener {
 				"mzq"));
 		openFile.setFileFilter(new FileNameExtensionFilter("MzML (*.mzML)",
 				"mzml"));
+		openFile.setFileFilter(new FileNameExtensionFilter(
+				"mzIdentML (*.mzIdML)", "mzid"));
 		int result = openFile.showOpenDialog(null);
 
 		if (result == JFileChooser.CANCEL_OPTION)
@@ -41,6 +46,32 @@ public class OpenListener implements ActionListener {
 		if (extension.equalsIgnoreCase("mzq")) {
 			MzQuantMLFile quantDataFile = new MzQuantMLFile(file);
 			model.addQuantDataFile(quantDataFile);
+		} else if (extension.equalsIgnoreCase("mzid")) {
+			// TODO: We possibly should poll the user here for an mzML file.
+			Object[] selectionValues = new Object[model.getRawData().size() + 1];
+			int i = 0;
+			selectionValues[i++] = "None";
+			for (RawDataFile rawDataFile : model.getRawData())
+			{
+				selectionValues[i++] = rawDataFile.getFileName();
+			}
+			String s = (String)JOptionPane.showInputDialog(
+			                    null,
+			                    "Please select the spectrum file",
+			                    "Parent Spectrum File",
+			                    JOptionPane.QUESTION_MESSAGE,
+			                    null,
+			                    selectionValues,
+			                    "None");
+
+			RawDataFile parent = null;
+			if (s != null && !s.equals("None"))
+			{
+				parent = model.getRawDataFile(s);
+			}
+			
+			MzIdentMLFile identDataFile = new MzIdentMLFile(file, parent);
+			model.addIdentDataFile(identDataFile);
 		} else if (extension.equalsIgnoreCase("mzml")) {
 			RawMzMLFile rawDataFile = new RawMzMLFile(file);
 			data.addRawDataFile(rawDataFile);
@@ -49,9 +80,7 @@ public class OpenListener implements ActionListener {
 					.setRawDataProcessing();
 			((RawDataAndMultiplexingStep) AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP)
 					.refreshFromData();
-		}
-		else
-		{
+		} else {
 			System.out.println("Unknown File type");
 		}
 	}

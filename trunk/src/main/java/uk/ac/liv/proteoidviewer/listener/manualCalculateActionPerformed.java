@@ -85,7 +85,7 @@ public class manualCalculateActionPerformed implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		ProgressBarDialog progressBarDialog = new ProgressBarDialog(proteoIDViewer, true);
+		ProgressBarDialog progressBarDialog = new ProgressBarDialog(null, true);
 		final Thread thread = new Thread(new Runnable() {
 
 			@Override
@@ -114,8 +114,7 @@ public class manualCalculateActionPerformed implements ActionListener {
 		List<SpectrumIdentificationItem> sIIListIsDecoyFalse = new ArrayList<>();
 		try {
 
-			List<SpectrumIdentificationResult> sirListTemp = proteoIDViewer.mzIdentMLUnmarshaller
-					.unmarshal(SpectrumIdentificationList.class,
+			List<SpectrumIdentificationResult> sirListTemp = proteoIDViewer.unmarshal(SpectrumIdentificationList.class,
 							siiComboBox.getSelectedItem().toString())
 					.getSpectrumIdentificationResult();
 			List<SpectrumIdentificationItem> siiListTemp = new ArrayList<>();
@@ -142,10 +141,9 @@ public class manualCalculateActionPerformed implements ActionListener {
 					PeptideEvidenceRef peptideEvidenceRef = peptideEvidenceRefList
 							.get(k);
 
-					PeptideEvidence peptideEvidence1 = proteoIDViewer.mzIdentMLUnmarshaller
-							.unmarshal(PeptideEvidence.class,
+					PeptideEvidence peptideEvidence1 = proteoIDViewer.unmarshal(PeptideEvidence.class,
 									peptideEvidenceRef.getPeptideEvidenceRef());
-					DBSequence dbSeq = proteoIDViewer.mzIdentMLUnmarshaller.unmarshal(
+					DBSequence dbSeq = proteoIDViewer.unmarshal(
 							DBSequence.class,
 							peptideEvidence1.getDBSequenceRef());
 

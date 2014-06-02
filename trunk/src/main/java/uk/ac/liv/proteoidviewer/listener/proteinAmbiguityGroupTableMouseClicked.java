@@ -13,6 +13,7 @@ import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.bind.JAXBException;
 
+import uk.ac.ebi.jmzidml.MzIdentMLElement;
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
 import uk.ac.ebi.jmzidml.model.mzidml.DBSequence;
 import uk.ac.ebi.jmzidml.model.mzidml.ProteinAmbiguityGroup;
@@ -33,8 +34,7 @@ public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
 	public proteinAmbiguityGroupTableMouseClicked(
 			ProteoIDViewer proteoIDViewer, JTextPane jProteinSequenceTextPane,
 			JLabel jScientificNameValueLabel,
-			JTable proteinAmbiguityGroupTable,
-			ProteinView proteinView) {
+			JTable proteinAmbiguityGroupTable, ProteinView proteinView) {
 		this.proteoIDViewer = proteoIDViewer;
 		this.jProteinSequenceTextPane = jProteinSequenceTextPane;
 		this.jScientificNameValueLabel = jScientificNameValueLabel;
@@ -52,15 +52,18 @@ public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
 		if (row != -1) {
 			row = proteinAmbiguityGroupTable.convertRowIndexToModel(row);
 			try {
-				proteinView.getDetectionHypothesisTable().removeAll();
-				proteinView.getIdentificationItemTable().removeAll();
+				((DefaultTableModel) proteinView.getDetectionHypothesisTable()
+						.getModel()).setRowCount(0);
+				((DefaultTableModel) proteinView.getIdentificationItemTable()
+				.getModel()).setRowCount(0);
 				// TODO: Disabled - Andrew
 				// proteinDetectionHypothesisTable.scrollRowToVisible(0);
 				String pag_id = (String) proteinAmbiguityGroupTable.getModel()
 						.getValueAt(row, 0);
 
-				ProteinAmbiguityGroup proteinAmbiguityGroup = proteoIDViewer.mzIdentMLUnmarshaller
-						.unmarshal(ProteinAmbiguityGroup.class, pag_id);
+				ProteinAmbiguityGroup proteinAmbiguityGroup = proteoIDViewer
+						.unmarshal(MzIdentMLElement.ProteinAmbiguityGroup
+								.getClazz(), pag_id);
 
 				List<ProteinDetectionHypothesis> proteinDetectionHypothesisList = proteinAmbiguityGroup
 						.getProteinDetectionHypothesis();
@@ -69,12 +72,14 @@ public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
 
 						ProteinDetectionHypothesis proteinDetectionHypothesis = proteinDetectionHypothesisList
 								.get(i);
-						DBSequence dBSequence = proteoIDViewer.mzIdentMLUnmarshaller
-								.unmarshal(DBSequence.class,
-										proteinDetectionHypothesis
-												.getDBSequenceRef());
+						DBSequence dBSequence = proteoIDViewer.unmarshal(
+								DBSequence.class,
+								proteinDetectionHypothesis.getDBSequenceRef());
 						boolean isDecoy = proteinView
-								.checkIfProteinDetectionHypothesisIsDecoy(proteinDetectionHypothesis, proteoIDViewer.mzIdentMLUnmarshaller);
+								.checkIfProteinDetectionHypothesisIsDecoy(
+										proteinDetectionHypothesis,
+										proteoIDViewer
+												.getMzIdentMLUnmarshaller());
 						List<CvParam> cvParamList = proteinDetectionHypothesis
 								.getCvParam();
 						String score = " ";
@@ -96,14 +101,18 @@ public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
 											.getPeptideHypothesis().size());
 						}
 
-						((DefaultTableModel) proteinView.getDetectionHypothesisTable()
-								.getModel()).addRow(new Object[] {
-								proteinDetectionHypothesis.getId(),
-								dBSequenceAccession,
-								IdViewerUtils.roundTwoDecimals(Double.valueOf(
-										score).doubleValue()), "",
-								Integer.valueOf(number_peptide), isDecoy,
-								proteinDetectionHypothesis.isPassThreshold() });
+						((DefaultTableModel) proteinView
+								.getDetectionHypothesisTable().getModel())
+								.addRow(new Object[] {
+										proteinDetectionHypothesis.getId(),
+										dBSequenceAccession,
+										IdViewerUtils.roundTwoDecimals(Double
+												.valueOf(score).doubleValue()),
+										"",
+										Integer.valueOf(number_peptide),
+										isDecoy,
+										proteinDetectionHypothesis
+												.isPassThreshold() });
 					}
 				}
 			} catch (JAXBException ex) {

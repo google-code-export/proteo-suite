@@ -18,6 +18,8 @@ import org.proteosuite.model.InspectModel;
 import org.proteosuite.model.QuantDataFile;
 import org.proteosuite.model.RawDataFile;
 
+import uk.ac.liv.proteoidviewer.ProteoIDViewer;
+
 /**
  * 
  * @author SPerkins
@@ -50,8 +52,10 @@ public class InspectTab extends JPanel {
 		Component content = null;
 		switch (panelType) {
 		case PANEL_BLANK:
-		case PANEL_IDENT:
 			content = new JPanel();
+			break;
+		case PANEL_IDENT:
+			content = new ProteoIDViewer();
 			break;
 		case PANEL_RAW:
 			content = new InspectRaw();

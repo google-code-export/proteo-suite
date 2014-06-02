@@ -14,7 +14,6 @@ import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
@@ -37,20 +36,17 @@ import uk.ac.liv.proteoidviewer.util.IdViewerUtils;
 
 public class ProteinView extends JPanel {
 	private static final String[] spectrumIdentificationItemProteinViewTableHeaders = new String[] {
-		"Peptide Sequence", "SII", "Name", "Score", "Expectation value",
-		"passThreshold" };
+			"Peptide Sequence", "SII", "Name", "Score", "Expectation value",
+			"passThreshold" };
 	private static final String[] proteinDetectionHypothesisTableHeaders = new String[] {
-		"ID", "Accession", "Scores", "P-values", "Number of peptides",
-		"Is Decoy", "passThreshold" };
+			"ID", "Accession", "Scores", "P-values", "Number of peptides",
+			"Is Decoy", "passThreshold" };
 	private static final String[] proteinAmbiguityGroupTableHeaders = new String[] {
-		"ID", "Name", "Protein Accessions", "Representative Protein",
-		"Scores", "P-values", "Number of peptides", "Is Decoy",
-		"passThreshold" };
-	
-	
+			"ID", "Name", "Protein Accessions", "Representative Protein",
+			"Scores", "P-values", "Number of peptides", "Is Decoy",
+			"passThreshold" };
+
 	private static final long serialVersionUID = 1L;
-	private final JTabbedPane mainTabbedPane;
-	private final ProteoIDViewer proteoIDViewer;
 
 	private final JTable spectrumIdentificationItemProteinViewTable = new JTable();
 	private final JTable proteinDetectionHypothesisTable = new JTable();
@@ -60,10 +56,7 @@ public class ProteinView extends JPanel {
 	private final JLabel jScientificNameValueLabel = new JLabel();
 
 	public ProteinView(ProteoIDViewer proteoIDViewer,
-			JTabbedPane mainTabbedPane,
 			SpectrumSummary spectrumSummary) {
-		this.mainTabbedPane = mainTabbedPane;
-		this.proteoIDViewer = proteoIDViewer;
 		jProteinDescriptionEditorPane.setContentType("text/html");
 
 		jProteinSequenceTextPane.setContentType("text/html");
@@ -75,8 +68,7 @@ public class ProteinView extends JPanel {
 
 		spectrumIdentificationItemProteinViewTable
 				.addMouseListener(new spectrumIdentificationItemProteinTableeMouseClicked(
-						proteoIDViewer,						
-						spectrumSummary, mainTabbedPane));
+						proteoIDViewer, spectrumSummary));
 
 		spectrumIdentificationItemProteinViewTable.getTableHeader()
 				.setReorderingAllowed(false);
@@ -86,8 +78,7 @@ public class ProteinView extends JPanel {
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		proteinDetectionHypothesisTable
 				.addMouseListener(new proteinDetectionHypothesisTableMouseClicked(
-						proteoIDViewer, proteinDetectionHypothesisTable,
-						this,
+						proteoIDViewer, proteinDetectionHypothesisTable, this,
 						jScientificNameValueLabel,
 						jProteinDescriptionEditorPane, jProteinSequenceTextPane));
 
@@ -104,7 +95,7 @@ public class ProteinView extends JPanel {
 						this));
 
 		proteinAmbiguityGroupTable.getTableHeader().setReorderingAllowed(false);
-		
+
 		createPanel();
 	}
 
@@ -182,15 +173,14 @@ public class ProteinView extends JPanel {
 		add(leftPanel);
 		add(jProteinInfoPanel);
 		getAccessibleContext().setAccessibleName("Protein View");
-		getAccessibleContext().setAccessibleParent(mainTabbedPane);
 	}
 
 	public JTable getIdentificationItemTable() {
 		return spectrumIdentificationItemProteinViewTable;
 	}
 
-
-	public void loadProteinAmbiguityGroupTable(GlobalStatisticsPanel globalStatisticsPanel,
+	public void loadProteinAmbiguityGroupTable(
+			GlobalStatisticsPanel globalStatisticsPanel,
 			MzIdentMLUnmarshaller mzIdentMLUnmarshaller) {
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		String protein_accessions = "";
@@ -319,53 +309,53 @@ public class ProteinView extends JPanel {
 					protein_accessions.length() - 1);
 			if (mzIdentMLUnmarshaller.getMzIdentMLVersion().startsWith("1.1.")
 					&& anchorProtein) {
-				((DefaultTableModel) getAmbiguityGroupTable()
-						.getModel()).addRow(new Object[] {
-						proteinAmbiguityGroup.getId(),
-						proteinAmbiguityGroup.getName(),
-						protein_accessions,
-						anchorProteinAccession,
-						IdViewerUtils.roundTwoDecimals(Double.valueOf(score)
-								.doubleValue()), " ",
-						Integer.valueOf(number_peptide),
-						String.valueOf(isDecoy),
-						String.valueOf(isPassThreshold) });
+				((DefaultTableModel) getAmbiguityGroupTable().getModel())
+						.addRow(new Object[] {
+								proteinAmbiguityGroup.getId(),
+								proteinAmbiguityGroup.getName(),
+								protein_accessions,
+								anchorProteinAccession,
+								IdViewerUtils.roundTwoDecimals(Double.valueOf(
+										score).doubleValue()), " ",
+								Integer.valueOf(number_peptide),
+								String.valueOf(isDecoy),
+								String.valueOf(isPassThreshold) });
 			} else if (mzIdentMLUnmarshaller.getMzIdentMLVersion().startsWith(
 					"1.2.")
 					&& groupRepresentativeProtein) {
-				((DefaultTableModel) getAmbiguityGroupTable()
-						.getModel()).addRow(new Object[] {
-						proteinAmbiguityGroup.getId(),
-						proteinAmbiguityGroup.getName(),
-						protein_accessions,
-						groupRepresentativeProteinAccession,
-						IdViewerUtils.roundTwoDecimals(Double.valueOf(score)
-								.doubleValue()), " ",
-						Integer.valueOf(number_peptide),
-						String.valueOf(isDecoy),
-						String.valueOf(isPassThreshold) });
+				((DefaultTableModel) getAmbiguityGroupTable().getModel())
+						.addRow(new Object[] {
+								proteinAmbiguityGroup.getId(),
+								proteinAmbiguityGroup.getName(),
+								protein_accessions,
+								groupRepresentativeProteinAccession,
+								IdViewerUtils.roundTwoDecimals(Double.valueOf(
+										score).doubleValue()), " ",
+								Integer.valueOf(number_peptide),
+								String.valueOf(isDecoy),
+								String.valueOf(isPassThreshold) });
 
 			} else if (mzIdentMLUnmarshaller.getMzIdentMLVersion().startsWith(
 					"1.2.")
 					&& leadProtein) {
-				((DefaultTableModel) getAmbiguityGroupTable()
-						.getModel()).addRow(new Object[] {
-						proteinAmbiguityGroup.getId(),
-						proteinAmbiguityGroup.getName(),
-						protein_accessions,
-						leadProteinAccession,
-						IdViewerUtils.roundTwoDecimals(Double.valueOf(score)
-								.doubleValue()), " ",
-						Integer.valueOf(number_peptide),
-						String.valueOf(isDecoy),
-						String.valueOf(isPassThreshold) });
+				((DefaultTableModel) getAmbiguityGroupTable().getModel())
+						.addRow(new Object[] {
+								proteinAmbiguityGroup.getId(),
+								proteinAmbiguityGroup.getName(),
+								protein_accessions,
+								leadProteinAccession,
+								IdViewerUtils.roundTwoDecimals(Double.valueOf(
+										score).doubleValue()), " ",
+								Integer.valueOf(number_peptide),
+								String.valueOf(isDecoy),
+								String.valueOf(isPassThreshold) });
 
 			} else {
-				((DefaultTableModel) getAmbiguityGroupTable()
-						.getModel()).addRow(new Object[] {
-						proteinAmbiguityGroup.getId(),
-						proteinAmbiguityGroup.getName(), protein_accessions,
-						" ", " ", " ", " ", " ", " " });
+				((DefaultTableModel) getAmbiguityGroupTable().getModel())
+						.addRow(new Object[] { proteinAmbiguityGroup.getId(),
+								proteinAmbiguityGroup.getName(),
+								protein_accessions, " ", " ", " ", " ", " ",
+								" " });
 			}
 		}
 
@@ -413,7 +403,7 @@ public class ProteinView extends JPanel {
 		});
 		proteinDetectionHypothesisTable.removeAll();
 		// proteinDetectionHypothesisTable.setAutoCreateRowSorter(true);
-		
+
 		proteinAmbiguityGroupTable.setModel(new DefaultTableModel(
 				new Object[][] {}, proteinAmbiguityGroupTableHeaders) {
 			private static final long serialVersionUID = 1L;
@@ -421,9 +411,8 @@ public class ProteinView extends JPanel {
 		proteinAmbiguityGroupTable.removeAll();
 		// proteinAmbiguityGroupTable.setAutoCreateRowSorter(true);
 
-
 		jProteinDescriptionEditorPane.setText("");
-		
+
 		jProteinSequenceTextPane.setText("");
 	}
 

@@ -68,8 +68,7 @@ public class spectrumIdentificationItemTablePeptideViewMouseClicked implements
 
 			// TODO: Disabled - Andrew
 			// fragmentationTablePeptideView.scrollRowToVisible(0);
-			SpectrumIdentificationItem spectrumIdentificationItem = proteoIDViewer.mzIdentMLUnmarshaller
-					.unmarshal(SpectrumIdentificationItem.class,
+			SpectrumIdentificationItem spectrumIdentificationItem = proteoIDViewer.unmarshal(SpectrumIdentificationItem.class,
 							(String) peptideSummary.getIdentificationTable()
 									.getValueAt(row, 0));
 
@@ -82,8 +81,7 @@ public class spectrumIdentificationItemTablePeptideViewMouseClicked implements
 							PeptideEvidenceRef peptideEvidenceRef = peptideEvidenceRefList
 									.get(i);
 
-							PeptideEvidence peptideEvidence = proteoIDViewer.mzIdentMLUnmarshaller
-									.unmarshal(PeptideEvidence.class,
+							PeptideEvidence peptideEvidence = proteoIDViewer.unmarshal(PeptideEvidence.class,
 											peptideEvidenceRef
 													.getPeptideEvidenceRef());
 
@@ -182,8 +180,7 @@ public class spectrumIdentificationItemTablePeptideViewMouseClicked implements
 						String sir_id = siiSirMap
 								.get((String) peptideSummary.getIdentificationTable()
 										.getValueAt(row, 0));
-						SpectrumIdentificationResult spectrumIdentificationResult = proteoIDViewer.mzIdentMLUnmarshaller
-								.unmarshal(SpectrumIdentificationResult.class,
+						SpectrumIdentificationResult spectrumIdentificationResult = proteoIDViewer.unmarshal(SpectrumIdentificationResult.class,
 										sir_id);
 						Spectrum spectrum = null;
 						String spectrumID = spectrumIdentificationResult

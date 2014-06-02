@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,17 +11,19 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import uk.ac.ebi.jmzidml.MzIdentMLElement;
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
+import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.listener.peptideEvidenceTableMouseClicked;
+import uk.ac.liv.proteoidviewer.listener.spectrumIdentificationItemTableMouseClicked;
+import uk.ac.liv.proteoidviewer.listener.spectrumIdentificationResultTableMouseClicked;
 
 public class SpectrumSummary extends JSplitPane {
 	private static final String[] fragmentationTableHeaders = { "M/Z",
@@ -41,28 +41,17 @@ public class SpectrumSummary extends JSplitPane {
 	private final JTable spectrumIdentificationItemTable = new JTable();
 	private final JPanel jExperimentalFilterPanel = new JPanel();
 	private final JPanel jGraph = new JPanel();
+	public List<SpectrumIdentificationItem> spectrumIdentificationItemListForSpecificResult;
 
-	private final ProteinDBView proteinDBView;
-	private final JTabbedPane mainTabbedPane;
-	private final ProteoIDViewer proteoIDViewer;
 
-	public SpectrumSummary(ProteoIDViewer proteoIDViewer,
-			ProteinDBView proteinDBView, JTabbedPane mainTabbedPane) {
-		this.proteinDBView = proteinDBView;
-		this.mainTabbedPane = mainTabbedPane;
-		this.proteoIDViewer = proteoIDViewer;
+	public SpectrumSummary(ProteoIDViewer proteoIDViewer, ProteinDBView proteinDBView) {
 
 		// spectrum tab
 		// spectrum Identification Result Table
 		spectrumIdentificationResultTable
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		spectrumIdentificationResultTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent evt) {
-				proteoIDViewer
-						.spectrumIdentificationResultTableMouseClicked(SpectrumSummary.this, proteoIDViewer.mzIdentMLUnmarshaller);
-			}
-		});
+		spectrumIdentificationResultTable.addMouseListener(new spectrumIdentificationResultTableMouseClicked(proteoIDViewer, SpectrumSummary.this));		
+		
 		spectrumIdentificationResultTable.getTableHeader()
 				.setReorderingAllowed(false);
 
@@ -80,7 +69,7 @@ public class SpectrumSummary extends JSplitPane {
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		peptideEvidenceTable
 				.addMouseListener(new peptideEvidenceTableMouseClicked(proteoIDViewer,
-						this, proteinDBView, mainTabbedPane));
+						this, proteinDBView));
 
 
 		// spectrum Identification Item Table
@@ -88,15 +77,7 @@ public class SpectrumSummary extends JSplitPane {
 				false);
 		spectrumIdentificationItemTable
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		spectrumIdentificationItemTable.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseClicked(MouseEvent evt) {
-				proteoIDViewer.spectrumIdentificationItemTableMouseClicked(
-						spectrumIdentificationItemTable.getSelectedRow(),
-						SpectrumSummary.this, proteoIDViewer.mzIdentMLUnmarshaller);
-			}
-		});
+		spectrumIdentificationItemTable.addMouseListener(new spectrumIdentificationItemTableMouseClicked(proteoIDViewer, SpectrumSummary.this));
 		
 		createSpectrumSummary();
 	}

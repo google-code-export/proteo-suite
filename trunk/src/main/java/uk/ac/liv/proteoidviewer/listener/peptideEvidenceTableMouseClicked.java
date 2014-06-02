@@ -3,8 +3,6 @@ package uk.ac.liv.proteoidviewer.listener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JTabbedPane;
-
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.tabs.ProteinDBView;
 import uk.ac.liv.proteoidviewer.tabs.SpectrumSummary;
@@ -14,13 +12,11 @@ public class peptideEvidenceTableMouseClicked implements MouseListener {
 	private final ProteoIDViewer proteoIDViewer;
 	private final SpectrumSummary spectrumSummary;
 	private final ProteinDBView proteinDBView;
-	private final JTabbedPane mainTabbedPane;
 
-	public peptideEvidenceTableMouseClicked(ProteoIDViewer proteoIDViewer, SpectrumSummary spectrumSummary, ProteinDBView proteinDBView, JTabbedPane mainTabbedPane) {
+	public peptideEvidenceTableMouseClicked(ProteoIDViewer proteoIDViewer, SpectrumSummary spectrumSummary, ProteinDBView proteinDBView) {
 		this.proteoIDViewer = proteoIDViewer;
 		this.spectrumSummary = spectrumSummary;
 		this.proteinDBView = proteinDBView;
-		this.mainTabbedPane = mainTabbedPane;
 	}
 
 	@Override
@@ -40,10 +36,10 @@ public class peptideEvidenceTableMouseClicked implements MouseListener {
 			}
 		}
 		if (!proteoIDViewer.fourthTab) {
-			proteinDBView.loadDBSequenceTable(proteoIDViewer.mzIdentMLUnmarshaller);
+			proteinDBView.loadDBSequenceTable(proteoIDViewer.getMzIdentMLUnmarshaller());
 			proteoIDViewer.fourthTab = true;
 		}
-		mainTabbedPane.setSelectedIndex(3);		
+		proteoIDViewer.setSelectedIndex(3);		
 	}
 
 	@Override
