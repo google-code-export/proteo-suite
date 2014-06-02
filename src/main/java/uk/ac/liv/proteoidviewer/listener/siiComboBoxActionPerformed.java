@@ -18,10 +18,11 @@ public class siiComboBoxActionPerformed implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (globalStatisticsPanel.getSiiComboBox().getSelectedIndex() != -1) {
-			proteoIDViewer.loadSpectrumIdentificationList(
-					proteoIDViewer.mzIdentMLUnmarshaller, globalStatisticsPanel);
-		}
-	}
+		if (globalStatisticsPanel.getSiiComboBox().getSelectedIndex() == -1)
+			return;
 
+		proteoIDViewer.loadSpectrumIdentificationList(
+				proteoIDViewer.getMzIdentMLUnmarshaller(), globalStatisticsPanel);
+
+	}
 }

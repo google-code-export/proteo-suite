@@ -29,8 +29,12 @@ public abstract class IdentDataFile {
     
     public String getFileName() {
         return file.getName();
-    }   
-    
+    }
+
+	public File getFile() {
+		return file;
+	}
+	
     public RawDataFile getParent() {
         return parent;
     }

@@ -67,14 +67,13 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 			// spectrumIdentificationItemProteinViewTable.scrollRowToVisible(0);
 			// row =
 			// proteinDetectionHypothesisTable.convertRowIndexToModel(row);
-			ProteinDetectionHypothesis proteinDetectionHypothesis = proteoIDViewer.mzIdentMLUnmarshaller
-					.unmarshal(ProteinDetectionHypothesis.class,
+			ProteinDetectionHypothesis proteinDetectionHypothesis = proteoIDViewer.unmarshal(ProteinDetectionHypothesis.class,
 							(String) proteinDetectionHypothesisTable.getModel()
 									.getValueAt(row, 0));
 			// System.out.println((String)
 			// proteinDetectionHypothesisTable.getModel().getValueAt(row,
 			// 0));
-			DBSequence dBSequence = proteoIDViewer.mzIdentMLUnmarshaller.unmarshal(
+			DBSequence dBSequence = proteoIDViewer.unmarshal(
 					DBSequence.class,
 					proteinDetectionHypothesis.getDBSequenceRef());
 			// System.out.println(proteinDetectionHypothesis.getDBSequenceRef());
@@ -105,8 +104,7 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 							.get(i);
 					for (int j = 0; j < peptideHypothesis
 							.getSpectrumIdentificationItemRef().size(); j++) {
-						spectrumIdentificationItem2 = proteoIDViewer.mzIdentMLUnmarshaller
-								.unmarshal(
+						spectrumIdentificationItem2 = proteoIDViewer.unmarshal(
 										SpectrumIdentificationItem.class,
 										peptideHypothesis
 												.getSpectrumIdentificationItemRef()
@@ -119,14 +117,12 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 					for (int k = 0; k < peptideEvidenceRefList.size(); k++) {
 						PeptideEvidenceRef peptideEvidenceRef = peptideEvidenceRefList
 								.get(k);
-						PeptideEvidence peptideEvidence = proteoIDViewer.mzIdentMLUnmarshaller
-								.unmarshal(PeptideEvidence.class,
+						PeptideEvidence peptideEvidence = proteoIDViewer.unmarshal(PeptideEvidence.class,
 										peptideEvidenceRef
 												.getPeptideEvidenceRef());
 						if (peptideEvidence.getDBSequenceRef().equals(
 								proteinDetectionHypothesis.getDBSequenceRef())) {
-							Peptide peptide = proteoIDViewer.mzIdentMLUnmarshaller
-									.unmarshal(Peptide.class,
+							Peptide peptide = proteoIDViewer.unmarshal(Peptide.class,
 											spectrumIdentificationItem2
 													.getPeptideRef());
 							if (peptide != null) {

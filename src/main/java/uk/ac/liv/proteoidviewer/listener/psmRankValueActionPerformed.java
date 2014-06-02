@@ -18,7 +18,7 @@ public class psmRankValueActionPerformed implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		peptideSummary.loadPeptideTable(proteoIDViewer.mzIdentMLUnmarshaller);		
+		peptideSummary.loadPeptideTable(proteoIDViewer.getMzIdentMLUnmarshaller());		
 	}
 
 }

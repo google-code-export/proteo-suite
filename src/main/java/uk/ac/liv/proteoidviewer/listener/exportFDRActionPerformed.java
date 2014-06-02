@@ -120,6 +120,5 @@ public class exportFDRActionPerformed implements ActionListener {
 		}
 
 		proteoIDViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-
 	}
 }

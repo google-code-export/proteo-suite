@@ -105,7 +105,7 @@ public class ExportListener implements ActionListener {
 				selectedFile.delete();
 			}
 
-			mzidToCsv.useMzIdentMLToCSV(proteoIDViewer.mzIdentMLUnmarshaller,
+			mzidToCsv.useMzIdentMLToCSV(proteoIDViewer.getMzIdentMLUnmarshaller(),
 					selectedFile.getPath(), option, false);
 
 		} catch (Exception ex) {

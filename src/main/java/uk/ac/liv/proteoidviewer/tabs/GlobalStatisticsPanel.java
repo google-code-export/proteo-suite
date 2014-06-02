@@ -15,7 +15,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import uk.ac.ebi.jmzidml.model.mzidml.ProteinDetectionHypothesis;
@@ -28,7 +27,6 @@ import uk.ac.liv.proteoidviewer.listener.siiComboBoxActionPerformed;
 public class GlobalStatisticsPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private final ProteoIDViewer proteoIDViewer;
-	private final JTabbedPane mainTabbedPane;
 
 	private final JLabel tpSiiValue = new JLabel("0");
 	private final JLabel fdrSiiValue = new JLabel("0");
@@ -53,10 +51,8 @@ public class GlobalStatisticsPanel extends JPanel {
 	private final List<SpectrumIdentificationItem> sIIListPassThreshold = new ArrayList<>();
 	private final List<ProteinDetectionHypothesis> pDHListPassThreshold = new ArrayList<>();
 	
-	public GlobalStatisticsPanel(ProteoIDViewer proteoIDViewer,
-			JTabbedPane mainTabbedPane) {
+	public GlobalStatisticsPanel(ProteoIDViewer proteoIDViewer) {
 		this.proteoIDViewer = proteoIDViewer;
-		this.mainTabbedPane = mainTabbedPane;
 
 		siiComboBox.addActionListener(new siiComboBoxActionPerformed(proteoIDViewer,
 				this));
@@ -163,9 +159,6 @@ public class GlobalStatisticsPanel extends JPanel {
 		add(rightSummary);
 		add(calculateParams);
 		add(bottomTables);
-		getAccessibleContext().setAccessibleName("Global Statistics");
-		getAccessibleContext().setAccessibleDescription("Global Statistics");
-		getAccessibleContext().setAccessibleParent(mainTabbedPane);
 	}
 
 	public void reset() {

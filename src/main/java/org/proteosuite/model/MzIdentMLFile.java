@@ -161,9 +161,11 @@ public class MzIdentMLFile extends IdentDataFile {
         AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Loading Identifications"));
         TasksTab.getInstance().refreshFromTasksModel();
 
-        MzIdentMLFile.this.getParent().setIdentStatus("Loading...");
-        ((CreateOrLoadIdentificationsStep) (AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)).refreshFromData();
-
+        if (MzIdentMLFile.this.getParent() != null)
+        {
+        	MzIdentMLFile.this.getParent().setIdentStatus("Loading...");
+            ((CreateOrLoadIdentificationsStep) (AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)).refreshFromData();
+        }
         ExecutorService executor = AnalyseData.getInstance().getGenericExecutor();
         SwingWorker<MzIdentMLUnmarshaller, Void> mzIdentMLWorker = new SwingWorker<MzIdentMLUnmarshaller, Void>() {
             @Override
@@ -183,9 +185,11 @@ public class MzIdentMLFile extends IdentDataFile {
 
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().checkAndUpdateIdentificationsStatus();
 
-                    MzIdentMLFile.this.getParent().setIdentStatus("Done");
-                    ((CreateOrLoadIdentificationsStep) (AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)).refreshFromData();
-
+                    if (MzIdentMLFile.this.getParent() != null)
+                    {
+                    	MzIdentMLFile.this.getParent().setIdentStatus("Done");                    
+                    	((CreateOrLoadIdentificationsStep) (AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)).refreshFromData();
+                    }
                     computePSMStats();
 
                     System.out.println("Done loading mzIdentML file.");
@@ -199,4 +203,8 @@ public class MzIdentMLFile extends IdentDataFile {
 
         executor.submit(mzIdentMLWorker);
     }
+
+	public MzIdentMLUnmarshaller getUnmarshaller() {
+		return unmarshaller;
+	}
 }
