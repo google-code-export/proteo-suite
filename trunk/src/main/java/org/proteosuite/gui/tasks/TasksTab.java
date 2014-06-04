@@ -1,23 +1,18 @@
 package org.proteosuite.gui.tasks;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
-
 import org.proteosuite.gui.tables.TasksTable;
 import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.Log;
 import org.proteosuite.model.Task;
 import org.proteosuite.model.TasksModel;
 
@@ -30,15 +25,16 @@ public class TasksTab extends JPanel {
     private static final long serialVersionUID = 1L;
     private static TasksTab instance = null;
     private static final AnalyseData data = AnalyseData.getInstance();
-    private TasksTable tasksTable = new TasksTable();
+    private final TasksTable tasksTable = new TasksTable();
     private final JPanel logArea = new JPanel();
-    private Map<BufferedReader, JTextArea> logMap = new LinkedHashMap<>();
+    private Map<Log, LogPane> logMap = new LinkedHashMap<>();
 
     private TasksTab() {
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(10, 10, 10, 10));
 
         add(new JScrollPane(tasksTable), BorderLayout.CENTER);
+        logArea.setMaximumSize(new Dimension(500, 300));
         add(logArea, BorderLayout.PAGE_END);
     }
 
@@ -58,37 +54,19 @@ public class TasksTab extends JPanel {
                     task.getStatus());
         }
 
-        List<BufferedReader> readers = data.getLogReaders();
+        List<Log> logs = data.getLogs();
 
-        for (final BufferedReader reader : readers) {
-            if (!logMap.containsKey(reader)) {
-                final JTextArea textArea = new JTextArea();
-                SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-                    @Override
-                    protected Void doInBackground() {
-                        try {
-                            String line;
-                            while ((line = reader.readLine()) != null) {
-                                textArea.append(line);
-                                if (!line.isEmpty()) {
-                                    textArea.append("\n");
-                                }
-                            }
-                        } catch (IOException ex) {
-                            Logger.getLogger(TasksTab.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-
-                        return null;
-                    }
-                };
-
-                worker.execute();
+        for (final Log log : logs) {
+            if (!logMap.containsKey(log)) {
+                LogPane thisLogPane = new LogPane(true);                
+                thisLogPane.handleLog(log);                
+                logMap.put(log, thisLogPane);
             }
         }
 
         logArea.removeAll();
         logArea.setLayout(new GridLayout(1, logMap.size()));
-        for (Map.Entry<BufferedReader, JTextArea> entry : logMap.entrySet()) {
+        for (Map.Entry<Log, LogPane> entry : logMap.entrySet()) {
             logArea.add(entry.getValue());
         }
 

@@ -144,19 +144,35 @@ public class ContinueButtonListener implements ActionListener {
                 return;
             }
         } else {
-            if (mgfPresent) {
-                JOptionPane
-                        .showConfirmDialog(
-                                panel,
-                                "You have not chosen to do a genome annotation run, but your raw data contains MGF files.\n"
-                                + "ProteoSuite does not currently support MGF files when not doing genome annotation.\n"
-                                + "We currently only support mzML.\n"
-                                + "This may change at a later date.\n"
-                                + "Please remove the MGF data to continue to the next stage.",
-                                "MGF Data Present", JOptionPane.PLAIN_MESSAGE,
-                                JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+            JOptionPane
+                .showConfirmDialog(
+                        panel,
+                        "This release is intended as a limited release.\n"
+                        + "Only ProteoAnnotator functionality is currently enabled.\n"
+                                + "The following features are disabled in this release:\n"
+                                + "- Label-free quantition.\n"
+                                + "- Tag-based quantitation.\n"
+                                + "- Generic (non-ProteoAnnotator) identification.\n"
+                                
+                        + "Please check back soon for a full release with all features enabled!.\n",                        
+                        "Feature Disabled : Limited Release", JOptionPane.PLAIN_MESSAGE,
+                        JOptionPane.INFORMATION_MESSAGE);
+            
+            return;
+            
+//            if (mgfPresent) {
+//                JOptionPane
+//                        .showConfirmDialog(
+//                                panel,
+//                                "You have not chosen to do a genome annotation run, but your raw data contains MGF files.\n"
+//                                + "ProteoSuite does not currently support MGF files when not doing genome annotation.\n"
+//                                + "We currently only support mzML.\n"
+//                                + "This may change at a later date.\n"
+//                                + "Please remove the MGF data to continue to the next stage.",
+//                                "MGF Data Present", JOptionPane.PLAIN_MESSAGE,
+//                                JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
         }
 
         if (data.getMultiplexing().equals("None (label-free)")) {
@@ -184,9 +200,7 @@ public class ContinueButtonListener implements ActionListener {
                                 JOptionPane.ERROR_MESSAGE);
                 return;
             }
-        }
-
-        
+        }       
 
         if (data.getGenomeAnnotationMode()) {
             ((CreateOrLoadIdentificationsStep) AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)

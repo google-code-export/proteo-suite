@@ -14,98 +14,114 @@ import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.UpdateCheck;
 
 public class Launcher {
-	/**
-	 * Main
-	 * 
-	 * @param args
-	 *            the command line arguments (leave empty)
-	 * @return void
-	 */
-	public static void main(String args[]) {
-		// Setting standard look and feel
-		setLookAndFeel();
 
-		if (!OpenMSLabelFreeWrapper.checkIsInstalled()) {
-			int result = JOptionPane
-					.showConfirmDialog(
-							null,
-							"You do not appear to have openMS installed.\n"
-                                                                + "You need to install openMS in able to use the label-free quantitation feature.\n"
-                                                                + "openMS features will be disabled for now.\n"
-									+ "OpenMS is available at:\nhttp://open-ms.sourceforge.net/\nTo install now, click \"Yes\" to be directed to the openMS web site.\n"
-                                                                + "Once installed you will need to restart Proteosuite to use openMS features.",
-							"openMS Not Installed!", JOptionPane.YES_NO_OPTION);
-			if (result == JOptionPane.YES_OPTION) {
-				OpenURL.open("http://open-ms.sourceforge.net/");
-				return;
-			}
-		}
-                
-                // Pre-load the searchGUI modifications.
-                IdentParamsView.readInPossibleMods();
+    /**
+     * Main
+     *
+     * @param args the command line arguments (leave empty)
+     * @return void
+     */
+    public static void main(String args[]) {
+        // Setting standard look and feel
+        setLookAndFeel();
 
-		SwingWorker<String, String> checkVersion = new UpdateWorker();
-		checkVersion.execute();
+        JOptionPane
+                .showConfirmDialog(
+                        null,
+                        "This release is intended as a limited release.\n"
+                        + "Only ProteoAnnotator functionality is currently enabled.\n"
+                                + "The following features are disabled in this release:\n"
+                                + "- Label-free quantition.\n"
+                                + "- Tag-based quantitation.\n"
+                                + "- Generic (non-ProteoAnnotator) identification.\n"
+                                
+                        + "Please check back soon for a full release with all features enabled!\n",                        
+                        "Limited Release : Features Disabled", JOptionPane.PLAIN_MESSAGE,
+                        JOptionPane.INFORMATION_MESSAGE);
+        
+//        if (!OpenMSLabelFreeWrapper.checkIsInstalled()) {
+//            int result = JOptionPane
+//                    .showConfirmDialog(
+//                            null,
+//                            "You do not appear to have openMS installed.\n"
+//                            + "You need to install openMS in able to use the label-free quantitation feature.\n"
+//                            + "openMS features will be disabled for now.\n"
+//                            + "OpenMS is available at:\nhttp://open-ms.sourceforge.net/\nTo install now, click \"Yes\" to be directed to the openMS web site.\n"
+//                            + "Once installed you will need to restart Proteosuite to use openMS features.",
+//                            "openMS Not Installed!", JOptionPane.YES_NO_OPTION);
+//            if (result == JOptionPane.YES_OPTION) {
+//                OpenURL.open("http://open-ms.sourceforge.net/");
+//                return;
+//            }
+//        }
 
-		// Create and display the form
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					new ProteoSuite().setVisible(true);
-				} catch (Exception e) {
-					ExceptionCatcher.reportException(e);
-					JOptionPane.showMessageDialog(null,
-							"ProteoSuite has crashed with: " + e.getMessage(),
-							"OH NO!", JOptionPane.ERROR_MESSAGE);
-					System.exit(1);
-				}
-			}
-		});
-	}
+        // Pre-load the searchGUI modifications.
+        IdentParamsView.readInPossibleMods();
 
-	private static void setLookAndFeel() {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        SwingWorker<String, String> checkVersion = new UpdateWorker();
+        checkVersion.execute();
 
-			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-				if ("Nimbus".equals(info.getName())) {
-					UIManager.setLookAndFeel(info.getClassName());
-					break;
-				}
-			}
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException | UnsupportedLookAndFeelException exception) {
-			exception.printStackTrace();
-		}		
-	}
+        // Create and display the form
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    new ProteoSuite().setVisible(true);
+                } catch (Exception e) {
+                    ExceptionCatcher.reportException(e);
+                    JOptionPane.showMessageDialog(null,
+                            "ProteoSuite has crashed with: " + e.getMessage(),
+                            "OH NO!", JOptionPane.ERROR_MESSAGE);
+                    System.exit(1);
+                }
+            }
+        });
+    }
 
-	private static class UpdateWorker extends SwingWorker<String, String> {
-		@Override
-		protected String doInBackground() throws Exception {
-			return UpdateCheck.hasUpdate(ProteoSuite.PROTEOSUITE_VERSION);
-		}
+    private static void setLookAndFeel() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-		@Override
-		protected void done() {
-			try {
-				String newVersion = get();
+            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException exception) {
+            exception.printStackTrace();
+        }
+    }
 
-				if (newVersion == null)
-					return;
+    private static class UpdateWorker extends SwingWorker<String, String> {
 
-				int result = JOptionPane
-						.showConfirmDialog(
-								null,
-								"There is a new version of ProteoSuite available\n Click OK to visit the download page.",
-								"Information", JOptionPane.OK_CANCEL_OPTION,
-								JOptionPane.INFORMATION_MESSAGE);
+        @Override
+        protected String doInBackground() throws Exception {
+            return UpdateCheck.hasUpdate(ProteoSuite.PROTEOSUITE_VERSION);
+        }
 
-				if (result == JOptionPane.OK_OPTION)
-					OpenURL.open(newVersion);
-			} catch (Exception ignore) {
-				// Most likely no Internet connection, do nothing!
-			}
-		}
-	}
+        @Override
+        protected void done() {
+            try {
+                String newVersion = get();
+
+                if (newVersion == null) {
+                    return;
+                }
+
+                int result = JOptionPane
+                        .showConfirmDialog(
+                                null,
+                                "There is a new version of ProteoSuite available\n Click OK to visit the download page.",
+                                "Information", JOptionPane.OK_CANCEL_OPTION,
+                                JOptionPane.INFORMATION_MESSAGE);
+
+                if (result == JOptionPane.OK_OPTION) {
+                    OpenURL.open(newVersion);
+                }
+            } catch (Exception ignore) {
+                // Most likely no Internet connection, do nothing!
+            }
+        }
+    }
 }

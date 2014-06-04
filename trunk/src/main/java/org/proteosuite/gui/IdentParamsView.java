@@ -100,7 +100,7 @@ public class IdentParamsView extends JDialog {
 
     private final JTextField jtDatabaseFile = new JTextField(50);
     
-    private final JTextField jtPrefix = new JTextField(10);
+    private final JTextField jtPrefix = new JTextField(16);
     
     private JTextField jtMSTolerance;
     private JTextField jtMSMSTolerance;
@@ -167,7 +167,7 @@ public class IdentParamsView extends JDialog {
             while ((line = reader.readLine()) != null) {
                 Matcher m = possibleModsFilePattern.matcher(line);
                 if (m.matches()) {
-                    possibleMods.add(m.group(1));
+                    possibleMods.add(m.group(1).trim());
                 }
             }
         } catch (IOException ex) {
@@ -313,12 +313,16 @@ public class IdentParamsView extends JDialog {
             "Whole Protein"});
         jcEnzyme.setSelectedIndex(20);
 
+        this.jcFragmentToleranceUnits.setSelectedIndex(1);
+        this.jcFragmentToleranceUnits.setEnabled(false);
         this.jcFragmentIonTypesXYZ = new JComboBox<>(new Character[]{'x', 'y', 'z'});
         this.jcFragmentIonTypesXYZ.setSelectedIndex(1);
         this.jcFragmentIonTypesABC = new JComboBox<>(new Character[]{'a', 'b', 'c'});
         this.jcFragmentIonTypesABC.setSelectedIndex(1);
         this.jtMSMSTolerance = new JTextField("5");
-        this.jtMSTolerance = new JTextField("10");
+        this.jtMSMSTolerance.setColumns(3);
+        this.jtMSTolerance = new JTextField("10");        
+        this.jtMSTolerance.setColumns(3);  
         this.jcMinCharge = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
         this.jcMinCharge.setSelectedIndex(1);
         this.jcMaxCharge = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
@@ -401,7 +405,7 @@ public class IdentParamsView extends JDialog {
         Map<String, String> parameterSet = new HashMap<>();
         parameterSet.put("prec_ppm", ((String) jcPrecursorToleranceUnits.getSelectedItem()).equals("ppm") ? "1" : "2");
         parameterSet.put("prec_tol", jtMSTolerance.getText());
-        parameterSet.put("frag_ppm", ((String) jcFragmentToleranceUnits.getSelectedItem()).equals("ppm") ? "1" : "2");
+        //parameterSet.put("frag_ppm", ((String) jcFragmentToleranceUnits.getSelectedItem()).equals("ppm") ? "1" : "2");
         parameterSet.put("frag_tol", jtMSMSTolerance.getText());
         parameterSet.put("enzyme", (String) jcEnzyme.getSelectedItem());
         parameterSet.put("min_charge", String.valueOf((Integer)jcMinCharge.getSelectedItem()));

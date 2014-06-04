@@ -1,8 +1,11 @@
 package org.proteosuite.identification;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,8 +18,12 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
+import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.Log;
 import org.proteosuite.model.MascotGenericFormatFile;
+import org.proteosuite.model.MzIdentMLFile;
+import org.proteosuite.model.Task;
 import org.proteosuite.utils.FileFormatUtils;
 import org.proteosuite.utils.StringUtils;
 
@@ -31,6 +38,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
     private BufferedReader reader;
     private Set<MascotGenericFormatFile> rawData;
     private AnalyseData data = AnalyseData.getInstance();
+    private String prefix = null;
 
     public SearchGuiViaMzidLibWrapper(Set<MascotGenericFormatFile> inputSpectra, String databasePath, Map<String, String> searchParamters, boolean doProteoGrouper, boolean doEmPAI) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -39,6 +47,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
     public SearchGuiViaMzidLibWrapper(Set<MascotGenericFormatFile> inputSpectra, String[] geneModel, Map<String, String> otherModels, Map<String, String> searchParameters, String prefix) {
         this.genomeAnnotation = true;
         this.rawData = inputSpectra;
+        this.prefix = prefix;
 
         commandList = new LinkedList<>();
         commandList.add("java");
@@ -77,32 +86,15 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
             commandList.add(otherModelBuilder.toString());
         }
 
-        if (prefix != null && !prefix.isEmpty()) {
+        if (this.prefix != null && !this.prefix.isEmpty()) {
             commandList.add("-prefix");
-            commandList.add(prefix);
+            commandList.add(this.prefix);
         }
 
         if (!searchParameters.isEmpty()) {
             commandList.add("-searchParameters");
-            StringBuilder parametersBuilder = new StringBuilder();
-            parametersBuilder.append("\"");
-            Iterator<Entry<String, String>> iterator = searchParameters.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Entry<String, String> searchEntry = iterator.next();
-                if (searchEntry.getKey().toUpperCase().contains("_MODS")) {
-                    parametersBuilder.append("-").append(searchEntry.getKey()).append(StringUtils.space()).append("\\\"").append(searchEntry.getValue()).append("\\\"");
-                } else {
-                    parametersBuilder.append("-").append(searchEntry.getKey()).append(StringUtils.space()).append(searchEntry.getValue());
-                }
-
-                if (iterator.hasNext()) {
-                    parametersBuilder.append(StringUtils.space());
-                }
-            }
-
-            parametersBuilder.append("\"");
-
-            commandList.add(parametersBuilder.toString());
+            File searchParameterFile = createSearchParameterFile(searchParameters);
+            commandList.add(searchParameterFile.getAbsolutePath());
         }
 
         commandList.add("-compress");
@@ -115,7 +107,42 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
         }
     }
 
+    private File createSearchParameterFile(Map<String, String> searchParameters) {
+        StringBuilder parametersBuilder = new StringBuilder();
+        Iterator<Entry<String, String>> iterator = searchParameters.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Entry<String, String> searchEntry = iterator.next();
+            if (searchEntry.getKey().toUpperCase().contains("_MODS")) {
+                parametersBuilder.append("-").append(searchEntry.getKey()).append(StringUtils.space()).append("\"").append(searchEntry.getValue()).append("\"");
+            } else {
+                parametersBuilder.append("-").append(searchEntry.getKey()).append(StringUtils.space()).append(searchEntry.getValue());
+            }
+
+            if (iterator.hasNext()) {
+                parametersBuilder.append(StringUtils.space());
+            }
+        }
+
+        File temporaryFile = null;
+        try {
+            temporaryFile = File.createTempFile("proteosuite_searchGUI_settings_", null);
+            BufferedWriter writer = new BufferedWriter(new FileWriter(temporaryFile));
+            writer.write(parametersBuilder.toString() + "\n");
+            writer.close();
+        } catch (IOException ex) {
+            System.out.println(ex.getLocalizedMessage());
+            temporaryFile = null;
+        }
+
+        return temporaryFile;
+    }
+
     private void computeGenomeAnnotation() {
+        data.getTasksModel()
+                .set(new Task(rawData.iterator().next().getFileName(),
+                                "Run Genome Annotation"));
+        TasksTab.getInstance().refreshFromTasksModel();
+
         SwingWorker<Integer, Void> worker = new SwingWorker() {
             @Override
             protected Integer doInBackground() throws Exception {
@@ -136,13 +163,12 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                 String executionString = StringUtils.join(" ", commandList);
                 System.out.println("Execution String: " + executionString);
                 Process process = Runtime.getRuntime().exec(executionString);
-                reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                processBufferedReader(reader);
-
-                reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                processBufferedReader(reader);
-                //data.getLogReaders().add(reader);
-                //TasksTab.getInstance().refreshFromTasksModel();                
+                Log log = new Log();
+                log.setErrorOutput(new BufferedReader(new InputStreamReader(process.getErrorStream())));
+                log.setStandardOutput(new BufferedReader(new InputStreamReader(process.getInputStream())));
+                data.getLogs().add(log);               
+                
+                TasksTab.getInstance().refreshFromTasksModel();
                 return process.waitFor();
             }
 
@@ -150,14 +176,38 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
             protected void done() {
                 try {
                     get();
+                    data.getTasksModel().set(
+                            new Task(rawData.iterator().next().getFileName(),
+                                    "Run Genome Annotation", "Complete"));
+                    TasksTab.getInstance().refreshFromTasksModel();
+
+                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
+                            .setIdentificationsDone();
+                    
+                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
+                            .setResultsDone();
+                    
                     JOptionPane
                             .showConfirmDialog(
                                     AnalyseDynamicTab.getInstance(),
                                     "Your genome annotation run has finished and your result files are now available.\n"
                                     + "Please check the \"annotation_output\" folder where your raw data was situated.\n"
-                                    + "Check the output folder for various CSV files and an annotated GFF file.",
+                                    + "Check the output folder for various CSV files and an annotated GFF file.\n"
+                                    + "Also check the \"ProteoAnnotator.txt\" file for any error messages and a log of the run.",
                                     "Genome Annotation Completed", JOptionPane.PLAIN_MESSAGE,
                                     JOptionPane.INFORMATION_MESSAGE);
+                    
+                    String outputMzid = rawData.iterator().next().getFile().getParentFile().getAbsolutePath()
+                            + File.separator + "annotation_output" + File.separator
+                            + prefix
+                            + rawData.iterator().next().getFileName().replaceAll(".[Mm][Gg][Ff]", StringUtils.emptyString())
+                            + "_fdr_peptide_threshold_mappedGff2_proteoGrouper_nonA_Threshold_FDR_Threshold.mzid";
+                    
+                    File mzidFile = new File(outputMzid);
+                    if (mzidFile.exists()) {
+                        data.getInspectModel().addIdentDataFile(new MzIdentMLFile(mzidFile, null));
+                    }
+                    
                     System.out.println("Done!");
                 } catch (InterruptedException | ExecutionException ex) {
                     System.out.println(ex.getLocalizedMessage());
@@ -166,40 +216,13 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
         };
 
         data.getSearchGUIExecutor().submit(worker);
-    }
-
-    private void processBufferedReader(final BufferedReader reader) {
-        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void done() {
-                try {
-                    get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    System.out.println("Problem reading output/error stream: " + ex.getLocalizedMessage());
-                }
-            }
-        };
-
-        worker.execute();
-    }
+    }  
 
     public void printDebugInfo() {
         System.out.println("This JAR found is: " + getMzIdLibJar());
     }
 
     private static File getMzIdLibJar() {
-//        return new File("c:\\mzidlib\\TestProcessBuilder-1.0-SNAPSHOT.jar");
-
         File thisClassFile = new File(SearchGuiViaMzidLibWrapper.class.getProtectionDomain().getCodeSource().getLocation().getPath());
         if (thisClassFile.getAbsolutePath().endsWith("classes")) {
             return new File("c:\\mzidlib\\mzidentml-lib-1.6.10-SNAPSHOT.jar");
