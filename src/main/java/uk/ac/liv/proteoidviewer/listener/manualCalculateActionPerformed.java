@@ -85,7 +85,7 @@ public class manualCalculateActionPerformed implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		ProgressBarDialog progressBarDialog = new ProgressBarDialog(null, true);
+		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(null, true);
 		final Thread thread = new Thread(new Runnable() {
 
 			@Override
@@ -208,8 +208,8 @@ public class manualCalculateActionPerformed implements ActionListener {
 					order = true;
 				}
 				cvTerm = cvTermMap.get(jComboBox1.getSelectedItem());
-				proteoIDViewer.falseDiscoveryRate = new FalseDiscoveryRate(proteoIDViewer.fileName,
-						Integer.parseInt(manualDecoyRatioValue.getText()),
+				proteoIDViewer.falseDiscoveryRate = new FalseDiscoveryRate(proteoIDViewer.fileName.getAbsolutePath(),
+						manualDecoyRatioValue.getText(),
 						manualDecoyPrefixValue.getText(), cvTerm, order);
 
 				proteoIDViewer.falseDiscoveryRate.computeFDRusingJonesMethod();

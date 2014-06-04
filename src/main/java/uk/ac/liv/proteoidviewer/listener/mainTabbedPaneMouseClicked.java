@@ -56,7 +56,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 		if (proteoIDViewer.getSelectedIndex() == 1 && !proteoIDViewer.secondTab
 				&& proteoIDViewer.getMzIdentMLUnmarshaller() != null) {
-			ProgressBarDialog progressBarDialog = new ProgressBarDialog(
+			final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
 					null, true);
 			final Thread thread = new Thread(new Runnable() {
 
@@ -85,7 +85,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 		if (proteoIDViewer.getSelectedIndex() == 2 && !proteoIDViewer.thirdTab
 				&& proteoIDViewer.getMzIdentMLUnmarshaller() != null) {
 
-			ProgressBarDialog progressBarDialog = new ProgressBarDialog(
+			final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
 					null, true);
 			final Thread thread = new Thread(new Runnable() {
 
@@ -114,7 +114,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 		if (proteoIDViewer.getSelectedIndex() == 3 && !proteoIDViewer.fourthTab
 				&& proteoIDViewer.getMzIdentMLUnmarshaller() != null) {
-			ProgressBarDialog progressBarDialog = new ProgressBarDialog(
+			final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
 					null, true);
 			final Thread thread = new Thread(new Runnable() {
 
@@ -143,7 +143,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 		if (proteoIDViewer.getSelectedIndex() == 4 && !proteoIDViewer.fifthTab
 				&& proteoIDViewer.getMzIdentMLUnmarshaller() != null) {
-			ProgressBarDialog progressBarDialog = new ProgressBarDialog(
+			final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
 					null, true);
 			final Thread thread = new Thread(new Runnable() {
 
@@ -171,7 +171,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 		if (proteoIDViewer.getSelectedIndex() == 5 && !proteoIDViewer.sixthTab
 				&& proteoIDViewer.getMzIdentMLUnmarshaller() != null) {
-			ProgressBarDialog progressBarDialog = new ProgressBarDialog(
+			final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
 					null, true);
 			final Thread thread = new Thread(new Runnable() {
 

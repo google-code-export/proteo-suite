@@ -66,7 +66,6 @@ public class ProteoSuite extends JFrame {
 	 * Update window title main project
 	 */
 	public void updateTitle() {
-		setTitle("ProteoSuite " + PROTEOSUITE_VERSION + " - <Project: "
-				+ WORKSPACE.getWorkSpace());
+		setTitle("ProteoSuite " + PROTEOSUITE_VERSION);
 	}
 }

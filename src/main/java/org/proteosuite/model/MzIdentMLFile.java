@@ -166,6 +166,7 @@ public class MzIdentMLFile extends IdentDataFile {
         	MzIdentMLFile.this.getParent().setIdentStatus("Loading...");
             ((CreateOrLoadIdentificationsStep) (AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)).refreshFromData();
         }
+        
         ExecutorService executor = AnalyseData.getInstance().getGenericExecutor();
         SwingWorker<MzIdentMLUnmarshaller, Void> mzIdentMLWorker = new SwingWorker<MzIdentMLUnmarshaller, Void>() {
             @Override

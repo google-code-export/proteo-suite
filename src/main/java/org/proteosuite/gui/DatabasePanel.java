@@ -32,6 +32,7 @@ public class DatabasePanel extends JPanel {
     private static final String fastATargetsOnlyTooltip = "FastA should contain target proteins only; no decoy proteins.";
     private static final String fastaTooltip = "FastA is not mandatory if GFF contains protein sequences.";
     private static final String gffTooltip = "GFF is always mandatory.";
+    private static final int TEXTFIELD_SIZE = 32;
 
     private JTextField databaseText;
 
@@ -76,14 +77,14 @@ public class DatabasePanel extends JPanel {
         geneModelGffLabelConstraints.gridx = 0;
         geneModelGffLabelConstraints.gridy = 0;
         geneModelGffLabelConstraints.anchor = GridBagConstraints.WEST;
-        JLabel geneModelGffLabel = new JLabel("Gene Model GFF:");
+        JLabel geneModelGffLabel = new JLabel("Canonical Gene Model GFF:");
         geneModelGffLabel.setToolTipText(gffTooltip);
         staticStartComponents.put(geneModelGffLabel, geneModelGffLabelConstraints);
 
         GridBagConstraints geneModelFastaLabelConstraints = new GridBagConstraints();
         geneModelFastaLabelConstraints.gridx = 5;
         geneModelFastaLabelConstraints.gridy = 0;
-        JLabel geneModelFastaLabel = new JLabel("Gene Model FastA:");
+        JLabel geneModelFastaLabel = new JLabel("Canonical Gene Model FastA:");
         geneModelFastaLabel.setToolTipText(fastaTooltip);
         staticStartComponents.put(geneModelFastaLabel, geneModelFastaLabelConstraints);
 
@@ -91,7 +92,8 @@ public class DatabasePanel extends JPanel {
         geneModelGffTextConstraints.gridx = 0;
         geneModelGffTextConstraints.gridy = 2;
         geneModelGffTextConstraints.gridwidth = 4;
-        final JTextField geneModelGffTextField = new JTextField(30);
+        geneModelGffTextConstraints.anchor = GridBagConstraints.WEST;
+        final JTextField geneModelGffTextField = new JTextField(TEXTFIELD_SIZE);
         staticStartComponents.put(geneModelGffTextField, geneModelGffTextConstraints);
 
         GridBagConstraints geneModelGffButtonConstraints = new GridBagConstraints();
@@ -99,6 +101,7 @@ public class DatabasePanel extends JPanel {
         geneModelGffButtonConstraints.gridy = 2;
         geneModelGffButtonConstraints.gridwidth = 1;
         geneModelGffButtonConstraints.gridheight = 2;
+        geneModelGffButtonConstraints.anchor = GridBagConstraints.WEST;
         final JButton geneModelGffButton = new JButton("...");
         geneModelGffButton.addActionListener(new ActionListener() {
             @Override
@@ -113,7 +116,8 @@ public class DatabasePanel extends JPanel {
         geneModelFastaTextConstraints.gridx = 5;
         geneModelFastaTextConstraints.gridy = 2;
         geneModelFastaTextConstraints.gridwidth = 4;
-        final JTextField geneModelFastaTextField = new JTextField(30);
+        geneModelFastaTextConstraints.anchor = GridBagConstraints.WEST;
+        final JTextField geneModelFastaTextField = new JTextField(TEXTFIELD_SIZE);
         geneModelFastaTextField.setToolTipText(fastATargetsOnlyTooltip);
         staticStartComponents.put(geneModelFastaTextField, geneModelFastaTextConstraints);
 
@@ -122,6 +126,7 @@ public class DatabasePanel extends JPanel {
         geneModelFastaButtonConstraints.gridy = 2;
         geneModelFastaButtonConstraints.gridwidth = 1;
         geneModelFastaButtonConstraints.gridheight = 2;
+        geneModelFastaButtonConstraints.anchor = GridBagConstraints.WEST;
         final JButton geneModelFastaButton = new JButton("...");
         geneModelFastaButton.setToolTipText(fastATargetsOnlyTooltip);
         geneModelFastaButton.addActionListener(new ActionListener() {
@@ -147,7 +152,7 @@ public class DatabasePanel extends JPanel {
         otherGffLabelConstraints.gridx = 0;
         otherGffLabelConstraints.gridy = 4;
         otherGffLabelConstraints.anchor = GridBagConstraints.WEST;
-        JLabel otherGffLabel = new JLabel("Other GFF:");
+        JLabel otherGffLabel = new JLabel("Predicted Gene Model GFF:");
         otherGffLabel.setToolTipText(gffTooltip);
         dynamicComponents.put(otherGffLabel, otherGffLabelConstraints);
 
@@ -155,7 +160,7 @@ public class DatabasePanel extends JPanel {
         otherFastaLabelConstraints.gridx = 5;
         otherFastaLabelConstraints.gridy = 4;
         otherFastaLabelConstraints.anchor = GridBagConstraints.WEST;
-        JLabel otherFastaLabel = new JLabel("Other FastA:");
+        JLabel otherFastaLabel = new JLabel("Predicted Gene Model FastA:");
         otherFastaLabel.setToolTipText(fastaTooltip);
         dynamicComponents.put(otherFastaLabel, otherFastaLabelConstraints);
 
@@ -176,7 +181,7 @@ public class DatabasePanel extends JPanel {
             otherGffTextConstraints.gridwidth = 4;
             otherGffTextConstraints.gridheight = 2;
             otherGffTextConstraints.anchor = GridBagConstraints.WEST;
-            final JTextField otherGffText = new JTextField(30);
+            final JTextField otherGffText = new JTextField(TEXTFIELD_SIZE);
             otherGffText.setText(gff);
             dynamicComponents.put(otherGffText, otherGffTextConstraints);
 
@@ -201,7 +206,8 @@ public class DatabasePanel extends JPanel {
             fastaTextConstraints.gridy = yOffset;
             fastaTextConstraints.gridwidth = 4;
             fastaTextConstraints.gridheight = 2;
-            final JTextField otherFastaText = new JTextField(30);
+            fastaTextConstraints.anchor = GridBagConstraints.WEST;
+            final JTextField otherFastaText = new JTextField(TEXTFIELD_SIZE);
             otherFastaText.setText(fasta);
             otherFastaText.setToolTipText(fastATargetsOnlyTooltip);
             dynamicComponents.put(otherFastaText, fastaTextConstraints);
@@ -211,6 +217,7 @@ public class DatabasePanel extends JPanel {
             otherFastaButtonConstraints.gridy = yOffset;
             otherFastaButtonConstraints.gridwidth = 1;
             otherFastaButtonConstraints.gridheight = 2;
+            otherFastaButtonConstraints.anchor = GridBagConstraints.WEST;
             final JButton otherFastaButton = new JButton("...");
             otherFastaButton.setToolTipText(fastATargetsOnlyTooltip);
             otherFastaButton.addActionListener(new ActionListener() {
@@ -234,10 +241,10 @@ public class DatabasePanel extends JPanel {
 
         GridBagConstraints newPairingConstraints = new GridBagConstraints();
         newPairingConstraints.gridx = 0;
-
+        newPairingConstraints.gridwidth = 2;
         newPairingConstraints.gridy = yOffset;
         newPairingConstraints.anchor = GridBagConstraints.WEST;
-        JButton newPairingButton = new JButton("New GFF-FastA Pairing");
+        JButton newPairingButton = new JButton("New Predicted Gene Model");
         if (otherModelsSize == 5) {
             newPairingButton.setEnabled(false);
         }
@@ -254,9 +261,11 @@ public class DatabasePanel extends JPanel {
 
         GridBagConstraints deletePairingConstraints = new GridBagConstraints();
         deletePairingConstraints.gridx = 2;
+        deletePairingConstraints.gridwidth = 2;
         deletePairingConstraints.gridy = yOffset;
+        deletePairingConstraints.anchor = GridBagConstraints.WEST;
 
-        JButton deletePairingButton = new JButton("Delete GFF-FastA Pairing");
+        JButton deletePairingButton = new JButton("Delete Predicted Gene Model");
         if (otherModelsSize == 0) {
             deletePairingButton.setEnabled(false);
         }
@@ -360,7 +369,7 @@ public class DatabasePanel extends JPanel {
         // Adding files
         JFileChooser chooser = new JFileChooser(WorkSpace.sPreviousLocation);
         if (fastaDialog) {
-            chooser.setDialogTitle("Select the fastA database file:");
+            chooser.setDialogTitle("Select the FastA database file:");
         } else {
             chooser.setDialogTitle("Select the GFF file:");
         }

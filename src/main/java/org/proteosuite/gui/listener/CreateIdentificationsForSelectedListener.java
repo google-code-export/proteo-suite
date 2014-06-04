@@ -51,8 +51,14 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
         if (data.getGenomeAnnotationMode()) {
             Set<MascotGenericFormatFile> rawDataFiles = new HashSet<>();
             for (int i = 0; i < data.getRawDataCount(); i++) {
-                rawDataFiles.add((MascotGenericFormatFile) data.getRawDataFile(i));
+                RawDataFile rawDataFile = data.getRawDataFile(i);
+                if (rawDataFile instanceof MascotGenericFormatFile) {
+                    rawDataFile.setIdentStatus("Creating...");
+                    rawDataFiles.add((MascotGenericFormatFile) rawDataFile);
+                }                
             }
+            
+            step.refreshFromData();
             
             if (rawDataFiles.size() > 1) {
                 JOptionPane
@@ -63,7 +69,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
                                 + "Any data after this limit will be ignored.\n"
                                 + "You have been warned!\n"
                                 + "This is because the pipeline currently only supports a single MGF file for analysis.\n",
-                                "Mutiple MGF Files : Merge Warning", JOptionPane.PLAIN_MESSAGE,
+                                "Multiple MGF Files : Merge Warning", JOptionPane.PLAIN_MESSAGE,
                                 JOptionPane.INFORMATION_MESSAGE);
             }
             

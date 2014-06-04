@@ -21,7 +21,7 @@ public class AnalyseData {
 	private String multiplexing = "";
 	private boolean supportGenomeAnnotation = false;
 	public static int MAX_THREADS = computeOptimumThreads();
-        public List<BufferedReader> logReaders = new ArrayList<>();
+        public List<Log> logs = new ArrayList<>();
 
 	private static AnalyseData instance = null;
 
@@ -40,8 +40,8 @@ public class AnalyseData {
 		return instance;
 	}
         
-        public List<BufferedReader> getLogReaders() {
-            return logReaders;
+        public List<Log> getLogs() {
+            return logs;
         }
 
 	public ExecutorService getGenericExecutor() {

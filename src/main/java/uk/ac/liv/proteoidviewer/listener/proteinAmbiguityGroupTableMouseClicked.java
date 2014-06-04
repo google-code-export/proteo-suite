@@ -62,8 +62,7 @@ public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
 						.getValueAt(row, 0);
 
 				ProteinAmbiguityGroup proteinAmbiguityGroup = proteoIDViewer
-						.unmarshal(MzIdentMLElement.ProteinAmbiguityGroup
-								.getClazz(), pag_id);
+						.unmarshal(ProteinAmbiguityGroup.class, pag_id);
 
 				List<ProteinDetectionHypothesis> proteinDetectionHypothesisList = proteinAmbiguityGroup
 						.getProteinDetectionHypothesis();
