@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+Configurations for various properties of model classes.
+
+        - 'autoRefResolving' determines if references within a class are automatically resolved. For example,
+            PeptideEvidence contains references to three separate classes. Setting this property to 'true'
+            for the PeptideEvidence config will cause these references to be resolved during unmarshalling.
+            Note: only elements that specify a refResolverClass can be switched to auto-resolving!
+        - Only if an element is idMapped, it can be searched using it's ID.
+        - An element cannot be idMapped if it is not indexed.
+        - If an element is not indexed it will not be visible to the API on it's own. To access a not indexed
+          element, it will have to be unmarshalled as part of the enclosing indexed parent element.
+        - xpath entries with leading or trailing whitespace will prevent elements from being indexed!
+            make sure to use a non-whitespace notation:
+              <xpath>/MzIdentML/xyz</xpath>
+            instead of line breaks:
+              <xpath>
+                /MzIdentML/xyz
+              </xpath>
+-->
 <mzIdentMLElementProperties>
     <configurations>
         <autoRefResolving>false</autoRefResolving>
@@ -474,7 +493,7 @@
         <cached>false</cached>
         <clazz>uk.ac.ebi.jmzidml.model.mzidml.ProteinAmbiguityGroup</clazz>
         <cvParamClass>uk.ac.ebi.jmzidml.model.mzidml.params.ProteinAmbiguityGroupCvParam</cvParamClass>
-        <idMapped>false</idMapped>
+        <idMapped>true</idMapped>
         <indexed>true</indexed>
         <tagName>ProteinAmbiguityGroup</tagName>
         <userParamClass>uk.ac.ebi.jmzidml.model.mzidml.params.ProteinAmbiguityGroupUserParam</userParamClass>
@@ -495,7 +514,7 @@
         <cached>false</cached>
         <clazz>uk.ac.ebi.jmzidml.model.mzidml.ProteinDetectionHypothesis</clazz>
         <cvParamClass>uk.ac.ebi.jmzidml.model.mzidml.params.ProteinDetectionHypothesisCvParam</cvParamClass>
-        <idMapped>false</idMapped>
+        <idMapped>true</idMapped>
         <indexed>true</indexed>
         <refResolverClass>uk.ac.ebi.jmzidml.xml.jaxb.resolver.ProteinDetectionHypothesisRefResolver</refResolverClass>
         <tagName>ProteinDetectionHypothesis</tagName>
@@ -643,7 +662,7 @@
         <cached>false</cached>
         <clazz>uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem</clazz>
         <cvParamClass>uk.ac.ebi.jmzidml.model.mzidml.params.SpectrumIdentificationItemCvParam</cvParamClass>
-        <idMapped>false</idMapped>
+        <idMapped>true</idMapped>
         <indexed>true</indexed>
         <refResolverClass>uk.ac.ebi.jmzidml.xml.jaxb.resolver.SpectrumIdentificationItemRefResolver</refResolverClass>
         <tagName>SpectrumIdentificationItem</tagName>
@@ -686,7 +705,7 @@
         <cached>false</cached>
         <clazz>uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult</clazz>
         <cvParamClass>uk.ac.ebi.jmzidml.model.mzidml.params.SpectrumIdentificationResultCvParam</cvParamClass>
-        <idMapped>false</idMapped>
+        <idMapped>true</idMapped>
         <indexed>true</indexed>
         <refResolverClass>uk.ac.ebi.jmzidml.xml.jaxb.resolver.SpectrumIdentificationResultRefResolver</refResolverClass>
         <tagName>SpectrumIdentificationResult</tagName>
