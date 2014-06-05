@@ -4,8 +4,6 @@ import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -236,8 +234,7 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 
 			}
 		} catch (JAXBException ex) {
-			Logger.getLogger(ProteoIDViewer.class.getName()).log(Level.SEVERE,
-					null, ex);
+			ex.printStackTrace();
 		}
 
 		proteoIDViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));

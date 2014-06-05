@@ -109,6 +109,8 @@ public class ExportListener implements ActionListener {
 					selectedFile.getPath(), option, false);
 
 		} catch (Exception ex) {
+
+			ex.printStackTrace();
 			JOptionPane
 					.showMessageDialog(
 							proteoIDViewer,

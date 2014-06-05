@@ -9,8 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -162,7 +160,7 @@ public class PeptideSummary extends JSplitPane {
 
 	public void loadPeptideTable(MzIdentMLUnmarshaller mzIdentMLUnmarshaller) {
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		spectrumIdentificationItemTablePeptideView.removeAll();
+		((DefaultTableModel) spectrumIdentificationItemTablePeptideView.getModel()).setNumRows(0);
 		siiSirMap.clear();
 
 		Iterator<Peptide> iterPeptide = mzIdentMLUnmarshaller
@@ -321,8 +319,7 @@ public class PeptideSummary extends JSplitPane {
 					}
 				}
 			} catch (Exception ex) {
-				Logger.getLogger(ProteoIDViewer.class.getName()).log(
-						Level.SEVERE, null, ex);
+				ex.printStackTrace();
 			}
 		}
 

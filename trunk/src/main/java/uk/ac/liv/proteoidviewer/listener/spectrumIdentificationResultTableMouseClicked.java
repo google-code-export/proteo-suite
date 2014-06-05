@@ -7,19 +7,15 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.table.DefaultTableModel;
-import javax.xml.bind.JAXBException;
 
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
 import uk.ac.ebi.jmzidml.model.mzidml.Modification;
 import uk.ac.ebi.jmzidml.model.mzidml.Peptide;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
-import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
 import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.tabs.SpectrumSummary;
@@ -50,9 +46,9 @@ public class spectrumIdentificationResultTableMouseClicked implements
 		// row =
 		// spectrumIdentificationResultTable.convertRowIndexToModel(row);
 		try {
-			spectrumSummary.getIdentificationItemTable().removeAll();
-			spectrumSummary.getEvidenceTable().removeAll();
-			spectrumSummary.getFragmentationTable().removeAll();
+			((DefaultTableModel) spectrumSummary.getIdentificationItemTable().getModel()).setNumRows(0);
+			((DefaultTableModel) spectrumSummary.getEvidenceTable().getModel()).setNumRows(0);
+			((DefaultTableModel) spectrumSummary.getFragmentationTable().getModel()).setNumRows(0);
 			spectrumSummary.getGraph().removeAll();
 
 			spectrumSummary.getGraph().validate();
@@ -242,18 +238,13 @@ public class spectrumIdentificationResultTableMouseClicked implements
 							}
 
 						}
-					} catch (JAXBException ex) {
-						Logger.getLogger(ProteoIDViewer.class.getName()).log(
-								Level.SEVERE, null, ex);
+					} catch (Exception ex) {
+						ex.printStackTrace();
 					}
 				}
 			}
-		} catch (JMzReaderException ex) {
-			Logger.getLogger(ProteoIDViewer.class.getName()).log(Level.SEVERE,
-					null, ex);
-		} catch (JAXBException ex) {
-			Logger.getLogger(ProteoIDViewer.class.getName()).log(Level.SEVERE,
-					null, ex);
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 
 		proteoIDViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));

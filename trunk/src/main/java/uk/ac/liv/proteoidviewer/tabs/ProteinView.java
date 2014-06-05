@@ -6,8 +6,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.BorderFactory;
 import javax.swing.JEditorPane;
@@ -18,7 +16,6 @@ import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
-import javax.xml.bind.JAXBException;
 
 import uk.ac.ebi.jmzidml.MzIdentMLElement;
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
@@ -298,9 +295,8 @@ public class ProteinView extends JPanel {
 							}
 
 						}
-					} catch (JAXBException ex) {
-						Logger.getLogger(ProteoIDViewer.class.getName()).log(
-								Level.SEVERE, null, ex);
+					} catch (Exception ex) {
+						ex.printStackTrace();
 					}
 
 				}
@@ -379,9 +375,8 @@ public class ProteinView extends JPanel {
 					result = true;
 					break;
 				}
-			} catch (JAXBException ex) {
-				Logger.getLogger(ProteoIDViewer.class.getName()).log(
-						Level.SEVERE, null, ex);
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 
 		}
@@ -394,21 +389,22 @@ public class ProteinView extends JPanel {
 						spectrumIdentificationItemProteinViewTableHeaders) {
 					private static final long serialVersionUID = 1L;
 				});
-		spectrumIdentificationItemProteinViewTable.removeAll();
+		((DefaultTableModel) spectrumIdentificationItemProteinViewTable.getModel()).setRowCount(0);
+		
 		// spectrumIdentificationItemProteinViewTable.setAutoCreateRowSorter(true);
 
 		proteinDetectionHypothesisTable.setModel(new DefaultTableModel(
 				new Object[][] {}, proteinDetectionHypothesisTableHeaders) {
 			private static final long serialVersionUID = 1L;
 		});
-		proteinDetectionHypothesisTable.removeAll();
+		((DefaultTableModel) proteinDetectionHypothesisTable.getModel()).setRowCount(0);
 		// proteinDetectionHypothesisTable.setAutoCreateRowSorter(true);
 
 		proteinAmbiguityGroupTable.setModel(new DefaultTableModel(
 				new Object[][] {}, proteinAmbiguityGroupTableHeaders) {
 			private static final long serialVersionUID = 1L;
 		});
-		proteinAmbiguityGroupTable.removeAll();
+		((DefaultTableModel) proteinAmbiguityGroupTable.getModel()).setRowCount(0);
 		// proteinAmbiguityGroupTable.setAutoCreateRowSorter(true);
 
 		jProteinDescriptionEditorPane.setText("");
