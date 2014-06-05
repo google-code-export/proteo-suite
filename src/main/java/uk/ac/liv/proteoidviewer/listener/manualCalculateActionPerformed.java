@@ -7,8 +7,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -330,8 +328,8 @@ public class manualCalculateActionPerformed implements ActionListener {
 				proteoIDViewer.repaint();
 			}
 		} catch (JAXBException ex) {
-			Logger.getLogger(ProteoIDViewer.class.getName()).log(Level.SEVERE,
-					null, ex);
+
+			ex.printStackTrace();
 		}
 	}// GEN-LAST:event_manualCalculateActionPerformed
 

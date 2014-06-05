@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -24,7 +22,6 @@ import uk.ac.ebi.jmzidml.model.mzidml.PeptideEvidence;
 import uk.ac.ebi.jmzidml.model.mzidml.PeptideEvidenceRef;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
-import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
 import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.tabs.PeptideSummary;
@@ -62,8 +59,8 @@ public class spectrumIdentificationItemTablePeptideViewMouseClicked implements
 			return;
 
 		proteoIDViewer.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		peptideSummary.getFragmentationTable().removeAll();
-		peptideSummary.getEvidenceTable().removeAll();
+		((DefaultTableModel) peptideSummary.getFragmentationTable().getModel()).setNumRows(0);
+		((DefaultTableModel) peptideSummary.getEvidenceTable().getModel()).setNumRows(0);
 		try {
 
 			// TODO: Disabled - Andrew
@@ -98,8 +95,7 @@ public class spectrumIdentificationItemTablePeptideViewMouseClicked implements
 							// +peptideEvidence.getDBSequenceRef()+"</a>"
 									});
 						} catch (JAXBException ex) {
-							Logger.getLogger(ProteoIDViewer.class.getName())
-									.log(Level.SEVERE, null, ex);
+							ex.printStackTrace();
 						}
 					}
 				}
@@ -227,12 +223,8 @@ public class spectrumIdentificationItemTablePeptideViewMouseClicked implements
 						jGraph1.add(spectrumPanel1);
 						jGraph1.validate();
 						jGraph1.repaint();
-					} catch (JMzReaderException ex) {
-						Logger.getLogger(ProteoIDViewer.class.getName()).log(
-								Level.SEVERE, null, ex);
-					} catch (JAXBException ex) {
-						Logger.getLogger(ProteoIDViewer.class.getName()).log(
-								Level.SEVERE, null, ex);
+					} catch (Exception ex) {
+						ex.printStackTrace();
 					}
 
 				} else if (mzValuesAsDouble.length > 0) {
@@ -256,8 +248,7 @@ public class spectrumIdentificationItemTablePeptideViewMouseClicked implements
 				}
 			}
 		} catch (JAXBException ex) {
-			Logger.getLogger(ProteoIDViewer.class.getName()).log(Level.SEVERE,
-					null, ex);
+			ex.printStackTrace();
 		}
 
 		proteoIDViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));

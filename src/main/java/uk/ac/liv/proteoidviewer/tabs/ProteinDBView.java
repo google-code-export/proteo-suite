@@ -64,7 +64,7 @@ public class ProteinDBView extends JPanel {
 				dBSequenceTableHeaders) {
 			private static final long serialVersionUID = 1L;
 		});
-		dBSequenceTable.removeAll();
+		((DefaultTableModel) dBSequenceTable.getModel()).setRowCount(0);
 	}
 
 	public JTable getTable() {

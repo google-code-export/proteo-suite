@@ -8,8 +8,6 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.BoxLayout;
 import javax.swing.table.DefaultTableModel;
@@ -22,7 +20,6 @@ import uk.ac.ebi.jmzidml.model.mzidml.PeptideEvidence;
 import uk.ac.ebi.jmzidml.model.mzidml.PeptideEvidenceRef;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
-import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
 import uk.ac.ebi.pride.tools.jmzreader.model.Spectrum;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.tabs.SpectrumSummary;
@@ -54,7 +51,7 @@ public class spectrumIdentificationItemTableMouseClicked implements
 
 		proteoIDViewer.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		spectrumSummary.getFragmentationTable().removeAll();
-		spectrumSummary.getEvidenceTable().removeAll();
+		((DefaultTableModel) spectrumSummary.getEvidenceTable().getModel()).setNumRows(0);
 
 		// TODO: Disabled - Andrew
 		// fragmentationTable.scrollRowToVisible(0);
@@ -87,8 +84,7 @@ public class spectrumIdentificationItemTableMouseClicked implements
 						// +peptideEvidence.getDBSequenceRef()+"</a>"
 								});
 					} catch (JAXBException ex) {
-						Logger.getLogger(ProteoIDViewer.class.getName()).log(
-								Level.SEVERE, null, ex);
+						ex.printStackTrace();
 					}
 				}
 			}
@@ -220,12 +216,8 @@ public class spectrumIdentificationItemTableMouseClicked implements
 					spectrumSummary.getGraph().add(spectrumPanel);
 					spectrumSummary.getGraph().validate();
 					spectrumSummary.getGraph().repaint();
-				} catch (JMzReaderException ex) {
-					Logger.getLogger(ProteoIDViewer.class.getName()).log(
-							Level.SEVERE, null, ex);
-				} catch (JAXBException ex) {
-					Logger.getLogger(ProteoIDViewer.class.getName()).log(
-							Level.SEVERE, null, ex);
+				} catch (Exception ex) {
+					ex.printStackTrace();
 				}
 
 			} else if (mzValuesAsDouble.length > 0) {

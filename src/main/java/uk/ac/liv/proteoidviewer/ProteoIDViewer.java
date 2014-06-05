@@ -33,9 +33,6 @@ import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationList;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.xml.bind.JAXBException;
@@ -129,16 +126,11 @@ public class ProteoIDViewer extends JTabbedPane {
 					break;
 				}
 			} catch (JAXBException ex) {
-				Logger.getLogger(ProteoIDViewer.class.getName()).log(
-						Level.SEVERE, null, ex);
+				ex.printStackTrace();
 			}
 
 		}
 		return result;
-	}
-
-	public void clearSummaryStats() {
-		globalStatisticsPanel.reset();
 	}
 
 	public void createTables() {
@@ -160,11 +152,9 @@ public class ProteoIDViewer extends JTabbedPane {
 		while (iterspectrumIdentificationList.hasNext()) {
 			SpectrumIdentificationList spectrumIdentificationList = iterspectrumIdentificationList
 					.next();
-
-			for (int j = 0; j < spectrumIdentificationList
-					.getSpectrumIdentificationResult().size(); j++) {
-				spectrumIdentificationResultList.add(spectrumIdentificationList
-						.getSpectrumIdentificationResult().get(j));
+			List<SpectrumIdentificationResult> sirList = spectrumIdentificationList.getSpectrumIdentificationResult();
+			for (int j = 0; j < sirList.size(); j++) {
+				spectrumIdentificationResultList.add(sirList.get(j));
 			}
 		}
 
@@ -441,8 +431,7 @@ public class ProteoIDViewer extends JTabbedPane {
 			}
 			// thresholdValue.setText(spectrumIdentificationProtocol.get(0).getThreshold().getCvParam().get(0).getValue());
 		} catch (JAXBException ex) {
-			Logger.getLogger(ProteoIDViewer.class.getName()).log(Level.SEVERE,
-					null, ex);
+			ex.printStackTrace();
 		}
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
@@ -476,7 +465,6 @@ public class ProteoIDViewer extends JTabbedPane {
 		}
 		jmzreader = null;
 		createTables();
-		clearSummaryStats();
 		setSelectedIndex(0);
 		secondTab = false;
 		thirdTab = false;
@@ -502,7 +490,7 @@ public class ProteoIDViewer extends JTabbedPane {
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 			} catch (JMzReaderException ex) {
-				System.out.println(ex.getMessage());
+				ex.printStackTrace();
 			}
 		}
 		if (getProteinView().getAmbiguityGroupTable().getRowCount() == 0) {

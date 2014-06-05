@@ -4,8 +4,6 @@ import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
 
@@ -60,8 +58,8 @@ public class spectrumIdentificationItemProteinTableeMouseClicked implements
 					}
 				}
 			} catch (JAXBException ex) {
-				Logger.getLogger(ProteoIDViewer.class.getName()).log(
-						Level.SEVERE, null, ex);
+
+				ex.printStackTrace();
 			}
 
 		}
