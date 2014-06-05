@@ -60,7 +60,9 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 		// row =
 		// spectrumIdentificationItemTable.convertRowIndexToModel(row);
 		try {
-			proteinView.getIdentificationItemTable().removeAll();
+			((DefaultTableModel) proteinView.getIdentificationItemTable()
+			.getModel()).setRowCount(0);
+			
 			// TODO: Disabled - Andrew
 			// spectrumIdentificationItemProteinViewTable.scrollRowToVisible(0);
 			// row =
