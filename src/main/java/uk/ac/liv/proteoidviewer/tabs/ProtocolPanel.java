@@ -10,20 +10,20 @@ import javax.swing.JTextPane;
 public class ProtocolPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
-	final JTextPane protocolTextPane = new JTextPane();
+	final JTextPane protocolText = new JTextPane();
 
 	public ProtocolPanel() {
 		setLayout(new BorderLayout());
-		protocolTextPane.setContentType("text/html");
-		protocolTextPane.setEditable(false);
+		protocolText.setContentType("text/html");
+		protocolText.setEditable(false);
 
 		setBorder(BorderFactory
 				.createTitledBorder("Summary"));
-		add(new JScrollPane(protocolTextPane),
+		add(new JScrollPane(protocolText),
 				BorderLayout.CENTER);
 	}
 
 	public void setProtocolText(String string) {
-		protocolTextPane.setText(string);		
+		protocolText.setText(string);		
 	}
 }

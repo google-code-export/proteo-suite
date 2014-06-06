@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -27,12 +28,12 @@ import uk.ac.liv.proteoidviewer.listener.spectrumIdentificationResultTableMouseC
 
 public class SpectrumSummary extends JSplitPane {
 	private static final String[] fragmentationTableHeaders = { "M/Z",
-		"Intensity", "M Error", "Ion Type", "Charge" };
+			"Intensity", "M Error", "Ion Type", "Charge" };
 
 	private static final String[] peptideEvidenceTableHeaders = { "Start",
 			"End", "Pre", "Post", "IsDecoy", "Peptide Sequence",
 			"dBSequence_ref" };
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private final JTable spectrumIdentificationResultTable = new JTable();
@@ -43,43 +44,47 @@ public class SpectrumSummary extends JSplitPane {
 	private final JPanel jGraph = new JPanel();
 	public List<SpectrumIdentificationItem> spectrumIdentificationItemListForSpecificResult;
 
+	public SpectrumSummary(ProteoIDViewer proteoIDViewer,
+			ProteinDBView proteinDBView) {
+		createTables(proteoIDViewer, proteinDBView);
+		createSpectrumSummary();
+	}
 
-	public SpectrumSummary(ProteoIDViewer proteoIDViewer, ProteinDBView proteinDBView) {
+	private void createTables(ProteoIDViewer proteoIDViewer,
+			ProteinDBView proteinDBView) {
+		spectrumIdentificationResultTable.setAutoCreateRowSorter(true);
+		fragmentationTable.setAutoCreateRowSorter(true);
+		peptideEvidenceTable.setAutoCreateRowSorter(true);
+		spectrumIdentificationItemTable.setAutoCreateRowSorter(true);
 
-		// spectrum tab
-		// spectrum Identification Result Table
 		spectrumIdentificationResultTable
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		spectrumIdentificationResultTable.addMouseListener(new spectrumIdentificationResultTableMouseClicked(proteoIDViewer, SpectrumSummary.this));		
-		
+		fragmentationTable
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		peptideEvidenceTable
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		spectrumIdentificationItemTable
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		fragmentationTable.getTableHeader().setReorderingAllowed(false);
+		peptideEvidenceTable.getTableHeader().setReorderingAllowed(false);
 		spectrumIdentificationResultTable.getTableHeader()
 				.setReorderingAllowed(false);
+		spectrumIdentificationItemTable.getTableHeader().setReorderingAllowed(
+				false);
+
+		spectrumIdentificationResultTable
+				.addMouseListener(new spectrumIdentificationResultTableMouseClicked(
+						proteoIDViewer, SpectrumSummary.this));
+		peptideEvidenceTable
+				.addMouseListener(new peptideEvidenceTableMouseClicked(
+						proteoIDViewer, proteinDBView));
+		spectrumIdentificationItemTable
+				.addMouseListener(new spectrumIdentificationItemTableMouseClicked(
+						proteoIDViewer, SpectrumSummary.this));
 
 		spectrumIdentificationResultTable
 				.setToolTipText("this corresponds to Spectrum Identification Result in mzIdentML");
-
-		// fragmentation Table
-		fragmentationTable
-				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		fragmentationTable.getTableHeader().setReorderingAllowed(false);
-
-		// peptide Evidence Table
-		peptideEvidenceTable.getTableHeader().setReorderingAllowed(false);
-		peptideEvidenceTable
-				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		peptideEvidenceTable
-				.addMouseListener(new peptideEvidenceTableMouseClicked(proteoIDViewer,
-						this, proteinDBView));
-
-
-		// spectrum Identification Item Table
-		spectrumIdentificationItemTable.getTableHeader().setReorderingAllowed(
-				false);
-		spectrumIdentificationItemTable
-				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		spectrumIdentificationItemTable.addMouseListener(new spectrumIdentificationItemTableMouseClicked(proteoIDViewer, SpectrumSummary.this));
-		
-		createSpectrumSummary();
 	}
 
 	private void createSpectrumSummary() {
@@ -93,6 +98,7 @@ public class SpectrumSummary extends JSplitPane {
 		jFragmentationPanel.setPreferredSize(new Dimension(383, 447));
 
 		jGraph.setBorder(BorderFactory.createTitledBorder("Graph"));
+		jGraph.setLayout(new BoxLayout(jGraph, BoxLayout.LINE_AXIS));
 
 		jExperimentalFilterPanel.setBorder(BorderFactory
 				.createTitledBorder("Experimental Filtering"));
@@ -146,19 +152,36 @@ public class SpectrumSummary extends JSplitPane {
 		setLeftComponent(leftPanel);
 	}
 
+	public JTable getFragmentationTable() {
+		return fragmentationTable;
+	}
+
+	public JPanel getGraph() {
+		return jGraph;
+	}
+
+	public JTable getIdentificationItemTable() {
+		return spectrumIdentificationItemTable;
+	}
+
+	public JTable getIdentificationResultTable() {
+		return spectrumIdentificationResultTable;
+	}
+
 	public void loadSpectrumIdentificationResultTable(
 			MzIdentMLUnmarshaller mzIdentMLUnmarshaller) {
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		Iterator<SpectrumIdentificationResult> iterSpectrumIdentificationResult = mzIdentMLUnmarshaller
 				.unmarshalCollectionFromXpath(MzIdentMLElement.SpectrumIdentificationResult);
-		while (iterSpectrumIdentificationResult.hasNext()) {
 
+		DefaultTableModel spectrumIdentificationResultTableModel = (DefaultTableModel) spectrumIdentificationResultTable
+				.getModel();
+		while (iterSpectrumIdentificationResult.hasNext()) {
 			SpectrumIdentificationResult spectrumIdentificationResult = iterSpectrumIdentificationResult
 					.next();
-			((DefaultTableModel) spectrumIdentificationResultTable.getModel())
-					.addRow(new String[] {
-							spectrumIdentificationResult.getId(),
-							spectrumIdentificationResult.getSpectrumID() });
+			spectrumIdentificationResultTableModel.addRow(new String[] {
+					spectrumIdentificationResult.getId(),
+					spectrumIdentificationResult.getSpectrumID() });
 			List<CvParam> cvParamListspectrumIdentificationResult = spectrumIdentificationResult
 					.getCvParam();
 
@@ -166,17 +189,14 @@ public class SpectrumSummary extends JSplitPane {
 				CvParam cvParam = cvParamListspectrumIdentificationResult
 						.get(s);
 				String name = cvParam.getName();
-				for (int j = 0; j < spectrumIdentificationResultTable
-						.getModel().getColumnCount(); j++) {
-					if (spectrumIdentificationResultTable.getModel()
-							.getColumnName(j).equals(name)) {
-						((DefaultTableModel) spectrumIdentificationResultTable
-								.getModel())
-								.setValueAt(
-										cvParam.getValue(),
-										((DefaultTableModel) spectrumIdentificationResultTable
-												.getModel()).getRowCount() - 1,
-										j);
+				for (int j = 0; j < spectrumIdentificationResultTableModel
+						.getColumnCount(); j++) {
+					if (spectrumIdentificationResultTableModel.getColumnName(j)
+							.equals(name)) {
+						spectrumIdentificationResultTableModel.setValueAt(
+								cvParam.getValue(),
+								spectrumIdentificationResultTableModel
+										.getRowCount() - 1, j);
 					}
 				}
 
@@ -187,7 +207,9 @@ public class SpectrumSummary extends JSplitPane {
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
 
-	public void reset(String[] sir, int spectrumIdentificationResultCvParamLengs, String[] spectrumIdentificationItemTableHeaders) {
+	public void reset(String[] sir,
+			int spectrumIdentificationResultCvParamLengs,
+			String[] spectrumIdentificationItemTableHeaders) {
 		String[] spectrumIdentificationResultTableHeaders = new String[spectrumIdentificationResultCvParamLengs + 2];
 		spectrumIdentificationResultTableHeaders[0] = "ID";
 		spectrumIdentificationResultTableHeaders[1] = "Spectrum ID";
@@ -203,36 +225,52 @@ public class SpectrumSummary extends JSplitPane {
 		spectrumIdentificationResultTable.setModel(new DefaultTableModel(
 				new Object[][] {}, spectrumIdentificationResultTableHeaders) {
 			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
 		});
 		// spectrumIdentificationResultTable.setAutoCreateRowSorter(true);
 
 		spectrumIdentificationResultTable.removeAll();
 
-
 		fragmentationTable.setModel(new DefaultTableModel(new Object[][] {},
 				fragmentationTableHeaders) {
 			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
 		});
 		fragmentationTable.removeAll();
 		// fragmentationTable.setAutoCreateRowSorter(true);
-		
-
 
 		peptideEvidenceTable.setModel(new DefaultTableModel(new Object[][] {},
 				peptideEvidenceTableHeaders) {
 			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
 		});
 		peptideEvidenceTable.removeAll();
-
 
 		spectrumIdentificationItemTable.setModel(new DefaultTableModel(
 				new Object[][] {}, spectrumIdentificationItemTableHeaders) {
 			private static final long serialVersionUID = 1L;
+
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
 		});
 		spectrumIdentificationItemTable.removeAll();
 		// spectrumIdentificationItemTable.setAutoCreateRowSorter(true);
 		// peptideEvidenceTable.setAutoCreateRowSorter(true);
-		
+
 		jExperimentalFilterPanel.removeAll();
 
 		jGraph.removeAll();
@@ -241,34 +279,21 @@ public class SpectrumSummary extends JSplitPane {
 		jGraph.repaint();
 	}
 
-	@Deprecated
-	public JTable getTable() {
-		return spectrumIdentificationResultTable;
+	public void removeAllEvidence() {
+		((DefaultTableModel) peptideEvidenceTable.getModel()).setNumRows(0);
 	}
 
-	@Deprecated
-	public JTable getIdentificationTable() {
-		return spectrumIdentificationResultTable;
-	}
-	
-	public JTable getIdentificationResultTable() {
-		return spectrumIdentificationResultTable;
-	}
-	
-	public JTable getIdentificationItemTable()
-	{
-		return spectrumIdentificationItemTable;
+	public void addEvidence(Object[] objects) {
+		((DefaultTableModel) peptideEvidenceTable.getModel()).addRow(objects);
 	}
 
-	public JTable getFragmentationTable() {
-		return this.fragmentationTable;
+	public void removeAllFragmentation() {
+		((DefaultTableModel) fragmentationTable.getModel()).setNumRows(0);
+
 	}
 
-	public JTable getEvidenceTable() {
-		return peptideEvidenceTable;
-	}
-
-	public JPanel getGraph() {
-		return jGraph;
+	public void removeAllIdentificationItems() {
+		((DefaultTableModel) spectrumIdentificationItemTable.getModel())
+				.setNumRows(0);
 	}
 }

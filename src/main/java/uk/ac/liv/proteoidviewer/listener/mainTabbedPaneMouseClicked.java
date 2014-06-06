@@ -31,7 +31,6 @@ import uk.ac.liv.proteoidviewer.util.ProgressBarDialog;
 
 public class mainTabbedPaneMouseClicked implements MouseListener {
 
-	private final ProteoIDViewer proteoIDViewer;
 	private final ProteinDBView proteinDBView;
 	private final SpectrumSummary spectrumSummary;
 	private final PeptideSummary peptideSummary;
@@ -42,7 +41,6 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 			ProtocolPanel protocolPanel, ProteinDBView proteinDBView,
 			SpectrumSummary spectrumSummary, PeptideSummary peptideSummary,
 			GlobalStatisticsPanel globalStatisticsPanel) {
-		this.proteoIDViewer = proteoIDViewer;
 		this.protocolPanel = protocolPanel;
 		this.proteinDBView = proteinDBView;
 		this.spectrumSummary = spectrumSummary;
@@ -52,198 +50,219 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// compare which tab is selected & boolean
+		ProteoIDViewer proteoIDViewer = (ProteoIDViewer) e.getSource();
 
-		if (proteoIDViewer.getSelectedIndex() == 1 && !proteoIDViewer.secondTab
+		if (proteoIDViewer.getSelectedIndex() == 1
+				&& !proteoIDViewer.isSecondTabLoaded
 				&& proteoIDViewer.getMzIdentMLUnmarshaller() != null) {
-			final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
-					null, true);
-			final Thread thread = new Thread(new Runnable() {
-
-				@Override
-				public void run() {
-					progressBarDialog.setTitle("Parsing the mzid file. Please Wait...");
-					progressBarDialog.setVisible(true);
-				}
-			}, "ProgressBarDialog");
-
-			thread.start();
-
-			new Thread("LoadingThread") {
-
-				@Override
-				public void run() {
-					spectrumSummary
-							.loadSpectrumIdentificationResultTable(proteoIDViewer.getMzIdentMLUnmarshaller());
-					proteoIDViewer.secondTab = true;
-					progressBarDialog.setVisible(false);
-					progressBarDialog.dispose();
-				}
-			}.start();
+			loadSecondTab(proteoIDViewer);
 		}
 
-		if (proteoIDViewer.getSelectedIndex() == 2 && !proteoIDViewer.thirdTab
+		if (proteoIDViewer.getSelectedIndex() == 2
+				&& !proteoIDViewer.isThirdTabLoaded
 				&& proteoIDViewer.getMzIdentMLUnmarshaller() != null) {
-
-			final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
-					null, true);
-			final Thread thread = new Thread(new Runnable() {
-
-				@Override
-				public void run() {
-					progressBarDialog.setTitle("Parsing the mzid file. Please Wait...");
-					progressBarDialog.setVisible(true);
-				}
-			}, "ProgressBarDialog");
-
-			thread.start();
-
-			new Thread("LoadingThread") {
-
-				@Override
-				public void run() {
-					peptideSummary
-							.loadPeptideTable(proteoIDViewer.getMzIdentMLUnmarshaller());
-					proteoIDViewer.thirdTab = true;
-					progressBarDialog.setVisible(false);
-					progressBarDialog.dispose();
-				}
-			}.start();
-
+			loadThirdTab(proteoIDViewer);
 		}
 
-		if (proteoIDViewer.getSelectedIndex() == 3 && !proteoIDViewer.fourthTab
+		if (proteoIDViewer.getSelectedIndex() == 3
+				&& !proteoIDViewer.isFourthTabLoaded
 				&& proteoIDViewer.getMzIdentMLUnmarshaller() != null) {
-			final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
-					null, true);
-			final Thread thread = new Thread(new Runnable() {
-
-				@Override
-				public void run() {
-					progressBarDialog.setTitle("Parsing the mzid file. Please Wait...");
-					progressBarDialog.setVisible(true);
-				}
-			}, "ProgressBarDialog");
-
-			thread.start();
-
-			new Thread("LoadingThread") {
-
-				@Override
-				public void run() {
-					spectrumSummary
-							.loadSpectrumIdentificationResultTable(proteoIDViewer.getMzIdentMLUnmarshaller());
-					proteinDBView
-							.loadDBSequenceTable(proteoIDViewer.getMzIdentMLUnmarshaller());
-					proteoIDViewer.fourthTab = true;
-					progressBarDialog.dispose();
-				}
-			}.start();
+			loadFourthTab(proteoIDViewer);
 		}
 
-		if (proteoIDViewer.getSelectedIndex() == 4 && !proteoIDViewer.fifthTab
+		if (proteoIDViewer.getSelectedIndex() == 4
+				&& !proteoIDViewer.isFifthTabLoaded
 				&& proteoIDViewer.getMzIdentMLUnmarshaller() != null) {
-			final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
-					null, true);
-			final Thread thread = new Thread(new Runnable() {
-
-				@Override
-				public void run() {
-					progressBarDialog.setTitle("Parsing the mzid file. Please Wait...");
-					progressBarDialog.setVisible(true);
-				}
-			}, "ProgressBarDialog");
-
-			thread.start();
-
-			new Thread("LoadingThread") {
-
-				@Override
-				public void run() {
-					loadSummaryStats();
-					proteoIDViewer.fifthTab = true;
-					progressBarDialog.setVisible(false);
-					progressBarDialog.dispose();
-				}
-			}.start();
-
+			loadFifthTab(proteoIDViewer);
 		}
 
-		if (proteoIDViewer.getSelectedIndex() == 5 && !proteoIDViewer.sixthTab
+		if (proteoIDViewer.getSelectedIndex() == 5
+				&& !proteoIDViewer.isSixthTabLoaded
 				&& proteoIDViewer.getMzIdentMLUnmarshaller() != null) {
-			final ProgressBarDialog progressBarDialog = new ProgressBarDialog(
-					null, true);
-			final Thread thread = new Thread(new Runnable() {
-
-				@Override
-				public void run() {
-					progressBarDialog.setTitle("Parsing the mzid file. Please Wait...");
-					progressBarDialog.setVisible(true);
-				}
-			}, "ProgressBarDialog");
-
-			thread.start();
-
-			new Thread("LoadingThread") {
-
-				@Override
-				public void run() {
-					loadProtocolData();
-					proteoIDViewer.sixthTab = true;
-					progressBarDialog.setVisible(false);
-					progressBarDialog.dispose();
-				}
-			}.start();
-
+			loadSixthTab(proteoIDViewer);
 		}
-		proteoIDViewer.repaint();
 	}
 
-	private void loadSummaryStats() {
-		Iterator<SpectrumIdentificationList> iterspectrumIdentificationList = proteoIDViewer.getMzIdentMLUnmarshaller()
-				.unmarshalCollectionFromXpath(MzIdentMLElement.SpectrumIdentificationList);
+	private void loadSixthTab(ProteoIDViewer proteoIDViewer) {
+		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(null,
+				true);
+		final Thread thread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				progressBarDialog.setTitle("Parsing the mzid file. Please Wait...");
+				progressBarDialog.setVisible(true);
+			}
+		}, "ProgressBarDialog");
+
+		thread.start();
+
+		new Thread("LoadingThread") {
+
+			@Override
+			public void run() {
+				loadProtocolData(proteoIDViewer);
+				proteoIDViewer.isSixthTabLoaded = true;
+				progressBarDialog.setVisible(false);
+				progressBarDialog.dispose();
+			}
+		}.start();
+
+	}
+
+	private void loadFifthTab(ProteoIDViewer proteoIDViewer) {
+		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(null,
+				true);
+		final Thread thread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				progressBarDialog.setTitle("Parsing the mzid file. Please Wait...");
+				progressBarDialog.setVisible(true);
+			}
+		}, "ProgressBarDialog");
+
+		thread.start();
+
+		new Thread("LoadingThread") {
+
+			@Override
+			public void run() {
+				loadSummaryStats(proteoIDViewer);
+				proteoIDViewer.isFifthTabLoaded = true;
+				progressBarDialog.setVisible(false);
+				progressBarDialog.dispose();
+			}
+		}.start();
+
+	}
+
+	private void loadFourthTab(ProteoIDViewer proteoIDViewer) {
+		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(null,
+				true);
+		final Thread thread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				progressBarDialog.setTitle("Parsing the mzid file. Please Wait...");
+				progressBarDialog.setVisible(true);
+			}
+		}, "ProgressBarDialog");
+
+		thread.start();
+
+		new Thread("LoadingThread") {
+
+			@Override
+			public void run() {
+				spectrumSummary
+						.loadSpectrumIdentificationResultTable(proteoIDViewer
+								.getMzIdentMLUnmarshaller());
+				proteinDBView.loadDBSequenceTable(proteoIDViewer
+						.getMzIdentMLUnmarshaller());
+				proteoIDViewer.isFourthTabLoaded = true;
+				progressBarDialog.dispose();
+			}
+		}.start();
+
+	}
+
+	private void loadThirdTab(ProteoIDViewer proteoIDViewer) {
+		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(null,
+				true);
+		final Thread thread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				progressBarDialog.setTitle("Parsing the mzid file. Please Wait...");
+				progressBarDialog.setVisible(true);
+			}
+		}, "ProgressBarDialog");
+
+		thread.start();
+
+		new Thread("LoadingThread") {
+
+			@Override
+			public void run() {
+				peptideSummary.loadPeptideTable(proteoIDViewer
+						.getMzIdentMLUnmarshaller());
+				proteoIDViewer.isThirdTabLoaded = true;
+				progressBarDialog.setVisible(false);
+				progressBarDialog.dispose();
+			}
+		}.start();
+	}
+
+	private void loadSecondTab(ProteoIDViewer proteoIDViewer) {
+		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(null,
+				true);
+		final Thread thread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				progressBarDialog.setTitle("Parsing the mzid file. Please Wait...");
+				progressBarDialog.setVisible(true);
+			}
+		}, "ProgressBarDialog");
+
+		thread.start();
+
+		new Thread("LoadingThread") {
+
+			@Override
+			public void run() {
+				spectrumSummary
+						.loadSpectrumIdentificationResultTable(proteoIDViewer
+								.getMzIdentMLUnmarshaller());
+				proteoIDViewer.isSecondTabLoaded = true;
+				progressBarDialog.setVisible(false);
+				progressBarDialog.dispose();
+			}
+		}.start();
+	}
+
+	private void loadSummaryStats(ProteoIDViewer proteoIDViewer) {
+		Iterator<SpectrumIdentificationList> iterspectrumIdentificationList = proteoIDViewer
+				.getMzIdentMLUnmarshaller().unmarshalCollectionFromXpath(
+						MzIdentMLElement.SpectrumIdentificationList);
 		while (iterspectrumIdentificationList.hasNext()) {
 			SpectrumIdentificationList spectrumIdentificationList1 = iterspectrumIdentificationList
 					.next();
 
-			globalStatisticsPanel.getSiiComboBox().addItem(spectrumIdentificationList1.getId());
+			globalStatisticsPanel.getSiiComboBox().addItem(
+					spectrumIdentificationList1.getId());
 		}
-		proteoIDViewer.loadSpectrumIdentificationList(
-				proteoIDViewer.getMzIdentMLUnmarshaller(),
-				globalStatisticsPanel);
+		globalStatisticsPanel.loadSpectrumIdentificationList(proteoIDViewer
+				.getMzIdentMLUnmarshaller());
 	}
 
-	private void loadProtocolData() {
+	private void loadProtocolData(ProteoIDViewer proteoIDViewer) {
 		protocolPanel.setProtocolText("");
-		String text = "";
 		proteoIDViewer.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		Map<String, AnalysisSoftware> analysisSoftwareHashMap;
-		AnalysisProtocolCollection analysisProtocolCollection;
-		List<SpectrumIdentificationProtocol> spectrumIdentificationProtocol;
-		ProteinDetectionProtocol proteinDetectionProtocol;
+		Map<String, AnalysisSoftware> analysisSoftwareHashMap = new HashMap<>();
 
-		analysisSoftwareHashMap = new HashMap<>();
-
-		Iterator<AnalysisSoftware> iterAnalysisSoftware = proteoIDViewer.getMzIdentMLUnmarshaller()
-				.unmarshalCollectionFromXpath(MzIdentMLElement.AnalysisSoftware);
+		Iterator<AnalysisSoftware> iterAnalysisSoftware = proteoIDViewer
+				.getMzIdentMLUnmarshaller().unmarshalCollectionFromXpath(
+						MzIdentMLElement.AnalysisSoftware);
 		while (iterAnalysisSoftware.hasNext()) {
 			AnalysisSoftware analysisSoftware = iterAnalysisSoftware.next();
 			analysisSoftwareHashMap.put(analysisSoftware.getId(),
 					analysisSoftware);
-
 		}
 
-		analysisProtocolCollection = proteoIDViewer.getMzIdentMLUnmarshaller()
-				.unmarshal(MzIdentMLElement.AnalysisProtocolCollection);
+		AnalysisProtocolCollection analysisProtocolCollection = proteoIDViewer
+				.getMzIdentMLUnmarshaller().unmarshal(
+						MzIdentMLElement.AnalysisProtocolCollection);
 
-		spectrumIdentificationProtocol = analysisProtocolCollection
+		List<SpectrumIdentificationProtocol> spectrumIdentificationProtocol = analysisProtocolCollection
 				.getSpectrumIdentificationProtocol();
-		proteinDetectionProtocol = analysisProtocolCollection
+		ProteinDetectionProtocol proteinDetectionProtocol = analysisProtocolCollection
 				.getProteinDetectionProtocol();
 
+		String text = "";
 		if (spectrumIdentificationProtocol != null) {
-			text = text
-					+ "<html><font color=red>Spectrum Identification Protocol</font><BR>";
+			text += "<html><font color=red>Spectrum Identification Protocol</font><BR>";
 			for (int i = 0; i < spectrumIdentificationProtocol.size(); i++) {
 				Param param = spectrumIdentificationProtocol.get(i)
 						.getSearchType();
@@ -289,12 +308,12 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 						SearchModification searchModification = searchModificationList
 								.get(j);
 						String mod = "";
-						if (searchModification.isFixedMod()) {
+						if (searchModification.isFixedMod())
 							mod = "(fixed)";
-						} else {
+						else
 							mod = "(variable)";
-						}
-						text = text + "<B>Search Modification:</B> Type " + mod
+
+						text += "<B>Search Modification:</B> Type " + mod
 								+ " Residues: "
 								+ searchModification.getResidues()
 								+ " Mass Delta: "
@@ -318,15 +337,15 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 						CvParam cvParam = cvParamList.get(j);
 						if (cvParam.getName().equals(
 								"search tolerance plus value")) {
-							t1 = t1 + "+" + cvParam.getValue() + " Da ";
+							t1 += "+" + cvParam.getValue() + " Da ";
 						}
 						if (cvParam.getName().equals(
 								"search tolerance minus value")) {
-							t2 = t2 + "-" + cvParam.getValue() + " Da ";
+							t2 += "-" + cvParam.getValue() + " Da ";
 						}
 					}
-					text = text + "<B>Fragment Tolerance: </B>" + t1 + " / "
-							+ t2 + "<BR>";
+					text += "<B>Fragment Tolerance: </B>" + t1 + " / " + t2
+							+ "<BR>";
 				}
 
 				Tolerance toleranceParent = spectrumIdentificationProtocol.get(
@@ -339,32 +358,31 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 						CvParam cvParam = cvParamList.get(j);
 						if (cvParam.getName().equals(
 								"search tolerance plus value")) {
-							t1 = t1 + "+" + cvParam.getValue() + " Da ";
+							t1 += "+" + cvParam.getValue() + " Da ";
 						}
 						if (cvParam.getName().equals(
 								"search tolerance minus value")) {
-							t2 = t2 + "-" + cvParam.getValue() + " Da ";
+							t2 += "-" + cvParam.getValue() + " Da ";
 						}
 					}
-					text = text + "<B>Parent Fragment Tolerance: </B>" + t1
-							+ " / " + t2 + "<BR>";
+					text += "<B>Parent Fragment Tolerance: </B>" + t1 + " / "
+							+ t2 + "<BR>";
 				}
 
 				String threshold = spectrumIdentificationProtocol.get(i)
 						.getThreshold().getCvParam().get(0).getValue();
 				if (threshold != null) {
-					text = text + "<B>Threshold: </B>" + threshold + "<BR>";
+					text += "<B>Threshold: </B>" + threshold + "<BR>";
 				}
 			}
 
 		}
 		if (proteinDetectionProtocol != null) {
-			text = text
-					+ "<html><font color=red>Protein Detection Protocol</font><BR>";
+			text = "<html><font color=red>Protein Detection Protocol</font><BR>";
 			String threshold = proteinDetectionProtocol.getThreshold()
 					.getCvParam().get(0).getValue();
 			if (threshold != null) {
-				text = text + "<B>Threshold: </B>" + threshold + "<BR>";
+				text += "<B>Threshold: </B>" + threshold + "<BR>";
 			}
 
 		}

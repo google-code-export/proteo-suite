@@ -1,6 +1,5 @@
 package uk.ac.liv.proteoidviewer.listener;
 
-import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -8,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.BoxLayout;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
@@ -37,7 +36,8 @@ public class spectrumIdentificationResultTableMouseClicked implements
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		int row = spectrumSummary.getIdentificationResultTable()
+		JTable spectrumSummaryIdentificationResult = (JTable) e.getSource();
+		int row = spectrumSummaryIdentificationResult
 				.getSelectedRow();
 		if (row == -1)
 			return;
@@ -45,33 +45,26 @@ public class spectrumIdentificationResultTableMouseClicked implements
 		proteoIDViewer.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		// row =
 		// spectrumIdentificationResultTable.convertRowIndexToModel(row);
-		try {
-			((DefaultTableModel) spectrumSummary.getIdentificationItemTable().getModel()).setNumRows(0);
-			((DefaultTableModel) spectrumSummary.getEvidenceTable().getModel()).setNumRows(0);
-			((DefaultTableModel) spectrumSummary.getFragmentationTable().getModel()).setNumRows(0);
-			spectrumSummary.getGraph().removeAll();
+		spectrumSummary.removeAllIdentificationItems();
+		spectrumSummary.removeAllEvidence();
+		spectrumSummary.removeAllFragmentation();
+		spectrumSummary.getGraph().removeAll();
+		spectrumSummary.getGraph().validate();
+		spectrumSummary.getGraph().repaint();
 
-			spectrumSummary.getGraph().validate();
-			spectrumSummary.getGraph().repaint();
+		
+		try {
 			// TODO: Disabled - Andrew
 			// spectrumIdentificationItemTable.scrollRowToVisible(0);
-			String sir_id = (String) spectrumSummary
-					.getIdentificationResultTable().getModel()
+			String sirID = (String) spectrumSummaryIdentificationResult.getModel()
 					.getValueAt(row, 0);
-			SpectrumIdentificationResult spectrumIdentificationResult = proteoIDViewer.unmarshal(SpectrumIdentificationResult.class, sir_id);
-			if (proteoIDViewer.jmzreader != null) {
+			SpectrumIdentificationResult spectrumIdentificationResult = proteoIDViewer
+					.unmarshal(SpectrumIdentificationResult.class, sirID);
+			if (proteoIDViewer.isRawAvailable()) {
 
-				Spectrum spectrum = null;
-				String spectrumID = spectrumIdentificationResult
-						.getSpectrumID();
-				if (proteoIDViewer.sourceFile.equals("mgf")) {
-					String spectrumIndex = spectrumID.substring(6);
-					Integer index1 = Integer.valueOf(spectrumIndex) + 1;
-					spectrum = proteoIDViewer.jmzreader.getSpectrumById(index1.toString());
-				}
-				if (proteoIDViewer.sourceFile.equals("mzML")) {
-					spectrum = proteoIDViewer.jmzreader.getSpectrumById(spectrumID);
-				}
+				Spectrum spectrum = proteoIDViewer
+						.getRawSpectrum(spectrumIdentificationResult
+								.getSpectrumID());
 
 				List<Double> mzValues;
 				if (spectrum.getPeakList() != null) {
@@ -90,22 +83,12 @@ public class spectrumIdentificationResultTableMouseClicked implements
 					mz[index] = mzValue;
 					intensities[index] = spectrum.getPeakList().get(mzValue);
 
-					// peakAnnotation.add(
-					// new DefaultSpectrumAnnotation(
-					// mz[index],
-					// intensities[index],
-					// Color.blue,
-					// ""));
 					index++;
 				}
-
+				
 				SpectrumPanel spectrumPanel = new SpectrumPanel(mz,
-						intensities, 0.0, "", "");
+						intensities, spectrum.getPrecursorMZ(), spectrum.getPrecursorCharge().toString(), "");
 				spectrumPanel.setAnnotations(peakAnnotation);
-				spectrumSummary.getGraph().setLayout(new BorderLayout());
-				spectrumSummary.getGraph().setLayout(
-						new BoxLayout(spectrumSummary.getGraph(),
-								BoxLayout.LINE_AXIS));
 				spectrumSummary.getGraph().add(spectrumPanel);
 				spectrumSummary.getGraph().validate();
 				spectrumSummary.getGraph().repaint();
@@ -113,18 +96,23 @@ public class spectrumIdentificationResultTableMouseClicked implements
 
 			spectrumSummary.spectrumIdentificationItemListForSpecificResult = spectrumIdentificationResult
 					.getSpectrumIdentificationItem();
-			if (spectrumSummary.spectrumIdentificationItemListForSpecificResult.size() > 0) {
+			if (spectrumSummary.spectrumIdentificationItemListForSpecificResult
+					.size() > 0) {
 
 				for (int i = 0; i < spectrumSummary.spectrumIdentificationItemListForSpecificResult
 						.size(); i++) {
 					try {
 						SpectrumIdentificationItem spectrumIdentificationItem = spectrumSummary.spectrumIdentificationItemListForSpecificResult
 								.get(i);
-						boolean isDecoy = proteoIDViewer.checkIfSpectrumIdentificationItemIsDecoy(
-								spectrumIdentificationItem,
-								proteoIDViewer.getMzIdentMLUnmarshaller());
+						boolean isDecoy = proteoIDViewer
+								.checkIfSpectrumIdentificationItemIsDecoy(
+										spectrumIdentificationItem,
+										proteoIDViewer
+												.getMzIdentMLUnmarshaller());
 
-						Peptide peptide = proteoIDViewer.unmarshal(Peptide.class, spectrumIdentificationItem.getPeptideRef());
+						Peptide peptide = proteoIDViewer.unmarshal(
+								Peptide.class,
+								spectrumIdentificationItem.getPeptideRef());
 						if (peptide != null) {
 							List<Modification> modificationList = peptide
 									.getModification();
@@ -253,24 +241,24 @@ public class spectrumIdentificationResultTableMouseClicked implements
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

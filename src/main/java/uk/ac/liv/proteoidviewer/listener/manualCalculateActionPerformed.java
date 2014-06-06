@@ -34,6 +34,7 @@ import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationList;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
 import uk.ac.liv.mzidlib.FalseDiscoveryRate;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
+import uk.ac.liv.proteoidviewer.tabs.GlobalStatisticsPanel;
 import uk.ac.liv.proteoidviewer.util.IdViewerUtils;
 import uk.ac.liv.proteoidviewer.util.ProgressBarDialog;
 
@@ -56,12 +57,13 @@ public class manualCalculateActionPerformed implements ActionListener {
 	private final JComboBox<String> jComboBox1;
 	private final JPanel tpEvaluePanel;
 	private final JPanel tpQvaluePanel;
+	private final GlobalStatisticsPanel globalStatisticsPanel;
 
 	public manualCalculateActionPerformed(ProteoIDViewer proteoIDViewer, JComboBox<String> siiComboBox, 
 			JCheckBox manualDecoy, JTextField manualDecoyPrefixValue, JLabel isDecoySiiValue, JLabel isDecoySiiFalseValue, 
 			JTextField manualDecoyRatioValue, JLabel fpSiiValue, List<SpectrumIdentificationItem> sIIListPassThreshold, JLabel tpSiiValue, 
 			JLabel fdrSiiValue, JPanel fdrPanel, JComboBox<String> jComboBox2, Map<String, String> cvTermMap, JComboBox<String> jComboBox1, 
-			JPanel tpEvaluePanel, JPanel tpQvaluePanel) {
+			JPanel tpEvaluePanel, JPanel tpQvaluePanel, GlobalStatisticsPanel globalStatisticsPanel) {
 		this.proteoIDViewer = proteoIDViewer;
 		this.siiComboBox = siiComboBox;
 		this.manualDecoy = manualDecoy;
@@ -79,23 +81,22 @@ public class manualCalculateActionPerformed implements ActionListener {
 		this.jComboBox1 = jComboBox1;
 		this.tpEvaluePanel = tpEvaluePanel;
 		this.tpQvaluePanel = tpQvaluePanel;
+		this.globalStatisticsPanel = globalStatisticsPanel;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(null, true);
-		final Thread thread = new Thread(new Runnable() {
+		new Thread("ProgressBar") {
 
 			@Override
 			public void run() {
 				progressBarDialog.setTitle("Calculating FDR stats and drawing graphs. Please wait..");
 				progressBarDialog.setVisible(true);
 			}
-		}, "ProgressBarDialog");
+		}.start();
 
-		thread.start();
-
-		new Thread("LoadingThread") {
+		Thread t = new Thread("LoadingThread") {
 
 			@Override
 			public void run() {
@@ -103,7 +104,8 @@ public class manualCalculateActionPerformed implements ActionListener {
 				progressBarDialog.setVisible(false);
 				progressBarDialog.dispose();
 			}
-		}.start();
+		};
+		t.start();
 
 	}
 
@@ -178,22 +180,22 @@ public class manualCalculateActionPerformed implements ActionListener {
 						.size()));
 			}
 			if (sIIListIsDecoyTrue != null) {
-				proteoIDViewer.falsePositiveSii = IdViewerUtils
+				globalStatisticsPanel.falsePositiveSii = IdViewerUtils
 						.roundThreeDecimals(sIIListIsDecoyTrue.size()
 								/ Double.valueOf(manualDecoyRatioValue
 										.getText().trim()));
-				fpSiiValue.setText(String.valueOf(proteoIDViewer.falsePositiveSii));
+				fpSiiValue.setText(String.valueOf(globalStatisticsPanel.falsePositiveSii));
 			}
 			if (sIIListIsDecoyTrue != null && sIIListIsDecoyFalse != null) {
-				proteoIDViewer.truePositiveSii = IdViewerUtils
+				globalStatisticsPanel.truePositiveSii = IdViewerUtils
 						.roundThreeDecimals(sIIListPassThreshold.size()
 								- sIIListIsDecoyTrue.size());
-				tpSiiValue.setText(String.valueOf(proteoIDViewer.truePositiveSii));
+				tpSiiValue.setText(String.valueOf(globalStatisticsPanel.truePositiveSii));
 			}
 			if (sIIListIsDecoyTrue != null && sIIListIsDecoyFalse != null) {
-				proteoIDViewer.fdrSii = IdViewerUtils.roundThreeDecimals(proteoIDViewer.falsePositiveSii
-						/ (proteoIDViewer.falsePositiveSii + proteoIDViewer.truePositiveSii));
-				fdrSiiValue.setText(String.valueOf(proteoIDViewer.fdrSii));
+				globalStatisticsPanel.fdrSii = IdViewerUtils.roundThreeDecimals(globalStatisticsPanel.falsePositiveSii
+						/ (globalStatisticsPanel.falsePositiveSii + globalStatisticsPanel.truePositiveSii));
+				fdrSiiValue.setText(String.valueOf(globalStatisticsPanel.fdrSii));
 			}
 
 			fdrPanel.removeAll();
@@ -206,22 +208,23 @@ public class manualCalculateActionPerformed implements ActionListener {
 					order = true;
 				}
 				cvTerm = cvTermMap.get(jComboBox1.getSelectedItem());
-				proteoIDViewer.falseDiscoveryRate = new FalseDiscoveryRate(proteoIDViewer.fileName.getAbsolutePath(),
+				FalseDiscoveryRate falseDiscoveryRate = null;
+				falseDiscoveryRate = new FalseDiscoveryRate(proteoIDViewer.fileName.getAbsolutePath(),
 						manualDecoyRatioValue.getText(),
 						manualDecoyPrefixValue.getText(), cvTerm, order);
 
-				proteoIDViewer.falseDiscoveryRate.computeFDRusingJonesMethod();
+				falseDiscoveryRate.computeFDRusingJonesMethod();
 
 				// FDR Graph
 				XYSeriesCollection datasetFDR = new XYSeriesCollection();
 				final XYSeries dataFDR = new XYSeries("FDR", false);
 
-				for (int i = 0; i < proteoIDViewer.falseDiscoveryRate.getSorted_evalues()
+				for (int i = 0; i < falseDiscoveryRate.getSorted_evalues()
 						.size(); i++) {
-					if (proteoIDViewer.falseDiscoveryRate.getSorted_evalues().get(i) != 0) {
-						dataFDR.add(Math.log10(proteoIDViewer.falseDiscoveryRate
+					if (falseDiscoveryRate.getSorted_evalues().get(i) != 0) {
+						dataFDR.add(Math.log10(falseDiscoveryRate
 								.getSorted_evalues().get(i)),
-								proteoIDViewer.falseDiscoveryRate.getSorted_estimatedFDR()
+								falseDiscoveryRate.getSorted_estimatedFDR()
 										.get(i));
 					}
 
@@ -229,24 +232,24 @@ public class manualCalculateActionPerformed implements ActionListener {
 
 				final XYSeries dataFDRQvalue = new XYSeries("Q-value", false);
 
-				for (int i = 0; i < proteoIDViewer.falseDiscoveryRate.getSorted_evalues()
+				for (int i = 0; i < falseDiscoveryRate.getSorted_evalues()
 						.size(); i++) {
-					if (proteoIDViewer.falseDiscoveryRate.getSorted_evalues().get(i) != 0) {
-						dataFDRQvalue.add(Math.log10(proteoIDViewer.falseDiscoveryRate
+					if (falseDiscoveryRate.getSorted_evalues().get(i) != 0) {
+						dataFDRQvalue.add(Math.log10(falseDiscoveryRate
 								.getSorted_evalues().get(i)),
-								proteoIDViewer.falseDiscoveryRate.getSorted_qValues().get(i));
+								falseDiscoveryRate.getSorted_qValues().get(i));
 					}
 				}
 
 				final XYSeries dataFDRSimple = new XYSeries("Simple FDR", false);
 
-				for (int i = 0; i < proteoIDViewer.falseDiscoveryRate.getSorted_evalues()
+				for (int i = 0; i < falseDiscoveryRate.getSorted_evalues()
 						.size(); i++) {
-					if (proteoIDViewer.falseDiscoveryRate.getSorted_evalues().get(i) != 0) {
+					if (falseDiscoveryRate.getSorted_evalues().get(i) != 0) {
 						dataFDRSimple
-								.add(Math.log10(proteoIDViewer.falseDiscoveryRate
+								.add(Math.log10(falseDiscoveryRate
 										.getSorted_evalues().get(i)),
-										proteoIDViewer.falseDiscoveryRate
+										falseDiscoveryRate
 												.getSorted_simpleFDR().get(i));
 					}
 
@@ -268,23 +271,23 @@ public class manualCalculateActionPerformed implements ActionListener {
 				XYSeriesCollection datasetTpQvalue = new XYSeriesCollection();
 				final XYSeries dataTpQvalue = new XYSeries("TP", false);
 
-				for (int i = 0; i < proteoIDViewer.falseDiscoveryRate.getSorted_evalues()
+				for (int i = 0; i < falseDiscoveryRate.getSorted_evalues()
 						.size(); i++) {
-					if (proteoIDViewer.falseDiscoveryRate.getSorted_evalues().get(i) != 0) {
-						dataTpQvalue.add(Math.log10(proteoIDViewer.falseDiscoveryRate
+					if (falseDiscoveryRate.getSorted_evalues().get(i) != 0) {
+						dataTpQvalue.add(Math.log10(falseDiscoveryRate
 								.getSorted_evalues().get(i)),
-								proteoIDViewer.falseDiscoveryRate.getTP().get(i));
+								falseDiscoveryRate.getTP().get(i));
 					}
 				}
 
 				final XYSeries dataFpQvalue = new XYSeries("FP", false);
 
-				for (int i = 0; i < proteoIDViewer.falseDiscoveryRate.getSorted_evalues()
+				for (int i = 0; i < falseDiscoveryRate.getSorted_evalues()
 						.size(); i++) {
-					if (proteoIDViewer.falseDiscoveryRate.getSorted_evalues().get(i) != 0) {
-						dataFpQvalue.add(Math.log10(proteoIDViewer.falseDiscoveryRate
+					if (falseDiscoveryRate.getSorted_evalues().get(i) != 0) {
+						dataFpQvalue.add(Math.log10(falseDiscoveryRate
 								.getSorted_evalues().get(i)),
-								proteoIDViewer.falseDiscoveryRate.getFP().get(i));
+								falseDiscoveryRate.getFP().get(i));
 					}
 				}
 
@@ -304,10 +307,10 @@ public class manualCalculateActionPerformed implements ActionListener {
 				XYSeriesCollection datasetTpQvalueCollection = new XYSeriesCollection();
 				final XYSeries dataTpQValueSeries = new XYSeries("data", false);
 
-				for (int i = 0; i < proteoIDViewer.falseDiscoveryRate.getSorted_evalues()
+				for (int i = 0; i < falseDiscoveryRate.getSorted_evalues()
 						.size(); i++) {
-					dataTpQValueSeries.add(proteoIDViewer.falseDiscoveryRate
-							.getSorted_qValues().get(i), proteoIDViewer.falseDiscoveryRate
+					dataTpQValueSeries.add(falseDiscoveryRate
+							.getSorted_qValues().get(i), falseDiscoveryRate
 							.getTP().get(i));
 					// System.out.println(falseDiscoveryRate.getSorted_qValues().get(i)
 					// + " " + falseDiscoveryRate.getTP().get(i) );

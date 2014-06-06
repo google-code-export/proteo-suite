@@ -3,6 +3,7 @@ package uk.ac.liv.proteoidviewer.tabs;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,9 +79,8 @@ public class PeptideSummary extends JSplitPane {
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		spectrumIdentificationItemTablePeptideView
 				.addMouseListener(new spectrumIdentificationItemTablePeptideViewMouseClicked(
-						proteoIDViewer,
-						this,
-						filterListIon1, filterListCharge1, jGraph1, siiSirMap));
+						proteoIDViewer, this, filterListIon1,
+						filterListCharge1, jGraph1, siiSirMap));
 
 		createPanel();
 	}
@@ -131,8 +131,11 @@ public class PeptideSummary extends JSplitPane {
 		SpectrumPanel.add(jFragmentationPanel1);
 
 		final JPanel leftPanel = new JPanel(new GridLayout(4, 1));
-		leftPanel.add(new JLabel("Peptide-Spectrum matches with Rank: "));
-		leftPanel.add(psmRankValue);
+		JPanel psmPanel = new JPanel(new FlowLayout());
+		
+		psmPanel.add(new JLabel("Peptide-Spectrum matches with Rank: "));
+		psmPanel.add(psmRankValue);
+		leftPanel.add(psmPanel);
 		leftPanel.add(jSpectrumIdentificationItemPanel1);
 		leftPanel.add(jPeptideEvidencePanel1);
 
@@ -154,13 +157,10 @@ public class PeptideSummary extends JSplitPane {
 		return spectrumIdentificationItemTablePeptideView;
 	}
 
-	public JComboBox<String> getPsmRankValue() {
-		return psmRankValue;
-	}
-
 	public void loadPeptideTable(MzIdentMLUnmarshaller mzIdentMLUnmarshaller) {
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		((DefaultTableModel) spectrumIdentificationItemTablePeptideView.getModel()).setNumRows(0);
+		((DefaultTableModel) spectrumIdentificationItemTablePeptideView
+				.getModel()).setNumRows(0);
 		siiSirMap.clear();
 
 		Iterator<Peptide> iterPeptide = mzIdentMLUnmarshaller
@@ -330,6 +330,12 @@ public class PeptideSummary extends JSplitPane {
 		peptideEvidenceTablePeptideView.setModel(new DefaultTableModel(
 				new Object[][] {}, peptideEvidenceTableHeaders) {
 			private static final long serialVersionUID = 1L;
+
+
+			@Override
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
 		});
 		peptideEvidenceTablePeptideView.removeAll();
 		// peptideEvidenceTablePeptideView.setAutoCreateRowSorter(true);
@@ -337,6 +343,12 @@ public class PeptideSummary extends JSplitPane {
 		fragmentationTablePeptideView.setModel(new DefaultTableModel(
 				new Object[][] {}, fragmentationTableHeaders) {
 			private static final long serialVersionUID = 1L;
+
+
+			@Override
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
 		});
 		fragmentationTablePeptideView.removeAll();
 
@@ -344,6 +356,13 @@ public class PeptideSummary extends JSplitPane {
 				.setModel(new DefaultTableModel(new Object[][] {},
 						spectrumIdentificationItemTableHeaders) {
 					private static final long serialVersionUID = 1L;
+					
+
+
+					@Override
+		            public boolean isCellEditable(int row, int col) {
+		                return false;
+		            }
 				});
 		spectrumIdentificationItemTablePeptideView.removeAll();
 		// spectrumIdentificationItemTablePeptideView.setAutoCreateRowSorter(true);
@@ -354,5 +373,11 @@ public class PeptideSummary extends JSplitPane {
 
 		jGraph1.validate();
 		jGraph1.repaint();
+	}
+
+	public void removeAllFragmentation() {
+		((DefaultTableModel) fragmentationTablePeptideView.getModel())
+		.setNumRows(0);
+		
 	}
 }

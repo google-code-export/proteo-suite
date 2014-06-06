@@ -3,6 +3,8 @@ package uk.ac.liv.proteoidviewer.listener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.JComboBox;
+
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.tabs.GlobalStatisticsPanel;
 
@@ -18,11 +20,13 @@ public class siiComboBoxActionPerformed implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (globalStatisticsPanel.getSiiComboBox().getSelectedIndex() == -1)
+		JComboBox<String> siiComboBox = (JComboBox<String>) e.getSource();
+		
+		if (siiComboBox.getSelectedIndex() == -1)
 			return;
 
-		proteoIDViewer.loadSpectrumIdentificationList(
-				proteoIDViewer.getMzIdentMLUnmarshaller(), globalStatisticsPanel);
+		globalStatisticsPanel.loadSpectrumIdentificationList(
+				proteoIDViewer.getMzIdentMLUnmarshaller());
 
 	}
 }

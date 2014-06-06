@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.bind.JAXBException;
 
@@ -45,13 +46,14 @@ public class spectrumIdentificationItemTableMouseClicked implements
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		int row = spectrumSummary.getIdentificationItemTable().getSelectedRow();
+		JTable spectrumSummaryIdentificationItem = (JTable) e.getSource();
+		int row = spectrumSummaryIdentificationItem.getSelectedRow();
 		if (row == -1)
 			return;
 
 		proteoIDViewer.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		spectrumSummary.getFragmentationTable().removeAll();
-		((DefaultTableModel) spectrumSummary.getEvidenceTable().getModel()).setNumRows(0);
+		spectrumSummary.removeAllFragmentation();
+		spectrumSummary.removeAllEvidence();
 
 		// TODO: Disabled - Andrew
 		// fragmentationTable.scrollRowToVisible(0);
@@ -71,8 +73,7 @@ public class spectrumIdentificationItemTableMouseClicked implements
 										peptideEvidenceRef
 												.getPeptideEvidenceRef());
 
-						((DefaultTableModel) spectrumSummary.getEvidenceTable()
-								.getModel()).addRow(new Object[] {
+						spectrumSummary.addEvidence(new Object[] {
 								peptideEvidence.getStart(),
 								peptideEvidence.getEnd(),
 								peptideEvidence.getPre(),
@@ -80,8 +81,6 @@ public class spectrumIdentificationItemTableMouseClicked implements
 								peptideEvidence.isIsDecoy(),
 								peptideEvidence.getPeptideRef(),
 								peptideEvidence.getDBSequenceRef()
-						// "<html><a href=>"
-						// +peptideEvidence.getDBSequenceRef()+"</a>"
 								});
 					} catch (JAXBException ex) {
 						ex.printStackTrace();
@@ -162,7 +161,7 @@ public class spectrumIdentificationItemTableMouseClicked implements
 
 			spectrumSummary.getGraph().validate();
 			spectrumSummary.getGraph().repaint();
-			if (proteoIDViewer.jmzreader != null) {
+			if (proteoIDViewer.isRawAvailable()) {
 				try {
 					int row1 = spectrumSummary.getIdentificationResultTable()
 							.getSelectedRow();
@@ -172,16 +171,9 @@ public class spectrumIdentificationItemTableMouseClicked implements
 					// System.out.println(sir_id);
 					SpectrumIdentificationResult spectrumIdentificationResult = proteoIDViewer.unmarshal(SpectrumIdentificationResult.class,
 									sir_id);
-					Spectrum spectrum = null;
-					String spectrumID = spectrumIdentificationResult
-							.getSpectrumID();
-					if (proteoIDViewer.sourceFile.equals("mgf")) {
-						String spectrumIndex = spectrumID.substring(6);
-						Integer index1 = Integer.valueOf(spectrumIndex) + 1;
-						spectrum = proteoIDViewer.jmzreader.getSpectrumById(index1.toString());
-					} else if (proteoIDViewer.sourceFile.equals("mzML")) {
-						spectrum = proteoIDViewer.jmzreader.getSpectrumById(spectrumID);
-					}
+					Spectrum spectrum = proteoIDViewer.getRawSpectrum(spectrumIdentificationResult
+							.getSpectrumID());
+					
 
 					List<Double> mzValues;
 					if (spectrum.getPeakList() != null) {
