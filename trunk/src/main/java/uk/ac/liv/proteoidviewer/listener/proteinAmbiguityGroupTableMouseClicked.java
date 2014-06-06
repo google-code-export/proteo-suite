@@ -7,11 +7,10 @@ import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.JTextPane;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.bind.JAXBException;
 
-import uk.ac.ebi.jmzidml.MzIdentMLElement;
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
 import uk.ac.ebi.jmzidml.model.mzidml.DBSequence;
 import uk.ac.ebi.jmzidml.model.mzidml.ProteinAmbiguityGroup;
@@ -23,14 +22,14 @@ import uk.ac.liv.proteoidviewer.util.IdViewerUtils;
 public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
 
 	private final ProteoIDViewer proteoIDViewer;
-	private final JTextPane jProteinSequenceTextPane;
+	private final JTextArea jProteinSequenceTextPane;
 	private final JLabel jScientificNameValueLabel;
 	private final JTable proteinAmbiguityGroupTable;
 
 	private final ProteinView proteinView;
 
 	public proteinAmbiguityGroupTableMouseClicked(
-			ProteoIDViewer proteoIDViewer, JTextPane jProteinSequenceTextPane,
+			ProteoIDViewer proteoIDViewer, JTextArea jProteinSequenceTextPane,
 			JLabel jScientificNameValueLabel,
 			JTable proteinAmbiguityGroupTable, ProteinView proteinView) {
 		this.proteoIDViewer = proteoIDViewer;

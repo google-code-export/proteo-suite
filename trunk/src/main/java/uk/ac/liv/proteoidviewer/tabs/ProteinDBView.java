@@ -18,21 +18,23 @@ import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 public class ProteinDBView extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private static final String[] dBSequenceTableHeaders = new String[] { "ID",
-		"Accession", "Seq", "Protein Description" };
-	
+			"Accession", "Seq", "Protein Description" };
+
 	private final JTable dBSequenceTable = new JTable();
 
 	public ProteinDBView() {
 		// dBSequenceTable Table
 		dBSequenceTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		dBSequenceTable.getTableHeader().setReorderingAllowed(false);
-		
+
 		setLayout(new BorderLayout());
 		add(new JScrollPane(dBSequenceTable));
-		setBorder(BorderFactory
-				.createTitledBorder("DB Sequence"));
+		setBorder(BorderFactory.createTitledBorder("DB Sequence"));
 	}
 
+	public JTable getTable() {
+		return dBSequenceTable;
+	}
 
 	public void loadDBSequenceTable(MzIdentMLUnmarshaller mzIdentMLUnmarshaller) {
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -55,19 +57,25 @@ public class ProteinDBView extends JPanel {
 		}
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
-	
-	public void reset()
-	{
+
+	public void reset() {
 		// dBSequence view dBSequenceTable
 		// dBSequenceTable.setAutoCreateRowSorter(true);
 		dBSequenceTable.setModel(new DefaultTableModel(new Object[][] {},
 				dBSequenceTableHeaders) {
 			private static final long serialVersionUID = 1L;
+			
+
+
+			@Override
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
 		});
 		((DefaultTableModel) dBSequenceTable.getModel()).setRowCount(0);
 	}
 
-	public JTable getTable() {
-		return dBSequenceTable;
+	public int getRowCount() {
+		return dBSequenceTable.getModel().getRowCount();
 	}
 }

@@ -3,17 +3,17 @@ package uk.ac.liv.proteoidviewer.tabs;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextPane;
+import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -48,78 +48,37 @@ public class ProteinView extends JPanel {
 	private final JTable spectrumIdentificationItemProteinViewTable = new JTable();
 	private final JTable proteinDetectionHypothesisTable = new JTable();
 	private final JTable proteinAmbiguityGroupTable = new JTable();
-	private final JEditorPane jProteinDescriptionEditorPane = new JEditorPane();
-	private final JTextPane jProteinSequenceTextPane = new JTextPane();
-	private final JLabel jScientificNameValueLabel = new JLabel();
+
+	private final JTextArea proteinDescription = new JTextArea();
+	private final JTextArea proteinSequence = new JTextArea();
+	private final JLabel scientificNameValue = new JLabel();
 
 	public ProteinView(ProteoIDViewer proteoIDViewer,
 			SpectrumSummary spectrumSummary) {
-		jProteinDescriptionEditorPane.setContentType("text/html");
-
-		jProteinSequenceTextPane.setContentType("text/html");
-		jProteinSequenceTextPane.setText("");
-
-		// spectrum Identification Item Protein View Table
-		spectrumIdentificationItemProteinViewTable
-				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-		spectrumIdentificationItemProteinViewTable
-				.addMouseListener(new spectrumIdentificationItemProteinTableeMouseClicked(
-						proteoIDViewer, spectrumSummary));
-
-		spectrumIdentificationItemProteinViewTable.getTableHeader()
-				.setReorderingAllowed(false);
-
-		// protein Detection Hypothesis Table
-		proteinDetectionHypothesisTable
-				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		proteinDetectionHypothesisTable
-				.addMouseListener(new proteinDetectionHypothesisTableMouseClicked(
-						proteoIDViewer, proteinDetectionHypothesisTable, this,
-						jScientificNameValueLabel,
-						jProteinDescriptionEditorPane, jProteinSequenceTextPane));
-
-		proteinDetectionHypothesisTable.getTableHeader().setReorderingAllowed(
-				false);
-
-		// protein Ambiguity Group Table
-		proteinAmbiguityGroupTable
-				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		proteinAmbiguityGroupTable
-				.addMouseListener(new proteinAmbiguityGroupTableMouseClicked(
-						proteoIDViewer, jProteinSequenceTextPane,
-						jScientificNameValueLabel, proteinAmbiguityGroupTable,
-						this));
-
-		proteinAmbiguityGroupTable.getTableHeader().setReorderingAllowed(false);
-
-		createPanel();
-	}
-
-	private void createPanel() {
-		final JScrollPane jProteinDescriptionScrollPane = new JScrollPane(
-				jProteinDescriptionEditorPane);
-		final JScrollPane jProteinSequenceScrollPane = new JScrollPane(
-				jProteinSequenceTextPane);
+		createTables(proteoIDViewer, spectrumSummary);
+		proteinDescription.setEditable(false);
+		proteinSequence.setEditable(false);
 
 		final JPanel jProteinDescriptionPanel = new JPanel(new BorderLayout());
 		jProteinDescriptionPanel.setBorder(BorderFactory
 				.createTitledBorder("Protein Description"));
-		jProteinDescriptionPanel.add(jProteinDescriptionScrollPane,
+		jProteinDescriptionPanel.add(new JScrollPane(proteinDescription),
 				BorderLayout.CENTER);
 
 		final JPanel jProteinSequencePanel = new JPanel(new BorderLayout());
 		jProteinSequencePanel.setBorder(BorderFactory
 				.createTitledBorder("Protein Sequence"));
-		jProteinSequencePanel.add(jProteinSequenceScrollPane,
+		jProteinSequencePanel.add(new JScrollPane(proteinSequence),
 				BorderLayout.CENTER);
 
 		final JPanel jProteinInfoPanel = new JPanel(new GridLayout(5, 1));
 		jProteinInfoPanel.setBorder(BorderFactory
 				.createTitledBorder("Protein Info"));
 		jProteinInfoPanel.setInheritsPopupMenu(true);
-		jProteinInfoPanel.add(new JLabel("Scientific name:"));
-		jProteinInfoPanel.add(jScientificNameValueLabel);
+		JPanel scientificNamePanel = new JPanel(new FlowLayout());
+		scientificNamePanel.add(new JLabel("Scientific name:"));
+		scientificNamePanel.add(scientificNameValue);
+		jProteinInfoPanel.add(scientificNamePanel);
 		jProteinInfoPanel.add(jProteinDescriptionPanel);
 		jProteinInfoPanel.add(jProteinSequencePanel);
 
@@ -170,6 +129,39 @@ public class ProteinView extends JPanel {
 		add(leftPanel);
 		add(jProteinInfoPanel);
 		getAccessibleContext().setAccessibleName("Protein View");
+	}
+
+	private void createTables(ProteoIDViewer proteoIDViewer,
+			SpectrumSummary spectrumSummary) {
+		spectrumIdentificationItemProteinViewTable.setAutoCreateRowSorter(true);
+		proteinDetectionHypothesisTable.setAutoCreateRowSorter(true);
+		proteinAmbiguityGroupTable.setAutoCreateRowSorter(true);
+
+		spectrumIdentificationItemProteinViewTable
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		proteinDetectionHypothesisTable
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		proteinAmbiguityGroupTable
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		spectrumIdentificationItemProteinViewTable.getTableHeader()
+				.setReorderingAllowed(false);
+		proteinDetectionHypothesisTable.getTableHeader().setReorderingAllowed(
+				false);
+		proteinAmbiguityGroupTable.getTableHeader().setReorderingAllowed(false);
+
+		spectrumIdentificationItemProteinViewTable
+				.addMouseListener(new spectrumIdentificationItemProteinTableeMouseClicked(
+						proteoIDViewer, spectrumSummary));
+		proteinDetectionHypothesisTable
+				.addMouseListener(new proteinDetectionHypothesisTableMouseClicked(
+						proteoIDViewer, proteinDetectionHypothesisTable, this,
+						scientificNameValue, proteinDescription,
+						proteinSequence));
+		proteinAmbiguityGroupTable
+				.addMouseListener(new proteinAmbiguityGroupTableMouseClicked(
+						proteoIDViewer, proteinSequence, scientificNameValue,
+						proteinAmbiguityGroupTable, this));
 	}
 
 	public JTable getIdentificationItemTable() {
@@ -389,27 +381,29 @@ public class ProteinView extends JPanel {
 						spectrumIdentificationItemProteinViewTableHeaders) {
 					private static final long serialVersionUID = 1L;
 				});
-		((DefaultTableModel) spectrumIdentificationItemProteinViewTable.getModel()).setRowCount(0);
-		
+		((DefaultTableModel) spectrumIdentificationItemProteinViewTable
+				.getModel()).setRowCount(0);
+
 		// spectrumIdentificationItemProteinViewTable.setAutoCreateRowSorter(true);
 
 		proteinDetectionHypothesisTable.setModel(new DefaultTableModel(
 				new Object[][] {}, proteinDetectionHypothesisTableHeaders) {
 			private static final long serialVersionUID = 1L;
 		});
-		((DefaultTableModel) proteinDetectionHypothesisTable.getModel()).setRowCount(0);
+		((DefaultTableModel) proteinDetectionHypothesisTable.getModel())
+				.setRowCount(0);
 		// proteinDetectionHypothesisTable.setAutoCreateRowSorter(true);
 
 		proteinAmbiguityGroupTable.setModel(new DefaultTableModel(
 				new Object[][] {}, proteinAmbiguityGroupTableHeaders) {
 			private static final long serialVersionUID = 1L;
 		});
-		((DefaultTableModel) proteinAmbiguityGroupTable.getModel()).setRowCount(0);
+		((DefaultTableModel) proteinAmbiguityGroupTable.getModel())
+				.setRowCount(0);
 		// proteinAmbiguityGroupTable.setAutoCreateRowSorter(true);
 
-		jProteinDescriptionEditorPane.setText("");
-
-		jProteinSequenceTextPane.setText("");
+		proteinDescription.setText("");
+		proteinSequence.setText("");
 	}
 
 	public JTable getDetectionHypothesisTable() {

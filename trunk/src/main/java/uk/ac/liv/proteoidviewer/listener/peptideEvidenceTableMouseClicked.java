@@ -3,41 +3,40 @@ package uk.ac.liv.proteoidviewer.listener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JTable;
+
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.tabs.ProteinDBView;
-import uk.ac.liv.proteoidviewer.tabs.SpectrumSummary;
 
 public class peptideEvidenceTableMouseClicked implements MouseListener {
 
 	private final ProteoIDViewer proteoIDViewer;
-	private final SpectrumSummary spectrumSummary;
 	private final ProteinDBView proteinDBView;
 
-	public peptideEvidenceTableMouseClicked(ProteoIDViewer proteoIDViewer, SpectrumSummary spectrumSummary, ProteinDBView proteinDBView) {
+	public peptideEvidenceTableMouseClicked(ProteoIDViewer proteoIDViewer, ProteinDBView proteinDBView) {
 		this.proteoIDViewer = proteoIDViewer;
-		this.spectrumSummary = spectrumSummary;
 		this.proteinDBView = proteinDBView;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		int row = spectrumSummary.getEvidenceTable().getSelectedRow();
+		JTable spectrumSummaryEvidence = (JTable) e.getSource();
+		int row = spectrumSummaryEvidence.getSelectedRow();
 		if (row != -1) {
 			// row = peptideEvidenceTable.convertRowIndexToModel(row);
-			String db_ref = (String) spectrumSummary.getEvidenceTable().getValueAt(row, 6);
+			String db_ref = (String) spectrumSummaryEvidence.getValueAt(row, 6);
 
-			int rowCount = proteinDBView.getTable().getModel().getRowCount();
+			int rowCount = proteinDBView.getRowCount();
 			for (int i = 0; i < rowCount; i++) {
 				if (db_ref.equals((String) proteinDBView.getTable().getValueAt(i, 0))) {
 
 					proteinDBView.getTable().setRowSelectionInterval(i, i);
 				}
-
 			}
 		}
-		if (!proteoIDViewer.fourthTab) {
+		if (!proteoIDViewer.isFourthTabLoaded) {
 			proteinDBView.loadDBSequenceTable(proteoIDViewer.getMzIdentMLUnmarshaller());
-			proteoIDViewer.fourthTab = true;
+			proteoIDViewer.isFourthTabLoaded = true;
 		}
 		proteoIDViewer.setSelectedIndex(3);		
 	}

@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
 
+import javax.swing.JTable;
 import javax.xml.bind.JAXBException;
 
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
@@ -19,8 +20,7 @@ public class spectrumIdentificationItemProteinTableeMouseClicked implements
 	private final SpectrumSummary spectrumSummary;
 
 	public spectrumIdentificationItemProteinTableeMouseClicked(
-			ProteoIDViewer proteoIDViewer,
-			SpectrumSummary spectrumSummary) {
+			ProteoIDViewer proteoIDViewer, SpectrumSummary spectrumSummary) {
 		this.proteoIDViewer = proteoIDViewer;
 		this.spectrumSummary = spectrumSummary;
 	}
@@ -28,10 +28,8 @@ public class spectrumIdentificationItemProteinTableeMouseClicked implements
 	@Override
 	public void mouseClicked(MouseEvent evt) {
 		proteoIDViewer.setCursor(new Cursor(Cursor.WAIT_CURSOR));
-
-		String sii_ref = (String) spectrumSummary.getIdentificationItemTable()
-				.getValueAt(spectrumSummary.getIdentificationItemTable()
-						.getSelectedRow(), 1);
+		JTable source = (JTable) evt.getSource();
+		String sii_ref = (String) source.getValueAt(source.getSelectedRow(), 1);
 
 		for (int i = 0; i < spectrumSummary.getIdentificationResultTable()
 				.getRowCount(); i++) {
@@ -39,7 +37,8 @@ public class spectrumIdentificationItemProteinTableeMouseClicked implements
 				String sir_id = (String) spectrumSummary
 						.getIdentificationResultTable().getValueAt(i, 0);
 
-				SpectrumIdentificationResult sir = proteoIDViewer.unmarshal(SpectrumIdentificationResult.class, sir_id);
+				SpectrumIdentificationResult sir = proteoIDViewer.unmarshal(
+						SpectrumIdentificationResult.class, sir_id);
 				List<SpectrumIdentificationItem> siiList = sir
 						.getSpectrumIdentificationItem();
 				for (int j = 0; j < siiList.size(); j++) {
@@ -49,11 +48,15 @@ public class spectrumIdentificationItemProteinTableeMouseClicked implements
 
 						spectrumSummary.getIdentificationResultTable()
 								.setRowSelectionInterval(i, i);
-						new spectrumIdentificationResultTableMouseClicked(proteoIDViewer, spectrumSummary).mouseClicked(evt);
+						new spectrumIdentificationResultTableMouseClicked(
+								proteoIDViewer, spectrumSummary)
+								.mouseClicked(evt);
 
 						spectrumSummary.getIdentificationItemTable()
 								.setRowSelectionInterval(j, j);
-						new spectrumIdentificationItemTableMouseClicked(proteoIDViewer, spectrumSummary).mouseClicked(evt);
+						new spectrumIdentificationItemTableMouseClicked(
+								proteoIDViewer, spectrumSummary)
+								.mouseClicked(evt);
 						break;
 					}
 				}
@@ -65,10 +68,11 @@ public class spectrumIdentificationItemProteinTableeMouseClicked implements
 		}
 
 		proteoIDViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		if (!proteoIDViewer.secondTab) {
+		if (!proteoIDViewer.isSecondTabLoaded) {
 			spectrumSummary
-					.loadSpectrumIdentificationResultTable(proteoIDViewer.getMzIdentMLUnmarshaller());
-			proteoIDViewer.secondTab = true;
+					.loadSpectrumIdentificationResultTable(proteoIDViewer
+							.getMzIdentMLUnmarshaller());
+			proteoIDViewer.isSecondTabLoaded = true;
 		}
 		proteoIDViewer.setSelectedIndex(1);
 	}

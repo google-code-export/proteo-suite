@@ -5,10 +5,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
 
-import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.JTextPane;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 import javax.xml.bind.JAXBException;
 
@@ -31,16 +30,16 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 	private final JTable proteinDetectionHypothesisTable;
 	private final ProteinView proteinView;
 	private final JLabel jScientificNameValueLabel;
-	private final JEditorPane jProteinDescriptionEditorPane;
-	private final JTextPane jProteinSequenceTextPane;
+	private final JTextArea jProteinDescriptionEditorPane;
+	private final JTextArea jProteinSequenceTextPane;
 
 	public proteinDetectionHypothesisTableMouseClicked(
 			ProteoIDViewer proteoIDViewer,
 			JTable proteinDetectionHypothesisTable,
 			ProteinView proteinView,
 			JLabel jScientificNameValueLabel,
-			JEditorPane jProteinDescriptionEditorPane,
-			JTextPane jProteinSequenceTextPane) {
+			JTextArea jProteinDescriptionEditorPane,
+			JTextArea jProteinSequenceTextPane) {
 		this.proteoIDViewer = proteoIDViewer;
 		this.proteinDetectionHypothesisTable = proteinDetectionHypothesisTable;
 		this.proteinView = proteinView;
@@ -88,10 +87,10 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 
 				for (int j = 0; j < cvParamListDBSequence.size(); j++) {
 					CvParam cvParam = cvParamListDBSequence.get(j);
-					if (cvParam.getName().equals("taxonomy: scientific name")) {
+					if (cvParam.getAccession().equals("MS:1001469")) {
 						scientific_name = cvParam.getValue();
 					}
-					if (cvParam.getName().equals("protein description")) {
+					if (cvParam.getAccession().equals("MS:1001088")) {
 						protein_description = cvParam.getValue();
 					}
 				}
