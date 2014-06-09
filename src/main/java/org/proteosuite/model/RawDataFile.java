@@ -3,12 +3,16 @@ package org.proteosuite.model;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  *
  * @author SPerkins
  */
 public abstract class RawDataFile {
+    protected Set<Spectrum> ms1Spectra = new TreeSet<>();
+    protected Set<FragmentSpectrum> ms2Spectra = new TreeSet<>();
     protected File file;
     protected boolean[] peakPicking = {false, false};
     protected boolean peakPickingChecked;

@@ -13,7 +13,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 import org.proteosuite.model.Log;
 
 /**
@@ -27,16 +28,18 @@ public class LogPane extends JScrollPane {
     public LogPane(boolean printAlso) {        
         this.printAlso = printAlso;
         this.textPane = new JTextPane();    
+        this.textPane.setContentType("text/html");
+        this.textPane.setEditable(false);
         this.setViewportView(textPane);
     }
 
     public void append(String appendedString) {
         try {
-            Document doc = textPane.getDocument();
-            doc.insertString(doc.getLength(), appendedString, null);
-            textPane.revalidate();
-        } catch (BadLocationException exc) {
-            exc.printStackTrace();
+            HTMLDocument doc = (HTMLDocument)textPane.getDocument();
+            HTMLEditorKit editorKit = (HTMLEditorKit)textPane.getEditorKit();
+            editorKit.insertHTML(doc, doc.getLength(), appendedString, 0, 0, null);           
+        } catch (BadLocationException | IOException ex) {
+            ex.printStackTrace();
         }
     }
 

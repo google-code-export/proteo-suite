@@ -15,7 +15,7 @@ import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.InspectModel;
 import org.proteosuite.model.MzIdentMLFile;
 import org.proteosuite.model.MzQuantMLFile;
-import org.proteosuite.model.RawMzMLFile;
+import org.proteosuite.model.MzMLFile;
 
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 
@@ -75,7 +75,7 @@ public class InspectComboListener implements ItemListener {
 	private void openRawFile(String fileChosen) {
 		InspectTab.getInstance().setInspectType(InspectTab.PANEL_RAW);
 
-		RawMzMLFile dataFile = (RawMzMLFile) inspectModel
+		MzMLFile dataFile = (MzMLFile) inspectModel
 				.getRawDataFile(fileChosen);
 
 		InspectRaw rawPanel = (InspectRaw) InspectTab.getInstance()

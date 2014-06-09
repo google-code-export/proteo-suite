@@ -16,7 +16,7 @@ import org.proteosuite.model.InspectModel;
 import org.proteosuite.model.MzIdentMLFile;
 import org.proteosuite.model.MzQuantMLFile;
 import org.proteosuite.model.RawDataFile;
-import org.proteosuite.model.RawMzMLFile;
+import org.proteosuite.model.MzMLFile;
 
 public class OpenListener implements ActionListener {
 
@@ -73,7 +73,7 @@ public class OpenListener implements ActionListener {
 			MzIdentMLFile identDataFile = new MzIdentMLFile(file, parent);
 			model.addIdentDataFile(identDataFile);
 		} else if (extension.equalsIgnoreCase("mzml")) {
-			RawMzMLFile rawDataFile = new RawMzMLFile(file);
+			MzMLFile rawDataFile = new MzMLFile(file);
 			data.addRawDataFile(rawDataFile);
 
 			AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()

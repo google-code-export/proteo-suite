@@ -10,7 +10,7 @@ import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.MascotGenericFormatFile;
-import org.proteosuite.model.RawMzMLFile;
+import org.proteosuite.model.MzMLFile;
 
 /**
  * 
@@ -45,7 +45,7 @@ public class AddRawDataListener implements ActionListener {
                         if (f.getName().toUpperCase().endsWith("MGF")) {
                             data.addRawDataFile(new MascotGenericFormatFile(f));
                         } else if (f.getName().toUpperCase().endsWith("MZML")) {
-                            data.addRawDataFile(new RawMzMLFile(f));
+                            data.addRawDataFile(new MzMLFile(f));
                         }			
 		}
 

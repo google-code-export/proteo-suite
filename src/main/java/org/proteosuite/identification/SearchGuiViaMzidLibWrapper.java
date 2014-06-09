@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +17,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
@@ -54,8 +58,8 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
         commandList.add("-Xmx5G");
         commandList.add("-jar");
 
-        commandList.add(getMzIdLibJar().getAbsolutePath());
-
+        String jarLocation = getMzIdLibJar().getAbsolutePath();
+        commandList.add(jarLocation.contains(" ") ? "\"" + jarLocation + "\"" : jarLocation);
         commandList.add("ProteoAnnotator");
         commandList.add("-inputGFF");
         commandList.add(geneModel[0]);
@@ -219,24 +223,29 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
     }  
 
     public void printDebugInfo() {
-        System.out.println("This JAR found is: " + getMzIdLibJar());
+        System.out.println("This JAR found is: \"" + getMzIdLibJar() + "\"");
     }
 
     private static File getMzIdLibJar() {
-        File thisClassFile = new File(SearchGuiViaMzidLibWrapper.class.getProtectionDomain().getCodeSource().getLocation().getPath());
-        if (thisClassFile.getAbsolutePath().endsWith("classes")) {
-            return new File("c:\\mzidlib\\mzidentml-lib-1.6.10-SNAPSHOT.jar");
-        }
-
-        File mzidlibFolder = new File(thisClassFile.getParent() + File.separator + "mzidlib");
-
-        File[] potentialJars = mzidlibFolder.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File directory, String fileName) {
-                return fileName.endsWith(".jar");
+        try {
+            File thisClassFile = new File(URLDecoder.decode(SearchGuiViaMzidLibWrapper.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8"));
+            if (thisClassFile.getAbsolutePath().endsWith("classes")) {
+                return new File("c:\\mzidlib\\mzidentml-lib-1.6.10-SNAPSHOT.jar");
             }
-        });
-
-        return potentialJars[0];
+            
+            File mzidlibFolder = new File(thisClassFile.getParent() + File.separator + "mzidlib");
+            System.out.println("Folder is :" + mzidlibFolder);
+            
+            File[] potentialJars = mzidlibFolder.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File directory, String fileName) {
+                    return fileName.endsWith(".jar");
+                }
+            });
+            
+            return potentialJars[0];
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException("UTF-8 not supported?!");
+        }       
     }
 }

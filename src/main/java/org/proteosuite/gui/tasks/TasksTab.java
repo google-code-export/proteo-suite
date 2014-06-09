@@ -1,12 +1,11 @@
 package org.proteosuite.gui.tasks;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.io.BufferedReader;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
@@ -30,12 +29,12 @@ public class TasksTab extends JPanel {
     private Map<Log, LogPane> logMap = new LinkedHashMap<>();
 
     private TasksTab() {
-        setLayout(new BorderLayout());
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        add(new JScrollPane(tasksTable), BorderLayout.CENTER);
-        logArea.setMaximumSize(new Dimension(500, 300));
-        add(logArea, BorderLayout.PAGE_END);
+        add(new JScrollPane(tasksTable));
+        logArea.setMaximumSize(new Dimension(2000, 300));
+        add(logArea);
     }
 
     public static TasksTab getInstance() {

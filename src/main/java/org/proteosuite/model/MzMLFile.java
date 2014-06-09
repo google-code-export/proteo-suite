@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
@@ -14,15 +15,15 @@ import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.utils.FileFormatUtils;
-import org.proteosuite.utils.StringUtils;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 /**
  *
  * @author SPerkins
  */
-public class RawMzMLFile extends RawDataFile {
+public class MzMLFile extends RawDataFile {
 
+    private final CountDownLatch loadLatch = new CountDownLatch(1);
     private MzMLUnmarshaller unmarshaller = null;
     private Pattern spectrumListPattern = Pattern
             .compile("<spectrumList([^<]+)>");
@@ -34,8 +35,8 @@ public class RawMzMLFile extends RawDataFile {
     private Pattern centroidedPattern = Pattern
             .compile("<cvParam[^<]+accession=\"MS:1000127\"");
 
-    public RawMzMLFile(File file) {
-        super(file);
+    public MzMLFile(File file) {
+        super(file);        
     }
 
     public MzMLUnmarshaller getUnmarshaller() {
@@ -53,7 +54,7 @@ public class RawMzMLFile extends RawDataFile {
             return false;
         }
 
-        return true;
+        return false;
     }
 
     @Override
@@ -173,8 +174,6 @@ public class RawMzMLFile extends RawDataFile {
             }
 
             reader.close();
-        } catch (FileNotFoundException ex) {
-
         } catch (IOException ex) {
 
         }
@@ -199,9 +198,9 @@ public class RawMzMLFile extends RawDataFile {
             @Override
             protected void done() {
                 try {
-                    unmarshaller = get();
+                    unmarshaller = get();                    
                     AnalyseData.getInstance().getInspectModel()
-                            .addRawDataFile(RawMzMLFile.this);
+                            .addRawDataFile(MzMLFile.this);
                     InspectTab.getInstance().refreshComboBox();
                     AnalyseData
                             .getInstance()
