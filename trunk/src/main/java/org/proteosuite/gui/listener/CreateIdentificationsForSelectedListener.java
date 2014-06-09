@@ -14,7 +14,7 @@ import org.proteosuite.identification.SearchGuiViaMzidLibWrapper;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.MascotGenericFormatFile;
 import org.proteosuite.model.RawDataFile;
-import org.proteosuite.model.RawMzMLFile;
+import org.proteosuite.model.MzMLFile;
 
 /**
  *
@@ -95,7 +95,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
                 step.refreshFromData();
                 
                 if (!(rawDataFile instanceof MascotGenericFormatFile)) {
-                    rawDataFile = ((RawMzMLFile)rawDataFile).getAsMGF();
+                    rawDataFile = ((MzMLFile)rawDataFile).getAsMGF();
                 }
                 
                 Set<MascotGenericFormatFile> rawDataFiles = Collections.singleton((MascotGenericFormatFile)rawDataFile);

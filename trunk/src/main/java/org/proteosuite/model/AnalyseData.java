@@ -1,6 +1,5 @@
 package org.proteosuite.model;
 
-import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -27,9 +26,25 @@ public class AnalyseData {
 
 	private AnalyseData() {
 		// Should really calculate most efficient number of threads to use.
-		genericExecutor = Executors.newFixedThreadPool((int)Math.floor((double)MAX_THREADS / 2.0) - 1);
+                int threadsForGenericExecutor = (int)Math.floor((double)MAX_THREADS / 2.0) - 1;
+                System.out.println("Constraining generic executor to use: " + threadsForGenericExecutor + " threads.");
+                if (threadsForGenericExecutor < 1) {
+                     System.out.println("Can't use zero threads! Setting to one.");
+                     threadsForGenericExecutor = 1;
+                }                
+                
+		genericExecutor = Executors.newFixedThreadPool(threadsForGenericExecutor);
+                
 		searchGUIExecutor = Executors.newSingleThreadExecutor();
-                openMSExecutor = Executors.newFixedThreadPool((int)Math.floor((double)MAX_THREADS / 2.0));
+                
+                int threadsForOpenMSExecutor = (int)Math.floor((double)MAX_THREADS / 2.0);
+                System.out.println("Constraining openMS executor to use: " + threadsForOpenMSExecutor + " threads.");
+                if (threadsForOpenMSExecutor < 1) {
+                    System.out.println("Can't use zero threads! Setting to one.");
+                    threadsForOpenMSExecutor = 1;
+                }
+                
+                openMSExecutor = Executors.newFixedThreadPool(threadsForOpenMSExecutor);
 	}
 
 	public static AnalyseData getInstance() {
@@ -112,15 +127,37 @@ public class AnalyseData {
 		inspectModel.clear();
 		supportGenomeAnnotation = false;
                 openMSExecutor.shutdownNow();
-                openMSExecutor = Executors.newFixedThreadPool((int)Math.floor((double)MAX_THREADS / 2.0));
+                
 		searchGUIExecutor.shutdownNow();
-		searchGUIExecutor = Executors.newSingleThreadExecutor();
+		
                 genericExecutor.shutdownNow();
-                genericExecutor = Executors.newFixedThreadPool((int)Math.floor((double)MAX_THREADS / 2.0) - 1);		
+                
+                
+                int threadsForGenericExecutor = (int)Math.floor((double)MAX_THREADS / 2.0) - 1;
+                System.out.println("Constraining generic executor to use: " + threadsForGenericExecutor + " threads.");
+                if (threadsForGenericExecutor < 1) {
+                     System.out.println("Can't use zero threads! Setting to one.");
+                     threadsForGenericExecutor = 1;
+                }                
+                
+		genericExecutor = Executors.newFixedThreadPool(threadsForGenericExecutor);
+                
+		searchGUIExecutor = Executors.newSingleThreadExecutor();
+                
+                int threadsForOpenMSExecutor = (int)Math.floor((double)MAX_THREADS / 2.0);
+                System.out.println("Constraining openMS executor to use: " + threadsForOpenMSExecutor + " threads.");
+                if (threadsForOpenMSExecutor < 1) {
+                    System.out.println("Can't use zero threads! Setting to one.");
+                    threadsForOpenMSExecutor = 1;
+                }
+                
+                openMSExecutor = Executors.newFixedThreadPool(threadsForOpenMSExecutor);
+                
 		AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().reset();
 	}
 
 	private static int computeOptimumThreads() {
+            System.out.println("Optimum threads: " + (Runtime.getRuntime().availableProcessors() - 1));
 		return Runtime.getRuntime().availableProcessors() - 1;
 	}
 }

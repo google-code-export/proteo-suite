@@ -23,7 +23,7 @@ import org.proteosuite.gui.chart.ChartSpectrum;
 import org.proteosuite.gui.tables.JTableMzML;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.InspectModel;
-import org.proteosuite.model.RawMzMLFile;
+import org.proteosuite.model.MzMLFile;
 
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
@@ -36,7 +36,7 @@ public class InspectRaw extends JPanel implements ListSelectionListener {
 	private final JTable jTable = new JTable();
 	private final InspectModel inspectModel = AnalyseData.getInstance()
 			.getInspectModel();
-	private RawMzMLFile data;
+	private MzMLFile data;
 
 	public InspectRaw() {
 		super(new BorderLayout());
@@ -109,7 +109,7 @@ public class InspectRaw extends JPanel implements ListSelectionListener {
 
 		if (inspectModel.isRawDataFile(InspectTab.getInstance()
 				.getSelectedFile())) {
-			RawMzMLFile rawMzMLFile = (RawMzMLFile) inspectModel
+			MzMLFile rawMzMLFile = (MzMLFile) inspectModel
 					.getRawDataFile(InspectTab.getInstance().getSelectedFile());
 			String sID = (String) getTablePanel().getValueAt(
 					listSelectionModel.getAnchorSelectionIndex(), 1);
@@ -120,7 +120,7 @@ public class InspectRaw extends JPanel implements ListSelectionListener {
 		}
 	}
 
-	public void setData(RawMzMLFile dataFile) {
+	public void setData(MzMLFile dataFile) {
 		data = dataFile;
 		
 		JTableMzML rawData = new JTableMzML();

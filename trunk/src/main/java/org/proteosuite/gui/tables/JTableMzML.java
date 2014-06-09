@@ -8,7 +8,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import org.proteosuite.model.RawMzMLFile;
+import org.proteosuite.model.MzMLFile;
 
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.model.mzml.PrecursorList;
@@ -30,7 +30,7 @@ public class JTableMzML extends JTableDefault {
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	}
 
-	public void showData(RawMzMLFile mzml, byte msLevelThreshold, double lowIntensityThreshold) {			
+	public void showData(MzMLFile mzml, byte msLevelThreshold, double lowIntensityThreshold) {			
 		MzMLUnmarshaller unmarshaller = mzml.getUnmarshaller();
 
 		// Reading spectrum data

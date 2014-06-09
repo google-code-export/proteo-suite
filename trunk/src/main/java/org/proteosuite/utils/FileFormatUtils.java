@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 import org.proteosuite.model.MascotGenericFormatFile;
-import org.proteosuite.model.RawMzMLFile;
+import org.proteosuite.model.MzMLFile;
 import static org.proteosuite.utils.StringUtils.emptyString;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
@@ -24,7 +24,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 public class FileFormatUtils {
     private static final Pattern terminatingZeroPattern = Pattern.compile("[.]{0,1}[0]+$");
     
-    public static boolean mzMLToMGF(RawMzMLFile input, String output) {
+    public static boolean mzMLToMGF(MzMLFile input, String output) {
         return mzMLToMGF(input.getUnmarshaller(), output);
     }
     

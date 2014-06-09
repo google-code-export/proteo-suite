@@ -1,15 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.proteosuite.utils.sanitychecking;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.proteosuite.model.RawDataFile;
-import org.proteosuite.model.RawMzMLFile;
+import org.proteosuite.model.MzMLFile;
 import org.proteosuite.quantitation.OpenMSLabelFreeWrapper;
 
 /**
@@ -25,7 +20,7 @@ public class TestOpenMS {
 
     public static void main(String[] args) {
         for (String rawFile : rawFiles) {
-            dataFiles.add(new RawMzMLFile(new File(directory + "\\" + rawFile)));
+            dataFiles.add(new MzMLFile(new File(directory + "\\" + rawFile)));
         }
 
         OpenMSLabelFreeWrapper openms = new OpenMSLabelFreeWrapper(dataFiles);

@@ -83,7 +83,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 		}
 	}
 
-	private void loadSixthTab(ProteoIDViewer proteoIDViewer) {
+	private void loadSixthTab(final ProteoIDViewer proteoIDViewer) {
 		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(null,
 				true);
 		final Thread thread = new Thread(new Runnable() {
@@ -110,7 +110,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 	}
 
-	private void loadFifthTab(ProteoIDViewer proteoIDViewer) {
+	private void loadFifthTab(final ProteoIDViewer proteoIDViewer) {
 		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(null,
 				true);
 		final Thread thread = new Thread(new Runnable() {
@@ -137,7 +137,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 	}
 
-	private void loadFourthTab(ProteoIDViewer proteoIDViewer) {
+	private void loadFourthTab(final ProteoIDViewer proteoIDViewer) {
 		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(null,
 				true);
 		final Thread thread = new Thread(new Runnable() {
@@ -167,7 +167,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 
 	}
 
-	private void loadThirdTab(ProteoIDViewer proteoIDViewer) {
+	private void loadThirdTab(final ProteoIDViewer proteoIDViewer) {
 		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(null,
 				true);
 		final Thread thread = new Thread(new Runnable() {
@@ -194,7 +194,7 @@ public class mainTabbedPaneMouseClicked implements MouseListener {
 		}.start();
 	}
 
-	private void loadSecondTab(ProteoIDViewer proteoIDViewer) {
+	private void loadSecondTab(final ProteoIDViewer proteoIDViewer) {
 		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(null,
 				true);
 		final Thread thread = new Thread(new Runnable() {

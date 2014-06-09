@@ -26,22 +26,17 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -319,9 +314,9 @@ public class IdentParamsView extends JDialog {
         this.jcFragmentIonTypesXYZ.setSelectedIndex(1);
         this.jcFragmentIonTypesABC = new JComboBox<>(new Character[]{'a', 'b', 'c'});
         this.jcFragmentIonTypesABC.setSelectedIndex(1);
-        this.jtMSMSTolerance = new JTextField("5");
+        this.jtMSMSTolerance = new JTextField("0.5");
         this.jtMSMSTolerance.setColumns(3);
-        this.jtMSTolerance = new JTextField("10");        
+        this.jtMSTolerance = new JTextField("5");        
         this.jtMSTolerance.setColumns(3);  
         this.jcMinCharge = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
         this.jcMinCharge.setSelectedIndex(1);
@@ -451,7 +446,7 @@ public class IdentParamsView extends JDialog {
                     validationErrors.add("GFF file has not been correctly set. Please amend.");
                 }
                 
-                if (geneModels[1] != null && !geneModels[1].isEmpty() && !geneModels[1].toUpperCase().endsWith(".FASTA")) {
+                if (geneModels[1] != null && !geneModels[1].isEmpty() && !(geneModels[1].toUpperCase().endsWith(".FASTA") || geneModels[1].toUpperCase().endsWith(".FA"))) {
                     validationErrors.add("FastA file has not been correctly set. Please amend.");
                 }
             }
