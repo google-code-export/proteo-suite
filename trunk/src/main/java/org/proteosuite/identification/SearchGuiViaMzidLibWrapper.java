@@ -17,8 +17,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
@@ -196,6 +194,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                                     AnalyseDynamicTab.getInstance(),
                                     "Your genome annotation run has finished and your result files are now available.\n"
                                     + "Please check the \"annotation_output\" folder where your raw data was situated.\n"
+                                            + "The mzID output file from the pipeline is currently loading in the background and should be available for viewing in the Inspect tab soon.\n"
                                     + "Check the output folder for various CSV files and an annotated GFF file.\n"
                                     + "Also check the \"ProteoAnnotator.txt\" file for any error messages and a log of the run.",
                                     "Genome Annotation Completed", JOptionPane.PLAIN_MESSAGE,

@@ -22,24 +22,27 @@ import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
 import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 public class FileFormatUtils {
+
     private static final Pattern terminatingZeroPattern = Pattern.compile("[.]{0,1}[0]+$");
-    
+
     public static boolean mzMLToMGF(MzMLFile input, String output) {
         return mzMLToMGF(input.getUnmarshaller(), output);
     }
-    
-    public static MascotGenericFormatFile merge(Set<MascotGenericFormatFile> setToMerge, long mergeLimit) {        
+
+    public static MascotGenericFormatFile merge(Set<MascotGenericFormatFile> setToMerge, long mergeLimit) {
         Set<MascotGenericFormatFile> mergeableSet = new HashSet<>();
         for (MascotGenericFormatFile thisFile : setToMerge) {
             if (thisFile.getFile().length() <= mergeLimit) {
                 mergeableSet.add(thisFile);
                 mergeLimit -= thisFile.getFile().length();
+            } else {
+                throw new MgfOverMergeLimitException(thisFile.getFile().length() - mergeLimit);
             }
         }
-        
+
         return merge(mergeableSet);
-    }    
-    
+    }
+
     public static MascotGenericFormatFile merge(Set<MascotGenericFormatFile> setToMerge) {
         Set<String> setToMergeAsStrings = new HashSet<>();
         String outputFile = null;
@@ -48,15 +51,15 @@ public class FileFormatUtils {
             if (outputFile == null) {
                 outputFile = file.getAbsoluteFileName().replaceFirst(".mgf", "_merge.mgf");
             }
-        }       
-        
+        }
+
         if (mergeMGF(setToMergeAsStrings, outputFile)) {
             return new MascotGenericFormatFile(new File(outputFile), false);
         }
-        
+
         return null;
     }
-    
+
     public static boolean mergeMGF(Set<String> setToMerge, String outputPath) {
         try {
             final BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
@@ -67,38 +70,38 @@ public class FileFormatUtils {
                     writer.write(line);
                     writer.newLine();
                 }
-                
+
                 reader.close();
             }
-            
+
             writer.close();
         } catch (IOException ex) {
             System.out.println("Exception merging MGF files.");
             return false;
         }
-        
+
         return true;
     }
-    
+
     public static boolean mzMLToMGF(MzMLUnmarshaller input, String output) {
         try {
             FileWriter outputStream = new FileWriter(output);
-            BufferedWriter writer = new BufferedWriter(outputStream);           
-            
+            BufferedWriter writer = new BufferedWriter(outputStream);
+
             String originalRawFileName = null;
             MzMLObjectIterator<SourceFile> sourceFiles = input.unmarshalCollectionFromXpath("/fileDescription/sourceFileList/sourceFile", SourceFile.class);
-            while (sourceFiles.hasNext()) {               
+            while (sourceFiles.hasNext()) {
                 SourceFile sourceFile = sourceFiles.next();
                 originalRawFileName = sourceFile.getName();
                 if (originalRawFileName != null) {
                     break;
                 }
-            }          
-            
+            }
+
             String mzmlId = input.getMzMLId();
 
             System.out.println("Unmarshalling finished!");
-            
+
             int invalidCount = 0;
 
             //... Reading entire spectra ...//
@@ -179,75 +182,72 @@ public class FileFormatUtils {
                                     }
                                 }
                             }
-                            
+
                             if (parentCharge == 0) //... In case it is not specified ...//
-                                {
-                                    parentCharge = 1;
-                                }
+                            {
+                                parentCharge = 1;
+                            }
 
-                                writer.write("BEGIN IONS");
-                                writer.write("\n");
+                            writer.write("BEGIN IONS");
+                            writer.write("\n");
 
-                                writer.write("TITLE=" + mzmlId + '.' + (spectrum.getIndex() + 1) + '.' + (spectrum.getIndex() + 1) + '.' + parentCharge);                               
-                                writer.write(" File:\"" + originalRawFileName + "\", NativeID:\"" + spectrum.getId() + "\"");                               
-                                writer.write("\n");   
-                                
-                                writer.write("RTINSECONDS=" + terminatingZeroPattern.matcher(String.format("%.4f", rt)).replaceFirst(StringUtils.emptyString()));                                
-                                writer.write("\n");
-                                
-                                writer.write("PEPMASS=" + terminatingZeroPattern.matcher(String.format("%.12f", parentIonMz)).replaceFirst(StringUtils.emptyString()) 
-                                        + " " + terminatingZeroPattern.matcher(String.format("%.10f", parentIntensity)).replaceFirst(StringUtils.emptyString()));                                
-                                writer.write("\n");
-                                
-                                writer.write("CHARGE=" + parentCharge + "+");
-                                writer.write("\n"); 
-                            
+                            writer.write("TITLE=" + mzmlId + '.' + (spectrum.getIndex() + 1) + '.' + (spectrum.getIndex() + 1) + '.' + parentCharge);
+                            writer.write(" File:\"" + originalRawFileName + "\", NativeID:\"" + spectrum.getId() + "\"");
+                            writer.write("\n");
+
+                            writer.write("RTINSECONDS=" + terminatingZeroPattern.matcher(String.format("%.4f", rt)).replaceFirst(StringUtils.emptyString()));
+                            writer.write("\n");
+
+                            writer.write("PEPMASS=" + terminatingZeroPattern.matcher(String.format("%.12f", parentIonMz)).replaceFirst(StringUtils.emptyString())
+                                    + " " + terminatingZeroPattern.matcher(String.format("%.10f", parentIntensity)).replaceFirst(StringUtils.emptyString()));
+                            writer.write("\n");
+
+                            writer.write("CHARGE=" + parentCharge + "+");
+                            writer.write("\n");
 
                             if (mzNumbers != null && intenNumbers != null && mzNumbers.length == intenNumbers.length) {
                                 double mz;
                                 double intensity;
-                                
+
                                 for (int i = 0; i < mzNumbers.length; i++) {
                                     mz = mzNumbers[i].doubleValue();
                                     intensity = intenNumbers[i].doubleValue();
-                                    if (intensity > 0.0001) {   
+                                    if (intensity > 0.0001) {
                                         String formattedMz = terminatingZeroPattern.matcher(String.format("%.7f", mz)).replaceFirst(StringUtils.emptyString());
                                         if (formattedMz.length() > 11) {
                                             int overhang = formattedMz.length() - 11;
                                             formattedMz = terminatingZeroPattern.matcher(String.format("%." + (7 - overhang) + "f", mz)).replaceFirst(StringUtils.emptyString());
                                         }
-                                        
-                                        writer.write(formattedMz + " " + terminatingZeroPattern.matcher(String.format("%.10f", intensity)).replaceFirst(StringUtils.emptyString()));                                        
+
+                                        writer.write(formattedMz + " " + terminatingZeroPattern.matcher(String.format("%.10f", intensity)).replaceFirst(StringUtils.emptyString()));
                                         writer.write("\n");
-                                    }                                   
-                                }                               
-                            }
-                            
-                            else {
+                                    }
+                                }
+                            } else {
                                 invalidCount++;
                                 if (mzNumbers == null) {
                                     System.out.println("mzNumbers is null for spectra " + spectrum.getIndex());
                                 }
-                                
+
                                 if (intenNumbers == null) {
                                     System.out.println("intenNumbers is null for spectra " + spectrum.getIndex());
                                 }
-                                
+
                                 if (mzNumbers != null && intenNumbers != null) {
-                                    System.out.println("Length mismatch for spectra " + spectrum.getIndex() + ": " + mzNumbers.length + "\t" + intenNumbers.length); 
+                                    System.out.println("Length mismatch for spectra " + spectrum.getIndex() + ": " + mzNumbers.length + "\t" + intenNumbers.length);
                                 }
-                                
+
                             }
-                            
+
                             writer.write("END IONS");
-                                writer.write("\n");
+                            writer.write("\n");
                         }
                     }  //... If precursor ion
                 } //... If MS2    
             }   //... While
 
             System.out.println(invalidCount);
-            
+
             writer.close();
         } catch (IOException | NumberFormatException e) {
             System.err.println("Error: " + e.getMessage());
@@ -257,7 +257,7 @@ public class FileFormatUtils {
         return true;
     }
 
-    public static boolean mzMLToMGF(File input, String output) {       
+    public static boolean mzMLToMGF(File input, String output) {
         try {
             FileWriter outputStream = new FileWriter(output);
             BufferedWriter writer = new BufferedWriter(outputStream);
@@ -266,7 +266,7 @@ public class FileFormatUtils {
             System.out.println("Unmarshalling File: " + input.getName());
 
             MzMLUnmarshaller unmarshaller = new MzMLUnmarshaller(input);
-            
+
             mzMLToMGF(unmarshaller, output);
         } catch (IOException e) {
             System.err.println("Error: " + e.getMessage());
@@ -447,5 +447,11 @@ public class FileFormatUtils {
             sPeptideRet = sPeptideRet + "S" + iSulf;
         }
         return sPeptideRet;
+    }
+
+    private static class MgfOverMergeLimitException extends RuntimeException {
+        public MgfOverMergeLimitException(long overBy) {
+            super("MGF data supplied is over the requested limit. Over by: " + overBy);
+        }
     }
 }
