@@ -107,6 +107,10 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
         }
         return identParamsView;
     }
+    
+    public void setCreateButtonEnabled(boolean state) {
+        this.createIdentifications.setEnabled(false);
+    }
 
     public synchronized void refreshFromData() {
         identificationsTable.clear();

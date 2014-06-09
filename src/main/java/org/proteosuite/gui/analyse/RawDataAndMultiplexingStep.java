@@ -82,11 +82,15 @@ public class RawDataAndMultiplexingStep extends JPanel {
 		JPanel buttonsPanel = new JPanel(new GridLayout(2, 3));
 
 		buttonsPanel.add(addRawDataButton);
-		buttonsPanel.add(getRow(new JLabel("Select multiplexing:"), multiplexingBox));
-		buttonsPanel.add(clearAllButton);
-		
+                genomeAnnotationBox.setSelected(true);
+                genomeAnnotationBox.setEnabled(false);
+		buttonsPanel.add(getRow(new JLabel("Genome Annotation (i.e. ProteoAnnotator) Run?"), genomeAnnotationBox));
+		buttonsPanel.add(clearAllButton);	
+                
+                
 		buttonsPanel.add(deleteSelectedButton);
-		buttonsPanel.add(getRow(new JLabel("Genome Annotation (i.e. ProteoAnnotator) Run?"), genomeAnnotationBox));		
+                multiplexingBox.setEnabled(false);
+		buttonsPanel.add(getRow(new JLabel("Select multiplexing:"), multiplexingBox));		
 		buttonsPanel.add(continueButton);
 
 		add(stepTitle, BorderLayout.PAGE_START);

@@ -185,7 +185,7 @@ public class IdentParamsView extends JDialog {
         run.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                jbRunActionPerformed(jtDatabaseFile.getText(),
+                handleRunButtonPress(jtDatabaseFile.getText(),
                         jlstFixedMods.getModel(), jlstVarMods.getModel(),
                         jcMaxMissedCleavages.getSelectedIndex());
             }
@@ -375,7 +375,7 @@ public class IdentParamsView extends JDialog {
         return uniMod;
     }
 
-    private void jbRunActionPerformed(String databaseFile,
+    private void handleRunButtonPress(String databaseFile,
             ListModel<String> fixedModsModel, ListModel<String> varModsModel,
             int maxMissedCleavages) {
 
