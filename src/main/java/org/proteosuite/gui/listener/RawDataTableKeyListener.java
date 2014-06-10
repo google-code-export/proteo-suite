@@ -1,4 +1,4 @@
-package org.proteosuite.gui.analyse;
+package org.proteosuite.gui.listener;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -7,6 +7,7 @@ import java.util.Arrays;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
+import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.InspectModel;
@@ -55,6 +56,9 @@ public class RawDataTableKeyListener implements KeyListener {
 			}
 
 			step.refreshFromData();
+			
+			if (t.getRowCount() == 0)
+				AnalyseData.getInstance().clear();
 		}
         InspectTab.getInstance().refreshComboBox();
 	}

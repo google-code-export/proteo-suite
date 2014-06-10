@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.proteosuite.gui.listener.ContinueButtonListener;
+import org.proteosuite.gui.listener.RawDataTableKeyListener;
 import org.proteosuite.gui.listener.RawDataTableListener;
 import org.proteosuite.gui.listener.TableButtonToggleListener;
 import org.proteosuite.gui.tables.RawDataAndMultiplexingTable;
