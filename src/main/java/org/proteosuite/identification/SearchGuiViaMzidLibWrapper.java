@@ -206,6 +206,8 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                             + rawData.iterator().next().getFileName().replaceAll(".[Mm][Gg][Ff]", StringUtils.emptyString())
                             + "_fdr_peptide_threshold_mappedGff2_proteoGrouper_nonA_Threshold_FDR_Threshold.mzid";
                     
+                    System.out.println("Looking for mzid file: " + outputMzid);
+                    
                     File mzidFile = new File(outputMzid);
                     if (mzidFile.exists()) {
                         data.getInspectModel().addIdentDataFile(new MzIdentMLFile(mzidFile, null));
@@ -216,6 +218,8 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                             + prefix
                             + rawData.iterator().next().getFileName().replaceAll(".[Mm][Gg][Ff]", StringUtils.emptyString())
                             + "_fdr_peptide_threshold_mappedGff2_proteoGrouper_fdr_Threshold.mzid";
+                    
+                    System.out.println("Looking for mzid file: " + outputMzid);
                     
                     mzidFile = new File(outputMzid);
                     if (mzidFile.exists()) {
