@@ -24,23 +24,22 @@ public class proteinAmbiguityGroupTableMouseClicked implements MouseListener {
 	private final ProteoIDViewer proteoIDViewer;
 	private final JTextArea jProteinSequenceTextPane;
 	private final JLabel jScientificNameValueLabel;
-	private final JTable proteinAmbiguityGroupTable;
 
 	private final ProteinView proteinView;
 
 	public proteinAmbiguityGroupTableMouseClicked(
 			ProteoIDViewer proteoIDViewer, JTextArea jProteinSequenceTextPane,
 			JLabel jScientificNameValueLabel,
-			JTable proteinAmbiguityGroupTable, ProteinView proteinView) {
+			ProteinView proteinView) {
 		this.proteoIDViewer = proteoIDViewer;
 		this.jProteinSequenceTextPane = jProteinSequenceTextPane;
 		this.jScientificNameValueLabel = jScientificNameValueLabel;
-		this.proteinAmbiguityGroupTable = proteinAmbiguityGroupTable;
 		this.proteinView = proteinView;
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		JTable proteinAmbiguityGroupTable = (JTable) e.getSource();
 		jProteinSequenceTextPane.setText("");
 		jScientificNameValueLabel.setText("");
 		proteoIDViewer.setCursor(new Cursor(Cursor.WAIT_CURSOR));

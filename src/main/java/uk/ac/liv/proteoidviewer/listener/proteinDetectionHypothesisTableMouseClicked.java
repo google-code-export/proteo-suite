@@ -27,7 +27,6 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 		MouseListener {
 
 	private final ProteoIDViewer proteoIDViewer;
-	private final JTable proteinDetectionHypothesisTable;
 	private final ProteinView proteinView;
 	private final JLabel jScientificNameValueLabel;
 	private final JTextArea jProteinDescriptionEditorPane;
@@ -35,13 +34,11 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 
 	public proteinDetectionHypothesisTableMouseClicked(
 			ProteoIDViewer proteoIDViewer,
-			JTable proteinDetectionHypothesisTable,
 			ProteinView proteinView,
 			JLabel jScientificNameValueLabel,
 			JTextArea jProteinDescriptionEditorPane,
 			JTextArea jProteinSequenceTextPane) {
 		this.proteoIDViewer = proteoIDViewer;
-		this.proteinDetectionHypothesisTable = proteinDetectionHypothesisTable;
 		this.proteinView = proteinView;
 		this.jScientificNameValueLabel = jScientificNameValueLabel;
 		this.jProteinDescriptionEditorPane = jProteinDescriptionEditorPane;
@@ -50,6 +47,7 @@ public class proteinDetectionHypothesisTableMouseClicked implements
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		JTable proteinDetectionHypothesisTable = (JTable) e.getSource();
 		int row = proteinDetectionHypothesisTable.getSelectedRow();
 		if (row == -1)
 			return;
