@@ -68,12 +68,13 @@ public class spectrumIdentificationItemProteinTableeMouseClicked implements
 		}
 
 		proteoIDViewer.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		if (!proteoIDViewer.isSecondTabLoaded) {
-			spectrumSummary
-					.loadSpectrumIdentificationResultTable(proteoIDViewer
-							.getMzIdentMLUnmarshaller());
-			proteoIDViewer.isSecondTabLoaded = true;
-		}
+		// TODO: Argh why! - AC
+		//if (!proteoIDViewer.isSecondTabLoaded) {
+		//	spectrumSummary
+		//			.loadSpectrumIdentificationResultTable(proteoIDViewer
+		////					.getMzIdentMLUnmarshaller());
+		//	proteoIDViewer.isSecondTabLoaded = true;
+		//}
 		proteoIDViewer.setSelectedIndex(1);
 	}
 

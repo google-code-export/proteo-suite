@@ -5,16 +5,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JComboBox;
 
-import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.tabs.GlobalStatisticsPanel;
 
 public class siiComboBoxActionPerformed implements ActionListener {
-	private final ProteoIDViewer proteoIDViewer;
 	private final GlobalStatisticsPanel globalStatisticsPanel;
 
-	public siiComboBoxActionPerformed(ProteoIDViewer proteoIDViewer,
-			GlobalStatisticsPanel globalStatisticsPanel) {
-		this.proteoIDViewer = proteoIDViewer;
+	public siiComboBoxActionPerformed(GlobalStatisticsPanel globalStatisticsPanel) {
 		this.globalStatisticsPanel = globalStatisticsPanel;
 	}
 
@@ -25,8 +21,7 @@ public class siiComboBoxActionPerformed implements ActionListener {
 		if (siiComboBox.getSelectedIndex() == -1)
 			return;
 
-		globalStatisticsPanel.loadSpectrumIdentificationList(
-				proteoIDViewer.getMzIdentMLUnmarshaller());
+		//globalStatisticsPanel.load();
 
 	}
 }

@@ -36,7 +36,6 @@ import uk.ac.liv.mzidlib.FalseDiscoveryRate;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.tabs.GlobalStatisticsPanel;
 import uk.ac.liv.proteoidviewer.util.IdViewerUtils;
-import uk.ac.liv.proteoidviewer.util.ProgressBarDialog;
 
 public class manualCalculateActionPerformed implements ActionListener {
 
@@ -59,11 +58,16 @@ public class manualCalculateActionPerformed implements ActionListener {
 	private final JPanel tpQvaluePanel;
 	private final GlobalStatisticsPanel globalStatisticsPanel;
 
-	public manualCalculateActionPerformed(ProteoIDViewer proteoIDViewer, JComboBox<String> siiComboBox, 
-			JCheckBox manualDecoy, JTextField manualDecoyPrefixValue, JLabel isDecoySiiValue, JLabel isDecoySiiFalseValue, 
-			JTextField manualDecoyRatioValue, JLabel fpSiiValue, List<SpectrumIdentificationItem> sIIListPassThreshold, JLabel tpSiiValue, 
-			JLabel fdrSiiValue, JPanel fdrPanel, JComboBox<String> jComboBox2, Map<String, String> cvTermMap, JComboBox<String> jComboBox1, 
-			JPanel tpEvaluePanel, JPanel tpQvaluePanel, GlobalStatisticsPanel globalStatisticsPanel) {
+	public manualCalculateActionPerformed(ProteoIDViewer proteoIDViewer,
+			JComboBox<String> siiComboBox, JCheckBox manualDecoy,
+			JTextField manualDecoyPrefixValue, JLabel isDecoySiiValue,
+			JLabel isDecoySiiFalseValue, JTextField manualDecoyRatioValue,
+			JLabel fpSiiValue,
+			List<SpectrumIdentificationItem> sIIListPassThreshold,
+			JLabel tpSiiValue, JLabel fdrSiiValue, JPanel fdrPanel,
+			JComboBox<String> jComboBox2, Map<String, String> cvTermMap,
+			JComboBox<String> jComboBox1, JPanel tpEvaluePanel,
+			JPanel tpQvaluePanel, GlobalStatisticsPanel globalStatisticsPanel) {
 		this.proteoIDViewer = proteoIDViewer;
 		this.siiComboBox = siiComboBox;
 		this.manualDecoy = manualDecoy;
@@ -86,23 +90,11 @@ public class manualCalculateActionPerformed implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		final ProgressBarDialog progressBarDialog = new ProgressBarDialog(null, true);
-		new Thread("ProgressBar") {
-
-			@Override
-			public void run() {
-				progressBarDialog.setTitle("Calculating FDR stats and drawing graphs. Please wait..");
-				progressBarDialog.setVisible(true);
-			}
-		}.start();
-
 		Thread t = new Thread("LoadingThread") {
 
 			@Override
 			public void run() {
 				makeFDRGraphs();
-				progressBarDialog.setVisible(false);
-				progressBarDialog.dispose();
 			}
 		};
 		t.start();
@@ -114,7 +106,8 @@ public class manualCalculateActionPerformed implements ActionListener {
 		List<SpectrumIdentificationItem> sIIListIsDecoyFalse = new ArrayList<>();
 		try {
 
-			List<SpectrumIdentificationResult> sirListTemp = proteoIDViewer.unmarshal(SpectrumIdentificationList.class,
+			List<SpectrumIdentificationResult> sirListTemp = proteoIDViewer
+					.unmarshal(SpectrumIdentificationList.class,
 							siiComboBox.getSelectedItem().toString())
 					.getSpectrumIdentificationResult();
 			List<SpectrumIdentificationItem> siiListTemp = new ArrayList<>();
@@ -141,7 +134,8 @@ public class manualCalculateActionPerformed implements ActionListener {
 					PeptideEvidenceRef peptideEvidenceRef = peptideEvidenceRefList
 							.get(k);
 
-					PeptideEvidence peptideEvidence1 = proteoIDViewer.unmarshal(PeptideEvidence.class,
+					PeptideEvidence peptideEvidence1 = proteoIDViewer
+							.unmarshal(PeptideEvidence.class,
 									peptideEvidenceRef.getPeptideEvidenceRef());
 					DBSequence dbSeq = proteoIDViewer.unmarshal(
 							DBSequence.class,
@@ -184,18 +178,22 @@ public class manualCalculateActionPerformed implements ActionListener {
 						.roundThreeDecimals(sIIListIsDecoyTrue.size()
 								/ Double.valueOf(manualDecoyRatioValue
 										.getText().trim()));
-				fpSiiValue.setText(String.valueOf(globalStatisticsPanel.falsePositiveSii));
+				fpSiiValue.setText(String
+						.valueOf(globalStatisticsPanel.falsePositiveSii));
 			}
 			if (sIIListIsDecoyTrue != null && sIIListIsDecoyFalse != null) {
 				globalStatisticsPanel.truePositiveSii = IdViewerUtils
 						.roundThreeDecimals(sIIListPassThreshold.size()
 								- sIIListIsDecoyTrue.size());
-				tpSiiValue.setText(String.valueOf(globalStatisticsPanel.truePositiveSii));
+				tpSiiValue.setText(String
+						.valueOf(globalStatisticsPanel.truePositiveSii));
 			}
 			if (sIIListIsDecoyTrue != null && sIIListIsDecoyFalse != null) {
-				globalStatisticsPanel.fdrSii = IdViewerUtils.roundThreeDecimals(globalStatisticsPanel.falsePositiveSii
-						/ (globalStatisticsPanel.falsePositiveSii + globalStatisticsPanel.truePositiveSii));
-				fdrSiiValue.setText(String.valueOf(globalStatisticsPanel.fdrSii));
+				globalStatisticsPanel.fdrSii = IdViewerUtils
+						.roundThreeDecimals(globalStatisticsPanel.falsePositiveSii
+								/ (globalStatisticsPanel.falsePositiveSii + globalStatisticsPanel.truePositiveSii));
+				fdrSiiValue.setText(String
+						.valueOf(globalStatisticsPanel.fdrSii));
 			}
 
 			fdrPanel.removeAll();
@@ -209,7 +207,8 @@ public class manualCalculateActionPerformed implements ActionListener {
 				}
 				cvTerm = cvTermMap.get(jComboBox1.getSelectedItem());
 				FalseDiscoveryRate falseDiscoveryRate = null;
-				falseDiscoveryRate = new FalseDiscoveryRate(proteoIDViewer.fileName.getAbsolutePath(),
+				falseDiscoveryRate = new FalseDiscoveryRate(
+						proteoIDViewer.getFileName().getAbsolutePath(),
 						manualDecoyRatioValue.getText(),
 						manualDecoyPrefixValue.getText(), cvTerm, order);
 
@@ -335,7 +334,6 @@ public class manualCalculateActionPerformed implements ActionListener {
 			ex.printStackTrace();
 		}
 	}// GEN-LAST:event_manualCalculateActionPerformed
-
 
 	private JFreeChart createFDRChart(final XYDataset dataset) {
 		final JFreeChart chart = ChartFactory.createScatterPlot("FDR", // chart

@@ -26,12 +26,14 @@ import uk.ac.ebi.jmzidml.model.mzidml.ProteinAmbiguityGroup;
 import uk.ac.ebi.jmzidml.model.mzidml.ProteinDetectionHypothesis;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
+import uk.ac.liv.proteoidviewer.interfaces.LazyLoading;
+import uk.ac.liv.proteoidviewer.listener.LazyLoadingComponentListener;
 import uk.ac.liv.proteoidviewer.listener.proteinAmbiguityGroupTableMouseClicked;
 import uk.ac.liv.proteoidviewer.listener.proteinDetectionHypothesisTableMouseClicked;
 import uk.ac.liv.proteoidviewer.listener.spectrumIdentificationItemProteinTableeMouseClicked;
 import uk.ac.liv.proteoidviewer.util.IdViewerUtils;
 
-public class ProteinView extends JPanel {
+public class ProteinView extends JPanel implements LazyLoading {
 	private static final String[] spectrumIdentificationItemProteinViewTableHeaders = new String[] {
 			"Peptide Sequence", "SII", "Name", "Score", "Expectation value",
 			"passThreshold" };
@@ -53,8 +55,16 @@ public class ProteinView extends JPanel {
 	private final JTextArea proteinSequence = new JTextArea();
 	private final JLabel scientificNameValue = new JLabel();
 
+	private final ProteoIDViewer proteoIDViewer;
+	private final GlobalStatisticsPanel globalStatisticsPanel;
+
 	public ProteinView(ProteoIDViewer proteoIDViewer,
-			SpectrumSummary spectrumSummary) {
+			SpectrumSummary spectrumSummary,
+			GlobalStatisticsPanel globalStatisticsPanel) {
+		this.proteoIDViewer = proteoIDViewer;
+		this.globalStatisticsPanel = globalStatisticsPanel;
+		addComponentListener(new LazyLoadingComponentListener());
+		
 		createTables(proteoIDViewer, spectrumSummary);
 		proteinDescription.setEditable(false);
 		proteinSequence.setEditable(false);
@@ -168,9 +178,9 @@ public class ProteinView extends JPanel {
 		return spectrumIdentificationItemProteinViewTable;
 	}
 
-	public void loadProteinAmbiguityGroupTable(
-			GlobalStatisticsPanel globalStatisticsPanel,
-			MzIdentMLUnmarshaller mzIdentMLUnmarshaller) {
+	public void load() {
+		MzIdentMLUnmarshaller mzIdentMLUnmarshaller = proteoIDViewer
+				.getMzIdentMLUnmarshaller();
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		String protein_accessions = "";
 		globalStatisticsPanel.getPDHListPassThreshold().clear();
