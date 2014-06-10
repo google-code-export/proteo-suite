@@ -49,7 +49,7 @@ public class ProteoSuite extends JFrame {
 
 		setJMenuBar(new MenuBar());
 
-		add(new TabbedMainPanel(), BorderLayout.CENTER);
+		add(TabbedMainPanel.getInstance(), BorderLayout.CENTER);
 		add(new StatusPanel(), BorderLayout.PAGE_END);
 
 		updateTitle();

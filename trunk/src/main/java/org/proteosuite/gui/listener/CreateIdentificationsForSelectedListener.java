@@ -8,13 +8,14 @@ import java.util.Map;
 import java.util.Set;
 import javax.swing.JOptionPane;
 import org.proteosuite.gui.IdentParamsView;
+import org.proteosuite.gui.TabbedMainPanel;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.identification.SearchGuiViaMzidLibWrapper;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.MascotGenericFormatFile;
-import org.proteosuite.model.RawDataFile;
 import org.proteosuite.model.MzMLFile;
+import org.proteosuite.model.RawDataFile;
 
 /**
  *
@@ -108,6 +109,8 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
 
             wrapper.printDebugInfo();
             wrapper.compute();
+            
+            TabbedMainPanel.getInstance().setSelectedIndex(2);
         } else {
             // Get the selected raw files from the table to know which ones to run
             // ident for.

@@ -36,6 +36,7 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
     private final JButton createIdentifications;
     private final JButton loadIdentifications;
     private final static AnalyseData data = AnalyseData.getInstance();
+    private boolean enableCreateIdentificationsButton = true;
 
     public CreateOrLoadIdentificationsStep() {
         super(new BorderLayout());
@@ -109,7 +110,8 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
     }
     
     public void setCreateButtonEnabled(boolean state) {
-        this.createIdentifications.setEnabled(false);
+        this.enableCreateIdentificationsButton = state;
+        this.createIdentifications.setEnabled(state);
     }
 
     public synchronized void refreshFromData() {
@@ -130,7 +132,10 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
             });
 
             createIdentifications.setText("Create identifications for all...");
-            createIdentifications.setEnabled(true);
+            if (this.enableCreateIdentificationsButton) {
+                createIdentifications.setEnabled(true);
+            }
+            
             loadIdentifications.setText("Load identifications for all...");
             
         }
