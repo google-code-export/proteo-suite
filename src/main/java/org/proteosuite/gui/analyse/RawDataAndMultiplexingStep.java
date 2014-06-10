@@ -2,10 +2,11 @@ package org.proteosuite.gui.analyse;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -13,10 +14,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import org.proteosuite.gui.listener.AddRawDataListener;
-import org.proteosuite.gui.listener.ClearAllRawFileButtonListener;
+
 import org.proteosuite.gui.listener.ContinueButtonListener;
-import org.proteosuite.gui.listener.DeleteSelectedRawFileButtonListener;
 import org.proteosuite.gui.listener.RawDataTableListener;
 import org.proteosuite.gui.listener.TableButtonToggleListener;
 import org.proteosuite.gui.tables.RawDataAndMultiplexingTable;
@@ -43,28 +42,18 @@ public class RawDataAndMultiplexingStep extends JPanel {
 		stepTitle.setFont(new Font(stepTitle.getFont().getFontName(), stepTitle
 				.getFont().getStyle(), 72));
 
-		final JButton clearAllButton = new JButton("Clear All");
 		final JButton continueButton = new JButton("Continue");
-		final JButton deleteSelectedButton = new JButton("Delete Selected");
-		JButton addRawDataButton = new JButton("Add Data Files...");
 
-		clearAllButton.setEnabled(false);
 		continueButton.setEnabled(false);
-		deleteSelectedButton.setEnabled(false);
 
-		addRawDataButton.addActionListener(new AddRawDataListener(this));
-		deleteSelectedButton
-				.addActionListener(new DeleteSelectedRawFileButtonListener(this));
-		clearAllButton
-				.addActionListener(new ClearAllRawFileButtonListener(this));
 		continueButton.addActionListener(new ContinueButtonListener(this));
 		
 		rawDataTable.getSelectionModel().addListSelectionListener(
-				new TableButtonToggleListener(rawDataTable, deleteSelectedButton));
+				new TableButtonToggleListener(rawDataTable));
 		
 		rawDataTable.getModel().addTableModelListener(
-				new RawDataTableListener(rawDataTable, deleteSelectedButton, clearAllButton,
-						continueButton));
+				new RawDataTableListener(rawDataTable, continueButton));
+		rawDataTable.addKeyListener(new RawDataTableKeyListener(this));
                 
                 multiplexingBox.addItem("iTRAQ 4-plex");
                 multiplexingBox.addItem("iTRAQ 8-plex");
@@ -81,16 +70,16 @@ public class RawDataAndMultiplexingStep extends JPanel {
 
 		JPanel buttonsPanel = new JPanel(new GridLayout(2, 3));
 
-		buttonsPanel.add(addRawDataButton);
                 genomeAnnotationBox.setSelected(true);
                 genomeAnnotationBox.setEnabled(false);
-		buttonsPanel.add(getRow(new JLabel("Genome Annotation (i.e. ProteoAnnotator) Run?"), genomeAnnotationBox));
-		buttonsPanel.add(clearAllButton);	
+		buttonsPanel.add(getRow(new JLabel("Genome Annotation (i.e. ProteoAnnotator) Run?"), genomeAnnotationBox));	
                 
                 
-		buttonsPanel.add(deleteSelectedButton);
                 multiplexingBox.setEnabled(false);
-		buttonsPanel.add(getRow(new JLabel("Select multiplexing:"), multiplexingBox));		
+        buttonsPanel.add(Box.createGlue());
+        buttonsPanel.add(Box.createGlue());
+		buttonsPanel.add(getRow(new JLabel("Select multiplexing:"), multiplexingBox));
+        buttonsPanel.add(Box.createGlue());
 		buttonsPanel.add(continueButton);
 
 		add(stepTitle, BorderLayout.PAGE_START);

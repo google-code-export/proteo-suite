@@ -13,6 +13,7 @@ import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.InspectModel;
+import org.proteosuite.model.MascotGenericFormatFile;
 import org.proteosuite.model.MzIdentMLFile;
 import org.proteosuite.model.MzQuantMLFile;
 import org.proteosuite.model.RawDataFile;
@@ -24,12 +25,14 @@ public class OpenListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		JFileChooser openFile = new JFileChooser();
 		openFile.setAcceptAllFileFilterUsed(false);
-		openFile.setFileFilter(new FileNameExtensionFilter("MzQuantML (*.mzq)",
+		openFile.setFileFilter(new FileNameExtensionFilter("MzQuantML (*.mzQ)",
 				"mzq"));
 		openFile.setFileFilter(new FileNameExtensionFilter("MzML (*.mzML)",
 				"mzml"));
+		openFile.setFileFilter(new FileNameExtensionFilter("MGF (*.mgf)",
+				"mgf"));
 		openFile.setFileFilter(new FileNameExtensionFilter(
-				"mzIdentML (*.mzIdML)", "mzid"));
+				"MzIdentML (*.mzId)", "mzid"));
 		int result = openFile.showOpenDialog(null);
 
 		if (result == JFileChooser.CANCEL_OPTION)
@@ -78,6 +81,12 @@ public class OpenListener implements ActionListener {
 
 			AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
 					.setRawDataProcessing();
+			((RawDataAndMultiplexingStep) AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP)
+					.refreshFromData();
+		} else if (extension.equalsIgnoreCase("mgf")) {
+            data.addRawDataFile(new MascotGenericFormatFile(file));
+			AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
+				.setRawDataProcessing();
 			((RawDataAndMultiplexingStep) AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP)
 					.refreshFromData();
 		} else {
