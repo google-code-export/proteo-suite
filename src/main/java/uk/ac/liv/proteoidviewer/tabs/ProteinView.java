@@ -58,13 +58,15 @@ public class ProteinView extends JPanel implements LazyLoading {
 	private final ProteoIDViewer proteoIDViewer;
 	private final GlobalStatisticsPanel globalStatisticsPanel;
 
+	private boolean isLoaded = false;
+
 	public ProteinView(ProteoIDViewer proteoIDViewer,
 			SpectrumSummary spectrumSummary,
 			GlobalStatisticsPanel globalStatisticsPanel) {
 		this.proteoIDViewer = proteoIDViewer;
 		this.globalStatisticsPanel = globalStatisticsPanel;
 		addComponentListener(new LazyLoadingComponentListener());
-		
+
 		createTables(proteoIDViewer, spectrumSummary);
 		proteinDescription.setEditable(false);
 		proteinSequence.setEditable(false);
@@ -141,6 +143,31 @@ public class ProteinView extends JPanel implements LazyLoading {
 		getAccessibleContext().setAccessibleName("Protein View");
 	}
 
+	public boolean checkIfProteinDetectionHypothesisIsDecoy(
+			ProteinDetectionHypothesis proteinDetectionHypothesis,
+			MzIdentMLUnmarshaller mzIdentMLUnmarshaller) {
+		boolean result = false;
+		List<PeptideHypothesis> PeptideHyposthesisList = proteinDetectionHypothesis
+				.getPeptideHypothesis();
+		for (int i = 0; i < PeptideHyposthesisList.size(); i++) {
+			try {
+				PeptideHypothesis peptideHypothesis = PeptideHyposthesisList
+						.get(i);
+				String peptidRef = peptideHypothesis.getPeptideEvidenceRef();
+				PeptideEvidence peptiedEvidence = mzIdentMLUnmarshaller
+						.unmarshal(PeptideEvidence.class, peptidRef);
+				if (peptiedEvidence.isIsDecoy()) {
+					result = true;
+					break;
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+		}
+		return result;
+	}
+
 	private void createTables(ProteoIDViewer proteoIDViewer,
 			SpectrumSummary spectrumSummary) {
 		spectrumIdentificationItemProteinViewTable.setAutoCreateRowSorter(true);
@@ -174,8 +201,21 @@ public class ProteinView extends JPanel implements LazyLoading {
 						proteinAmbiguityGroupTable, this));
 	}
 
+	public JTable getAmbiguityGroupTable() {
+		return proteinAmbiguityGroupTable;
+	}
+
+	public JTable getDetectionHypothesisTable() {
+		return proteinDetectionHypothesisTable;
+	}
+
 	public JTable getIdentificationItemTable() {
 		return spectrumIdentificationItemProteinViewTable;
+	}
+
+	@Override
+	public boolean isLoaded() {
+		return isLoaded;
 	}
 
 	public void load() {
@@ -358,31 +398,7 @@ public class ProteinView extends JPanel implements LazyLoading {
 		}
 
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-	}
-
-	public boolean checkIfProteinDetectionHypothesisIsDecoy(
-			ProteinDetectionHypothesis proteinDetectionHypothesis,
-			MzIdentMLUnmarshaller mzIdentMLUnmarshaller) {
-		boolean result = false;
-		List<PeptideHypothesis> PeptideHyposthesisList = proteinDetectionHypothesis
-				.getPeptideHypothesis();
-		for (int i = 0; i < PeptideHyposthesisList.size(); i++) {
-			try {
-				PeptideHypothesis peptideHypothesis = PeptideHyposthesisList
-						.get(i);
-				String peptidRef = peptideHypothesis.getPeptideEvidenceRef();
-				PeptideEvidence peptiedEvidence = mzIdentMLUnmarshaller
-						.unmarshal(PeptideEvidence.class, peptidRef);
-				if (peptiedEvidence.isIsDecoy()) {
-					result = true;
-					break;
-				}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
-
-		}
-		return result;
+		isLoaded = true;
 	}
 
 	public void reset() {
@@ -414,13 +430,5 @@ public class ProteinView extends JPanel implements LazyLoading {
 
 		proteinDescription.setText("");
 		proteinSequence.setText("");
-	}
-
-	public JTable getDetectionHypothesisTable() {
-		return proteinDetectionHypothesisTable;
-	}
-
-	public JTable getAmbiguityGroupTable() {
-		return proteinAmbiguityGroupTable;
 	}
 }

@@ -33,6 +33,8 @@ public class ProtocolPanel extends JPanel implements LazyLoading {
 	private final JTextPane protocolText = new JTextPane();
 	private final ProteoIDViewer proteoIDViewer;
 
+	private boolean isLoaded = false;
+
 	public ProtocolPanel(ProteoIDViewer proteoIDViewer) {
 		this.proteoIDViewer = proteoIDViewer;
 		addComponentListener(new LazyLoadingComponentListener());
@@ -40,14 +42,13 @@ public class ProtocolPanel extends JPanel implements LazyLoading {
 		protocolText.setContentType("text/html");
 		protocolText.setEditable(false);
 
-		setBorder(BorderFactory
-				.createTitledBorder("Summary"));
-		add(new JScrollPane(protocolText),
-				BorderLayout.CENTER);
+		setBorder(BorderFactory.createTitledBorder("Summary"));
+		add(new JScrollPane(protocolText), BorderLayout.CENTER);
 	}
 
-	public void setProtocolText(String string) {
-		protocolText.setText(string);		
+	@Override
+	public boolean isLoaded() {
+		return isLoaded;
 	}
 
 	public void load() {
@@ -201,5 +202,10 @@ public class ProtocolPanel extends JPanel implements LazyLoading {
 		}
 		setProtocolText(text);
 		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		isLoaded = true;
+	}
+
+	public void setProtocolText(String string) {
+		protocolText.setText(string);
 	}
 }

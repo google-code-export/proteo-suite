@@ -60,6 +60,8 @@ public class PeptideSummary extends JSplitPane implements LazyLoading {
 	private final JPanel jGraph1 = new JPanel();
 	private final Map<String, String> siiSirMap = new HashMap<>();
 
+	private boolean isLoaded = false;
+	
 	public PeptideSummary(ProteoIDViewer proteoIDViewer) {
 		addComponentListener(new LazyLoadingComponentListener());
 		this.proteoIDViewer = proteoIDViewer;
@@ -84,7 +86,9 @@ public class PeptideSummary extends JSplitPane implements LazyLoading {
 				.addMouseListener(new spectrumIdentificationItemTablePeptideViewMouseClicked(
 						proteoIDViewer, this, filterListIon1,
 						filterListCharge1, jGraph1, siiSirMap));
-
+		
+		spectrumIdentificationItemTablePeptideView.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
 		createPanel();
 	}
 
@@ -158,6 +162,11 @@ public class PeptideSummary extends JSplitPane implements LazyLoading {
 
 	public JTable getIdentificationTable() {
 		return spectrumIdentificationItemTablePeptideView;
+	}
+
+	@Override
+	public boolean isLoaded() {
+		return isLoaded;
 	}
 
 	public void load() {
@@ -328,6 +337,13 @@ public class PeptideSummary extends JSplitPane implements LazyLoading {
 		}
 
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		isLoaded = true;
+	}
+
+	public void removeAllFragmentation() {
+		((DefaultTableModel) fragmentationTablePeptideView.getModel())
+		.setNumRows(0);
+		
 	}
 
 	public void reset(String[] spectrumIdentificationItemTableHeaders) {
@@ -377,11 +393,5 @@ public class PeptideSummary extends JSplitPane implements LazyLoading {
 
 		jGraph1.validate();
 		jGraph1.repaint();
-	}
-
-	public void removeAllFragmentation() {
-		((DefaultTableModel) fragmentationTablePeptideView.getModel())
-		.setNumRows(0);
-		
 	}
 }
