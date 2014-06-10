@@ -54,14 +54,14 @@ public class LogPane extends JScrollPane {
                     String errorLine = null;
                     while ((outputLine = outputReader.readLine()) != null || (errorLine = errorReader.readLine()) != null) {
                         if (outputLine != null) {
-                            LogPane.this.append(outputLine + "\n");
+                            LogPane.this.append(outputLine + "\n\n");
                             if (printAlso) {
                                 System.out.println(outputLine);
                             }
                         }
 
                         if (errorLine != null) {
-                            LogPane.this.append("<font color=\"red\">" +errorLine + "</font>\n");
+                            LogPane.this.append("<font color=\"red\">" +errorLine + "</font>\n\n");
                             if (printAlso) {
                                 System.out.println(errorLine);
                             }
