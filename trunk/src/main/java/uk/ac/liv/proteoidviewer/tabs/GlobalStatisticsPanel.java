@@ -70,6 +70,7 @@ public class GlobalStatisticsPanel extends JPanel implements LazyLoading {
 	public double falsePositiveSii;
 	public double truePositiveSii;
 	public double fdrSii;
+	private boolean isLoaded = false;
 
 	public GlobalStatisticsPanel(ProteoIDViewer proteoIDViewer) {
 		addComponentListener(new LazyLoadingComponentListener());
@@ -189,38 +190,9 @@ public class GlobalStatisticsPanel extends JPanel implements LazyLoading {
 		return siiComboBox;
 	}
 
-	public void reset() {
-		tpSiiValue.setText("0");
-		fdrSiiValue.setText("0");
-
-		totalSIRLabelValue.setText("0");
-		totalSIIaboveThresholdLabelValue.setText("0");
-		totalSIIbelowThresholdLabelValue.setText("0");
-		totalSIIaboveThresholdRankOneLabelValue.setText("0");
-		percentIdentifiedSpectraLabelValue.setText("0");
-		totalPeptidesaboveThresholdLabelValue.setText("0");
-		totalPAGsLabelValue.setText("0");
-		totalPDHsaboveThresholdLabelValue.setText("0");
-		isDecoySiiValue.setText("0");
-		isDecoySiiFalseValue.setText("0");
-
-		fpSiiValue.setText("0");
-
-		tpEvaluePanel.removeAll();
-		tpEvaluePanel.validate();
-		tpEvaluePanel.repaint();
-
-		tpQvaluePanel.removeAll();
-		tpQvaluePanel.validate();
-		tpQvaluePanel.repaint();
-		jComboBox1.removeAllItems();
-
-		siiComboBox.removeAllItems();
-
-		fdrPanel.removeAll();
-		fdrPanel.validate();
-		fdrPanel.repaint();
-
+	@Override
+	public boolean isLoaded() {
+		return isLoaded;
 	}
 
 	@Override
@@ -405,6 +377,40 @@ public class GlobalStatisticsPanel extends JPanel implements LazyLoading {
 			ex.printStackTrace();
 		}
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		
+
+		isLoaded = true;
+	}
+
+	public void reset() {
+		tpSiiValue.setText("0");
+		fdrSiiValue.setText("0");
+
+		totalSIRLabelValue.setText("0");
+		totalSIIaboveThresholdLabelValue.setText("0");
+		totalSIIbelowThresholdLabelValue.setText("0");
+		totalSIIaboveThresholdRankOneLabelValue.setText("0");
+		percentIdentifiedSpectraLabelValue.setText("0");
+		totalPeptidesaboveThresholdLabelValue.setText("0");
+		totalPAGsLabelValue.setText("0");
+		totalPDHsaboveThresholdLabelValue.setText("0");
+		isDecoySiiValue.setText("0");
+		isDecoySiiFalseValue.setText("0");
+
+		fpSiiValue.setText("0");
+
+		tpEvaluePanel.removeAll();
+		tpEvaluePanel.validate();
+		tpEvaluePanel.repaint();
+
+		tpQvaluePanel.removeAll();
+		tpQvaluePanel.validate();
+		tpQvaluePanel.repaint();
+		jComboBox1.removeAllItems();
+
+		siiComboBox.removeAllItems();
+
+		fdrPanel.removeAll();
+		fdrPanel.validate();
+		fdrPanel.repaint();
 	}
 }

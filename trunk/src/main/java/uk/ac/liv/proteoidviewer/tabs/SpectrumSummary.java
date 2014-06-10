@@ -43,9 +43,11 @@ public class SpectrumSummary extends JSplitPane implements LazyLoading {
 	private final JTable spectrumIdentificationItemTable = new JTable();
 	private final JPanel jExperimentalFilterPanel = new JPanel();
 	private final JPanel jGraph = new JPanel();
-	
+
 	public List<SpectrumIdentificationItem> spectrumIdentificationItemListForSpecificResult;
 	private final ProteoIDViewer proteoIDViewer;
+
+	private boolean isLoaded = false;
 
 	public SpectrumSummary(ProteoIDViewer proteoIDViewer,
 			ProteinDBView proteinDBView) {
@@ -55,41 +57,8 @@ public class SpectrumSummary extends JSplitPane implements LazyLoading {
 		createSpectrumSummary();
 	}
 
-	private void createTables(ProteoIDViewer proteoIDViewer,
-			ProteinDBView proteinDBView) {
-		spectrumIdentificationResultTable.setAutoCreateRowSorter(true);
-		fragmentationTable.setAutoCreateRowSorter(true);
-		peptideEvidenceTable.setAutoCreateRowSorter(true);
-		spectrumIdentificationItemTable.setAutoCreateRowSorter(true);
-
-		spectrumIdentificationResultTable
-				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		fragmentationTable
-				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		peptideEvidenceTable
-				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		spectrumIdentificationItemTable
-				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-		fragmentationTable.getTableHeader().setReorderingAllowed(false);
-		peptideEvidenceTable.getTableHeader().setReorderingAllowed(false);
-		spectrumIdentificationResultTable.getTableHeader()
-				.setReorderingAllowed(false);
-		spectrumIdentificationItemTable.getTableHeader().setReorderingAllowed(
-				false);
-
-		spectrumIdentificationResultTable
-				.addMouseListener(new spectrumIdentificationResultTableMouseClicked(
-						proteoIDViewer, SpectrumSummary.this));
-		peptideEvidenceTable
-				.addMouseListener(new peptideEvidenceTableMouseClicked(
-						proteoIDViewer, proteinDBView));
-		spectrumIdentificationItemTable
-				.addMouseListener(new spectrumIdentificationItemTableMouseClicked(
-						proteoIDViewer, SpectrumSummary.this));
-
-		spectrumIdentificationResultTable
-				.setToolTipText("this corresponds to Spectrum Identification Result in mzIdentML");
+	public void addEvidence(Object[] objects) {
+		((DefaultTableModel) peptideEvidenceTable.getModel()).addRow(objects);
 	}
 
 	private void createSpectrumSummary() {
@@ -157,6 +126,50 @@ public class SpectrumSummary extends JSplitPane implements LazyLoading {
 		setLeftComponent(leftPanel);
 	}
 
+	private void createTables(ProteoIDViewer proteoIDViewer,
+			ProteinDBView proteinDBView) {
+		spectrumIdentificationResultTable.setAutoCreateRowSorter(true);
+		fragmentationTable.setAutoCreateRowSorter(true);
+		peptideEvidenceTable.setAutoCreateRowSorter(true);
+		spectrumIdentificationItemTable.setAutoCreateRowSorter(true);
+
+		spectrumIdentificationResultTable
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		fragmentationTable
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		peptideEvidenceTable
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		spectrumIdentificationItemTable
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		fragmentationTable.getTableHeader().setReorderingAllowed(false);
+		peptideEvidenceTable.getTableHeader().setReorderingAllowed(false);
+		spectrumIdentificationResultTable.getTableHeader()
+				.setReorderingAllowed(false);
+		spectrumIdentificationItemTable.getTableHeader().setReorderingAllowed(
+				false);
+
+		spectrumIdentificationResultTable
+				.addMouseListener(new spectrumIdentificationResultTableMouseClicked(
+						proteoIDViewer, SpectrumSummary.this));
+		peptideEvidenceTable
+				.addMouseListener(new peptideEvidenceTableMouseClicked(
+						proteoIDViewer, proteinDBView));
+		spectrumIdentificationItemTable
+				.addMouseListener(new spectrumIdentificationItemTableMouseClicked(
+						proteoIDViewer, SpectrumSummary.this));
+
+		spectrumIdentificationResultTable
+				.setToolTipText("this corresponds to Spectrum Identification Result in mzIdentML");
+
+		spectrumIdentificationResultTable.setCursor(Cursor
+				.getPredefinedCursor(Cursor.HAND_CURSOR));
+		spectrumIdentificationItemTable.setCursor(Cursor
+				.getPredefinedCursor(Cursor.HAND_CURSOR));
+		peptideEvidenceTable.setCursor(Cursor
+				.getPredefinedCursor(Cursor.HAND_CURSOR));
+	}
+
 	public JTable getFragmentationTable() {
 		return fragmentationTable;
 	}
@@ -171,6 +184,68 @@ public class SpectrumSummary extends JSplitPane implements LazyLoading {
 
 	public JTable getIdentificationResultTable() {
 		return spectrumIdentificationResultTable;
+	}
+
+	@Override
+	public boolean isLoaded() {
+		return isLoaded;
+	}
+
+	@Override
+	public void load() {
+		setCursor(new Cursor(Cursor.WAIT_CURSOR));
+		Iterator<SpectrumIdentificationResult> iterSpectrumIdentificationResult = proteoIDViewer
+				.getMzIdentMLUnmarshaller().unmarshalCollectionFromXpath(
+						MzIdentMLElement.SpectrumIdentificationResult);
+
+		DefaultTableModel spectrumIdentificationResultTableModel = (DefaultTableModel) getIdentificationResultTable()
+				.getModel();
+		spectrumIdentificationResultTableModel.setRowCount(0);
+		getIdentificationResultTable().getTableHeader().setEnabled(false);
+		while (iterSpectrumIdentificationResult.hasNext()) {
+			SpectrumIdentificationResult spectrumIdentificationResult = iterSpectrumIdentificationResult
+					.next();
+
+			spectrumIdentificationResultTableModel.addRow(new String[] {
+					spectrumIdentificationResult.getId(),
+					spectrumIdentificationResult.getSpectrumID() });
+
+			List<CvParam> cvParamListspectrumIdentificationResult = spectrumIdentificationResult
+					.getCvParam();
+
+			for (int s = 0; s < cvParamListspectrumIdentificationResult.size(); s++) {
+				CvParam cvParam = cvParamListspectrumIdentificationResult
+						.get(s);
+				String name = cvParam.getName();
+				for (int j = 0; j < spectrumIdentificationResultTableModel
+						.getColumnCount(); j++) {
+					if (!spectrumIdentificationResultTableModel
+							.getColumnName(j).equals(name))
+						continue;
+					spectrumIdentificationResultTableModel.setValueAt(cvParam
+							.getValue(), spectrumIdentificationResultTableModel
+							.getRowCount() - 1, j);
+
+				}
+			}
+		}
+		getIdentificationResultTable().getTableHeader().setEnabled(true);
+
+		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+	}
+
+	public void removeAllEvidence() {
+		((DefaultTableModel) peptideEvidenceTable.getModel()).setNumRows(0);
+	}
+
+	public void removeAllFragmentation() {
+		((DefaultTableModel) fragmentationTable.getModel()).setNumRows(0);
+
+	}
+
+	public void removeAllIdentificationItems() {
+		((DefaultTableModel) spectrumIdentificationItemTable.getModel())
+				.setNumRows(0);
 	}
 
 	public void reset(String[] sir,
@@ -243,70 +318,5 @@ public class SpectrumSummary extends JSplitPane implements LazyLoading {
 
 		jGraph.validate();
 		jGraph.repaint();
-	}
-
-	public void removeAllEvidence() {
-		((DefaultTableModel) peptideEvidenceTable.getModel()).setNumRows(0);
-	}
-
-	public void addEvidence(Object[] objects) {
-		((DefaultTableModel) peptideEvidenceTable.getModel()).addRow(objects);
-	}
-
-	public void removeAllFragmentation() {
-		((DefaultTableModel) fragmentationTable.getModel()).setNumRows(0);
-
-	}
-
-	public void removeAllIdentificationItems() {
-		((DefaultTableModel) spectrumIdentificationItemTable.getModel())
-				.setNumRows(0);
-	}
-
-	@Override
-	public void load() {
-		setCursor(new Cursor(Cursor.WAIT_CURSOR));
-		Iterator<SpectrumIdentificationResult> iterSpectrumIdentificationResult = proteoIDViewer
-				.getMzIdentMLUnmarshaller()
-				.unmarshalCollectionFromXpath(
-						MzIdentMLElement.SpectrumIdentificationResult);
-
-		DefaultTableModel spectrumIdentificationResultTableModel = (DefaultTableModel) getIdentificationResultTable().getModel();
-		spectrumIdentificationResultTableModel.setRowCount(0);
-		getIdentificationResultTable().getTableHeader()
-				.setEnabled(false);
-		while (iterSpectrumIdentificationResult.hasNext()) {
-			SpectrumIdentificationResult spectrumIdentificationResult = iterSpectrumIdentificationResult
-					.next();
-
-			spectrumIdentificationResultTableModel.addRow(new String[] {
-					spectrumIdentificationResult.getId(),
-					spectrumIdentificationResult.getSpectrumID() });
-
-			List<CvParam> cvParamListspectrumIdentificationResult = spectrumIdentificationResult
-					.getCvParam();
-
-			for (int s = 0; s < cvParamListspectrumIdentificationResult
-					.size(); s++) {
-				CvParam cvParam = cvParamListspectrumIdentificationResult
-						.get(s);
-				String name = cvParam.getName();
-				for (int j = 0; j < spectrumIdentificationResultTableModel
-						.getColumnCount(); j++) {
-					if (!spectrumIdentificationResultTableModel
-							.getColumnName(j).equals(name))
-						continue;
-					spectrumIdentificationResultTableModel.setValueAt(
-							cvParam.getValue(),
-							spectrumIdentificationResultTableModel
-									.getRowCount() - 1, j);
-
-				}
-			}
-		}
-		getIdentificationResultTable().getTableHeader()
-				.setEnabled(true);
-
-		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
 }

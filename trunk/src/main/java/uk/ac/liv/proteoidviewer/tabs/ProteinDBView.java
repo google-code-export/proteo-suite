@@ -26,6 +26,8 @@ public class ProteinDBView extends JPanel implements LazyLoading {
 	private final JTable dBSequenceTable = new JTable();
 	private final ProteoIDViewer proteoIDViewer;
 
+	private boolean isLoaded = false;
+
 	public ProteinDBView(ProteoIDViewer proteoIDViewer) {
 		this.proteoIDViewer = proteoIDViewer;
 		addComponentListener(new LazyLoadingComponentListener());
@@ -38,12 +40,22 @@ public class ProteinDBView extends JPanel implements LazyLoading {
 		setBorder(BorderFactory.createTitledBorder("DB Sequence"));
 	}
 
+	public int getRowCount() {
+		return dBSequenceTable.getModel().getRowCount();
+	}
+
 	public JTable getTable() {
 		return dBSequenceTable;
 	}
 
+	@Override
+	public boolean isLoaded() {
+		return isLoaded;
+	}
+
 	public void load() {
-		MzIdentMLUnmarshaller mzIdentMLUnmarshaller = proteoIDViewer.getMzIdentMLUnmarshaller();
+		MzIdentMLUnmarshaller mzIdentMLUnmarshaller = proteoIDViewer
+				.getMzIdentMLUnmarshaller();
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		Iterator<DBSequence> iterDBSequence = mzIdentMLUnmarshaller
 				.unmarshalCollectionFromXpath(MzIdentMLElement.DBSequence);
@@ -63,6 +75,7 @@ public class ProteinDBView extends JPanel implements LazyLoading {
 
 		}
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		isLoaded = true;
 	}
 
 	public void reset() {
@@ -71,18 +84,12 @@ public class ProteinDBView extends JPanel implements LazyLoading {
 		dBSequenceTable.setModel(new DefaultTableModel(new Object[][] {},
 				dBSequenceTableHeaders) {
 			private static final long serialVersionUID = 1L;
-			
-
 
 			@Override
-            public boolean isCellEditable(int row, int col) {
-                return false;
-            }
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
 		});
 		((DefaultTableModel) dBSequenceTable.getModel()).setRowCount(0);
-	}
-
-	public int getRowCount() {
-		return dBSequenceTable.getModel().getRowCount();
 	}
 }
