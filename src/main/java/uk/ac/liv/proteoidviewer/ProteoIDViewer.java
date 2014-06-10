@@ -8,7 +8,6 @@
  */
 package uk.ac.liv.proteoidviewer;
 
-import uk.ac.liv.proteoidviewer.listener.mainTabbedPaneMouseClicked;
 import uk.ac.liv.proteoidviewer.tabs.GlobalStatisticsPanel;
 import uk.ac.liv.proteoidviewer.tabs.PeptideSummary;
 import uk.ac.liv.proteoidviewer.tabs.ProteinDBView;
@@ -49,13 +48,8 @@ import uk.ac.ebi.pride.tools.mzml_wrapper.MzMlWrapper;
 public class ProteoIDViewer extends JTabbedPane {
 	private static final long serialVersionUID = 1L;
 
-	public boolean isSecondTabLoaded;
-	public boolean isThirdTabLoaded;
-	public boolean isFourthTabLoaded;
-	public boolean isFifthTabLoaded;
-	public boolean isSixthTabLoaded;
 	private JMzReader jMzReader = null;
-	public File fileName = null;
+	private File fileName = null;
 	private String rawType = "";
 
 	private MzIdentMLUnmarshaller mzIdentMLUnmarshaller = null;
@@ -63,10 +57,10 @@ public class ProteoIDViewer extends JTabbedPane {
 	private final GlobalStatisticsPanel globalStatisticsPanel = new GlobalStatisticsPanel(
 			this);
 	private final PeptideSummary peptideSummary = new PeptideSummary(this);
-	private final ProteinDBView proteinDBView = new ProteinDBView();
-	private final ProtocolPanel protocolPanel = new ProtocolPanel();
+	private final ProteinDBView proteinDBView = new ProteinDBView(this);
+	private final ProtocolPanel protocolPanel = new ProtocolPanel(this);
 	private final SpectrumSummary spectrumSummary = new SpectrumSummary(this, proteinDBView);;
-	private final ProteinView proteinView = new ProteinView(this, spectrumSummary);
+	private final ProteinView proteinView = new ProteinView(this, spectrumSummary, globalStatisticsPanel);
 
 	/**
 	 * Creates new form ProteoIDViewer
@@ -75,9 +69,6 @@ public class ProteoIDViewer extends JTabbedPane {
 		// Swing init components
 
 		setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		addMouseListener(new mainTabbedPaneMouseClicked(this, protocolPanel,
-				proteinDBView, spectrumSummary, peptideSummary,
-				globalStatisticsPanel));
 
 		addTab("Protein View", null, proteinView, "Protein View");
 		addTab("Spectrum Summary", null, spectrumSummary, "Spectrum Summary");
@@ -249,22 +240,14 @@ public class ProteoIDViewer extends JTabbedPane {
 						"1.2.")) {
 			JOptionPane
 					.showMessageDialog(
-							null,
+							this,
 							"The file is not compatible with the Viewer: different mzIdentMl version",
 							"mzIdentMl version",
 							JOptionPane.INFORMATION_MESSAGE);
 			return;
 		}
 		jMzReader = null;
-		createTables();
-		setSelectedIndex(0);
-		isSecondTabLoaded = false;
-		isThirdTabLoaded = false;
-		isFourthTabLoaded = false;
-		isFifthTabLoaded = false;
-		isSixthTabLoaded = false;
-		getProteinView().loadProteinAmbiguityGroupTable(
-				globalStatisticsPanel(), getMzIdentMLUnmarshaller());
+		rawType = "";
 
 		if (identDataFile.getParent() != null)
 		{
@@ -285,11 +268,9 @@ public class ProteoIDViewer extends JTabbedPane {
 				ex.printStackTrace();
 			}
 		}
-		if (getProteinView().getAmbiguityGroupTable().getRowCount() == 0) {
-			JOptionPane.showMessageDialog(null,
-					"There is no protein view for this file", "Protein View",
-					JOptionPane.INFORMATION_MESSAGE);
-		}
+
+		createTables();
+		setSelectedIndex(0);
 	}
 
 	public <T extends MzIdentMLObject> T unmarshal(Class<T> clazz, String id) throws JAXBException {
@@ -311,5 +292,9 @@ public class ProteoIDViewer extends JTabbedPane {
 		}
 		
 		return jMzReader.getSpectrumById(id);
+	}
+
+	public File getFileName() {
+		return fileName;
 	}
 }

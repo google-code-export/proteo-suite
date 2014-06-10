@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,12 +33,14 @@ import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationList;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
+import uk.ac.liv.proteoidviewer.interfaces.LazyLoading;
+import uk.ac.liv.proteoidviewer.listener.LazyLoadingComponentListener;
 import uk.ac.liv.proteoidviewer.listener.manualCalculateActionPerformed;
 import uk.ac.liv.proteoidviewer.listener.manualDecoyActionPerformed;
 import uk.ac.liv.proteoidviewer.listener.siiComboBoxActionPerformed;
 import uk.ac.liv.proteoidviewer.util.IdViewerUtils;
 
-public class GlobalStatisticsPanel extends JPanel {
+public class GlobalStatisticsPanel extends JPanel implements LazyLoading {
 	private static final long serialVersionUID = 1L;
 	private final ProteoIDViewer proteoIDViewer;
 
@@ -69,10 +72,11 @@ public class GlobalStatisticsPanel extends JPanel {
 	public double fdrSii;
 
 	public GlobalStatisticsPanel(ProteoIDViewer proteoIDViewer) {
+		addComponentListener(new LazyLoadingComponentListener());
 		this.proteoIDViewer = proteoIDViewer;
 
 		siiComboBox.addActionListener(new siiComboBoxActionPerformed(
-				proteoIDViewer, this));
+				this));
 
 		fdrPanel.setBorder(BorderFactory.createTitledBorder("FDR Graph"));
 		fdrPanel.setPreferredSize(new Dimension(257, 255));
@@ -185,8 +189,54 @@ public class GlobalStatisticsPanel extends JPanel {
 		return siiComboBox;
 	}
 
-	public void loadSpectrumIdentificationList(
-			MzIdentMLUnmarshaller mzIdentMLUnmarshaller) {
+	public void reset() {
+		tpSiiValue.setText("0");
+		fdrSiiValue.setText("0");
+
+		totalSIRLabelValue.setText("0");
+		totalSIIaboveThresholdLabelValue.setText("0");
+		totalSIIbelowThresholdLabelValue.setText("0");
+		totalSIIaboveThresholdRankOneLabelValue.setText("0");
+		percentIdentifiedSpectraLabelValue.setText("0");
+		totalPeptidesaboveThresholdLabelValue.setText("0");
+		totalPAGsLabelValue.setText("0");
+		totalPDHsaboveThresholdLabelValue.setText("0");
+		isDecoySiiValue.setText("0");
+		isDecoySiiFalseValue.setText("0");
+
+		fpSiiValue.setText("0");
+
+		tpEvaluePanel.removeAll();
+		tpEvaluePanel.validate();
+		tpEvaluePanel.repaint();
+
+		tpQvaluePanel.removeAll();
+		tpQvaluePanel.validate();
+		tpQvaluePanel.repaint();
+		jComboBox1.removeAllItems();
+
+		siiComboBox.removeAllItems();
+
+		fdrPanel.removeAll();
+		fdrPanel.validate();
+		fdrPanel.repaint();
+
+	}
+
+	@Override
+	public void load() {
+		Iterator<SpectrumIdentificationList> iterspectrumIdentificationList = proteoIDViewer
+				.getMzIdentMLUnmarshaller().unmarshalCollectionFromXpath(
+						MzIdentMLElement.SpectrumIdentificationList);
+		while (iterspectrumIdentificationList.hasNext()) {
+			SpectrumIdentificationList spectrumIdentificationList1 = iterspectrumIdentificationList
+					.next();
+
+			getSiiComboBox().addItem(
+					spectrumIdentificationList1.getId());
+		}
+		
+		MzIdentMLUnmarshaller mzIdentMLUnmarshaller = proteoIDViewer.getMzIdentMLUnmarshaller();
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
 		List<Peptide> peptideListNonReduntant = new ArrayList<>();
@@ -355,39 +405,6 @@ public class GlobalStatisticsPanel extends JPanel {
 			ex.printStackTrace();
 		}
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-	}
-
-	public void reset() {
-		tpSiiValue.setText("0");
-		fdrSiiValue.setText("0");
-
-		totalSIRLabelValue.setText("0");
-		totalSIIaboveThresholdLabelValue.setText("0");
-		totalSIIbelowThresholdLabelValue.setText("0");
-		totalSIIaboveThresholdRankOneLabelValue.setText("0");
-		percentIdentifiedSpectraLabelValue.setText("0");
-		totalPeptidesaboveThresholdLabelValue.setText("0");
-		totalPAGsLabelValue.setText("0");
-		totalPDHsaboveThresholdLabelValue.setText("0");
-		isDecoySiiValue.setText("0");
-		isDecoySiiFalseValue.setText("0");
-
-		fpSiiValue.setText("0");
-
-		tpEvaluePanel.removeAll();
-		tpEvaluePanel.validate();
-		tpEvaluePanel.repaint();
-
-		tpQvaluePanel.removeAll();
-		tpQvaluePanel.validate();
-		tpQvaluePanel.repaint();
-		jComboBox1.removeAllItems();
-
-		siiComboBox.removeAllItems();
-
-		fdrPanel.removeAll();
-		fdrPanel.validate();
-		fdrPanel.repaint();
-
+		
 	}
 }

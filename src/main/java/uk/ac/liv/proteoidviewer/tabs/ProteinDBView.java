@@ -14,15 +14,21 @@ import javax.swing.table.DefaultTableModel;
 import uk.ac.ebi.jmzidml.MzIdentMLElement;
 import uk.ac.ebi.jmzidml.model.mzidml.DBSequence;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
+import uk.ac.liv.proteoidviewer.ProteoIDViewer;
+import uk.ac.liv.proteoidviewer.interfaces.LazyLoading;
+import uk.ac.liv.proteoidviewer.listener.LazyLoadingComponentListener;
 
-public class ProteinDBView extends JPanel {
+public class ProteinDBView extends JPanel implements LazyLoading {
 	private static final long serialVersionUID = 1L;
 	private static final String[] dBSequenceTableHeaders = new String[] { "ID",
 			"Accession", "Seq", "Protein Description" };
 
 	private final JTable dBSequenceTable = new JTable();
+	private final ProteoIDViewer proteoIDViewer;
 
-	public ProteinDBView() {
+	public ProteinDBView(ProteoIDViewer proteoIDViewer) {
+		this.proteoIDViewer = proteoIDViewer;
+		addComponentListener(new LazyLoadingComponentListener());
 		// dBSequenceTable Table
 		dBSequenceTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		dBSequenceTable.getTableHeader().setReorderingAllowed(false);
@@ -36,7 +42,8 @@ public class ProteinDBView extends JPanel {
 		return dBSequenceTable;
 	}
 
-	public void loadDBSequenceTable(MzIdentMLUnmarshaller mzIdentMLUnmarshaller) {
+	public void load() {
+		MzIdentMLUnmarshaller mzIdentMLUnmarshaller = proteoIDViewer.getMzIdentMLUnmarshaller();
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		Iterator<DBSequence> iterDBSequence = mzIdentMLUnmarshaller
 				.unmarshalCollectionFromXpath(MzIdentMLElement.DBSequence);

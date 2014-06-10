@@ -34,10 +34,6 @@ public class peptideEvidenceTableMouseClicked implements MouseListener {
 				}
 			}
 		}
-		if (!proteoIDViewer.isFourthTabLoaded) {
-			proteinDBView.loadDBSequenceTable(proteoIDViewer.getMzIdentMLUnmarshaller());
-			proteoIDViewer.isFourthTabLoaded = true;
-		}
 		proteoIDViewer.setSelectedIndex(3);		
 	}
 

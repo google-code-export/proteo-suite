@@ -30,11 +30,13 @@ import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
+import uk.ac.liv.proteoidviewer.interfaces.LazyLoading;
+import uk.ac.liv.proteoidviewer.listener.LazyLoadingComponentListener;
 import uk.ac.liv.proteoidviewer.listener.psmRankValueActionPerformed;
 import uk.ac.liv.proteoidviewer.listener.spectrumIdentificationItemTablePeptideViewMouseClicked;
 import uk.ac.liv.proteoidviewer.util.IdViewerUtils;
 
-public class PeptideSummary extends JSplitPane {
+public class PeptideSummary extends JSplitPane implements LazyLoading {
 
 	private static final String[] peptideEvidenceTableHeaders = { "Start",
 			"End", "Pre", "Post", "IsDecoy", "Peptide Sequence",
@@ -59,6 +61,7 @@ public class PeptideSummary extends JSplitPane {
 	private final Map<String, String> siiSirMap = new HashMap<>();
 
 	public PeptideSummary(ProteoIDViewer proteoIDViewer) {
+		addComponentListener(new LazyLoadingComponentListener());
 		this.proteoIDViewer = proteoIDViewer;
 
 		// peptide Evidence Table
@@ -101,7 +104,7 @@ public class PeptideSummary extends JSplitPane {
 				.createTitledBorder("Experimental Filtering"));
 
 		psmRankValue.addActionListener(new psmRankValueActionPerformed(
-				proteoIDViewer, this));
+				this));
 
 		final JPanel jSpectrumIdentificationItemPanel1 = new JPanel();
 		jSpectrumIdentificationItemPanel1.setLayout(new BorderLayout());
@@ -157,7 +160,8 @@ public class PeptideSummary extends JSplitPane {
 		return spectrumIdentificationItemTablePeptideView;
 	}
 
-	public void loadPeptideTable(MzIdentMLUnmarshaller mzIdentMLUnmarshaller) {
+	public void load() {
+		MzIdentMLUnmarshaller mzIdentMLUnmarshaller = proteoIDViewer.getMzIdentMLUnmarshaller();
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		((DefaultTableModel) spectrumIdentificationItemTablePeptideView
 				.getModel()).setNumRows(0);
