@@ -195,7 +195,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                                     "Your genome annotation run has finished and your result files are now available.\n"
                                     + "Please check the \"annotation_output\" folder where your raw data was situated.\n"
                                             + "The mzID output file from the pipeline is currently loading in the background and should be available for viewing in the Inspect tab soon.\n"
-                                    + "Check the output folder for various CSV files and an annotated GFF file.\n"
+                                    + "Check the output folder for various CSV files and multiple annotated GFF files.\n"
                                     + "Also check the \"ProteoAnnotator.txt\" file for any error messages and a log of the run.",
                                     "Genome Annotation Completed", JOptionPane.PLAIN_MESSAGE,
                                     JOptionPane.INFORMATION_MESSAGE);
@@ -207,6 +207,17 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                             + "_fdr_peptide_threshold_mappedGff2_proteoGrouper_nonA_Threshold_FDR_Threshold.mzid";
                     
                     File mzidFile = new File(outputMzid);
+                    if (mzidFile.exists()) {
+                        data.getInspectModel().addIdentDataFile(new MzIdentMLFile(mzidFile, null));
+                    }
+                    
+                    outputMzid = rawData.iterator().next().getFile().getParentFile().getAbsolutePath()
+                            + File.separator + "annotation_output" + File.separator
+                            + prefix
+                            + rawData.iterator().next().getFileName().replaceAll(".[Mm][Gg][Ff]", StringUtils.emptyString())
+                            + "_fdr_peptide_threshold_mappedGff2_proteoGrouper_fdr_Threshold.mzid";
+                    
+                    mzidFile = new File(outputMzid);
                     if (mzidFile.exists()) {
                         data.getInspectModel().addIdentDataFile(new MzIdentMLFile(mzidFile, null));
                     }

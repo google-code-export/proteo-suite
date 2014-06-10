@@ -30,7 +30,7 @@ import org.proteosuite.WorkSpace;
 public class ProteoSuite extends JFrame {
 	private static final long serialVersionUID = 1L;
 	// Project settings
-	public static final String PROTEOSUITE_VERSION = "1.0.0 ALPHA";
+	public static final String PROTEOSUITE_VERSION = "0.3.3 ALPHA";
 
 	public static final String MZQ_XSD = "mzQuantML_1_0_0.xsd";
 	public static final String PSI_MS_VERSION = "3.37.0";

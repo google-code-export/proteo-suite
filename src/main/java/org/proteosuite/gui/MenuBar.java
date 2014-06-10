@@ -63,7 +63,7 @@ public class MenuBar extends JMenuBar {
 	}
 
 	private JMenu getFileMenu() {
-		JMenuItem openFile = new JMenuItem("Open File");
+		JMenuItem openFile = new JMenuItem("Import File");
 		openFile.addActionListener(new OpenListener());
 
 		JMenuItem jmExit = new JMenuItem("Exit");

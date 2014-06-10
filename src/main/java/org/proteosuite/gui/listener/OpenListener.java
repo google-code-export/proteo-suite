@@ -4,26 +4,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.regex.Pattern;
-
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
+import org.proteosuite.WorkSpace;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.InspectModel;
 import org.proteosuite.model.MascotGenericFormatFile;
 import org.proteosuite.model.MzIdentMLFile;
+import org.proteosuite.model.MzMLFile;
 import org.proteosuite.model.MzQuantMLFile;
 import org.proteosuite.model.RawDataFile;
-import org.proteosuite.model.MzMLFile;
 
 public class OpenListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JFileChooser openFile = new JFileChooser();
+		JFileChooser openFile = new JFileChooser(WorkSpace.sPreviousLocation);
 		openFile.setAcceptAllFileFilterUsed(false);
 		openFile.setFileFilter(new FileNameExtensionFilter("MzQuantML (*.mzQ)",
 				"mzq"));
@@ -39,6 +38,9 @@ public class OpenListener implements ActionListener {
 			return;
 
 		File file = openFile.getSelectedFile();
+                if (!file.getParent().equals(WorkSpace.sPreviousLocation)) {
+                        WorkSpace.sPreviousLocation = file.getParent();
+                }                
 
 		AnalyseData data = AnalyseData.getInstance();
 		InspectModel model = AnalyseData.getInstance().getInspectModel();
