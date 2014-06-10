@@ -192,13 +192,17 @@ public class ProteinView extends JPanel implements LazyLoading {
 						proteoIDViewer, spectrumSummary));
 		proteinDetectionHypothesisTable
 				.addMouseListener(new proteinDetectionHypothesisTableMouseClicked(
-						proteoIDViewer, proteinDetectionHypothesisTable, this,
+						proteoIDViewer, this,
 						scientificNameValue, proteinDescription,
 						proteinSequence));
 		proteinAmbiguityGroupTable
 				.addMouseListener(new proteinAmbiguityGroupTableMouseClicked(
 						proteoIDViewer, proteinSequence, scientificNameValue,
-						proteinAmbiguityGroupTable, this));
+						this));
+
+		proteinDetectionHypothesisTable.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		proteinAmbiguityGroupTable.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		spectrumIdentificationItemProteinViewTable.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	}
 
 	public JTable getAmbiguityGroupTable() {
