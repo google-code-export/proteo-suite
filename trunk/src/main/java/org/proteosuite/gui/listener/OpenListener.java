@@ -78,7 +78,7 @@ public class OpenListener implements ActionListener {
 			MzIdentMLFile identDataFile = new MzIdentMLFile(file, parent);
 			model.addIdentDataFile(identDataFile);
 		} else if (extension.equalsIgnoreCase("mzml")) {
-			MzMLFile rawDataFile = new MzMLFile(file);
+			MzMLFile rawDataFile = new MzMLFile(file, true);
 			data.addRawDataFile(rawDataFile);
 
 			AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
@@ -86,7 +86,7 @@ public class OpenListener implements ActionListener {
 			((RawDataAndMultiplexingStep) AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP)
 					.refreshFromData();
 		} else if (extension.equalsIgnoreCase("mgf")) {
-            data.addRawDataFile(new MascotGenericFormatFile(file));
+            data.addRawDataFile(new MascotGenericFormatFile(file, true));
 			AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
 				.setRawDataProcessing();
 			((RawDataAndMultiplexingStep) AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP)

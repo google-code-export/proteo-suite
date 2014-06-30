@@ -44,4 +44,14 @@ public final class NumericalUtils {
         
         return true;
     }
+    
+    public static boolean isInteger(String candidate) {
+        try {
+            int validatedInt = Integer.parseInt(candidate);
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+        
+        return true;
+    }
 }

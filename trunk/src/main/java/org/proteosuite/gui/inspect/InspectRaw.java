@@ -1,11 +1,12 @@
 package org.proteosuite.gui.inspect;
 
+import com.compomics.util.gui.spectrum.ChromatogramPanel;
+import com.compomics.util.gui.spectrum.SpectrumPanel;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -16,17 +17,14 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 import org.proteosuite.gui.chart.ChartChromatogram;
 import org.proteosuite.gui.chart.ChartPlot2D;
 import org.proteosuite.gui.chart.ChartSpectrum;
-import org.proteosuite.gui.tables.JTableMzML;
+import org.proteosuite.gui.tables.MzTable;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.InspectModel;
 import org.proteosuite.model.MzMLFile;
-
-import com.compomics.util.gui.spectrum.ChromatogramPanel;
-import com.compomics.util.gui.spectrum.SpectrumPanel;
+import org.proteosuite.model.RawDataFile;
 
 public class InspectRaw extends JPanel implements ListSelectionListener {
 	private static final long serialVersionUID = 1L;
@@ -36,7 +34,7 @@ public class InspectRaw extends JPanel implements ListSelectionListener {
 	private final JTable jTable = new JTable();
 	private final InspectModel inspectModel = AnalyseData.getInstance()
 			.getInspectModel();
-	private MzMLFile data;
+	private RawDataFile data;
 
 	public InspectRaw() {
 		super(new BorderLayout());
@@ -76,13 +74,14 @@ public class InspectRaw extends JPanel implements ListSelectionListener {
 				try {
 					LOW_INTENSITY = Double.parseDouble(threshold
 							.getText());
-					setData(data);
+					setData(data, false);
 				} catch (NumberFormatException exception) {
 					// User entered non-numeric data
 					threshold.setText(String.valueOf(LOW_INTENSITY));
 				}
 			}
 		});
+                
 		panel.add(refresh);
 
 		return panel;
@@ -98,8 +97,8 @@ public class InspectRaw extends JPanel implements ListSelectionListener {
 
 	@Override
 	public void valueChanged(ListSelectionEvent listSelectionEvent) {
-		if (listSelectionEvent.getValueIsAdjusting())
-			return;
+//		if (listSelectionEvent.getValueIsAdjusting()){
+//			return;}
 
 		ListSelectionModel listSelectionModel = (ListSelectionModel) listSelectionEvent
 				.getSource();
@@ -109,21 +108,21 @@ public class InspectRaw extends JPanel implements ListSelectionListener {
 
 		if (inspectModel.isRawDataFile(InspectTab.getInstance()
 				.getSelectedFile())) {
-			MzMLFile rawMzMLFile = (MzMLFile) inspectModel
+			RawDataFile rawDataFile = inspectModel
 					.getRawDataFile(InspectTab.getInstance().getSelectedFile());
 			String sID = (String) getTablePanel().getValueAt(
 					listSelectionModel.getAnchorSelectionIndex(), 1);
 
 			SpectrumPanel specPanel = (SpectrumPanel) ChartSpectrum
-					.getSpectrum(rawMzMLFile.getUnmarshaller(), sID);
+					.getSpectrum(rawDataFile, sID);
 			chartPanel.setSpectrum(specPanel);
 		}
 	}
 
-	public void setData(MzMLFile dataFile) {
+	public void setData(RawDataFile dataFile, boolean refreshChromatogram) {
 		data = dataFile;
 		
-		JTableMzML rawData = new JTableMzML();
+		MzTable rawData = new MzTable();
 		rawData.showData(dataFile, MS_LEVEL, LOW_INTENSITY);
 
 		JTable jTable = getTablePanel();
@@ -131,12 +130,14 @@ public class InspectRaw extends JPanel implements ListSelectionListener {
 		jTable.setModel(rawData.getModel());
 
 		rawData.getSelectionModel().addListSelectionListener(this);
-		ChromatogramPanel cachedChromatogram = ChartChromatogram.getChromatogram(dataFile
+                if (dataFile instanceof MzMLFile && refreshChromatogram) {
+                    ChromatogramPanel cachedChromatogram = ChartChromatogram.getChromatogram(((MzMLFile)dataFile)
 					.getUnmarshaller());
 
-		getChartPanel().setChromatogram(cachedChromatogram);
-
-		JPanel cached2DView = ChartPlot2D.get2DPlot(dataFile.getUnmarshaller(), MS_LEVEL, LOW_INTENSITY);
+                    getChartPanel().setChromatogram(cachedChromatogram);
+                }		
+		
+                JPanel cached2DView = ChartPlot2D.get2DPlot(dataFile, MS_LEVEL, LOW_INTENSITY);
 
 		getChartPanel().set2D(cached2DView);
 	}

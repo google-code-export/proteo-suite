@@ -54,7 +54,7 @@ public class FileFormatUtils {
         }
 
         if (mergeMGF(setToMergeAsStrings, outputFile)) {
-            return new MascotGenericFormatFile(new File(outputFile), false);
+            return new MascotGenericFormatFile(new File(outputFile));
         }
 
         return null;

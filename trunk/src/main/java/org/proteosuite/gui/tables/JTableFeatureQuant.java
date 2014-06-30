@@ -17,6 +17,7 @@ import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 public class JTableFeatureQuant extends JTableDefault {
 	private static final long serialVersionUID = 1L;
 
+        @Override
 	public boolean isCellEditable(int rowIndex, int colIndex) {
 		return false;
 	}

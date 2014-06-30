@@ -2,34 +2,48 @@ package org.proteosuite.model;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import uk.ac.ebi.jmzml.model.mzml.CVParam;
 
 /**
  *
  * @author SPerkins
  */
-public abstract class RawDataFile {
-    protected Set<Spectrum> ms1Spectra = new TreeSet<>();
-    protected Set<FragmentSpectrum> ms2Spectra = new TreeSet<>();
+public abstract class RawDataFile implements Iterable<Spectrum> {
+    protected Map<String, Spectrum> cachedSpectra = null;    
+    protected boolean cachingComplete = false;
     protected File file;
     protected boolean[] peakPicking = {false, false};
     protected boolean peakPickingChecked;
     protected int spectraCount;
     protected boolean[] msLevelPresence = {false, false};
-    protected boolean spectraCountChecked;
-    protected boolean guiInteraction = true;
-    private Map<String, String> assayConditions = new HashMap<>();
+    protected boolean spectraCountChecked;    
+    private final Map<String, String> assayConditions = new HashMap<>();
     private IdentDataFile identFile = null;
-    private String identStatus = "<None>";  
+    private String identStatus = "<None>";      
+   
     
-    public RawDataFile(File file) {
-        this(file, true);        
+    @Override
+    public abstract Iterator<Spectrum> iterator();
+    
+    public Spectrum getSpectrumByID(String id) {
+        if (cachedSpectra.size() > 0) {
+            return cachedSpectra.get(id);
+        } else {
+            for (Spectrum spectrum : this) {
+                if (spectrum.getSpectrumID().equals(id)) {
+                    return spectrum;
+                }
+            }
+        }
+        
+        return null;
     }
     
-    public RawDataFile(File file, boolean guiInteraction) {
-        this.guiInteraction = guiInteraction;
+    public RawDataFile(File file) {
+        
         this.file = file;
         initiateLoading();
     }
@@ -99,4 +113,6 @@ public abstract class RawDataFile {
     }
     
     protected abstract void initiateLoading();
+    
+    
 }

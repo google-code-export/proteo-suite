@@ -12,12 +12,12 @@ import javax.swing.JPanel;
  * @author SPerkins
  */
 public class InspectModel {
-    private final Map<String, ChromatogramPanel> cachedChromatograms = new HashMap<String, ChromatogramPanel>();
-    private final Map<String, JPanel> cached2DViews = new HashMap<String, JPanel>();
+    private final Map<String, ChromatogramPanel> cachedChromatograms = new HashMap<>();
+    private final Map<String, JPanel> cached2DViews = new HashMap<>();
 
-    private final List<RawDataFile> rawData = new ArrayList<RawDataFile>();
-    private final List<IdentDataFile> identData = new ArrayList<IdentDataFile>();
-    private final List<QuantDataFile> quantData = new ArrayList<QuantDataFile>();
+    private final List<RawDataFile> rawData = new ArrayList<>();
+    private final List<IdentDataFile> identData = new ArrayList<>();
+    private final List<QuantDataFile> quantData = new ArrayList<>();
 
     public synchronized void addRawDataFile(RawDataFile rawDataFile) {
         rawData.add(rawDataFile);
