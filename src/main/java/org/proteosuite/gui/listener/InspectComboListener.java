@@ -2,9 +2,7 @@ package org.proteosuite.gui.listener;
 
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
 import javax.swing.JTable;
-
 import org.proteosuite.gui.inspect.InspectQuant;
 import org.proteosuite.gui.inspect.InspectRaw;
 import org.proteosuite.gui.inspect.InspectTab;
@@ -14,9 +12,9 @@ import org.proteosuite.gui.tables.JTableProteinQuant;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.InspectModel;
 import org.proteosuite.model.MzIdentMLFile;
-import org.proteosuite.model.MzQuantMLFile;
-import org.proteosuite.model.MzMLFile;
 
+import org.proteosuite.model.MzQuantMLFile;
+import org.proteosuite.model.RawDataFile;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 
 /**
@@ -75,12 +73,12 @@ public class InspectComboListener implements ItemListener {
 	private void openRawFile(String fileChosen) {
 		InspectTab.getInstance().setInspectType(InspectTab.PANEL_RAW);
 
-		MzMLFile dataFile = (MzMLFile) inspectModel
+		RawDataFile dataFile = inspectModel
 				.getRawDataFile(fileChosen);
 
 		InspectRaw rawPanel = (InspectRaw) InspectTab.getInstance()
 				.getContentPanel();
-		rawPanel.setData(dataFile);
+		rawPanel.setData(dataFile, true);
 	}
 
 	private void openIdentFile(String fileChosen) {

@@ -22,7 +22,7 @@ public class LazyLoadingComponentListener implements
 
 	@Override
 	public void componentShown(ComponentEvent e) {
-		LazyLoading lazyLoadable = (LazyLoading) e.getSource();
+		final LazyLoading lazyLoadable = (LazyLoading) e.getSource();
 		lazyLoadable.removeComponentListener(this);
 		
 		new Thread(lazyLoadable.getClass().getName() + " LazyLoader") {
