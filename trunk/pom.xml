@@ -142,6 +142,11 @@
             <artifactId>utilities</artifactId>
             <version>3.27.0</version>
         </dependency>
+        <dependency>
+            <groupId>cranfield</groupId>
+            <artifactId>mzqlib</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     
     <pluginRepositories>

@@ -104,8 +104,7 @@ public class IdentParamsView extends JDialog {
  
     private JComboBox<Character> jcFragmentIonTypesABC;
     private JComboBox<Character> jcFragmentIonTypesXYZ;
-    private JCheckBox jcDoProteoGrouper;
-    private JCheckBox jcDoEmPAI;
+    private JCheckBox jcDoProteoGrouper;    
     private JComboBox<String> jcEnzyme;
 
     private DatabasePanel databasePanel;
@@ -322,8 +321,7 @@ public class IdentParamsView extends JDialog {
         this.jcMinCharge.setSelectedIndex(1);
         this.jcMaxCharge = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
         this.jcMaxCharge.setSelectedIndex(3);
-        this.jcDoProteoGrouper = new JCheckBox("Group Proteins?");
-        this.jcDoEmPAI = new JCheckBox("Calculate emPAI?");
+        this.jcDoProteoGrouper = new JCheckBox("Group Proteins?");        
         jtMSTolerance
                 .setToolTipText("Precursor Mass Tolerance (E.g. +/- 2.5Da, +/- 20ppm)");
 
@@ -344,7 +342,7 @@ public class IdentParamsView extends JDialog {
         jPanel.add(getRow(new JLabel("Output File Prefix:"), jtPrefix));
 
         if (!this.genomeAnnotationMode) {
-            jPanel.add(getRow(jcDoProteoGrouper, jcDoEmPAI));
+            jPanel.add(getRow(jcDoProteoGrouper));
         }
 
         return jPanel;
@@ -428,11 +426,7 @@ public class IdentParamsView extends JDialog {
 
     public boolean isRequestingProteoGrouper() {
         return jcDoProteoGrouper.isSelected();
-    }
-
-    public boolean isRequestingEmPAI() {
-        return jcDoEmPAI.isSelected();
-    }
+    }    
 
     private Set<String> validateFields() {
         Set<String> validationErrors = new HashSet<>();

@@ -1,6 +1,8 @@
 package org.proteosuite;
 
 import java.awt.EventQueue;
+import java.awt.HeadlessException;
+import java.util.concurrent.ExecutionException;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
@@ -8,6 +10,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.proteosuite.gui.IdentParamsView;
 import org.proteosuite.gui.ProteoSuite;
+import org.proteosuite.quantitation.OpenMSLabelFreeWrapper;
 import org.proteosuite.utils.ExceptionCatcher;
 import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.UpdateCheck;
@@ -22,37 +25,23 @@ public class Launcher {
      */
     public static void main(String args[]) {
         // Setting standard look and feel
-        setLookAndFeel();
-
-        JOptionPane
-                .showConfirmDialog(
-                        null,
-                        "This release is intended as a limited release.\n"
-                        + "Only ProteoAnnotator functionality is currently enabled.\n"
-                                + "The following features are disabled in this release:\n"
-                                + "- Label-free quantition.\n"
-                                + "- Tag-based quantitation.\n"
-                                + "- Generic (non-ProteoAnnotator) identification.\n"
-                                
-                        + "Please check back soon for a full release with all features enabled!\n",                        
-                        "Limited Release : Features Disabled", JOptionPane.PLAIN_MESSAGE,
-                        JOptionPane.INFORMATION_MESSAGE);
+        setLookAndFeel();        
         
-//        if (!OpenMSLabelFreeWrapper.checkIsInstalled()) {
-//            int result = JOptionPane
-//                    .showConfirmDialog(
-//                            null,
-//                            "You do not appear to have openMS installed.\n"
-//                            + "You need to install openMS in able to use the label-free quantitation feature.\n"
-//                            + "openMS features will be disabled for now.\n"
-//                            + "OpenMS is available at:\nhttp://open-ms.sourceforge.net/\nTo install now, click \"Yes\" to be directed to the openMS web site.\n"
-//                            + "Once installed you will need to restart Proteosuite to use openMS features.",
-//                            "openMS Not Installed!", JOptionPane.YES_NO_OPTION);
-//            if (result == JOptionPane.YES_OPTION) {
-//                OpenURL.open("http://open-ms.sourceforge.net/");
-//                return;
-//            }
-//        }
+        if (!OpenMSLabelFreeWrapper.checkIsInstalled()) {
+            int result = JOptionPane
+                    .showConfirmDialog(
+                            null,
+                            "You do not appear to have openMS installed.\n"
+                            + "You need to install openMS in able to use the label-free quantitation feature.\n"
+                            + "openMS features will be disabled for now.\n"
+                            + "OpenMS is available at:\nhttp://open-ms.sourceforge.net/\nTo install now, click \"Yes\" to be directed to the openMS web site.\n"
+                            + "Once installed you will need to restart Proteosuite to use openMS features.",
+                            "openMS Not Installed!", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                OpenURL.open("http://open-ms.sourceforge.net/");
+                return;
+            }
+        }
 
         // Pre-load the searchGUI modifications.
         IdentParamsView.readInPossibleMods();
@@ -118,7 +107,7 @@ public class Launcher {
                 if (result == JOptionPane.OK_OPTION) {
                     OpenURL.open(newVersion);
                 }
-            } catch (Exception ignore) {
+            } catch (InterruptedException | ExecutionException | HeadlessException ignore) {
                 // Most likely no Internet connection, do nothing!
             }
         }

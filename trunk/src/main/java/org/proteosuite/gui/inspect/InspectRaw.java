@@ -3,6 +3,7 @@ package org.proteosuite.gui.inspect;
 import com.compomics.util.gui.spectrum.ChromatogramPanel;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -99,7 +100,8 @@ public class InspectRaw extends JPanel implements ListSelectionListener {
 	public void valueChanged(ListSelectionEvent listSelectionEvent) {
 //		if (listSelectionEvent.getValueIsAdjusting()){
 //			return;}
-
+                
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		ListSelectionModel listSelectionModel = (ListSelectionModel) listSelectionEvent
 				.getSource();
 
@@ -117,17 +119,21 @@ public class InspectRaw extends JPanel implements ListSelectionListener {
 					.getSpectrum(rawDataFile, sID);
 			chartPanel.setSpectrum(specPanel);
 		}
+                
+                this.setCursor(Cursor.getDefaultCursor());
 	}
 
 	public void setData(RawDataFile dataFile, boolean refreshChromatogram) {
+                this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            
 		data = dataFile;
 		
 		MzTable rawData = new MzTable();
 		rawData.showData(dataFile, MS_LEVEL, LOW_INTENSITY);
 
-		JTable jTable = getTablePanel();
-		jTable.removeAll();
-		jTable.setModel(rawData.getModel());
+		JTable mzTable = getTablePanel();
+		mzTable.removeAll();
+		mzTable.setModel(rawData.getModel());
 
 		rawData.getSelectionModel().addListSelectionListener(this);
                 if (dataFile instanceof MzMLFile && refreshChromatogram) {
@@ -140,5 +146,7 @@ public class InspectRaw extends JPanel implements ListSelectionListener {
                 JPanel cached2DView = ChartPlot2D.get2DPlot(dataFile, MS_LEVEL, LOW_INTENSITY);
 
 		getChartPanel().set2D(cached2DView);
+                
+                this.setCursor(Cursor.getDefaultCursor());
 	}
 }

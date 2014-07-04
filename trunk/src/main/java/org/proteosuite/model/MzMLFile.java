@@ -19,6 +19,7 @@ import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.utils.FileFormatUtils;
+import org.proteosuite.utils.NumericalUtils;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
@@ -31,7 +32,7 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 public class MzMLFile extends RawDataFile {
 
     private MzMLUnmarshaller unmarshaller = null;
-    private boolean cacheSpectra = false;    
+    private boolean cacheSpectra = false;
     private static final Pattern spectrumListPattern = Pattern
             .compile("<spectrumList([^<]+)>");
     private final Pattern spectrumCountPattern = Pattern.compile("count=\"(\\d+)\"");
@@ -71,11 +72,7 @@ public class MzMLFile extends RawDataFile {
 
     @Override
     public boolean isLoaded() {
-        if (unmarshaller == null) {
-            return false;
-        }
-
-        return false;
+        return unmarshaller != null;
     }
 
     @Override
@@ -260,6 +257,7 @@ public class MzMLFile extends RawDataFile {
 
         return null;
     }
+
     @Override
     public Iterator<Spectrum> iterator() {
         return new Iterator<Spectrum>() {
@@ -309,7 +307,12 @@ public class MzMLFile extends RawDataFile {
                 } else {
                     List<CVParam> precursorParams = spectrum.getPrecursorList().getPrecursor().get(0).getSelectedIonList().getSelectedIon().get(0).getCvParam();
                     double precursorMz = Double.parseDouble(getValueForAccession(PRECURSOR_MZ_PARAM, precursorParams));
-                    int precursorCharge = Integer.parseInt(getValueForAccession(PRECURSOR_CHARGE_PARAM, precursorParams));
+                    String precursorChargeString = getValueForAccession(PRECURSOR_CHARGE_PARAM, precursorParams);
+                    int precursorCharge = 0;
+                    if (precursorChargeString != null && NumericalUtils.isInteger(precursorChargeString)) {
+                        precursorCharge = Integer.parseInt(getValueForAccession(PRECURSOR_CHARGE_PARAM, precursorParams));
+                    }
+                    
                     localSpectrum = new FragmentSpectrum(precursorMz, 0.0, precursorCharge);
                 }
 
