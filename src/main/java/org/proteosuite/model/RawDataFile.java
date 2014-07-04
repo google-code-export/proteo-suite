@@ -3,9 +3,7 @@ package org.proteosuite.model;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import uk.ac.ebi.jmzml.model.mzml.CVParam;
 
 /**
  *
@@ -42,8 +40,7 @@ public abstract class RawDataFile implements Iterable<Spectrum> {
         return null;
     }
     
-    public RawDataFile(File file) {
-        
+    public RawDataFile(File file) {        
         this.file = file;
         initiateLoading();
     }

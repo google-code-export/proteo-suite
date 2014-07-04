@@ -42,7 +42,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
     private AnalyseData data = AnalyseData.getInstance();
     private String prefix = null;
 
-    public SearchGuiViaMzidLibWrapper(Set<MascotGenericFormatFile> inputSpectra, String databasePath, Map<String, String> searchParamters, boolean doProteoGrouper, boolean doEmPAI) {
+    public SearchGuiViaMzidLibWrapper(Set<MascotGenericFormatFile> inputSpectra, String databasePath, Map<String, String> searchParamters, boolean doProteoGrouper) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

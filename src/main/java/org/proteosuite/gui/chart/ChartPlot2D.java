@@ -2,9 +2,13 @@ package org.proteosuite.gui.chart;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Float;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import javax.swing.JPanel;
+import org.jfree.chart.ChartPanel;
 import org.proteosuite.model.MzIntensityPair;
 import org.proteosuite.model.PrecursorSpectrum;
 import org.proteosuite.model.RawDataFile;
@@ -17,10 +21,17 @@ import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 /**
  *
  * @author Andrew Collins
+ * @author Simon Perkins
  */
 public class ChartPlot2D extends AbstractChart {
+    private static final Map<Metadata2D, ChartPanel> cache2D = new HashMap<>();
 
     public static JPanel get2DPlot(RawDataFile rawDataFile, byte msLevelThreshold, double lowIntensityThreshold) {
+        Metadata2D metadata = new Metadata2D(rawDataFile, msLevelThreshold, lowIntensityThreshold);
+        if (cache2D.containsKey(metadata)) {
+            return cache2D.get(metadata);
+        }
+        
         Set<Point2D.Float> points = new HashSet<>();
 
         for (org.proteosuite.model.Spectrum spectrum : rawDataFile) {
@@ -41,10 +52,14 @@ public class ChartPlot2D extends AbstractChart {
         }
 
         float[][] data = convertPoints(points);
+        
+        ChartPanel panel = TwoDPlot.getTwoDPlot(data);
+        cache2D.put(metadata, panel);
 
-        return TwoDPlot.getTwoDPlot(data);
+        return panel;
     }
 
+    @Deprecated
     public static JPanel get2DPlot(MzMLUnmarshaller unmarshaller, byte msLevelThreshold, double lowIntensityThreshold) {
 
         // Check if mzML contains MS1 data
@@ -115,5 +130,43 @@ public class ChartPlot2D extends AbstractChart {
 
             points.add(new Point2D.Float(massCharges[i], rt));
         }
+    }
+    
+    private static class Metadata2D {
+        private final RawDataFile rawData;
+        private final int msLevel;
+        private final double lowIntensityThreshold;
+        public Metadata2D(RawDataFile rawData, int msLevel, double lowIntensityThreshold) {
+            this.rawData = rawData;
+            this.msLevel = msLevel;
+            this.lowIntensityThreshold = lowIntensityThreshold;
+        }       
+
+        @Override
+        public int hashCode() {
+            int hash = 5;
+            hash = 97 * hash + Objects.hashCode(this.rawData);
+            hash = 97 * hash + this.msLevel;
+            hash = 97 * hash + (int) (Double.doubleToLongBits(this.lowIntensityThreshold) ^ (Double.doubleToLongBits(this.lowIntensityThreshold) >>> 32));
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            
+            final Metadata2D that = (Metadata2D) obj;
+            if (!Objects.equals(this.rawData, that.rawData)) {
+                return false;
+            }            
+             
+            return this.msLevel == that.msLevel && this.lowIntensityThreshold == that.lowIntensityThreshold;
+        }       
     }
 }

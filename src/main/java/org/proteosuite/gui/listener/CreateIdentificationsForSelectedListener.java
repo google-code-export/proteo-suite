@@ -133,8 +133,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
                         rawDataFiles,
                         identDialog.getSingleDatabasePath(),
                         runParams,
-                        identDialog.isRequestingProteoGrouper(),
-                        identDialog.isRequestingEmPAI());
+                        identDialog.isRequestingProteoGrouper());
 
                 wrapper.compute();
             }
