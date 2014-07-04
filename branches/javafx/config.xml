@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProteoSuiteApplication xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="ProteoSuiteApplication.xsd" >
+    <configSettings>
+        <generalSettings>
+            <workspace>D:\3_ProteoSuite\D-001-iTRAQ-4plex-AB</workspace>
+        </generalSettings>
+        <xTrackerSettings>
+            <plugins>
+                <pluginsLoadIdentFilesList>
+                    <pluginLoadIdentFiles id="mascot_xml" type="LoadIdent" value="loadMascotIdent" desc="Plugin for loading Mascot XML files" />
+                    <pluginLoadIdentFiles id="mzid" type="LoadIdent" value="loadMzIdentML" desc="Plugin for loading mzIdentML files" />
+		    <pluginLoadIdentFiles id="mzIdentML" type="LoadIdent" value="loadMzIdentML" desc="Plugin for loading mzIdentML files" />
+                </pluginsLoadIdentFilesList>
+                <pluginsLoadRawFilesList>
+                    <pluginLoadRawFiles id="mgf" type="LoadRaw" value="loadRawMGF" desc="Plugin for loading Mascot Generic Format files" />
+                    <pluginLoadRawFiles id="mzml" type="LoadRaw" value="loadRawMzML111" desc="Plugin for loading mzML files" />
+                </pluginsLoadRawFilesList>
+                <pluginsQuantitationList>
+                    <pluginQuantitation id="iTRAQ" type="Technique" value="iTraqQuantitation" desc="Plugin for iTRAQ pipeline" />
+                    <pluginQuantitation id="TMT" type="Technique" value="iTraqQuantitation" desc="Plugin for TMT pipeline" />
+                    <pluginQuantitation id="emPAI" type="Technique" value="emPAIuniqueChargeQuantitation" desc="Plugin for emPAI pipeline" />
+                </pluginsQuantitationList>
+                <pluginsOutputList>
+                    <pluginOutput id="mzq" type="Output" value="outputMZQ" desc="Plugin to display results as mzQuantML" />
+		    <pluginOutput id="mzQuantML" type="Output" value="outputMZQ" desc="Plugin to display results as mzQuantML" />
+                    <pluginOutput id="csv" type="Output" value="outputCSV" desc="Plugin to display results as CSV" />
+                </pluginsOutputList>
+            </plugins>
+        </xTrackerSettings>
+    </configSettings>
+</ProteoSuiteApplication>
