@@ -1,32 +1,23 @@
 package org.proteosuite;
 
-import java.awt.EventQueue;
-import java.awt.HeadlessException;
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Application;
+import javafx.concurrent.Task;
+import javafx.stage.Stage;
 import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
 import org.proteosuite.gui.IdentParamsView;
 import org.proteosuite.gui.ProteoSuite;
+import org.proteosuite.model.AnalyseData;
 import org.proteosuite.quantitation.OpenMSLabelFreeWrapper;
-import org.proteosuite.utils.ExceptionCatcher;
 import org.proteosuite.utils.OpenURL;
 import org.proteosuite.utils.UpdateCheck;
 
-public class Launcher {
+public class Launcher extends Application {
 
-    /**
-     * Main
-     *
-     * @param args the command line arguments (leave empty)
-     * @return void
-     */
-    public static void main(String args[]) {
-        // Setting standard look and feel
-        setLookAndFeel();        
-        
+    public static void main(String[] args) {
         if (!OpenMSLabelFreeWrapper.checkIsInstalled()) {
             int result = JOptionPane
                     .showConfirmDialog(
@@ -46,53 +37,31 @@ public class Launcher {
         // Pre-load the searchGUI modifications.
         IdentParamsView.readInPossibleMods();
 
-        SwingWorker<String, String> checkVersion = new UpdateWorker();
-        checkVersion.execute();
+        UpdateTask checkVersion = new UpdateTask();
 
-        // Create and display the form
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    new ProteoSuite().setVisible(true);
-                } catch (Exception e) {
-                    ExceptionCatcher.reportException(e);
-                    JOptionPane.showMessageDialog(null,
-                            "ProteoSuite has crashed with: " + e.getMessage(),
-                            "OH NO!", JOptionPane.ERROR_MESSAGE);
-                    System.exit(1);
-                }
-            }
-        });
+        AnalyseData.getInstance().getGenericExecutor().submit(checkVersion);
+
+        launch(args);
+
     }
 
-    private static void setLookAndFeel() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
-            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException exception) {
-            exception.printStackTrace();
-        }
+    @Override
+    public void start(Stage stage) throws Exception {
+        ProteoSuite application = new ProteoSuite(stage);
+        application.start();
     }
 
-    private static class UpdateWorker extends SwingWorker<String, String> {
+    private static class UpdateTask extends Task<String> {
 
         @Override
-        protected String doInBackground() throws Exception {
+        protected String call() throws IOException {
             return UpdateCheck.hasUpdate(ProteoSuite.PROTEOSUITE_VERSION);
         }
 
         @Override
-        protected void done() {
+        protected void succeeded() {
             try {
                 String newVersion = get();
-
                 if (newVersion == null) {
                     return;
                 }
@@ -107,8 +76,8 @@ public class Launcher {
                 if (result == JOptionPane.OK_OPTION) {
                     OpenURL.open(newVersion);
                 }
-            } catch (InterruptedException | ExecutionException | HeadlessException ignore) {
-                // Most likely no Internet connection, do nothing!
+            } catch (InterruptedException | ExecutionException ex) {
+                Logger.getLogger(Launcher.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
