@@ -64,7 +64,9 @@ public class CleanIdentificationsStep extends JPanel {
 		AnalyseData data = AnalyseData.getInstance();
 		for (int i = 0; i < data.getRawDataCount(); i++) {
 			IdentDataFile identData = data.getRawDataFile(i).getIdentificationDataFile();
-			cleanIdentificationsTable.addIdentFileRow(identData);
+                        if (identData.isCleanable()) {
+                            cleanIdentificationsTable.addIdentFileRow(identData);
+                        }			
 		}
 	}
 }

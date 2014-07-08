@@ -82,6 +82,7 @@ public class PerformThresholdingForSelectedListener implements ActionListener {
             protected void done() {
                 RawDataFile rawData = identData.getParent();
                 IdentDataFile newIdentFile = new MzIdentMLFile(new File(outputPath), rawData);
+                newIdentFile.setCleanable(false);
                 rawData.setIdentificationDataFile(newIdentFile);     
                 
                 data.getInspectModel().removeIdentDataFile(identData);

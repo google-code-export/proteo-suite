@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package org.proteosuite.model;
 
 import java.io.File;
@@ -17,10 +13,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import javax.swing.SwingWorker;
-import org.proteosuite.gui.analyse.AnalyseDynamicTab;
-import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
-import org.proteosuite.gui.inspect.InspectTab;
-import org.proteosuite.gui.tasks.TasksTab;
+import org.proteosuite.gui.listener.RawFileLoadCompleteListener;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
 import uk.ac.ebi.pride.tools.jmzreader.model.impl.CvParam;
 import uk.ac.ebi.pride.tools.mgf_parser.MgfFile;
@@ -65,6 +58,7 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
     protected void initiateLoading() {
         ExecutorService executor = AnalyseData.getInstance().getGenericExecutor();
 
+        actions.add(new RawFileLoadCompleteListener());
         SwingWorker<MgfFile, Void> mgfWorker = new SwingWorker<MgfFile, Void>() {
             @Override
             protected MgfFile doInBackground() {
@@ -84,22 +78,8 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
                     if (mgf == null) {
                         throw new RuntimeException("MGF file not read in correctly.");
                     }                    
-
-                    RawDataAndMultiplexingStep.getInstance().refreshFromData();
-
-                    AnalyseData.getInstance().getInspectModel()
-                            .addRawDataFile(MascotGenericFormatFile.this);
-                    InspectTab.getInstance().refreshComboBox();
-                    AnalyseData
-                            .getInstance()
-                            .getTasksModel()
-                            .set(new Task(file.getName(), "Load Raw Data",
-                                            "Complete"));
-                    TasksTab.getInstance().refreshFromTasksModel();
-
-                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
-                            .checkAndUpdateRawDataStatus();
-
+                    
+                    actions.fireDependingActions();
                     System.out.println("Done loading MGF file.");
                 } catch (InterruptedException ex) {
                     System.out

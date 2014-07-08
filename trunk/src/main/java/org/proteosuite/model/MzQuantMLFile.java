@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutorService;
 import javax.swing.SwingWorker;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.inspect.InspectTab;
+import org.proteosuite.gui.listener.QuantFileLoadCompleteListener;
 import org.proteosuite.gui.tasks.TasksTab;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 
@@ -35,6 +36,8 @@ public class MzQuantMLFile extends QuantDataFile {
         
         ExecutorService executor = AnalyseData.getInstance().getGenericExecutor();
         
+        actions.add(new QuantFileLoadCompleteListener());
+        
         SwingWorker<MzQuantMLUnmarshaller, Void> mzMLWorker = new SwingWorker<MzQuantMLUnmarshaller, Void>() {
             @Override
             protected MzQuantMLUnmarshaller doInBackground() {
@@ -45,11 +48,7 @@ public class MzQuantMLFile extends QuantDataFile {
             protected void done() {
                 try {
                     unmarshaller = get();                    
-                    InspectTab.getInstance().refreshComboBox();
-                    AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Load Quantitation Data", "Complete"));
-                    TasksTab.getInstance().refreshFromTasksModel();
-                    
-                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().checkAndUpdateRawDataStatus();
+                    actions.fireDependingActions();                    
                     
                     System.out.println("Done loading mzQuantML file.");
                 } catch (InterruptedException ex) {

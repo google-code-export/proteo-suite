@@ -15,7 +15,7 @@ import javax.swing.SwingWorker;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CleanIdentificationsStep;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
-import org.proteosuite.gui.inspect.InspectTab;
+import org.proteosuite.gui.listener.IdentFileLoadCompleteListener;
 import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.utils.StringUtils;
 import uk.ac.ebi.jmzidml.MzIdentMLElement;
@@ -77,7 +77,7 @@ public class MzIdentMLFile extends IdentDataFile {
     }
 
     @Override
-    protected synchronized void computePSMStats() {
+    public synchronized void computePSMStats() {
         SwingWorker<String[], Void> worker = new SwingWorker<String[], Void>() {
             @Override
             protected String[] doInBackground() {                
@@ -160,6 +160,8 @@ public class MzIdentMLFile extends IdentDataFile {
     protected void initiateLoading() {
         AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Loading Identifications"));
         TasksTab.getInstance().refreshFromTasksModel();
+        
+        actions.add(new IdentFileLoadCompleteListener());
 
         if (MzIdentMLFile.this.getParent() != null)
         {
@@ -178,20 +180,7 @@ public class MzIdentMLFile extends IdentDataFile {
             protected void done() {
                 try {
                     unmarshaller = get();
-                    AnalyseData.getInstance().getInspectModel().addIdentDataFile(MzIdentMLFile.this);
-                    InspectTab.getInstance().refreshComboBox();
-
-                    AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Loading Identifications", "Complete"));
-                    TasksTab.getInstance().refreshFromTasksModel();
-
-                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().checkAndUpdateIdentificationsStatus();
-
-                    if (MzIdentMLFile.this.getParent() != null)
-                    {
-                    	MzIdentMLFile.this.getParent().setIdentStatus("Done");                    
-                    	((CreateOrLoadIdentificationsStep) (AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)).refreshFromData();
-                    }
-                    computePSMStats();
+                    actions.fireDependingActions();                  
 
                     System.out.println("Done loading mzIdentML file.");
                 } catch (InterruptedException ex) {
