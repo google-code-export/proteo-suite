@@ -16,10 +16,13 @@ public abstract class IdentDataFile {
     protected int psmCountNotPassingThrehsold = -1;
     protected int peptideCountPassingThreshold = -1;
     protected String thresholdingUsed = "";
-    protected Map<String, String> thresholdables = new HashMap<String, String>(); 
+    protected Map<String, String> thresholdables = new HashMap<>(); 
+    protected DependingActionRegister<IdentDataFile> actions; 
+    private boolean mayNeedCleaning = false;
     public IdentDataFile(File file, RawDataFile parent) {
         this.file = file;
         this.parent = parent;
+        actions = new DependingActionRegister<>(this);
         initiateLoading();
     } 
     
@@ -39,11 +42,19 @@ public abstract class IdentDataFile {
         return parent;
     }
     
+    public void setCleanable(boolean cleanable) {
+        this.mayNeedCleaning = cleanable;
+    } 
+    
+    public boolean isCleanable() {
+        return this.mayNeedCleaning;
+    }
+    
     public abstract String getFormat();
     
     public abstract boolean isLoaded();
     protected abstract void initiateLoading();
-    protected abstract void computePSMStats();
+    public abstract void computePSMStats();
     public abstract int getPSMCountPassingThreshold();
     public abstract int getPSMCountNotPassingThreshold();
     public abstract int getPeptideCountPassingThreshold();

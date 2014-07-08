@@ -20,8 +20,8 @@ public abstract class RawDataFile implements Iterable<Spectrum> {
     protected boolean spectraCountChecked;    
     private final Map<String, String> assayConditions = new HashMap<>();
     private IdentDataFile identFile = null;
-    private String identStatus = "<None>";      
-   
+    private String identStatus = "<None>";     
+    protected DependingActionRegister<RawDataFile> actions;  
     
     @Override
     public abstract Iterator<Spectrum> iterator();
@@ -42,6 +42,7 @@ public abstract class RawDataFile implements Iterable<Spectrum> {
     
     public RawDataFile(File file) {        
         this.file = file;
+        actions = new DependingActionRegister<>(this);
         initiateLoading();
     }
     

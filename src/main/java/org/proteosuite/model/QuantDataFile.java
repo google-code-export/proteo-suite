@@ -8,9 +8,11 @@ import java.io.File;
  */
 public abstract class QuantDataFile {
     protected File file;
+    protected DependingActionRegister<QuantDataFile> actions; 
     
     public QuantDataFile(File file) {
         this.file = file;
+        actions = new DependingActionRegister<>(this);
         initiateLoading();
     }
     

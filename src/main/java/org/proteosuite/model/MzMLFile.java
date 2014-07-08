@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import javax.swing.SwingWorker;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.inspect.InspectTab;
+import org.proteosuite.gui.listener.RawFileLoadCompleteListener;
 import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.utils.FileFormatUtils;
 import org.proteosuite.utils.NumericalUtils;
@@ -50,7 +51,7 @@ public class MzMLFile extends RawDataFile {
     private static final String BINARY_MZ_PARAM = "MS:1000514";
     private static final String BINARY_INTENSITY_PARAM = "MS:1000515";
     private static final String RETENTION_TIME_PARAM = "MS:1000016";
-    private static final String RETENTION_TIME_MINUTE_PARAM = "UO:0000031";
+    private static final String RETENTION_TIME_MINUTE_PARAM = "UO:0000031";    
 
     public MzMLFile(File file) {
         this(file, false);
@@ -58,7 +59,7 @@ public class MzMLFile extends RawDataFile {
 
     public MzMLFile(File file, boolean cacheSpectra) {
         super(file);
-        this.cacheSpectra = cacheSpectra;
+        this.cacheSpectra = cacheSpectra;        
     }
 
     public MzMLUnmarshaller getUnmarshaller() {
@@ -205,6 +206,8 @@ public class MzMLFile extends RawDataFile {
         AnalyseData.getInstance().getTasksModel()
                 .set(new Task(file.getName(), "Load Raw Data"));
         TasksTab.getInstance().refreshFromTasksModel();
+        
+        actions.add(new RawFileLoadCompleteListener());
 
         ExecutorService executor = AnalyseData.getInstance().getGenericExecutor();
         SwingWorker<MzMLUnmarshaller, Void> mzMLWorker = new SwingWorker<MzMLUnmarshaller, Void>() {
@@ -217,18 +220,11 @@ public class MzMLFile extends RawDataFile {
             protected void done() {
                 try {
                     unmarshaller = get();
-                    AnalyseData.getInstance().getInspectModel()
-                            .addRawDataFile(MzMLFile.this);
-                    InspectTab.getInstance().refreshComboBox();
-                    AnalyseData
-                            .getInstance()
-                            .getTasksModel()
-                            .set(new Task(file.getName(), "Load Raw Data",
-                                            "Complete"));
-                    TasksTab.getInstance().refreshFromTasksModel();
-
-                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
-                            .checkAndUpdateRawDataStatus();
+                    if (unmarshaller == null) {
+                        throw new RuntimeException("mzML file not read in correctly.");
+                    }  
+                    
+                    actions.fireDependingActions();
 
                     System.out.println("Done loading mzML file.");
                 } catch (InterruptedException ex) {

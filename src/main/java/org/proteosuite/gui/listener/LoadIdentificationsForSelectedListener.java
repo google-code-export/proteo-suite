@@ -51,6 +51,7 @@ public class LoadIdentificationsForSelectedListener implements ActionListener {
             
             if (files.length < 2) {
                 MzIdentMLFile mzIdentML = new MzIdentMLFile(files[0], data.getRawDataFile(selectedRawFiles[0]));
+                mzIdentML.setCleanable(true);
                 for (int i : selectedRawFiles) {
                     data.getRawDataFile(i).setIdentificationDataFile(mzIdentML);
                 }
@@ -58,7 +59,9 @@ public class LoadIdentificationsForSelectedListener implements ActionListener {
                 for (File file : files) {
                     for (int i : selectedRawFiles) {
                         if (stripExtension(data.getRawDataFile(i).getAbsoluteFileName()).equals(stripExtension(file.getAbsolutePath()))) {
-                            data.getRawDataFile(i).setIdentificationDataFile(new MzIdentMLFile(file, data.getRawDataFile(i)));
+                            MzIdentMLFile mzIdentML = new MzIdentMLFile(file, data.getRawDataFile(i));
+                            mzIdentML.setCleanable(true);
+                            data.getRawDataFile(i).setIdentificationDataFile(mzIdentML);
                             break;
                         }
                     }

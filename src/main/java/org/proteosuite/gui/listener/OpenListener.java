@@ -75,6 +75,7 @@ public class OpenListener implements ActionListener {
                 }
 
                 MzIdentMLFile identDataFile = new MzIdentMLFile(file, parent);
+                identDataFile.setCleanable(true);
                 model.addIdentDataFile(identDataFile);
             } else if (extension.equalsIgnoreCase("mzml")) {
                 MzMLFile rawDataFile = new MzMLFile(file, true);
