@@ -15,8 +15,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.SwingWorker;
-import org.proteosuite.gui.analyse.AnalyseDynamicTab;
-import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.gui.listener.RawFileLoadCompleteListener;
 import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.utils.FileFormatUtils;
