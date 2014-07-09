@@ -15,15 +15,12 @@ import org.proteosuite.gui.tables.CleanIdentificationsTable;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.IdentDataFile;
 
-/**
- * 
- * @author SPerkins
- */
 public class CleanIdentificationsStep extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private final CleanIdentificationsTable cleanIdentificationsTable = new CleanIdentificationsTable();
+        private static CleanIdentificationsStep INSTANCE = null;
 
-	public CleanIdentificationsStep() {
+	private CleanIdentificationsStep() {
             super(new BorderLayout());
             
             JLabel stepTitle = new JLabel("Clean up your identifications:");
@@ -53,6 +50,14 @@ public class CleanIdentificationsStep extends JPanel {
                 add(stepTitle, BorderLayout.PAGE_START);
                 add(new JScrollPane(cleanIdentificationsTable), BorderLayout.CENTER);
                 add(buttonsPanel, BorderLayout.PAGE_END);
+        }
+        
+        public static CleanIdentificationsStep getInstance() {
+            if (INSTANCE == null) {
+                INSTANCE = new CleanIdentificationsStep();
+            }
+            
+            return INSTANCE;
         }
         
         public CleanIdentificationsTable getCleanIdentificationsTable() {

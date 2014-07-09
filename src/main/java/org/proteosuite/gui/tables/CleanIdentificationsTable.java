@@ -2,6 +2,7 @@ package org.proteosuite.gui.tables;
 
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.tree.TreeSelectionModel;
 import org.proteosuite.model.IdentDataFile;
 
 /**
@@ -26,9 +27,10 @@ public class CleanIdentificationsTable extends JTable {
         model.addColumn("Peptide Spectrum Matches (PSMs) Not Passing Threshold");
         model.addColumn("Peptides");
         model.addColumn("Thresholding Used");
-        model.addColumn("Apply Thresholding");
+        model.addColumn("Thresholding Status");
         
         setModel(model);
+        getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
     }
     
     public void addIdentFileRow(IdentDataFile identFile) {        

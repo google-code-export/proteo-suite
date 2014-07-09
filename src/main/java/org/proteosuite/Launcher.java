@@ -21,7 +21,6 @@ public class Launcher {
      * Main
      *
      * @param args the command line arguments (leave empty)
-     * @return void
      */
     public static void main(String args[]) {
         // Setting standard look and feel
