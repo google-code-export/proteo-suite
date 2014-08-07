@@ -11,9 +11,9 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import org.proteosuite.gui.tables.TasksTable;
 import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.BackgroundTask;
+import org.proteosuite.model.BackgroundTaskManager;
 import org.proteosuite.model.Log;
-import org.proteosuite.model.Task;
-import org.proteosuite.model.TasksModel;
 
 /**
  *
@@ -45,11 +45,11 @@ public class TasksTab extends JPanel {
         return instance;
     }
 
-    public synchronized void refreshFromTasksModel() {
-        TasksModel model = data.getTasksModel();
+    public synchronized void refreshData() {
+        
         tasksTable.clear();
-        for (Task task : model) {
-            tasksTable.addTaskRow(task.getFile(), task.getPhase(),
+        for (BackgroundTask task : BackgroundTaskManager.getInstance().getTasks()) {
+            tasksTable.addTaskRow(task.getSubject().getSubjectName(), task.getName(),
                     task.getStatus());
         }
 

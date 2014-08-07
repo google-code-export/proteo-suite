@@ -10,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import javax.swing.SwingWorker;
-import org.proteosuite.gui.listener.RawFileLoadCompleteListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.proteosuite.actions.ProteoSuiteAction;
+import org.proteosuite.actions.RawFilePostLoadAction;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
 import uk.ac.ebi.pride.tools.jmzreader.model.impl.CvParam;
 import uk.ac.ebi.pride.tools.mgf_parser.MgfFile;
@@ -56,44 +56,45 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
 
     @Override
     protected void initiateLoading() {
-        ExecutorService executor = AnalyseData.getInstance().getGenericExecutor();
-
-        actions.add(new RawFileLoadCompleteListener());
-        SwingWorker<MgfFile, Void> mgfWorker = new SwingWorker<MgfFile, Void>() {
+        
+        final BackgroundTask task = new BackgroundTask(this, "Load Raw Data");
+        
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<MgfFile, Void>() {
             @Override
-            protected MgfFile doInBackground() {
+            public MgfFile act(Void ignored) {
                 try {
                     return new MgfFile(file);
                 } catch (JMzReaderException ex) {
-                    System.out.println(ex.getLocalizedMessage());
+                    Logger.getLogger(MascotGenericFormatFile.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
+                
                 return null;
             }
-
+        });
+        
+        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
             @Override
-            protected void done() {
-                try {
-                    mgf = get();
-                    if (mgf == null) {
+            public Void act(Void argument) {
+                mgf = task.getResultOfClass(MascotGenericFormatFile.class);
+                if (mgf == null) {
                         throw new RuntimeException("MGF file not read in correctly.");
-                    }                    
-                    
-                    actions.fireDependingActions();
-                    System.out.println("Done loading MGF file.");
-                } catch (InterruptedException ex) {
-                    System.out
-                            .println("Interrupted exception loading MGF file: "
-                                    + ex.getLocalizedMessage());
-                } catch (ExecutionException ex) {
-                    System.out
-                            .println("Execution exception loading MGF file: "
-                                    + ex.getLocalizedMessage());
-                }
+                    }
+                
+                return null;
             }
-        };
-
-        executor.submit(mgfWorker);
+        });
+        
+        
+        task.addCompletionAction(new RawFilePostLoadAction());
+        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+            @Override
+            public Void act(Void ignored) {
+                System.out.println("Done loading MGF file.");
+                return null;
+            }
+        });
+        
+        BackgroundTaskManager.getInstance().submit(task);      
     }
 
     @Override
@@ -214,5 +215,10 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
         }
 
         return null;
+    }
+
+    @Override
+    public String getSubjectName() {
+        return this.getFileName();
     }
 }

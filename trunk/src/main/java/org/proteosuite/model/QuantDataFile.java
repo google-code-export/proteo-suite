@@ -6,13 +6,12 @@ import java.io.File;
  *
  * @author SPerkins
  */
-public abstract class QuantDataFile {
+public abstract class QuantDataFile implements BackgroundTaskSubject {
     protected File file;
-    protected DependingActionRegister<QuantDataFile> actions; 
+    
     
     public QuantDataFile(File file) {
-        this.file = file;
-        actions = new DependingActionRegister<>(this);
+        this.file = file;        
         initiateLoading();
     }
     

@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @author SPerkins
  */
-public abstract class IdentDataFile {
+public abstract class IdentDataFile implements BackgroundTaskSubject {
     protected RawDataFile parent;
     protected File file;    
     protected boolean computedPSMStats = false;
@@ -17,12 +17,11 @@ public abstract class IdentDataFile {
     protected int peptideCountPassingThreshold = -1;
     protected String thresholdingUsed = "";
     protected Map<String, String> thresholdables = new HashMap<>(); 
-    protected DependingActionRegister<IdentDataFile> actions; 
+     
     private boolean mayNeedCleaning = false;
     public IdentDataFile(File file, RawDataFile parent) {
         this.file = file;
-        this.parent = parent;
-        actions = new DependingActionRegister<>(this);
+        this.parent = parent;        
         initiateLoading();
     } 
     
