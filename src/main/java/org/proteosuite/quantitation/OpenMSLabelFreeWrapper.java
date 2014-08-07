@@ -6,303 +6,280 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-
-import javax.swing.SwingWorker;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
-
+import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.executor.Executor;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
-import org.proteosuite.utils.MappingHelper;
-import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.jopenms.command.JOpenMS;
-import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.BackgroundTask;
+import org.proteosuite.model.BackgroundTaskManager;
+import org.proteosuite.model.BackgroundTaskSubject;
 import org.proteosuite.model.MzQuantMLFile;
 import org.proteosuite.model.QuantDataFile;
 import org.proteosuite.model.RawDataFile;
-import org.proteosuite.model.Task;
-
+import org.proteosuite.utils.MappingHelper;
 import uk.ac.liv.mzqlib.consensusxml.convertor.ConsensusXMLProcessor;
 import uk.ac.liv.mzqlib.consensusxml.convertor.ConsensusXMLProcessorFactory;
 
 /**
- * 
+ *
  * @author SPerkins
  */
 public class OpenMSLabelFreeWrapper {
 
-	private final ExecutorService executor;
-	private final List<RawDataFile> rawDataFiles;
-	private final CountDownLatch featureFinderCentroidedLatch;
-	private final CountDownLatch mapAlignerPoseClusteringLatch;
-	private final CountDownLatch featureLinkerUnlabeledQTLatch;
-	private static String systemExecutableExtension;
+    private final List<RawDataFile> rawDataFiles;
+    private final CountDownLatch featureFinderCentroidedLatch;
+    private final CountDownLatch mapAlignerPoseClusteringLatch;
+    private final CountDownLatch featureLinkerUnlabeledQTLatch;
+    private static String systemExecutableExtension;
 
-	public static boolean checkIsInstalled() {
-		Executor exec = new Executor("FeatureFinderCentroided");
-		exec.callExe();
-		String output = exec.getOutput();
+    public static boolean checkIsInstalled() {
+        Executor exec = new Executor("FeatureFinderCentroided");
+        exec.callExe();
+        String output = exec.getOutput();
 
-		if (output != null && output.contains("No options given. Aborting!")) {
-			return true;
-		}
+        if (output != null && output.contains("No options given. Aborting!")) {
+            return true;
+        }
 
-		exec = new Executor("FeatureFinderCentroided.exe");
-		exec.callExe();
-		output = exec.getOutput();
-		if (output != null && output.contains("No options given. Aborting!")) {
-			return true;
-		}
+        exec = new Executor("FeatureFinderCentroided.exe");
+        exec.callExe();
+        output = exec.getOutput();
+        if (output != null && output.contains("No options given. Aborting!")) {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public OpenMSLabelFreeWrapper(List<RawDataFile> rawDataFiles) {
-		String operatingSystemType = System.getProperty("os.name");
+    public OpenMSLabelFreeWrapper(List<RawDataFile> rawDataFiles) {
+        String operatingSystemType = System.getProperty("os.name");
 
-		if (operatingSystemType.startsWith("Windows")) {
-			systemExecutableExtension = ".exe";
-			if (System.getenv("ProgramFiles(x86)") != null) {
+        if (operatingSystemType.startsWith("Windows")) {
+            systemExecutableExtension = ".exe";
+            if (System.getenv("ProgramFiles(x86)") != null) {
 
-			} else {
+            } else {
 
-			}
-		} else {
-			systemExecutableExtension = "";
-			String linuxVersion = org.proteosuite.jopenms.util.Utils
-					.getLinuxVersion();
-			if (linuxVersion.contains("x86_64")
-					|| linuxVersion.contains("ia64")) {
+            }
+        } else {
+            systemExecutableExtension = "";
+            String linuxVersion = org.proteosuite.jopenms.util.Utils
+                    .getLinuxVersion();
+            if (linuxVersion.contains("x86_64")
+                    || linuxVersion.contains("ia64")) {
 
-			} else {
+            } else {
 
-			}
-		}
+            }
+        }
 
-		this.executor = AnalyseData.getInstance().getOpenMSExecutor();
-		this.rawDataFiles = rawDataFiles;
-		featureFinderCentroidedLatch = new CountDownLatch(rawDataFiles.size());
-		mapAlignerPoseClusteringLatch = new CountDownLatch(1);
-		featureLinkerUnlabeledQTLatch = new CountDownLatch(1);
-	}
+        this.rawDataFiles = rawDataFiles;
+        featureFinderCentroidedLatch = new CountDownLatch(rawDataFiles.size());
+        mapAlignerPoseClusteringLatch = new CountDownLatch(1);
+        featureLinkerUnlabeledQTLatch = new CountDownLatch(1);
+    }
 
-	public void compute() {
-		AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
-				.setQuantitationProcessing();
+    public void compute() {
+        AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
+                .setQuantitationProcessing();
 
-		List<String> featureFinderCentroidedFiles = new ArrayList<>();
-		List<String> mapAlignerPoseClusteringFiles = new ArrayList<>();
-		int featureFinderExecutionDelay = 0;
-		for (RawDataFile dataFile : rawDataFiles) {
-			String featureFinderCentroidedFile = dataFile.getAbsoluteFileName()
-					.replaceAll("\\." + dataFile.getFormat() + '$',
-							"_FFC.featureXML");
-			String mapAlignerPostClusteringFile = featureFinderCentroidedFile
-					.replaceAll("\\." + "featureXML" + '$', "_MAPC.featureXML");
-			doFeatureFinderCentroided(dataFile, featureFinderCentroidedFile,
-					featureFinderCentroidedLatch, featureFinderExecutionDelay);
-			featureFinderCentroidedFiles.add(featureFinderCentroidedFile);
-			mapAlignerPoseClusteringFiles.add(mapAlignerPostClusteringFile);
-			featureFinderExecutionDelay += 5;
-		}
+        List<String> featureFinderCentroidedFiles = new ArrayList<>();
+        List<String> mapAlignerPoseClusteringFiles = new ArrayList<>();
+        int featureFinderExecutionDelay = 0;
+        for (RawDataFile dataFile : rawDataFiles) {
+            String featureFinderCentroidedFile = dataFile.getAbsoluteFileName()
+                    .replaceAll("\\." + dataFile.getFormat() + '$',
+                            "_FFC.featureXML");
+            String mapAlignerPostClusteringFile = featureFinderCentroidedFile
+                    .replaceAll("\\." + "featureXML" + '$', "_MAPC.featureXML");
+            doFeatureFinderCentroided(dataFile, featureFinderCentroidedFile,
+                    featureFinderCentroidedLatch, featureFinderExecutionDelay);
+            featureFinderCentroidedFiles.add(featureFinderCentroidedFile);
+            mapAlignerPoseClusteringFiles.add(mapAlignerPostClusteringFile);
+            featureFinderExecutionDelay += 5;
+        }
 
-		String unlabeledOutputFile = rawDataFiles.get(0).getFile().getParent()
-				+ "\\unlabeled_result_FLUQT.consensusXML";
-		String mzQuantMLFile = unlabeledOutputFile.replace(".consensusXML",
-				".mzq");
+        String unlabeledOutputFile = rawDataFiles.get(0).getFile().getParent()
+                + "\\unlabeled_result_FLUQT.consensusXML";
+        String mzQuantMLFile = unlabeledOutputFile.replace(".consensusXML",
+                ".mzq");
 
-		doMapAlignerPoseClustering(featureFinderCentroidedFiles,
-				mapAlignerPoseClusteringFiles, featureFinderCentroidedLatch,
-				mapAlignerPoseClusteringLatch);
+        doMapAlignerPoseClustering(featureFinderCentroidedFiles,
+                mapAlignerPoseClusteringFiles, featureFinderCentroidedLatch,
+                mapAlignerPoseClusteringLatch);
 
-		doFeatureLinkerUnlabeledQT(mapAlignerPoseClusteringFiles,
-				unlabeledOutputFile, mapAlignerPoseClusteringLatch,
-				featureLinkerUnlabeledQTLatch);
+        doFeatureLinkerUnlabeledQT(mapAlignerPoseClusteringFiles,
+                unlabeledOutputFile, mapAlignerPoseClusteringLatch,
+                featureLinkerUnlabeledQTLatch);
 
-		doConsensusXMLToMzQuantMLConversion(unlabeledOutputFile, mzQuantMLFile,
-				featureLinkerUnlabeledQTLatch);
-	}
+        doConsensusXMLToMzQuantMLConversion(unlabeledOutputFile, mzQuantMLFile,
+                featureLinkerUnlabeledQTLatch);
+    }
 
-	private void doFeatureFinderCentroided(final RawDataFile inputDataFile,
-			final String outputFile,
-			final CountDownLatch featureFinderCentroidedLatch,
-			final int executionDelay) {
-		AnalyseData.getInstance().getTasksModel()
-				.set(new Task(inputDataFile.getFileName(), "Finding Features"));
-		TasksTab.getInstance().refreshFromTasksModel();
+    private void doFeatureFinderCentroided(final RawDataFile inputDataFile,
+            final String outputFile,
+            final CountDownLatch featureFinderCentroidedLatch,
+            final int executionDelay) {
 
-		SwingWorker<Void, String> worker = new SwingWorker<Void, String>() {
-			@Override
-			protected Void doInBackground() {
-				try {
-					Thread.sleep(executionDelay * 1000);
-					JOpenMS.performOpenMSTask(systemExecutableExtension,
-							"FeatureFinderCentroided",
-							Arrays.asList(inputDataFile.getAbsoluteFileName()),
-							Arrays.asList(outputFile));
+        BackgroundTask task = new BackgroundTask(inputDataFile, "Finding Features");
 
-					featureFinderCentroidedLatch.countDown();
-				} catch (NullPointerException | InterruptedException n) {
-					n.printStackTrace();
-				}
-				return null;
-			}
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Void, Void>() {
+            @Override
+            public Void act(Void argument) {
+                try {
+                    Thread.sleep(executionDelay * 1000);
+                    JOpenMS.performOpenMSTask(systemExecutableExtension,
+                            "FeatureFinderCentroided",
+                            Arrays.asList(inputDataFile.getAbsoluteFileName()),
+                            Arrays.asList(outputFile));
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(OpenMSLabelFreeWrapper.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
-			@Override
-			protected void done() {
-				try {
-					get();
-					AnalyseData
-							.getInstance()
-							.getTasksModel()
-							.set(new Task(inputDataFile.getFileName(),
-									"Finding Features", "Complete"));
-					TasksTab.getInstance().refreshFromTasksModel();
-				} catch (InterruptedException | ExecutionException ex) {
-					System.out.println(ex.getLocalizedMessage());
-				}
-			}
-		};
+                return null;
+            }
+        });
 
-		executor.submit(worker);
-	}
+        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+            @Override
+            public Void act(Void argument) {
+                featureFinderCentroidedLatch.countDown();
+                return null;
+            }
+        });
 
-	private void doMapAlignerPoseClustering(final List<String> inputFiles,
-			final List<String> outputFiles,
-			final CountDownLatch featureFinderCentroidedLatch,
-			final CountDownLatch mapAlignerPoseClusteringLatch) {
-		String fileName = new File(inputFiles.get(0)).getName();
-		AnalyseData.getInstance().getTasksModel()
-				.set(new Task(fileName, "Aligning Features"));
-		TasksTab.getInstance().refreshFromTasksModel();
-		SwingWorker<Void, String> worker = new SwingWorker<Void, String>() {
-			@Override
-			protected Void doInBackground() {
-				try {
-					featureFinderCentroidedLatch.await();
-					JOpenMS.performOpenMSTask(systemExecutableExtension,
-							"MapAlignerPoseClustering", inputFiles, outputFiles);
-					mapAlignerPoseClusteringLatch.countDown();
-				} catch (InterruptedException ex) {
-					System.out.println(ex.getLocalizedMessage());
-				}
+        BackgroundTaskManager.getInstance().submit(task);
+    }
 
-				return null;
-			}
+    private void doMapAlignerPoseClustering(final List<String> inputFiles,
+            final List<String> outputFiles,
+            final CountDownLatch featureFinderCentroidedLatch,
+            final CountDownLatch mapAlignerPoseClusteringLatch) {
 
-			@Override
-			protected void done() {
-				try {
-					get();
+        BackgroundTaskSubject subject = new BackgroundTaskSubject() {
+            private final File file = new File(inputFiles.get(0));
 
-					String fileName = new File(inputFiles.get(0)).getName();
+            @Override
+            public String getSubjectName() {
+                return file.getName();
+            }
+        };
 
-					AnalyseData
-							.getInstance()
-							.getTasksModel()
-							.set(new Task(fileName, "Aligning Features",
-									"Complete"));
-					TasksTab.getInstance().refreshFromTasksModel();
-				} catch (InterruptedException | ExecutionException ex) {
-					System.out.println(ex.getLocalizedMessage());
-				}
-			}
-		};
+        BackgroundTask task = new BackgroundTask(subject, "Aligning Features");
 
-		executor.submit(worker);
-	}
+        task.addProcessingCondition(featureFinderCentroidedLatch);
 
-	private void doFeatureLinkerUnlabeledQT(final List<String> inputFiles,
-			final String outputFile,
-			final CountDownLatch mapAlignerPoseClusteringLatch,
-			final CountDownLatch featureLinkerUnlabeledQTLatch) {
-		String fileName = new File(inputFiles.get(0)).getName();
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Void, Void>() {
+            @Override
+            public Void act(Void argument) {
+                JOpenMS.performOpenMSTask(systemExecutableExtension,
+                        "MapAlignerPoseClustering", inputFiles, outputFiles);
 
-		AnalyseData.getInstance().getTasksModel()
-				.set(new Task(fileName, "Linking Features"));
-		TasksTab.getInstance().refreshFromTasksModel();
-		SwingWorker<Void, String> worker = new SwingWorker<Void, String>() {
-			@Override
-			protected Void doInBackground() {
-				try {
-					mapAlignerPoseClusteringLatch.await();
-					JOpenMS.performOpenMSTask(systemExecutableExtension,
-							"FeatureLinkerUnlabeledQT", inputFiles,
-							Arrays.asList(outputFile));
-				} catch (InterruptedException ex) {
+                return null;
+            }
+        });
 
-				}
+        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+            @Override
+            public Void act(Void argument) {
+                mapAlignerPoseClusteringLatch.countDown();
+                return null;
+            }
+        });
 
-				return null;
-			}
+        BackgroundTaskManager.getInstance().submit(task);
+    }
 
-			@Override
-			protected void done() {
-				try {
-					get();
-					String fileName = new File(inputFiles.get(0)).getName();
+    private void doFeatureLinkerUnlabeledQT(final List<String> inputFiles,
+            final String outputFile,
+            final CountDownLatch mapAlignerPoseClusteringLatch,
+            final CountDownLatch featureLinkerUnlabeledQTLatch) {
 
-					AnalyseData
-							.getInstance()
-							.getTasksModel()
-							.set(new Task(fileName, "Linking Features",
-									"Complete"));
-					TasksTab.getInstance().refreshFromTasksModel();
+        BackgroundTaskSubject subject = new BackgroundTaskSubject() {
+            private final File file = new File(inputFiles.get(0));
 
-					AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
-							.setQuantitationDone();
+            @Override
+            public String getSubjectName() {
+                return file.getName();
+            }
+        };
 
-					featureLinkerUnlabeledQTLatch.countDown();
+        BackgroundTask task = new BackgroundTask(subject, "Linking Features");
 
-				} catch (InterruptedException | ExecutionException ex) {
-					System.out.println(ex.getLocalizedMessage());
-				}
-			}
-		};
+        task.addProcessingCondition(mapAlignerPoseClusteringLatch);
 
-		executor.submit(worker);
-	}
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Void, Void>() {
+            @Override
+            public Void act(Void argument) {
+                JOpenMS.performOpenMSTask(systemExecutableExtension,
+                        "FeatureLinkerUnlabeledQT", inputFiles,
+                        Arrays.asList(outputFile));
 
-	private void doConsensusXMLToMzQuantMLConversion(
-			final String consensusXMLFile, final String mzqFile,
-			final CountDownLatch featureLinkerUnlabeledQTLatch) {
-		SwingWorker<Void, String> worker = new SwingWorker<Void, String>() {
-			@Override
-			protected Void doInBackground() {
+                return null;
+            }
+        });
 
-				try {
-					featureLinkerUnlabeledQTLatch.await();
-					try {
-						ConsensusXMLProcessor conProc = ConsensusXMLProcessorFactory
-								.getInstance().buildConsensusXMLProcessor(
-										new File(consensusXMLFile));
-						conProc.convert(mzqFile);
-					} catch (IOException | JAXBException ex) {
-						System.out.println(ex.getLocalizedMessage());
-					}
-				} catch (InterruptedException ex) {
-					System.out.println(ex.getLocalizedMessage());
-				}
+        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
 
-				return null;
-			}
+            @Override
+            public Void act(Void argument) {
+                AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
+                        .setQuantitationDone();
 
-			@Override
-			protected void done() {
-				try {
-					get();
-					QuantDataFile quantFile = new MzQuantMLFile(new File(
-							mzqFile));
-					AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
-							.setQuantitationDone();
-					MappingHelper.map(quantFile);
-				} catch (InterruptedException | ExecutionException ex) {
-					System.out.println(ex.getLocalizedMessage());
-				}
-			}
-		};
+                featureLinkerUnlabeledQTLatch.countDown();
+                return null;
+            }
+        });
 
-		executor.submit(worker);
-	}
+        BackgroundTaskManager.getInstance().submit(task);
+    }
+
+    private void doConsensusXMLToMzQuantMLConversion(
+            final String consensusXMLFile, final String mzqFile,
+            final CountDownLatch featureLinkerUnlabeledQTLatch) {
+
+        BackgroundTaskSubject subject = new BackgroundTaskSubject() {
+            private final File file = new File(consensusXMLFile);
+
+            @Override
+            public String getSubjectName() {
+                return file.getName();
+            }
+        };
+
+        BackgroundTask task = new BackgroundTask(subject, "Converting to mzQuantML");
+        task.addProcessingCondition(featureLinkerUnlabeledQTLatch);
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Void, Void>() {
+            @Override
+            public Void act(Void argument) {
+                try {                    
+                    ConsensusXMLProcessor conProc = ConsensusXMLProcessorFactory
+                            .getInstance().buildConsensusXMLProcessor(
+                                    new File(consensusXMLFile));
+                    conProc.convert(mzqFile);
+                } catch (IOException | JAXBException ex) {
+                    Logger.getLogger(OpenMSLabelFreeWrapper.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                return null;
+            }
+        });
+
+        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+            @Override
+            public Void act(Void argument) {
+                QuantDataFile quantFile = new MzQuantMLFile(new File(
+                        mzqFile));
+                AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
+                        .setQuantitationDone();
+                MappingHelper.map(quantFile);
+                return null;
+            }
+        });
+
+        BackgroundTaskManager.getInstance().submit(task);
+    }
 }

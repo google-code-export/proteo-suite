@@ -7,26 +7,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-
-import javax.swing.SwingWorker;
 import javax.xml.validation.Validator;
-
-import static org.proteosuite.gui.ProteoSuite.MZQ_XSD;
-
 import org.proteosuite.WorkSpace;
+import org.proteosuite.actions.ProteoSuiteAction;
+import static org.proteosuite.gui.ProteoSuite.MZQ_XSD;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
-import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.BackgroundTask;
+import org.proteosuite.model.BackgroundTaskManager;
 import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.RawDataFile;
-import org.proteosuite.model.Task;
 import org.proteosuite.utils.PluginManager;
 import org.proteosuite.utils.ProteinInferenceHelper;
 import org.proteosuite.utils.SystemUtils;
 import org.w3c.dom.DOMException;
-
 import uk.ac.cranfield.xTracker.utils.XMLparser;
 import uk.ac.cranfield.xTracker.xTracker;
 
@@ -36,47 +30,40 @@ import uk.ac.cranfield.xTracker.xTracker;
  */
 public class XTrackerITRAQWrapper {
 
-    private List<RawDataFile> rawData;
-    private static ExecutorService executor;
+    private List<RawDataFile> rawData;    
     private static boolean fourPlex = true;
     private static SystemUtils sysUtils = new SystemUtils();
     private String outputPath = null;
 
     public XTrackerITRAQWrapper(List<RawDataFile> rawData) {
-        this.rawData = rawData;
-        executor = AnalyseData.getInstance().getGenericExecutor();
+        this.rawData = rawData;        
         fourPlex = !AnalyseData.getInstance().getMultiplexing().equals("iTRAQ 8-plex");
     }
 
     public void compute() {
-        SwingWorker<Void, Void> iTRAQWorker = new SwingWorker<Void, Void>() {
+        final BackgroundTask task = new BackgroundTask(rawData.iterator().next(), "Quantitating iTRAQ Data");
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Void, Void>() {
             @Override
-            public Void doInBackground() {
+            public Void act(Void argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationProcessing();
-                AnalyseData.getInstance().getTasksModel().set(new Task(rawData.get(0).getFileName(), "Quantitating iTRAQ Data"));
-                TasksTab.getInstance().refreshFromTasksModel();
                 generateFiles();
                 new xTracker(outputPath, rawData.get(0).getFile().getParent());                
                 return null;
             }
-            
+        });
+        
+        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
             @Override
-            public void done() {
-                try {
-                    get();
-                    
-                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationDone();
+            public Void act(Void argument) {
+                AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationDone();
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setMappingDone();
-                    AnalyseData.getInstance().getTasksModel().set(new Task(rawData.get(0).getFileName(), "Quantitating iTRAQ Data", "Complete"));
-                    TasksTab.getInstance().refreshFromTasksModel();
                     ProteinInferenceHelper.infer(outputPath, fourPlex ? "iTRAQ 4-plex" : "iTRAQ 8-plex", ProteinInferenceHelper.REPORTER_ION_INTENSITY, "sum");
-                } catch (InterruptedException | ExecutionException ex) {
-                    ex.printStackTrace();
-                }
+                    return null;
             }
-        };
+        });
+        
 
-        executor.submit(iTRAQWorker);
+        BackgroundTaskManager.getInstance().submit(task);
     }
 
     /**

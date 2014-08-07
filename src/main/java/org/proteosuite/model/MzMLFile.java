@@ -10,13 +10,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.SwingWorker;
-import org.proteosuite.gui.listener.RawFileLoadCompleteListener;
-import org.proteosuite.gui.tasks.TasksTab;
+import org.proteosuite.actions.ProteoSuiteAction;
+import org.proteosuite.actions.RawFilePostLoadAction;
 import org.proteosuite.utils.FileFormatUtils;
 import org.proteosuite.utils.NumericalUtils;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
@@ -49,7 +46,7 @@ public class MzMLFile extends RawDataFile {
     private static final String BINARY_MZ_PARAM = "MS:1000514";
     private static final String BINARY_INTENSITY_PARAM = "MS:1000515";
     private static final String RETENTION_TIME_PARAM = "MS:1000016";
-    private static final String RETENTION_TIME_MINUTE_PARAM = "UO:0000031";    
+    private static final String RETENTION_TIME_MINUTE_PARAM = "UO:0000031";
 
     public MzMLFile(File file) {
         this(file, false);
@@ -57,7 +54,7 @@ public class MzMLFile extends RawDataFile {
 
     public MzMLFile(File file, boolean cacheSpectra) {
         super(file);
-        this.cacheSpectra = cacheSpectra;        
+        this.cacheSpectra = cacheSpectra;
     }
 
     public MzMLUnmarshaller getUnmarshaller() {
@@ -200,44 +197,39 @@ public class MzMLFile extends RawDataFile {
     }
 
     @Override
-    protected void initiateLoading() {
-        AnalyseData.getInstance().getTasksModel()
-                .set(new Task(file.getName(), "Load Raw Data"));
-        TasksTab.getInstance().refreshFromTasksModel();
-        
-        actions.add(new RawFileLoadCompleteListener());
+    protected void initiateLoading() {        
 
-        ExecutorService executor = AnalyseData.getInstance().getGenericExecutor();
-        SwingWorker<MzMLUnmarshaller, Void> mzMLWorker = new SwingWorker<MzMLUnmarshaller, Void>() {
+        final BackgroundTask task = new BackgroundTask(this, "Load Raw Data");        
+
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<MzMLUnmarshaller, Void>() {
             @Override
-            protected MzMLUnmarshaller doInBackground() {
+            public MzMLUnmarshaller act(Void ignored) {
                 return new MzMLUnmarshaller(file);
             }
+        });
 
+        task.addCompletionAction(new ProteoSuiteAction<Void,Void>() {
             @Override
-            protected void done() {
-                try {
-                    unmarshaller = get();
-                    if (unmarshaller == null) {
-                        throw new RuntimeException("mzML file not read in correctly.");
-                    }  
-                    
-                    actions.fireDependingActions();
-
-                    System.out.println("Done loading mzML file.");
-                } catch (InterruptedException ex) {
-                    System.out
-                            .println("Interrupted exception loading mzML file: "
-                                    + ex.getLocalizedMessage());
-                } catch (ExecutionException ex) {
-                    System.out
-                            .println("Execution exception loading mzML file: "
-                                    + ex.getLocalizedMessage());
+            public Void act(Void ignored) {
+                unmarshaller = task.getResultOfClass(MzMLUnmarshaller.class);
+                if (unmarshaller == null) {
+                    throw new RuntimeException("mzML file not read in correctly.");
                 }
+                
+                return null;
             }
-        };
+        });
+        
+        task.addCompletionAction(new RawFilePostLoadAction());
+        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+            @Override
+            public Void act(Void ignored) {
+                System.out.println("Done loading mzML file.");
+                return null;
+            }
+        });
 
-        executor.submit(mzMLWorker);
+        BackgroundTaskManager.getInstance().submit(task);       
     }
 
     public MascotGenericFormatFile getAsMGF() {
@@ -306,7 +298,7 @@ public class MzMLFile extends RawDataFile {
                     if (precursorChargeString != null && NumericalUtils.isInteger(precursorChargeString)) {
                         precursorCharge = Integer.parseInt(getValueForAccession(PRECURSOR_CHARGE_PARAM, precursorParams));
                     }
-                    
+
                     localSpectrum = new FragmentSpectrum(precursorMz, 0.0, precursorCharge);
                 }
 
@@ -406,5 +398,10 @@ public class MzMLFile extends RawDataFile {
         }
 
         return null;
+    }
+
+    @Override
+    public String getSubjectName() {
+        return this.getFileName();
     }
 }

@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @author SPerkins
  */
-public abstract class RawDataFile implements Iterable<Spectrum> {
+public abstract class RawDataFile implements Iterable<Spectrum>, BackgroundTaskSubject {
     protected Map<String, Spectrum> cachedSpectra = null;    
     protected boolean cachingComplete = false;
     protected File file;
@@ -20,8 +20,7 @@ public abstract class RawDataFile implements Iterable<Spectrum> {
     protected boolean spectraCountChecked;    
     private final Map<String, String> assayConditions = new HashMap<>();
     private IdentDataFile identFile = null;
-    private String identStatus = "<None>";     
-    protected DependingActionRegister<RawDataFile> actions;  
+    private String identStatus = "<None>";   
     
     @Override
     public abstract Iterator<Spectrum> iterator();
@@ -41,8 +40,7 @@ public abstract class RawDataFile implements Iterable<Spectrum> {
     }
     
     public RawDataFile(File file) {        
-        this.file = file;
-        actions = new DependingActionRegister<>(this);
+        this.file = file;        
         initiateLoading();
     }
     

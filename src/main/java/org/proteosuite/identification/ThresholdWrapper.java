@@ -1,12 +1,16 @@
-
-
 package org.proteosuite.identification;
 
-import javax.swing.SwingWorker;
-import org.proteosuite.gui.listener.ThresholdCompletionListener;
+import java.io.File;
+import org.proteosuite.actions.ProteoSuiteAction;
+import org.proteosuite.gui.analyse.CleanIdentificationsStep;
+import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.model.AnalyseData;
-import org.proteosuite.model.DependingActionRegister;
+import org.proteosuite.model.BackgroundTask;
+import org.proteosuite.model.BackgroundTaskManager;
+import org.proteosuite.model.BackgroundTaskSubject;
 import org.proteosuite.model.IdentDataFile;
+import org.proteosuite.model.MzIdentMLFile;
+import org.proteosuite.model.RawDataFile;
 import uk.ac.liv.mzidlib.ThresholdMzid;
 
 /**
@@ -14,46 +18,71 @@ import uk.ac.liv.mzidlib.ThresholdMzid;
  * @author SPerkins
  */
 public class ThresholdWrapper {
-    private static AnalyseData data = AnalyseData.getInstance();
+
+    private static final AnalyseData data = AnalyseData.getInstance();
     private final IdentDataFile dataFile;
     private final String thresholdOn;
     private final double thresholdValue;
     private final boolean higherValuesBetter;
-    private final DependingActionRegister<ThresholdWrapper> actions;
+
     private String outputPath;
+
     public ThresholdWrapper(IdentDataFile dataFile, String thresholdOn, double thresholdValue, boolean higherValuesBetter) {
         this.dataFile = dataFile;
         this.thresholdOn = thresholdOn;
         this.thresholdValue = thresholdValue;
         this.higherValuesBetter = higherValuesBetter;
-        actions = new DependingActionRegister<>(this);
+
     }
-    
+
     public IdentDataFile getOriginalIdentData() {
         return this.dataFile;
     }
-    
+
     public String getThresholdedOutputPath() {
         return this.outputPath;
     }
-    
-    public void doThresholding() {
-       actions.add(new ThresholdCompletionListener());
-        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 
+    public void doThresholding() {
+        final BackgroundTask task = new BackgroundTask(new BackgroundTaskSubject() {
             @Override
-            protected Void doInBackground() throws Exception {
+            public String getSubjectName() {
+                return dataFile.getFileName();
+            }
+        }, "Thresholding Identifications");
+
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<String, Void>() {
+            @Override
+            public String act(Void argument) {
                 outputPath = dataFile.getAbsoluteFileName().replace(".mzid", "_thresholded.mzid");
                 new ThresholdMzid(dataFile.getAbsoluteFileName(), outputPath, true, thresholdOn, thresholdValue, !ThresholdWrapper.this.higherValuesBetter, false);
+                return outputPath;
+            }
+        });
+
+        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+            @Override
+            public Void act(Void argument) {
+                RawDataFile rawDataFile = dataFile.getParent();
+                File newFile = new File(outputPath);
+                if (!newFile.exists()) {
+                    return null;
+                }
+
+                IdentDataFile newIdentFile = new MzIdentMLFile(newFile, rawDataFile);
+                newIdentFile.setCleanable(false);
+                rawDataFile.setIdentificationDataFile(newIdentFile);
+
+                data.getInspectModel().removeIdentDataFile(dataFile);
+                data.getInspectModel().addIdentDataFile(newIdentFile);
+                InspectTab.getInstance().refreshComboBox();
+
+                CleanIdentificationsStep.getInstance().refreshFromData();
+                
                 return null;
             }
-            
-            @Override
-            protected void done() {
-                actions.fireDependingActions();
-            }        
-        };
-        
-        data.getGenericExecutor().submit(worker);
+        });
+
+        BackgroundTaskManager.getInstance().submit(task);
     }
 }

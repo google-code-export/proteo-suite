@@ -1,12 +1,8 @@
 package org.proteosuite.model;
 
 import java.io.File;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import javax.swing.SwingWorker;
-import org.proteosuite.gui.analyse.AnalyseDynamicTab;
-import org.proteosuite.gui.inspect.InspectTab;
-import org.proteosuite.gui.listener.QuantFileLoadCompleteListener;
+import org.proteosuite.actions.ProteoSuiteAction;
+import org.proteosuite.actions.QuantFilePostLoadAction;
 import org.proteosuite.gui.tasks.TasksTab;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 
@@ -30,39 +26,40 @@ public class MzQuantMLFile extends QuantDataFile {
     }
     
     @Override
-    public void initiateLoading() {
-        AnalyseData.getInstance().getTasksModel().set(new Task(file.getName(), "Load Quantitation Data"));
-        TasksTab.getInstance().refreshFromTasksModel();
+    public void initiateLoading() {       
         
-        ExecutorService executor = AnalyseData.getInstance().getGenericExecutor();
+        final BackgroundTask task = new BackgroundTask(this, "Load Quantitation Data");
         
-        actions.add(new QuantFileLoadCompleteListener());
-        
-        SwingWorker<MzQuantMLUnmarshaller, Void> mzMLWorker = new SwingWorker<MzQuantMLUnmarshaller, Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<MzQuantMLUnmarshaller, Void>() {
             @Override
-            protected MzQuantMLUnmarshaller doInBackground() {
+            public MzQuantMLUnmarshaller act(Void argument) {
                 return new MzQuantMLUnmarshaller(file);
             }
-
+        });
+        
+        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
             @Override
-            protected void done() {
-                try {
-                    unmarshaller = get();                    
-                    actions.fireDependingActions();                    
-                    
-                    System.out.println("Done loading mzQuantML file.");
-                } catch (InterruptedException ex) {
-                    System.out.println("Interrupted exception loading mzQuantML file: " + ex.getLocalizedMessage());
-                } catch (ExecutionException ex) {
-                    System.out.println("Execution exception loading mzQuantML file: " + ex.getLocalizedMessage());
+            public Void act(Void argument) {
+                unmarshaller = task.getResultOfClass(MzQuantMLUnmarshaller.class);
+                if (unmarshaller == null) {
+                    throw new RuntimeException("mzQuantML file not read in correctly.");
                 }
+                
+                return null;
             }
-        };
-
-        executor.submit(mzMLWorker);
+        });
+        
+        task.addCompletionAction(new QuantFilePostLoadAction());
+        
+        BackgroundTaskManager.getInstance().submit(task);       
     }
 
     public MzQuantMLUnmarshaller getUnmarshaller() {
         return unmarshaller;
+    }
+
+    @Override
+    public String getSubjectName() {
+        return this.getFileName();
     }
 }

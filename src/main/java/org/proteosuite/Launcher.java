@@ -1,15 +1,20 @@
 package org.proteosuite;
 
 import java.awt.EventQueue;
-import java.awt.HeadlessException;
-import java.util.concurrent.ExecutionException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.proteosuite.actions.ProteoSuiteAction;
+import org.proteosuite.actions.TaskPostCompleteAction;
 import org.proteosuite.gui.IdentParamsView;
 import org.proteosuite.gui.ProteoSuite;
+import org.proteosuite.model.BackgroundTask;
+import org.proteosuite.model.BackgroundTaskManager;
+import org.proteosuite.model.BackgroundTaskSubject;
 import org.proteosuite.quantitation.OpenMSLabelFreeWrapper;
 import org.proteosuite.utils.ExceptionCatcher;
 import org.proteosuite.utils.OpenURL;
@@ -24,8 +29,8 @@ public class Launcher {
      */
     public static void main(String args[]) {
         // Setting standard look and feel
-        setLookAndFeel();        
-        
+        setLookAndFeel();
+
         if (!OpenMSLabelFreeWrapper.checkIsInstalled()) {
             int result = JOptionPane
                     .showConfirmDialog(
@@ -45,8 +50,10 @@ public class Launcher {
         // Pre-load the searchGUI modifications.
         IdentParamsView.readInPossibleMods();
 
-        SwingWorker<String, String> checkVersion = new UpdateWorker();
-        checkVersion.execute();
+        BackgroundTaskManager.getInstance().setTasksRefreshAction(new TaskPostCompleteAction());
+
+        BackgroundTask checkVersion = new UpdateWorker();
+        BackgroundTaskManager.getInstance().submit(checkVersion);
 
         // Create and display the form
         EventQueue.invokeLater(new Runnable() {
@@ -80,35 +87,52 @@ public class Launcher {
         }
     }
 
-    private static class UpdateWorker extends SwingWorker<String, String> {
+    private static class UpdateWorker extends BackgroundTask {
 
-        @Override
-        protected String doInBackground() throws Exception {
-            return UpdateCheck.hasUpdate(ProteoSuite.PROTEOSUITE_VERSION);
-        }
-
-        @Override
-        protected void done() {
-            try {
-                String newVersion = get();
-
-                if (newVersion == null) {
-                    return;
+        public UpdateWorker() {
+            super(new BackgroundTaskSubject() {
+                @Override
+                public String getSubjectName() {
+                    return "ProteoSuite";
                 }
+            }, "Checking For Update");
 
-                int result = JOptionPane
-                        .showConfirmDialog(
-                                null,
-                                "There is a new version of ProteoSuite available\n Click OK to visit the download page.",
-                                "Information", JOptionPane.OK_CANCEL_OPTION,
-                                JOptionPane.INFORMATION_MESSAGE);
+            super.addAsynchronousProcessingAction(new ProteoSuiteAction<String, Void>() {
+                @Override
+                public String act(Void argument) {
+                    try {
+                        return UpdateCheck.hasUpdate(ProteoSuite.PROTEOSUITE_VERSION);
+                    } catch (IOException ex) {
+                        Logger.getLogger(Launcher.class.getName()).log(Level.SEVERE, null, ex);
+                    }
 
-                if (result == JOptionPane.OK_OPTION) {
-                    OpenURL.open(newVersion);
+                    return null;
                 }
-            } catch (InterruptedException | ExecutionException | HeadlessException ignore) {
-                // Most likely no Internet connection, do nothing!
-            }
+            });
+
+            super.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+
+                @Override
+                public Void act(Void argument) {
+                    String newVersion = UpdateWorker.super.getResultOfClass(String.class);
+                    if (newVersion == null) {
+                        return null;
+                    }
+
+                    int result = JOptionPane
+                            .showConfirmDialog(
+                                    null,
+                                    "There is a new version of ProteoSuite available\n Click OK to visit the download page.",
+                                    "Information", JOptionPane.OK_CANCEL_OPTION,
+                                    JOptionPane.INFORMATION_MESSAGE);
+
+                    if (result == JOptionPane.OK_OPTION) {
+                        OpenURL.open(newVersion);
+                    }
+
+                    return null;
+                }
+            });
         }
     }
 }

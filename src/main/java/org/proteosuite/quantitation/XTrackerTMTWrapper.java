@@ -7,18 +7,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import javax.swing.SwingWorker;
 import javax.xml.validation.Validator;
 import org.proteosuite.WorkSpace;
+import org.proteosuite.actions.ProteoSuiteAction;
 import static org.proteosuite.gui.ProteoSuite.MZQ_XSD;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
-import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.BackgroundTask;
+import org.proteosuite.model.BackgroundTaskManager;
 import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.RawDataFile;
-import org.proteosuite.model.Task;
 import org.proteosuite.utils.PluginManager;
 import org.proteosuite.utils.ProteinInferenceHelper;
 import org.proteosuite.utils.SystemUtils;
@@ -33,46 +31,40 @@ import uk.ac.cranfield.xTracker.xTracker;
 public class XTrackerTMTWrapper {
 
     private List<RawDataFile> rawData;
-    private static ExecutorService executor;
+    
     private static String plex;
     private static SystemUtils sysUtils = new SystemUtils();
     private String outputPath = null;
 
     public XTrackerTMTWrapper(List<RawDataFile> rawData) {
-        this.rawData = rawData;
-        executor = AnalyseData.getInstance().getGenericExecutor();
+        this.rawData = rawData;        
         plex = AnalyseData.getInstance().getMultiplexing();
     }
 
     public void compute() {
-        SwingWorker<Void, Void> TMTWorker = new SwingWorker<Void, Void>() {
+        BackgroundTask task = new BackgroundTask(rawData.iterator().next(), "Quantitating TMT Data");
+        
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Void, Void>() {
             @Override
-            public Void doInBackground() {
+            public Void act(Void argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationProcessing();
-                AnalyseData.getInstance().getTasksModel().set(new Task(rawData.get(0).getFileName(), "Quantitating TMT Data"));
-                TasksTab.getInstance().refreshFromTasksModel();
                 generateFiles();
                 new xTracker(outputPath, rawData.get(0).getFile().getParent());
                 return null;
             }
-
+        });
+        
+        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
             @Override
-            public void done() {
-                try {
-                    get();
-
-                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationDone();
+            public Void act(Void argument) {
+                AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationDone();
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setMappingDone();
-                    AnalyseData.getInstance().getTasksModel().set(new Task(rawData.get(0).getFileName(), "Quantitating TMT Data", "Complete"));
-                    TasksTab.getInstance().refreshFromTasksModel();
                     ProteinInferenceHelper.infer(outputPath, plex, ProteinInferenceHelper.REPORTER_ION_INTENSITY, "sum");
-                } catch (InterruptedException | ExecutionException ex) {
-                    ex.printStackTrace();
-                }
+                    return null;
             }
-        };
-
-        executor.submit(TMTWorker);
+        });
+        
+        BackgroundTaskManager.getInstance().submit(task);        
     }
 
     /**

@@ -2,13 +2,13 @@ package org.proteosuite.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.concurrent.ExecutionException;
-import javax.swing.SwingWorker;
+import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
-import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.BackgroundTask;
+import org.proteosuite.model.BackgroundTaskManager;
+import org.proteosuite.model.BackgroundTaskSubject;
 import org.proteosuite.model.MzQuantMLFile;
-import org.proteosuite.model.Task;
 import uk.ac.man.mzqlib.postprocessing.ProteinAbundanceInference;
 
 /**
@@ -33,21 +33,25 @@ public class ProteinInferenceHelper {
 
     public static void infer(final String inputFile, final String quantMethod,
             final String quantDataType, final String mergeOperator) {
-        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
 
+        final String fileName = new File(inputFile).getName();
+
+        BackgroundTask task = new BackgroundTask(new BackgroundTaskSubject() {
             @Override
-            public Void doInBackground() {
+            public String getSubjectName() {
+                return fileName;
+            }
+        }, "Inferring Proteins");
+
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Void, Void>() {
+            @Override
+            public Void act(Void argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
                         .setProteinInferenceProcessing();
-                String fileName = new File(inputFile).getName();
-                AnalyseData
-                        .getInstance()
-                        .getTasksModel()
-                        .set(new Task(fileName,
-                                        "Inferring Proteins"));
-                TasksTab.getInstance().refreshFromTasksModel();
+
                 outputFile = inputFile.replaceAll(".mzq",
                         "_protein_inference.mzq");
+
                 try {
                     if (quantDataType.equals(REPORTER_ION_INTENSITY)) {
                         new ProteinAbundanceInference(inputFile, outputFile,
@@ -67,34 +71,24 @@ public class ProteinInferenceHelper {
 
                 return null;
             }
+        });
 
+        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
             @Override
-            public void done() {
-                try {
-                    get();
+            public Void act(Void argument) {
+                AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
+                        .setProteinInferenceDone();
 
-                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
-                            .setProteinInferenceDone();
-                    String fileName = new File(inputFile).getName();
-                    AnalyseData
-                            .getInstance()
-                            .getTasksModel()
-                            .set(new Task(fileName,
-                                            "Inferring Proteins", "Complete"));
-                    TasksTab.getInstance().refreshFromTasksModel();
-
-                    AnalyseData
-                            .getInstance()
-                            .getInspectModel()
-                            .addQuantDataFile(
-                                    new MzQuantMLFile(new File(outputFile)));
-                } catch (InterruptedException | ExecutionException ex) {
-                    System.out.println(ex.getLocalizedMessage());
-                }
-
+                AnalyseData
+                        .getInstance()
+                        .getInspectModel()
+                        .addQuantDataFile(
+                                new MzQuantMLFile(new File(outputFile)));
+                
+                return null;
             }
-        };
+        });
 
-        AnalyseData.getInstance().getGenericExecutor().submit(worker);
+        BackgroundTaskManager.getInstance().submit(task);
     }
 }

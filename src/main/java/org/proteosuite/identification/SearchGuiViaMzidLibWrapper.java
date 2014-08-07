@@ -16,16 +16,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
+import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.BackgroundTask;
+import org.proteosuite.model.BackgroundTaskManager;
 import org.proteosuite.model.Log;
 import org.proteosuite.model.MascotGenericFormatFile;
 import org.proteosuite.model.MzIdentMLFile;
-import org.proteosuite.model.Task;
 import org.proteosuite.utils.FileFormatUtils;
 import org.proteosuite.utils.StringUtils;
 
@@ -140,101 +142,105 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
     }
 
     private void computeGenomeAnnotation() {
-        data.getTasksModel()
-                .set(new Task(rawData.iterator().next().getFileName(),
-                                "Run Genome Annotation"));
-        TasksTab.getInstance().refreshFromTasksModel();
 
-        SwingWorker<Integer, Void> worker = new SwingWorker() {
+        BackgroundTask task = new BackgroundTask(rawData.iterator().next(), "Run Genome Annotation");
+
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Integer, Void>() {
             @Override
-            protected Integer doInBackground() throws Exception {
-                MascotGenericFormatFile mgf;
-                if (rawData.size() > 1) {
-                    mgf = FileFormatUtils.merge(new TreeSet<>(rawData), 1024 * 1024 * 1024);
-                } else {
-                    mgf = rawData.iterator().next();
-                }
-
-                if (mgf != null) {
-                    commandList.add("-spectrum_files");
-                    commandList.add(mgf.getAbsoluteFileName());
-                }
-
-                commandList.add("-outputFolder");
-                commandList.add(mgf.getFile().getParentFile().getAbsolutePath() + File.separator + "annotation_output");
-                String executionString = StringUtils.join(" ", commandList);
-                System.out.println("Execution String: " + executionString);
-                Process process = Runtime.getRuntime().exec(executionString);
-                Log log = new Log();
-                log.setErrorOutput(new BufferedReader(new InputStreamReader(process.getErrorStream())));
-                log.setStandardOutput(new BufferedReader(new InputStreamReader(process.getInputStream())));
-                data.getLogs().add(log);               
-                
-                TasksTab.getInstance().refreshFromTasksModel();
-                return process.waitFor();
-            }
-
-            @Override
-            protected void done() {
+            public Integer act(Void ignored) {
                 try {
-                    get();
-                    data.getTasksModel().set(
-                            new Task(rawData.iterator().next().getFileName(),
-                                    "Run Genome Annotation", "Complete"));
-                    TasksTab.getInstance().refreshFromTasksModel();
+                    MascotGenericFormatFile mgf;
+                    if (rawData.size() > 1) {
+                        mgf = FileFormatUtils.merge(new TreeSet<>(rawData), 1024 * 1024 * 1024);
+                    } else {
+                        mgf = rawData.iterator().next();
+                    }
+                    
+                    if (mgf != null) {
+                        commandList.add("-spectrum_files");
+                        commandList.add(mgf.getAbsoluteFileName());
+                    }
+                    
+                    commandList.add("-outputFolder");
+                    commandList.add(mgf.getFile().getParentFile().getAbsolutePath() + File.separator + "annotation_output");
+                    String executionString = StringUtils.join(" ", commandList);
+                    System.out.println("Execution String: " + executionString);
+                    Process process = Runtime.getRuntime().exec(executionString);
+                    Log log = new Log();
+                    log.setErrorOutput(new BufferedReader(new InputStreamReader(process.getErrorStream())));
+                    log.setStandardOutput(new BufferedReader(new InputStreamReader(process.getInputStream())));
+                    data.getLogs().add(log);
+                    
+                    //TasksTab.getInstance().refreshData();
+                    return process.waitFor();
+                } catch (IOException | InterruptedException ex) {
+                    Logger.getLogger(SearchGuiViaMzidLibWrapper.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                return 1;
+            }
+        });
 
-                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
-                            .setIdentificationsDone();
-                    
-                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
-                            .setResultsDone();
-                    
-                    JOptionPane
+        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+            @Override
+            public Void act(Void argument) {
+                AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
+                        .setIdentificationsDone();
+
+                AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
+                        .setResultsDone();
+                
+                JOptionPane
                             .showConfirmDialog(
                                     AnalyseDynamicTab.getInstance(),
                                     "Your genome annotation run has finished and your result files are now available.\n"
                                     + "Please check the \"annotation_output\" folder where your raw data was situated.\n"
-                                            + "The mzID output file from the pipeline is currently loading in the background and should be available for viewing in the Inspect tab soon.\n"
+                                    + "The mzID output file from the pipeline is currently loading in the background and should be available for viewing in the Inspect tab soon.\n"
                                     + "Check the output folder for various CSV files and multiple annotated GFF files.\n"
                                     + "Also check the \"ProteoAnnotator.txt\" file for any error messages and a log of the run.",
                                     "Genome Annotation Completed", JOptionPane.PLAIN_MESSAGE,
                                     JOptionPane.INFORMATION_MESSAGE);
-                    
+
                     String outputMzid = rawData.iterator().next().getFile().getParentFile().getAbsolutePath()
                             + File.separator + "annotation_output" + File.separator
                             + prefix
                             + rawData.iterator().next().getFileName().replaceAll(".[Mm][Gg][Ff]", StringUtils.emptyString())
                             + "_fdr_peptide_threshold_mappedGff2_proteoGrouper_nonA_Threshold_FDR_Threshold.mzid";
-                    
+
                     System.out.println("Looking for mzid file: " + outputMzid);
-                    
+
                     File mzidFile = new File(outputMzid);
                     if (mzidFile.exists()) {
                         data.getInspectModel().addIdentDataFile(new MzIdentMLFile(mzidFile, null));
                     }
-                    
+
                     outputMzid = rawData.iterator().next().getFile().getParentFile().getAbsolutePath()
                             + File.separator + "annotation_output" + File.separator
                             + prefix
                             + rawData.iterator().next().getFileName().replaceAll(".[Mm][Gg][Ff]", StringUtils.emptyString())
                             + "_fdr_peptide_threshold_mappedGff2_proteoGrouper_fdr_Threshold.mzid";
-                    
+
                     System.out.println("Looking for mzid file: " + outputMzid);
-                    
+
                     mzidFile = new File(outputMzid);
                     if (mzidFile.exists()) {
                         data.getInspectModel().addIdentDataFile(new MzIdentMLFile(mzidFile, null));
                     }
                     
-                    System.out.println("Done!");
-                } catch (InterruptedException | ExecutionException ex) {
-                    System.out.println(ex.getLocalizedMessage());
-                }
+                    return null;
             }
-        };
-
-        data.getSearchGUIExecutor().submit(worker);
-    }  
+        });
+        
+        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+            @Override
+            public Void act(Void argument) {
+                System.out.println("Genome annotation done.");
+                return null;
+            }
+        });
+        
+        BackgroundTaskManager.getInstance().submit(task);
+    }
 
     public void printDebugInfo() {
         System.out.println("This JAR found is: \"" + getMzIdLibJar() + "\"");
@@ -246,20 +252,20 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
             if (thisClassFile.getAbsolutePath().endsWith("classes")) {
                 return new File("c:\\mzidlib\\mzidentml-lib-1.6.10-SNAPSHOT.jar");
             }
-            
+
             File mzidlibFolder = new File(thisClassFile.getParent() + File.separator + "mzidlib");
             System.out.println("Folder is :" + mzidlibFolder);
-            
+
             File[] potentialJars = mzidlibFolder.listFiles(new FilenameFilter() {
                 @Override
                 public boolean accept(File directory, String fileName) {
                     return fileName.endsWith(".jar");
                 }
             });
-            
+
             return potentialJars[0];
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException("UTF-8 not supported?!");
-        }       
+        }
     }
 }
