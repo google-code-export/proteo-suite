@@ -105,7 +105,9 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
                     identDialog.getGeneModel(),
                     identDialog.getOtherGeneModels(),
                     runParams,
-                    identDialog.getOutputFilePrefix());
+                    identDialog.getOutputFilePrefix(),
+                    identDialog.getPeptideLevelThresholding(),
+                    identDialog.getProteinLevelThresholding());
 
             wrapper.printDebugInfo();
             wrapper.compute();

@@ -70,6 +70,7 @@ public class IdentParamsView extends JDialog {
     private static final WorkSpace workSpace = WorkSpace.getInstance();
     private static final String NO_MODS_SELECTED = "--- none selected ---";
     private static Set<String> possibleMods = null;
+    private static final String[] thresholdValues = new String[]{"0.00 (0%)", "0.001 (0.1%)", "0.005 (0.5%)", "0.01 (1%)", "0.02 (2%)", "0.03 (3%)", "0.04 (4%)", "0.05 (5%)"};
 
     private boolean genomeAnnotationMode = false;
 
@@ -106,6 +107,8 @@ public class IdentParamsView extends JDialog {
     private JComboBox<Character> jcFragmentIonTypesXYZ;
     private JCheckBox jcDoProteoGrouper;    
     private JComboBox<String> jcEnzyme;
+    private JComboBox<String> peptideThresholdValueComboBox;
+    private JComboBox<String> proteinThresholdValueComboBox;
 
     private DatabasePanel databasePanel;
 
@@ -323,7 +326,11 @@ public class IdentParamsView extends JDialog {
         this.jcMaxCharge.setSelectedIndex(3);
         this.jcDoProteoGrouper = new JCheckBox("Group Proteins?");        
         jtMSTolerance
-                .setToolTipText("Precursor Mass Tolerance (E.g. +/- 2.5Da, +/- 20ppm)");
+                .setToolTipText("Precursor Mass Tolerance (E.g. +/- 2.5Da, +/- 20ppm)");        
+        this.peptideThresholdValueComboBox = new JComboBox<>(thresholdValues);
+        this.peptideThresholdValueComboBox.setSelectedIndex(3);
+        this.proteinThresholdValueComboBox = new JComboBox<>(thresholdValues);
+        this.proteinThresholdValueComboBox.setSelectedIndex(3);
 
         // Tolerances
         jPanel.add(getRow(new JLabel("<html>Precursor MS tolerance &plusmn;</html>"), jtMSTolerance, jcPrecursorToleranceUnits));
@@ -341,6 +348,10 @@ public class IdentParamsView extends JDialog {
         
         jPanel.add(getRow(new JLabel("Output File Prefix:"), jtPrefix));
 
+        if (this.genomeAnnotationMode) {
+            jPanel.add(getRow(new JLabel("Peptide-level thresholding:"), this.peptideThresholdValueComboBox, new JLabel("Protein-level thresholding:"), this.proteinThresholdValueComboBox));
+        }
+        
         if (!this.genomeAnnotationMode) {
             jPanel.add(getRow(jcDoProteoGrouper));
         }
@@ -427,6 +438,14 @@ public class IdentParamsView extends JDialog {
     public boolean isRequestingProteoGrouper() {
         return jcDoProteoGrouper.isSelected();
     }    
+    
+    public String getPeptideLevelThresholding() {
+        return ((String) this.peptideThresholdValueComboBox.getSelectedItem()).split(" ")[0];
+    }
+    
+    public String getProteinLevelThresholding() {
+        return ((String) this.proteinThresholdValueComboBox.getSelectedItem()).split(" ")[0];
+    }
 
     private Set<String> validateFields() {
         Set<String> validationErrors = new HashSet<>();

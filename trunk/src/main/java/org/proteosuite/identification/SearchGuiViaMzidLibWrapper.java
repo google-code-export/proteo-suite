@@ -21,7 +21,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
-import org.proteosuite.gui.tasks.TasksTab;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
@@ -48,7 +47,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public SearchGuiViaMzidLibWrapper(Set<MascotGenericFormatFile> inputSpectra, String[] geneModel, Map<String, String> otherModels, Map<String, String> searchParameters, String prefix) {
+    public SearchGuiViaMzidLibWrapper(Set<MascotGenericFormatFile> inputSpectra, String[] geneModel, Map<String, String> otherModels, Map<String, String> searchParameters, String prefix, String peptideLevelThresholding, String proteinLevelThresholding) {
         this.genomeAnnotation = true;
         this.rawData = inputSpectra;
         this.prefix = prefix;
@@ -101,6 +100,12 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
             commandList.add(searchParameterFile.getAbsolutePath());
         }
 
+        commandList.add("-peptideThreshValue");
+        commandList.add(peptideLevelThresholding);
+        
+        commandList.add("-proteinThreshValue");
+        commandList.add(proteinLevelThresholding);
+        
         commandList.add("-compress");
         commandList.add("false");
     }
