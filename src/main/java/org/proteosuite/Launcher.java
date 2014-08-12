@@ -12,6 +12,7 @@ import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.actions.TaskPostCompleteAction;
 import org.proteosuite.gui.IdentParamsView;
 import org.proteosuite.gui.ProteoSuite;
+import org.proteosuite.gui.RIntegration.R;
 import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
 import org.proteosuite.model.BackgroundTaskSubject;
@@ -30,13 +31,29 @@ public class Launcher {
     public static void main(String args[]) {
         // Setting standard look and feel
         setLookAndFeel();
+        
+        if (!R.checkisInstalled()) {
+            int result = JOptionPane
+                    .showConfirmDialog(
+                            null,
+                            "You do not appear to have R installed.\n"
+                            + "You need to install R to use advanced statictics and graphics.\n"
+                            + "These features will be disabled for now.\n"
+                            + "R is available at:\nhttp://cran.r-project.org//\nTo install now, click \"Yes\" to be directed to the openMS web site.\n"
+                            + "Once installed you will need to restart Proteosuite to use openMS features.",
+                            "openMS Not Installed!", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                OpenURL.open("http://cran.r-project.org/");
+                return;
+            }
+        }
 
         if (!OpenMSLabelFreeWrapper.checkIsInstalled()) {
             int result = JOptionPane
                     .showConfirmDialog(
                             null,
                             "You do not appear to have openMS installed.\n"
-                            + "You need to install openMS in able to use the label-free quantitation feature.\n"
+                            + "You need to install openMS in order to use the label-free quantitation feature.\n"
                             + "openMS features will be disabled for now.\n"
                             + "OpenMS is available at:\nhttp://open-ms.sourceforge.net/\nTo install now, click \"Yes\" to be directed to the openMS web site.\n"
                             + "Once installed you will need to restart Proteosuite to use openMS features.",
