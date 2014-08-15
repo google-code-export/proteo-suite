@@ -41,7 +41,7 @@ public class Launcher {
                             + "These features will be disabled for now.\n"
                             + "R is available at:\nhttp://cran.r-project.org//\nTo install now, click \"Yes\" to be directed to the openMS web site.\n"
                             + "Once installed you will need to restart Proteosuite to use openMS features.",
-                            "openMS Not Installed!", JOptionPane.YES_NO_OPTION);
+                            "R Not Installed!", JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.YES_OPTION) {
                 OpenURL.open("http://cran.r-project.org/");
                 return;
@@ -127,10 +127,9 @@ public class Launcher {
                 }
             });
 
-            super.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
-
+            super.addCompletionAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
                 @Override
-                public Void act(Void argument) {
+                public Void act(BackgroundTaskSubject subject) {
                     String newVersion = UpdateWorker.super.getResultOfClass(String.class);
                     if (newVersion == null) {
                         return null;
@@ -148,7 +147,7 @@ public class Launcher {
                     }
 
                     return null;
-                }
+                }               
             });
         }
     }

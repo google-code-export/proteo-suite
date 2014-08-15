@@ -10,7 +10,7 @@ import org.proteosuite.model.RawDataFile;
  *
  * @author SPerkins
  */
-public class RawFilePostLoadAction implements ProteoSuiteAction<Void, RawDataFile> {
+public class RawFilePostLoadAction implements ProteoSuiteAction<Object, RawDataFile> {
 
     @Override
     public Void act(RawDataFile rawData) {

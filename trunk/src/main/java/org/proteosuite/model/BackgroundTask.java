@@ -59,7 +59,7 @@ public class BackgroundTask {
     }
 
     public final void queueForExecution(ExecutorService service) {
-        for (ProteoSuiteAction action : BackgroundTask.this.synchronousProcessingActions) {
+        for (ProteoSuiteAction<BackgroundTaskSubject, Object> action : BackgroundTask.this.synchronousProcessingActions) {
             processingResults.add(action.act(taskSubject));
         }
 
@@ -71,7 +71,7 @@ public class BackgroundTask {
                 }
                 
                 taskStatus = "In Progress...";
-                for (ProteoSuiteAction action : BackgroundTask.this.asynchronousProcessingActions) {
+                for (ProteoSuiteAction<BackgroundTaskSubject, Object> action : BackgroundTask.this.asynchronousProcessingActions) {
                     processingResults.add(action.act(taskSubject));
                 }
 
@@ -81,7 +81,7 @@ public class BackgroundTask {
             @Override
             protected void done() {
                 taskStatus = "Complete";
-                for (ProteoSuiteAction action : BackgroundTask.this.completionActions) {
+                for (ProteoSuiteAction<BackgroundTaskSubject, Object> action : BackgroundTask.this.completionActions) {
                     action.act(taskSubject);
                 }
             }

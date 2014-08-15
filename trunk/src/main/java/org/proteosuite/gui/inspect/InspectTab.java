@@ -33,7 +33,7 @@ public class InspectTab extends JPanel {
 
 	private static final int CONTENT_PANEL_INDEX = 1;
 
-	private final JComboBox<String> dataFileComboBox = new JComboBox<String>();
+	private final JComboBox<String> dataFileComboBox = new JComboBox<>();
 	private final InspectModel inspectModel = AnalyseData.getInstance()
 			.getInspectModel();
 	private static InspectTab instance = null;
@@ -104,7 +104,7 @@ public class InspectTab extends JPanel {
 	}
 
 	public void refreshComboBox() {
-		Set<String> files = new HashSet<String>();
+		Set<String> files = new HashSet<>();
 
 		for (RawDataFile dataFile : inspectModel.getRawData()) {
 			files.add(dataFile.getFileName());

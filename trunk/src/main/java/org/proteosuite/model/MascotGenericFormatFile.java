@@ -59,9 +59,9 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
         
         final BackgroundTask task = new BackgroundTask(this, "Load Raw Data");
         
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<MgfFile, Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<MgfFile, BackgroundTaskSubject>() {
             @Override
-            public MgfFile act(Void ignored) {
+            public MgfFile act(BackgroundTaskSubject ignored) {
                 try {
                     return new MgfFile(file);
                 } catch (JMzReaderException ex) {
@@ -72,10 +72,10 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
             }
         });
         
-        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
             @Override
-            public Void act(Void argument) {
-                mgf = task.getResultOfClass(MascotGenericFormatFile.class);
+            public Void act(BackgroundTaskSubject argument) {
+                mgf = task.getResultOfClass(MgfFile.class);
                 if (mgf == null) {
                         throw new RuntimeException("MGF file not read in correctly.");
                     }
@@ -86,9 +86,9 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
         
         
         task.addCompletionAction(new RawFilePostLoadAction());
-        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
             @Override
-            public Void act(Void ignored) {
+            public Void act(BackgroundTaskSubject ignored) {
                 System.out.println("Done loading MGF file.");
                 return null;
             }
@@ -163,7 +163,22 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
 
                 if (spectrumIterator.hasNext()) {
                     uk.ac.ebi.pride.tools.jmzreader.model.Spectrum spectrum = spectrumIterator.next();
-                    Feature precursor = new Feature(spectrum.getPrecursorMZ(), spectrum.getPrecursorIntensity(), spectrum.getPrecursorCharge());
+                    Double precursorMz = spectrum.getPrecursorMZ();
+                    Double precursorIntensity = spectrum.getPrecursorIntensity();
+                    Integer precursorCharge = spectrum.getPrecursorCharge();
+                    if (precursorMz == null) {
+                        throw new RuntimeException("Precursor m/z value in MGF can not be empty/null!");
+                    }
+                    
+                    if (precursorIntensity == null) {
+                        precursorIntensity = 10.0;
+                    }
+                    
+                    if (precursorCharge == null) {
+                        throw new RuntimeException("Precursor charge value in MGF can not be empty/null!");
+                    }
+                    
+                    Feature precursor = new Feature(precursorMz, precursorIntensity, precursorCharge);
                     localSpectrum = new FragmentSpectrum(precursor);
 
                     Map<Double, Double> peakList = spectrum.getPeakList();
