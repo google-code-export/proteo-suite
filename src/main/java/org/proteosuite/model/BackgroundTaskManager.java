@@ -17,7 +17,7 @@ public class BackgroundTaskManager {
     private final Set<BackgroundTask> tasks = new LinkedHashSet<>();
     private final int OPTIMUM_THREADS = computeOptimumThreads();
     private static BackgroundTaskManager INSTANCE;
-    private ProteoSuiteAction<Void, Void> tasksRefreshAction = null;
+    private ProteoSuiteAction<Object, BackgroundTaskSubject> tasksRefreshAction = null;
 
     private BackgroundTaskManager() {
         this.reset();
@@ -31,7 +31,7 @@ public class BackgroundTaskManager {
         return INSTANCE;
     }
     
-    public void setTasksRefreshAction(ProteoSuiteAction<Void, Void> action) {
+    public void setTasksRefreshAction(ProteoSuiteAction<Object, BackgroundTaskSubject> action) {
         this.tasksRefreshAction = action;
     }
     
