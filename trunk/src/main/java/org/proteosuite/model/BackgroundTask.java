@@ -92,7 +92,7 @@ public class BackgroundTask {
 
     public final <T> T getResultOfClass(Class clazz) {
         for (Object object : this.processingResults) {
-            if (object.getClass().equals(clazz)) {
+            if (object != null && object.getClass().equals(clazz)) {
                 return (T) object;
             }
         }

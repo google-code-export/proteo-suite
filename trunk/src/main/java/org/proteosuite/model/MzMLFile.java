@@ -201,16 +201,16 @@ public class MzMLFile extends RawDataFile {
 
         final BackgroundTask task = new BackgroundTask(this, "Load Raw Data");        
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<MzMLUnmarshaller, Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<MzMLUnmarshaller, BackgroundTaskSubject>() {
             @Override
-            public MzMLUnmarshaller act(Void ignored) {
+            public MzMLUnmarshaller act(BackgroundTaskSubject ignored) {
                 return new MzMLUnmarshaller(file);
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Void,Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<Void,BackgroundTaskSubject>() {
             @Override
-            public Void act(Void ignored) {
+            public Void act(BackgroundTaskSubject ignored) {
                 unmarshaller = task.getResultOfClass(MzMLUnmarshaller.class);
                 if (unmarshaller == null) {
                     throw new RuntimeException("mzML file not read in correctly.");
@@ -221,9 +221,9 @@ public class MzMLFile extends RawDataFile {
         });
         
         task.addCompletionAction(new RawFilePostLoadAction());
-        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<Void, BackgroundTaskSubject>() {
             @Override
-            public Void act(Void ignored) {
+            public Void act(BackgroundTaskSubject ignored) {
                 System.out.println("Done loading mzML file.");
                 return null;
             }

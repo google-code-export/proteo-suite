@@ -125,9 +125,9 @@ public class Launcher {
                 }
             }, "Checking For Update");
 
-            super.addAsynchronousProcessingAction(new ProteoSuiteAction<String, Void>() {
+            super.addAsynchronousProcessingAction(new ProteoSuiteAction<String, BackgroundTaskSubject>() {
                 @Override
-                public String act(Void argument) {
+                public String act(BackgroundTaskSubject argument) {
                     try {
                         return UpdateCheck.hasUpdate(ProteoSuite.PROTEOSUITE_VERSION);
                     } catch (IOException ex) {
