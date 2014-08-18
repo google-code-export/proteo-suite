@@ -8,14 +8,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import org.proteosuite.model.FragmentSpectrum;
 import org.proteosuite.model.MzIntensityPair;
-import org.proteosuite.model.MzMLFile;
 import org.proteosuite.model.PrecursorSpectrum;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.model.Spectrum;
-import uk.ac.ebi.jmzml.model.mzml.CVParam;
-import uk.ac.ebi.jmzml.model.mzml.PrecursorList;
-import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
-import uk.ac.ebi.jmzml.xml.io.MzMLUnmarshaller;
 
 /**
  *
@@ -41,6 +36,10 @@ public class MzTable extends JTableDefault {
             }
 
             MzIntensityPair basePeak = spectrum.getBasePeak();
+            if (basePeak.getIntensity() == 0.0 && basePeak.getMz() == 0.0) {
+                calculateBasePeak(basePeak, spectrum);
+            }
+            
             if (basePeak.getIntensity() < lowIntensityThreshold) {
                 continue;
             }
@@ -239,5 +238,19 @@ public class MzTable extends JTableDefault {
         model.addColumn("RT (sec)");
         model.addColumn("Precurs m/z");
         setModel(model);
+    }
+    
+    private static void calculateBasePeak(MzIntensityPair basePeak, Spectrum spectrum) {
+        double intensity = 0.0;
+        double mz = 0.0;
+        for (MzIntensityPair dataPoint : spectrum) {
+            if (dataPoint.getIntensity() > intensity) {
+                intensity = dataPoint.getIntensity();
+                mz = dataPoint.getMz();
+            }
+        }
+        
+        basePeak.setMz(mz);
+        basePeak.setIntensity(intensity);
     }
 }

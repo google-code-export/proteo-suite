@@ -77,9 +77,9 @@ public class MzIdentMLFile extends IdentDataFile {
     public synchronized void computePSMStats() {
         final BackgroundTask task = new BackgroundTask(this, "Compute PSM Stats");
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<String[], Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<String[], BackgroundTaskSubject>() {
             @Override
-            public String[] act(Void ignored) {
+            public String[] act(BackgroundTaskSubject ignored) {
                 SpectrumIdentificationProtocol protocol = unmarshaller.unmarshal(MzIdentMLElement.SpectrumIdentificationProtocol);
                 List<CvParam> thresholdingParams = protocol.getThreshold().getCvParam();
                 List<String> thresholdTerms = new ArrayList<>();
@@ -129,9 +129,9 @@ public class MzIdentMLFile extends IdentDataFile {
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<Void, BackgroundTaskSubject>() {
             @Override
-            public Void act(Void argument) {
+            public Void act(BackgroundTaskSubject argument) {
                 String[] computationResult = task.getResultOfClass(String[].class);
                 psmCountPassingThreshold = Integer.parseInt(computationResult[0]);
                 psmCountNotPassingThrehsold = Integer.parseInt(computationResult[1]);
@@ -159,9 +159,9 @@ public class MzIdentMLFile extends IdentDataFile {
     protected void initiateLoading() {
         final BackgroundTask task = new BackgroundTask(this, "LoadingIdentifications");
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<MzIdentMLUnmarshaller, Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<MzIdentMLUnmarshaller, BackgroundTaskSubject>() {
             @Override
-            public MzIdentMLUnmarshaller act(Void argument) {
+            public MzIdentMLUnmarshaller act(BackgroundTaskSubject argument) {
                 if (MzIdentMLFile.this.getParent() != null) {
                     MzIdentMLFile.this.getParent().setIdentStatus("Loading...");
                     ((CreateOrLoadIdentificationsStep) (AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)).refreshFromData();
@@ -171,9 +171,9 @@ public class MzIdentMLFile extends IdentDataFile {
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<Void, BackgroundTaskSubject>() {
             @Override
-            public Void act(Void argument) {
+            public Void act(BackgroundTaskSubject argument) {
                 unmarshaller = task.getResultOfClass(MzIdentMLUnmarshaller.class);
                 return null;
             }
