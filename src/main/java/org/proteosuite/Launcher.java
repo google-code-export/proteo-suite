@@ -31,38 +31,8 @@ public class Launcher {
     public static void main(String args[]) {
         // Setting standard look and feel
         setLookAndFeel();
-        
-        if (!R.checkisInstalled()) {
-            int result = JOptionPane
-                    .showConfirmDialog(
-                            null,
-                            "You do not appear to have R installed.\n"
-                            + "You need to install R to use advanced statictics and graphics.\n"
-                            + "These features will be disabled for now.\n"
-                            + "R is available at:\nhttp://cran.r-project.org//\nTo install now, click \"Yes\" to be directed to the openMS web site.\n"
-                            + "Once installed you will need to restart Proteosuite to use openMS features.",
-                            "R Not Installed!", JOptionPane.YES_NO_OPTION);
-            if (result == JOptionPane.YES_OPTION) {
-                OpenURL.open("http://cran.r-project.org/");
-                return;
-            }
-        }
-
-        if (!OpenMSLabelFreeWrapper.checkIsInstalled()) {
-            int result = JOptionPane
-                    .showConfirmDialog(
-                            null,
-                            "You do not appear to have openMS installed.\n"
-                            + "You need to install openMS in order to use the label-free quantitation feature.\n"
-                            + "openMS features will be disabled for now.\n"
-                            + "OpenMS is available at:\nhttp://open-ms.sourceforge.net/\nTo install now, click \"Yes\" to be directed to the openMS web site.\n"
-                            + "Once installed you will need to restart Proteosuite to use openMS features.",
-                            "openMS Not Installed!", JOptionPane.YES_NO_OPTION);
-            if (result == JOptionPane.YES_OPTION) {
-                OpenURL.open("http://open-ms.sourceforge.net/");
-                return;
-            }
-        }
+        installCheckR();
+        installCheckOpenMS();
 
         // Pre-load the searchGUI modifications.
         IdentParamsView.readInPossibleMods();
@@ -89,7 +59,48 @@ public class Launcher {
         });
     }
 
-    private static void setLookAndFeel() {
+    private static void installCheckOpenMS() {
+    	String openMSUrl = "http://open-ms.sourceforge.net";
+
+        if (!OpenMSLabelFreeWrapper.checkIsInstalled()) {
+            int result = JOptionPane
+                    .showConfirmDialog(
+                            null,
+                            "You do not appear to have openMS installed.\n"
+                            + "You need to install openMS in order to use the label-free quantitation feature.\n"
+                            + "openMS features will be disabled for now.\n"
+                            + "OpenMS is available at:\n" + openMSUrl +"\nTo install now, click \"Yes\" to be directed to the openMS web site.\n"
+                            + "Once installed you will need to restart Proteosuite to use openMS features.",
+                            "openMS Not Installed!", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                OpenURL.open(openMSUrl);
+                return;
+            }
+        }
+		
+	}
+
+	private static void installCheckR() {
+    	String rUrl = "http://cran.r-project.org";
+        
+        if (!R.checkisInstalled()) {
+            int result = JOptionPane
+                    .showConfirmDialog(
+                            null,
+                            "You do not appear to have R installed.\n"
+                            + "You need to install R to use advanced statictics and graphics.\n"
+                            + "These features will be disabled for now.\n"
+                            + "R is available at:\n"+ rUrl + "\nTo install now, click \"Yes\" to be directed to the openMS web site.\n"
+                            + "Once installed you will need to restart Proteosuite to use openMS features.",
+                            "R Not Installed!", JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION) {
+                OpenURL.open(rUrl);
+                return;
+            }
+        }
+	}
+
+	private static void setLookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
