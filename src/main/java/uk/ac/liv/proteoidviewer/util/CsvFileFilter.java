@@ -11,7 +11,7 @@ public class CsvFileFilter extends FileFilter {
 
 	@Override
 	public boolean accept(File file) {
-		// Allow just directories and files with ".mzid" extension...
+		// Allow just directories and files with ".mzid" extension
 		return file.isDirectory() || file.getAbsolutePath().endsWith(".csv");
 	}
 
