@@ -22,17 +22,19 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
+import org.proteosuite.gui.renderer.PeptideCellRenderer;
+import org.proteosuite.model.Modification;
+import org.proteosuite.model.Peptide;
+
 import uk.ac.ebi.jmzidml.MzIdentMLElement;
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
-import uk.ac.ebi.jmzidml.model.mzidml.Modification;
-import uk.ac.ebi.jmzidml.model.mzidml.Peptide;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
 import uk.ac.ebi.jmzidml.xml.io.MzIdentMLUnmarshaller;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.interfaces.LazyLoading;
 import uk.ac.liv.proteoidviewer.listener.LazyLoadingComponentListener;
-import uk.ac.liv.proteoidviewer.listener.psmRankValueActionPerformed;
+import uk.ac.liv.proteoidviewer.listener.PsmRankValueActionPerformed;
 import uk.ac.liv.proteoidviewer.listener.spectrumIdentificationItemTablePeptideViewMouseClicked;
 import uk.ac.liv.proteoidviewer.util.IdViewerUtils;
 
@@ -88,7 +90,8 @@ public class PeptideSummary extends JSplitPane implements LazyLoading {
 						filterListCharge1, jGraph1, siiSirMap));
 		
 		spectrumIdentificationItemTablePeptideView.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		
+		spectrumIdentificationItemTablePeptideView.setDefaultRenderer(Object.class, new PeptideCellRenderer());
+
 		createPanel();
 	}
 
@@ -107,7 +110,7 @@ public class PeptideSummary extends JSplitPane implements LazyLoading {
 		jExperimentalFilterPanel1.setBorder(BorderFactory
 				.createTitledBorder("Experimental Filtering"));
 
-		psmRankValue.addActionListener(new psmRankValueActionPerformed(
+		psmRankValue.addActionListener(new PsmRankValueActionPerformed(
 				this));
 
 		final JPanel jSpectrumIdentificationItemPanel1 = new JPanel();
@@ -137,14 +140,17 @@ public class PeptideSummary extends JSplitPane implements LazyLoading {
 		SpectrumPanel.add(jExperimentalFilterPanel1);
 		SpectrumPanel.add(jFragmentationPanel1);
 
-		final JPanel leftPanel = new JPanel(new GridLayout(4, 1));
+		final JPanel leftPanel = new JPanel(new BorderLayout());
 		JPanel psmPanel = new JPanel(new FlowLayout());
 		
 		psmPanel.add(new JLabel("Peptide-Spectrum matches with Rank: "));
 		psmPanel.add(psmRankValue);
-		leftPanel.add(psmPanel);
-		leftPanel.add(jSpectrumIdentificationItemPanel1);
-		leftPanel.add(jPeptideEvidencePanel1);
+		leftPanel.add(psmPanel, BorderLayout.PAGE_START);
+		
+		JPanel tablePanel = new JPanel(new GridLayout(2, 1));
+		tablePanel.add(jSpectrumIdentificationItemPanel1);
+		tablePanel.add(jPeptideEvidencePanel1);
+		leftPanel.add(tablePanel, BorderLayout.CENTER);
 
 		setBorder(null);
 		setDividerLocation(500);
@@ -170,18 +176,27 @@ public class PeptideSummary extends JSplitPane implements LazyLoading {
 	}
 
 	public void load() {
+		int filterRank = 10;
+		if (psmRankValue.getSelectedIndex() == 0) {
+			filterRank = 1;
+		} else if (psmRankValue.getSelectedIndex() == 1) {
+			filterRank = 2;
+		} else if (psmRankValue.getSelectedIndex() == 2) {
+			filterRank = 3;
+		}
+		
 		MzIdentMLUnmarshaller mzIdentMLUnmarshaller = proteoIDViewer.getMzIdentMLUnmarshaller();
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		((DefaultTableModel) spectrumIdentificationItemTablePeptideView
 				.getModel()).setNumRows(0);
 		siiSirMap.clear();
 
-		Iterator<Peptide> iterPeptide = mzIdentMLUnmarshaller
+		Iterator<uk.ac.ebi.jmzidml.model.mzidml.Peptide> iterPeptide = mzIdentMLUnmarshaller
 				.unmarshalCollectionFromXpath(MzIdentMLElement.Peptide);
-		Map<String, Peptide> pepMap = new HashMap<>();
+		Map<String, uk.ac.ebi.jmzidml.model.mzidml.Peptide> pepMap = new HashMap<>();
 
 		while (iterPeptide.hasNext()) {
-			Peptide pep = iterPeptide.next();
+			uk.ac.ebi.jmzidml.model.mzidml.Peptide pep = iterPeptide.next();
 			pepMap.put(pep.getId(), pep);
 		}
 
@@ -200,134 +215,126 @@ public class PeptideSummary extends JSplitPane implements LazyLoading {
 					siiSirMap.put(spectrumIdentificationItem.getId(),
 							spectrumIdentificationResult.getId());
 
-					boolean isDecoy = proteoIDViewer
-							.checkIfSpectrumIdentificationItemIsDecoy(
-									spectrumIdentificationItem,
-									mzIdentMLUnmarshaller);
+					if (spectrumIdentificationItem.getRank() > filterRank)
+						continue;
 
 					// Peptide peptide =
 					// mzIdentMLUnmarshaller.unmarshal(Peptide.class,
 					// spectrumIdentificationItem.getPeptideRef());
-					Peptide peptide = pepMap.get(spectrumIdentificationItem
+					uk.ac.ebi.jmzidml.model.mzidml.Peptide peptide = pepMap.get(spectrumIdentificationItem
 							.getPeptideRef());
 					// Peptide peptide =
 					// spectrumIdentificationItem.getPeptide();
 
-					if (peptide != null) {
-						List<Modification> modificationList = peptide
-								.getModification();
-						Modification modification;
-						String residues = null;
-						Integer location = -1;
-						String modificationName = null;
-						CvParam modificationCvParam;
-						String combine = null;
-						if (modificationList.size() > 0) {
-							modification = modificationList.get(0);
-							location = modification.getLocation();
-							if (modification.getResidues().size() > 0) {
-								residues = modification.getResidues().get(0);
-							}
-							List<CvParam> modificationCvParamList = modification
-									.getCvParam();
-							if (modificationCvParamList.size() > 0) {
-								modificationCvParam = modificationCvParamList
-										.get(0);
-								modificationName = modificationCvParam
-										.getName();
-							}
-						}
-						if (modificationName != null) {
-							combine = modificationName;
-						}
-						if (residues != null) {
-							combine += " on residues: " + residues;
-						}
-						if (location != null) {
-							combine += " at location: " + location;
-						}
-						double calculatedMassToCharge = 0;
-						if (spectrumIdentificationItem
-								.getCalculatedMassToCharge() != null) {
-							calculatedMassToCharge = spectrumIdentificationItem
-									.getCalculatedMassToCharge();
-						}
-						int rank = 10;
-						if (psmRankValue.getSelectedIndex() == 0) {
-							rank = 1;
-						} else if (psmRankValue.getSelectedIndex() == 1) {
-							rank = 2;
-						} else if (psmRankValue.getSelectedIndex() == 2) {
-							rank = 3;
-						}
+					if (peptide == null)
+						continue;
 
-						if (spectrumIdentificationItem.getRank() <= rank) {
+					boolean isDecoy = proteoIDViewer
+							.checkIfSpectrumIdentificationItemIsDecoy(
+									spectrumIdentificationItem,
+									mzIdentMLUnmarshaller);
+					
+					List<uk.ac.ebi.jmzidml.model.mzidml.Modification> modificationList = peptide
+							.getModification();
+					
+					Modification[] mods = new Modification[modificationList.size()];
+					
+					
+					String[] residues = null;
+					Integer location = -1;
+					String modificationName = null;
+					CvParam modificationCvParam;
+					int modCount = 0;
+					if (modificationList.size() > 0) {
+						uk.ac.ebi.jmzidml.model.mzidml.Modification modification = modificationList.get(0);
+						location = modification.getLocation();
+						if (modification.getResidues().size() > 0) {
+							residues = new String[modification.getResidues().size()];
+							residues = modification.getResidues().toArray(residues);
+						}
+						List<CvParam> modificationCvParamList = modification
+								.getCvParam();
+						if (modificationCvParamList.size() > 0) {
+							modificationCvParam = modificationCvParamList
+									.get(0);
+							modificationName = modificationCvParam
+									.getName();
+						}
+						mods[modCount++] = new Modification(location, residues, modificationName);
+					}
+					
+					Peptide pepMod = new Peptide(peptide.getPeptideSequence(), mods);
+					
+					double calculatedMassToCharge = 0;
+					if (spectrumIdentificationItem
+							.getCalculatedMassToCharge() != null) {
+						calculatedMassToCharge = spectrumIdentificationItem
+								.getCalculatedMassToCharge();
+					}
+
+					((DefaultTableModel) spectrumIdentificationItemTablePeptideView
+							.getModel())
+							.addRow(new Object[] {
+									spectrumIdentificationItem.getId(),
+									pepMod,
+									IdViewerUtils
+											.roundTwoDecimals(calculatedMassToCharge),
+									IdViewerUtils
+											.roundTwoDecimals(spectrumIdentificationItem
+													.getExperimentalMassToCharge()),
+									spectrumIdentificationItem
+											.getRank(),
+									isDecoy,
+									spectrumIdentificationItem
+											.isPassThreshold() });
+
+					List<CvParam> cvParamListspectrumIdentificationItem = spectrumIdentificationItem
+							.getCvParam();
+
+					for (int s = 0; s < cvParamListspectrumIdentificationItem
+							.size(); s++) {
+						CvParam cvParam = cvParamListspectrumIdentificationItem
+								.get(s);
+						String accession = cvParam.getAccession();
+
+						if (cvParam.getName().equals(
+								"peptide unique to one protein")) {
 							((DefaultTableModel) spectrumIdentificationItemTablePeptideView
 									.getModel())
-									.addRow(new Object[] {
-											spectrumIdentificationItem.getId(),
-											peptide.getPeptideSequence(),
-											combine,
+									.setValueAt(1,
+											spectrumIdentificationItemTablePeptideView
+													.getModel()
+													.getRowCount() - 1,
+											8 + s);
+						} else if (accession.equals("MS:1001330")
+								|| accession.equals("MS:1001172")
+								|| accession.equals("MS:1001159")
+								|| accession.equals("MS:1001328")) {
+							// ((DefaultTableModel)
+							// spectrumIdentificationItemTablePeptideView.getModel()).setValueAt(roundScientificNumbers(Double.valueOf(cvParam.getValue()).doubleValue()),
+							// ((DefaultTableModel)
+							// spectrumIdentificationItemTablePeptideView.getModel()).getRowCount()
+							// - 1, 8 + s);
+							((DefaultTableModel) spectrumIdentificationItemTablePeptideView
+									.getModel())
+									.setValueAt(
 											IdViewerUtils
-													.roundTwoDecimals(calculatedMassToCharge),
-											IdViewerUtils
-													.roundTwoDecimals(spectrumIdentificationItem
-															.getExperimentalMassToCharge()),
-											Integer.valueOf(spectrumIdentificationItem
-													.getRank()),
-											isDecoy,
-											spectrumIdentificationItem
-													.isPassThreshold() });
-
-							List<CvParam> cvParamListspectrumIdentificationItem = spectrumIdentificationItem
-									.getCvParam();
-
-							for (int s = 0; s < cvParamListspectrumIdentificationItem
-									.size(); s++) {
-								CvParam cvParam = cvParamListspectrumIdentificationItem
-										.get(s);
-								String accession = cvParam.getAccession();
-
-								if (cvParam.getName().equals(
-										"peptide unique to one protein")) {
-									((DefaultTableModel) spectrumIdentificationItemTablePeptideView
-											.getModel())
-											.setValueAt(1,
-													spectrumIdentificationItemTablePeptideView
-															.getModel()
-															.getRowCount() - 1,
-													8 + s);
-								} else if (accession.equals("MS:1001330")
-										|| accession.equals("MS:1001172")
-										|| accession.equals("MS:1001159")
-										|| accession.equals("MS:1001328")) {
-									// ((DefaultTableModel)
-									// spectrumIdentificationItemTablePeptideView.getModel()).setValueAt(roundScientificNumbers(Double.valueOf(cvParam.getValue()).doubleValue()),
-									// ((DefaultTableModel)
-									// spectrumIdentificationItemTablePeptideView.getModel()).getRowCount()
-									// - 1, 8 + s);
-									((DefaultTableModel) spectrumIdentificationItemTablePeptideView
-											.getModel())
-											.setValueAt(
-													IdViewerUtils
-															.roundThreeDecimals(Double
-																	.parseDouble(cvParam
-																			.getValue())),
-													spectrumIdentificationItemTablePeptideView
-															.getModel()
-															.getRowCount() - 1,
-													8 + s);
-								} else {
-									((DefaultTableModel) spectrumIdentificationItemTablePeptideView
-											.getModel())
-											.setValueAt(
-													cvParam.getValue(),
-													(spectrumIdentificationItemTablePeptideView
-															.getModel())
-															.getRowCount() - 1,
-													8 + s);
-								}
-							}
+													.roundThreeDecimals(Double
+															.parseDouble(cvParam
+																	.getValue())),
+											spectrumIdentificationItemTablePeptideView
+													.getModel()
+													.getRowCount() - 1,
+											8 + s);
+						} else {
+							((DefaultTableModel) spectrumIdentificationItemTablePeptideView
+									.getModel())
+									.setValueAt(
+											cvParam.getValue(),
+											(spectrumIdentificationItemTablePeptideView
+													.getModel())
+													.getRowCount() - 1,
+											7 + s);
 						}
 					}
 				}
@@ -384,7 +391,7 @@ public class PeptideSummary extends JSplitPane implements LazyLoading {
 		                return false;
 		            }
 				});
-		spectrumIdentificationItemTablePeptideView.removeAll();
+		//spectrumIdentificationItemTablePeptideView.removeAll();
 		// spectrumIdentificationItemTablePeptideView.setAutoCreateRowSorter(true);
 
 		jExperimentalFilterPanel1.removeAll();

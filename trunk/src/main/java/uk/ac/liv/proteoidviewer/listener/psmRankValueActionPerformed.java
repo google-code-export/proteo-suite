@@ -5,11 +5,11 @@ import java.awt.event.ActionListener;
 
 import uk.ac.liv.proteoidviewer.tabs.PeptideSummary;
 
-public class psmRankValueActionPerformed implements ActionListener {
+public class PsmRankValueActionPerformed implements ActionListener {
 
 	private final PeptideSummary peptideSummary;
 
-	public psmRankValueActionPerformed(PeptideSummary peptideSummary) {
+	public PsmRankValueActionPerformed(PeptideSummary peptideSummary) {
 		this.peptideSummary = peptideSummary;
 	}
 
