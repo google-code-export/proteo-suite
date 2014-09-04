@@ -214,7 +214,23 @@ public class ProteoIDViewer extends JTabbedPane {
 		spectrumSummary.reset(sir, spectrumIdentificationResultCvParamLengs,
 				spectrumIdentificationItemTableHeaders);
 
-		//
+		spectrumIdentificationItemTableHeaders = new String[spectrumIdentificationItemCvParamLengs + 7];
+		spectrumIdentificationItemTableHeaders[0] = "ID";
+		spectrumIdentificationItemTableHeaders[1] = "Peptide Sequence";
+		spectrumIdentificationItemTableHeaders[2] = "Theoretical m/z";
+		spectrumIdentificationItemTableHeaders[3] = "Experimental m/z";
+		spectrumIdentificationItemTableHeaders[4] = "Rank";
+		spectrumIdentificationItemTableHeaders[5] = "Is Decoy";
+		spectrumIdentificationItemTableHeaders[6] = "PassThreshold";
+		if (sii != null) {
+			for (int i = 0; i < sii.length; i++) {
+				String string = sii[i];
+
+				string = string.replaceAll("\\\\", "");
+
+				spectrumIdentificationItemTableHeaders[7 + i] = string;
+			}
+		}
 		peptideSummary.reset(spectrumIdentificationItemTableHeaders);
 		// peptideEvidenceTablePeptideView.setAutoCreateRowSorter(true);
 	}
