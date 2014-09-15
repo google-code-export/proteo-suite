@@ -21,6 +21,7 @@ public abstract class RawDataFile implements Iterable<Spectrum>, BackgroundTaskS
     private final Map<String, String> assayConditions = new HashMap<>();
     private IdentDataFile identFile = null;
     private String identStatus = "<None>";   
+    private boolean selectedUsingFolderMode = false;
     
     @Override
     public abstract Iterator<Spectrum> iterator();
@@ -50,6 +51,10 @@ public abstract class RawDataFile implements Iterable<Spectrum>, BackgroundTaskS
     
     public String getIdentStatus() {
         return identStatus;
+    }
+    
+    public void setSelectedUsingFolderMode(boolean selectionMode) {
+        this.selectedUsingFolderMode = selectionMode;
     }
     
     public void setIdentStatus(String identStatus) {
