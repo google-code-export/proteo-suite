@@ -40,11 +40,11 @@ public class BackgroundTaskManager {
     }
 
     public void submit(BackgroundTask task) {
-        this.tasks.add(task);
-        if (tasksRefreshAction != null) {
-            tasksRefreshAction.act(null);
-            task.addCompletionAction(tasksRefreshAction);
+        if (tasksRefreshAction != null) {            
+            task.setRefreshAction(tasksRefreshAction);            
         }
+        
+        this.tasks.add(task);        
         
         switch (task.getName().toUpperCase()) {
             case "CREATE IDENTIFICATIONS":
@@ -62,7 +62,7 @@ public class BackgroundTaskManager {
         }
     }
 
-    public void reset() {
+    public final void reset() {
         if (genericService != null) {
             genericService.shutdownNow();
         }
