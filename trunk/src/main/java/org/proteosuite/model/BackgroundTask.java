@@ -19,6 +19,7 @@ public class BackgroundTask {
     private final Set<ProteoSuiteAction<BackgroundTaskSubject, Object>> synchronousProcessingActions = new LinkedHashSet<>();
     private final Set<ProteoSuiteAction<BackgroundTaskSubject, Object>> asynchronousProcessingActions = new LinkedHashSet<>();
     private final Set<ProteoSuiteAction<BackgroundTaskSubject, Object>> completionActions = new LinkedHashSet<>();
+    private ProteoSuiteAction<Object, BackgroundTaskSubject> refreshAction;
     private final Set<Object> processingResults = new LinkedHashSet<>();
     private final BackgroundTaskSubject taskSubject;
     private String taskStatus = "Pending...";
@@ -57,8 +58,13 @@ public class BackgroundTask {
     public final void addCompletionAction(ProteoSuiteAction action) {
         this.completionActions.add(action);
     }
+    
+    public final void setRefreshAction(ProteoSuiteAction<Object, BackgroundTaskSubject> action) {
+        this.refreshAction = action;
+    }
 
     public final void queueForExecution(ExecutorService service) {
+        refreshAction.act(taskSubject);
         for (ProteoSuiteAction<BackgroundTaskSubject, Object> action : BackgroundTask.this.synchronousProcessingActions) {
             processingResults.add(action.act(taskSubject));
         }
@@ -71,6 +77,7 @@ public class BackgroundTask {
                 }
                 
                 taskStatus = "In Progress...";
+                refreshAction.act(taskSubject);
                 for (ProteoSuiteAction<BackgroundTaskSubject, Object> action : BackgroundTask.this.asynchronousProcessingActions) {
                     processingResults.add(action.act(taskSubject));
                 }
@@ -81,6 +88,7 @@ public class BackgroundTask {
             @Override
             protected void done() {
                 taskStatus = "Complete";
+                refreshAction.act(taskSubject);
                 for (ProteoSuiteAction<BackgroundTaskSubject, Object> action : BackgroundTask.this.completionActions) {
                     action.act(taskSubject);
                 }
