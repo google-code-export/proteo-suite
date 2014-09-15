@@ -2,6 +2,8 @@ package org.proteosuite.gui.listener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
@@ -15,7 +17,9 @@ import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
 import org.proteosuite.gui.analyse.TMTStep;
 import org.proteosuite.gui.tables.DefineConditionsTable;
 import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.MascotGenericFormatFile;
 import org.proteosuite.model.RawDataFile;
+import org.proteosuite.utils.StringUtils;
 
 /**
  *
@@ -118,6 +122,7 @@ public class ContinueButtonListener implements ActionListener {
 
         boolean mzmlPresent = false;
         boolean mgfPresent = false;
+        Set<String> mgfErrorFiles = new LinkedHashSet<>();
         for (int i = 0; i < data.getRawDataCount(); i++) {
             RawDataFile dataFile = data.getRawDataFile(i);
             switch (dataFile.getFormat().toUpperCase()) {
@@ -126,12 +131,19 @@ public class ContinueButtonListener implements ActionListener {
                     break;
                 case "MGF":
                     mgfPresent = true;
+                    if (dataFile.getFile().length() > Math.pow(1024, 3)) {
+                        mgfErrorFiles.add(dataFile.getFileName());
+                    } else if (((MascotGenericFormatFile)dataFile).getSpectraCount() > 25000) {
+                        mgfErrorFiles.add(dataFile.getFileName());
+                    }
+                    
                     break;
             }
         }
 
         if (data.getGenomeAnnotationMode()) {
             if (mzmlPresent) {
+                // Needs fixing!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
                 JOptionPane
                         .showConfirmDialog(
                                 panel,
@@ -143,14 +155,43 @@ public class ContinueButtonListener implements ActionListener {
                                 JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            
+            if (data.getRawDataCount() > 1 && !data.getRawDataFile(0).isSelectedUsingFolderMode()) {
+                JOptionPane
+                        .showConfirmDialog(
+                                panel,
+                                "You have selected more than one MGF file for analysis in the genome annotation pipeline.\n"
+                                + "But these files were not imported in the same step using \"Import MGFs From Folder\".\n"
+                                + "To select multiple MGFs for genome annotation please clear the existing file selection and use \"Import MGFs From Folder\".\n",
+                                "Multiple MGF Files : Different Data Source", JOptionPane.PLAIN_MESSAGE,
+                                JOptionPane.INFORMATION_MESSAGE);
+                
+                return;
+            }
+            
+            if (mgfErrorFiles.size() > 0) {
+                JOptionPane
+                        .showConfirmDialog(
+                                panel,
+                                "Some of your MGF files are too large to process in the genome annotation pipeline.\n"
+                                + "Files that are too large to process:\n" + StringUtils.join("\n", mgfErrorFiles) + "\n"
+                                + "Your either have more than 1GB of data per file, or more than 25,000 spectra per file.\n"
+                                + "Please remove the problem MGF file(s) from your chosen directory, then remove all MGFs from ProteoSuite and re-import your chosen folder.\n"
+                                        + "You may wish to split large MGF files into smaller MGF files.",
+                                "MGF Files : Data Too Large", JOptionPane.PLAIN_MESSAGE,
+                                JOptionPane.ERROR_MESSAGE);
+
+                return;
+            }
         } else {           
             if (mgfPresent) {
                 JOptionPane
                         .showConfirmDialog(
                                 panel,
                                 "You have not chosen to do a genome annotation run, but your raw data contains MGF files.\n"
-                                + "ProteoSuite does not currently support MGF files when not doing genome annotation.\n"
-                                + "We currently only support mzML.\n"
+                                + "ProteoSuite does not currently support MGF files for processing when not doing genome annotation.\n"
+                                + "We currently only support mzML for processing.\n"
+                                        + "MGF files can still be visualised in the 'Inspect' tab."
                                 + "This may change at a later date.\n"
                                 + "Please remove the MGF data to continue to the next stage.",
                                 "MGF Data Present", JOptionPane.PLAIN_MESSAGE,

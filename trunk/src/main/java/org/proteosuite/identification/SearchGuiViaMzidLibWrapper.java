@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -24,10 +23,10 @@ import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
+import org.proteosuite.model.BackgroundTaskSubject;
 import org.proteosuite.model.Log;
 import org.proteosuite.model.MascotGenericFormatFile;
 import org.proteosuite.model.MzIdentMLFile;
-import org.proteosuite.utils.FileFormatUtils;
 import org.proteosuite.utils.StringUtils;
 
 /**
@@ -43,7 +42,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
     private AnalyseData data = AnalyseData.getInstance();
     private String prefix = null;
 
-    public SearchGuiViaMzidLibWrapper(Set<MascotGenericFormatFile> inputSpectra, String databasePath, Map<String, String> searchParamters, boolean doProteoGrouper) {
+    public SearchGuiViaMzidLibWrapper(Set<MascotGenericFormatFile> inputSpectra, String databasePath, Map<String, String> searchParameters) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -102,10 +101,10 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
 
         commandList.add("-peptideThreshValue");
         commandList.add(peptideLevelThresholding);
-        
+
         commandList.add("-proteinThreshValue");
         commandList.add(proteinLevelThresholding);
-        
+
         commandList.add("-compress");
         commandList.add("false");
     }
@@ -150,22 +149,19 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
 
         BackgroundTask task = new BackgroundTask(rawData.iterator().next(), "Run Genome Annotation");
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Integer, Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
             @Override
-            public Integer act(Void ignored) {
+            public Object act(BackgroundTaskSubject ignored) {
                 try {
-                    MascotGenericFormatFile mgf;
+                    MascotGenericFormatFile mgf = rawData.iterator().next();
                     if (rawData.size() > 1) {
-                        mgf = FileFormatUtils.merge(new TreeSet<>(rawData), 1024 * 1024 * 1024);
+                        commandList.add("-spectrum_files");
+                        commandList.add(mgf.getFile().getParent());
                     } else {
-                        mgf = rawData.iterator().next();
-                    }
-                    
-                    if (mgf != null) {
                         commandList.add("-spectrum_files");
                         commandList.add(mgf.getAbsoluteFileName());
                     }
-                    
+
                     commandList.add("-outputFolder");
                     commandList.add(mgf.getFile().getParentFile().getAbsolutePath() + File.separator + "annotation_output");
                     String executionString = StringUtils.join(" ", commandList);
@@ -175,14 +171,13 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                     log.setErrorOutput(new BufferedReader(new InputStreamReader(process.getErrorStream())));
                     log.setStandardOutput(new BufferedReader(new InputStreamReader(process.getInputStream())));
                     data.getLogs().add(log);
-                    
-                    //TasksTab.getInstance().refreshData();
+
                     return process.waitFor();
                 } catch (IOException | InterruptedException ex) {
                     Logger.getLogger(SearchGuiViaMzidLibWrapper.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
-                return 1;
+
+                return -1;
             }
         });
 
@@ -194,48 +189,32 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
 
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
                         .setResultsDone();
-                
+
                 JOptionPane
-                            .showConfirmDialog(
-                                    AnalyseDynamicTab.getInstance(),
-                                    "Your genome annotation run has finished and your result files are now available.\n"
-                                    + "Please check the \"annotation_output\" folder where your raw data was situated.\n"
-                                    + "The mzID output file from the pipeline is currently loading in the background and should be available for viewing in the Inspect tab soon.\n"
-                                    + "Check the output folder for various CSV files and multiple annotated GFF files.\n"
-                                    + "Also check the \"ProteoAnnotator.txt\" file for any error messages and a log of the run.",
-                                    "Genome Annotation Completed", JOptionPane.PLAIN_MESSAGE,
-                                    JOptionPane.INFORMATION_MESSAGE);
+                        .showConfirmDialog(
+                                AnalyseDynamicTab.getInstance(),
+                                "Your genome annotation run has finished and your result files are now available.\n"
+                                + "Please check the \"annotation_output\" folder where your raw data was situated.\n"
+                                + "The mzID output file from the pipeline is currently loading in the background and should be available for viewing in the Inspect tab soon.\n"
+                                + "Check the output folder for various CSV files and multiple annotated GFF files.\n"
+                                + "Also check the \"ProteoAnnotator.txt\" file for any error messages and a log of the run.",
+                                "Genome Annotation Completed", JOptionPane.PLAIN_MESSAGE,
+                                JOptionPane.INFORMATION_MESSAGE);
 
-                    String outputMzid = rawData.iterator().next().getFile().getParentFile().getAbsolutePath()
-                            + File.separator + "annotation_output" + File.separator
-                            + prefix
-                            + rawData.iterator().next().getFileName().replaceAll(".[Mm][Gg][Ff]", StringUtils.emptyString())
-                            + "_fdr_peptide_threshold_mappedGff2_proteoGrouper_nonA_Threshold_FDR_Threshold.mzid";
+                String outputMzid = rawData.iterator().next().getFile().getParentFile().getAbsolutePath()
+                        + File.separator + "annotation_output" + File.separator
+                        + prefix
+                        + "combined_fdr_peptide_threshold_mappedGff2_proteoGrouper_fdr_Threshold.mzid";
 
-                    System.out.println("Looking for mzid file: " + outputMzid);
+                File mzidFile = new File(outputMzid);
+                if (mzidFile.exists()) {
+                    data.getInspectModel().addIdentDataFile(new MzIdentMLFile(mzidFile, null));
+                }
 
-                    File mzidFile = new File(outputMzid);
-                    if (mzidFile.exists()) {
-                        data.getInspectModel().addIdentDataFile(new MzIdentMLFile(mzidFile, null));
-                    }
-
-                    outputMzid = rawData.iterator().next().getFile().getParentFile().getAbsolutePath()
-                            + File.separator + "annotation_output" + File.separator
-                            + prefix
-                            + rawData.iterator().next().getFileName().replaceAll(".[Mm][Gg][Ff]", StringUtils.emptyString())
-                            + "_fdr_peptide_threshold_mappedGff2_proteoGrouper_fdr_Threshold.mzid";
-
-                    System.out.println("Looking for mzid file: " + outputMzid);
-
-                    mzidFile = new File(outputMzid);
-                    if (mzidFile.exists()) {
-                        data.getInspectModel().addIdentDataFile(new MzIdentMLFile(mzidFile, null));
-                    }
-                    
-                    return null;
+                return null;
             }
         });
-        
+
         task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
             @Override
             public Void act(Void argument) {
@@ -243,7 +222,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                 return null;
             }
         });
-        
+
         BackgroundTaskManager.getInstance().submit(task);
     }
 
@@ -255,7 +234,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
         try {
             File thisClassFile = new File(URLDecoder.decode(SearchGuiViaMzidLibWrapper.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8"));
             if (thisClassFile.getAbsolutePath().endsWith("classes")) {
-                return new File("c:\\mzidlib\\mzidentml-lib-1.6.10-SNAPSHOT.jar");
+                return new File("c:\\mzidlib\\mzidentml-lib-1.6.11-SNAPSHOT.jar");
             }
 
             File mzidlibFolder = new File(thisClassFile.getParent() + File.separator + "mzidlib");
