@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import javax.swing.JOptionPane;
 import org.proteosuite.gui.IdentParamsView;
 import org.proteosuite.gui.TabbedMainPanel;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
@@ -23,7 +22,7 @@ import org.proteosuite.model.RawDataFile;
  */
 public class CreateIdentificationsForSelectedListener implements ActionListener {
 
-    private CreateOrLoadIdentificationsStep step;
+    private final CreateOrLoadIdentificationsStep step;
 
     public CreateIdentificationsForSelectedListener(
             CreateOrLoadIdentificationsStep step) {
@@ -32,50 +31,24 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        AnalyseData data = AnalyseData.getInstance();
-
-        if (data.getGenomeAnnotationMode()) {
-            int dataTotal = 0;
-            int spectraCount = 0;
-            for (int i = 0; i < data.getRawDataCount(); i++) {
-                RawDataFile rawDataFile = data.getRawDataFile(i);
-                if (rawDataFile instanceof MascotGenericFormatFile) {
-                    dataTotal += rawDataFile.getFile().length();
-                    dataTotal += rawDataFile.getSpectraCount();
-                }
-            }
-
-            if (dataTotal > Math.pow(1024, 3) || spectraCount > 25000) {
-                JOptionPane
-                        .showConfirmDialog(
-                                step,
-                                "Your cumulative MGF data is too large to process.\n"
-                                + "Your either have more than 1GB of data, or more than 25,000 spectra.\n"
-                                + "Please try again with MGF data that meets these requirements.\n"
-                                        + "It is suggested to split your experiment up into multiple genome annotation runs.",
-                                "Multiple MGF Files : Merge Warning", JOptionPane.PLAIN_MESSAGE,
-                                JOptionPane.ERROR_MESSAGE);
-
-                return;
-            }
-        }
-
+        AnalyseData data = AnalyseData.getInstance();     
+        
         // Get the identParamsView.
         final IdentParamsView identDialog = step.getIdentParamsView();
 
         // Add the view to the content pane.
         identDialog.setVisible(true);
-
+        
         if (identDialog.hasRunSuccessfully()) {
             step.setCreateButtonEnabled(false);
         } else {
             return;
         }
-
+        
         AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
                 .setIdentificationsProcessing();
-
-        Map<String, String> runParams = identDialog.getSearchGUIParameterSet();
+        
+        Map<String, String> runParams = identDialog.getSearchGUIParameterSet();       
 
         if (data.getGenomeAnnotationMode()) {
             Set<MascotGenericFormatFile> rawDataFiles = new HashSet<>();
@@ -88,18 +61,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
             }
 
             step.refreshFromData();
-
-            if (rawDataFiles.size() > 1) {
-                JOptionPane
-                        .showConfirmDialog(
-                                step,
-                                "You have selected more than one MGF file for analysis.\n"
-                                + "Your MGF files will be merged.\n"
-                                + "This is because the pipeline currently only supports a single MGF file for analysis.\n",
-                                "Multiple MGF Files : Merge Warning", JOptionPane.PLAIN_MESSAGE,
-                                JOptionPane.INFORMATION_MESSAGE);
-            }
-
+            
             SearchGuiViaMzidLibWrapper wrapper = new SearchGuiViaMzidLibWrapper(
                     rawDataFiles,
                     identDialog.getGeneModel(),
@@ -125,7 +87,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
                 rawDataFile.setIdentStatus("Creating...");
                 step.refreshFromData();
 
-                if (!(rawDataFile instanceof MascotGenericFormatFile)) {
+                if (rawDataFile instanceof MzMLFile) {
                     rawDataFile = ((MzMLFile) rawDataFile).getAsMGF();
                 }
 
@@ -134,11 +96,10 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
                 SearchGuiViaMzidLibWrapper wrapper = new SearchGuiViaMzidLibWrapper(
                         rawDataFiles,
                         identDialog.getSingleDatabasePath(),
-                        runParams,
-                        identDialog.isRequestingProteoGrouper());
+                        runParams);
 
                 wrapper.compute();
             }
-        }
+        }       
     }
 }

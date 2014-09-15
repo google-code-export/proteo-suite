@@ -57,6 +57,10 @@ public abstract class RawDataFile implements Iterable<Spectrum>, BackgroundTaskS
         this.selectedUsingFolderMode = selectionMode;
     }
     
+    public boolean isSelectedUsingFolderMode() {
+        return this.selectedUsingFolderMode;
+    }
+    
     public void setIdentStatus(String identStatus) {
         this.identStatus = identStatus;
     }
