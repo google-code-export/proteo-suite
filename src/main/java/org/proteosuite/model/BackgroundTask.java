@@ -22,11 +22,20 @@ public class BackgroundTask {
     private ProteoSuiteAction<Object, BackgroundTaskSubject> refreshAction;
     private final Set<Object> processingResults = new LinkedHashSet<>();
     private final BackgroundTaskSubject taskSubject;
+    private boolean invisibility = false;
     private String taskStatus = "Pending...";
 
     public BackgroundTask(BackgroundTaskSubject taskSubject, String taskName) {
         this.taskSubject = taskSubject;
         this.taskName = taskName;
+    }
+
+    public void setInvisibility(boolean invisibility) {
+        this.invisibility = invisibility;
+    }
+
+    public boolean isInvisible() {
+        return this.invisibility;
     }
 
     public final String getName() {
@@ -58,13 +67,16 @@ public class BackgroundTask {
     public final void addCompletionAction(ProteoSuiteAction action) {
         this.completionActions.add(action);
     }
-    
+
     public final void setRefreshAction(ProteoSuiteAction<Object, BackgroundTaskSubject> action) {
         this.refreshAction = action;
     }
 
     public final void queueForExecution(ExecutorService service) {
-        refreshAction.act(taskSubject);
+        if (!invisibility) {
+            refreshAction.act(taskSubject);
+        }
+        
         for (ProteoSuiteAction<BackgroundTaskSubject, Object> action : BackgroundTask.this.synchronousProcessingActions) {
             processingResults.add(action.act(taskSubject));
         }
@@ -75,9 +87,12 @@ public class BackgroundTask {
                 for (CountDownLatch condition : BackgroundTask.this.processingConditions) {
                     condition.await();
                 }
-                
+
                 taskStatus = "In Progress...";
-                refreshAction.act(taskSubject);
+                if (!invisibility) {
+                    refreshAction.act(taskSubject);
+                }
+                
                 for (ProteoSuiteAction<BackgroundTaskSubject, Object> action : BackgroundTask.this.asynchronousProcessingActions) {
                     processingResults.add(action.act(taskSubject));
                 }
@@ -88,7 +103,10 @@ public class BackgroundTask {
             @Override
             protected void done() {
                 taskStatus = "Complete";
-                refreshAction.act(taskSubject);
+                if (!invisibility) {
+                    refreshAction.act(taskSubject);
+                }
+                
                 for (ProteoSuiteAction<BackgroundTaskSubject, Object> action : BackgroundTask.this.completionActions) {
                     action.act(taskSubject);
                 }

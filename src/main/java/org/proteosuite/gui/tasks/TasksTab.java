@@ -46,19 +46,21 @@ public class TasksTab extends JPanel {
     }
 
     public synchronized void refreshData() {
-        
+
         tasksTable.clear();
         for (BackgroundTask task : BackgroundTaskManager.getInstance().getTasks()) {
-            tasksTable.addTaskRow(task.getSubject().getSubjectName(), task.getName(),
-                    task.getStatus());
+            if (!task.isInvisible()) {
+                tasksTable.addTaskRow(task.getSubject().getSubjectName(), task.getName(),
+                        task.getStatus());
+            }
         }
 
         List<Log> logs = data.getLogs();
 
         for (final Log log : logs) {
             if (!logMap.containsKey(log)) {
-                LogPane thisLogPane = new LogPane(true);                
-                thisLogPane.handleLog(log);                
+                LogPane thisLogPane = new LogPane(true);
+                thisLogPane.handleLog(log);
                 logMap.put(log, thisLogPane);
             }
         }
