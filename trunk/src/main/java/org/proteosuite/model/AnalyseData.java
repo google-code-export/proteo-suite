@@ -3,6 +3,7 @@ package org.proteosuite.model;
 import java.util.ArrayList;
 import java.util.List;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
+import org.proteosuite.gui.tasks.TasksTab;
 
 /**
  *
@@ -11,11 +12,11 @@ import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 public class AnalyseData {
 
     private final InspectModel inspectModel = new InspectModel();
-    
+
     private final List<RawDataFile> rawDataFiles = new ArrayList<>();
     private String multiplexing = "";
     private boolean supportGenomeAnnotation = false;
-    public List<Log> logs = new ArrayList<>();
+    private LogManager logs = new LogManager();
     private static AnalyseData instance = null;
 
     private AnalyseData() {
@@ -35,7 +36,7 @@ public class AnalyseData {
 
     public InspectModel getInspectModel() {
         return inspectModel;
-    }    
+    }
 
     public void addRawDataFile(RawDataFile rawDataFile) {
         synchronized (this) {
@@ -80,12 +81,22 @@ public class AnalyseData {
 
     public void clear() {
         rawDataFiles.clear();
-        multiplexing = "";        
+        multiplexing = "";
         inspectModel.clear();
         supportGenomeAnnotation = false;
 
         BackgroundTaskManager.getInstance().reset();
 
         AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().reset();
+    }
+
+    private class LogManager extends ArrayList<Log> {
+
+        @Override
+        public boolean add(Log log) {
+            boolean success = super.add(log);
+            TasksTab.getInstance().refreshData();
+            return success;
+        }
     }
 }

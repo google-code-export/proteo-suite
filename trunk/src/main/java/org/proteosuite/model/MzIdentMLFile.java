@@ -157,7 +157,7 @@ public class MzIdentMLFile extends IdentDataFile {
 
     @Override
     protected void initiateLoading() {
-        final BackgroundTask task = new BackgroundTask(this, "LoadingIdentifications");
+        final BackgroundTask task = new BackgroundTask(this, "Loading Identifications");
 
         task.addAsynchronousProcessingAction(new ProteoSuiteAction<MzIdentMLUnmarshaller, BackgroundTaskSubject>() {
             @Override

@@ -61,20 +61,17 @@ public class FileFormatUtils {
     }
 
     public static boolean mergeMGF(Set<String> setToMerge, String outputPath) {
-        try {
-            final BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath));
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath))) {
             for (String mgfFile : setToMerge) {
-                final BufferedReader reader = new BufferedReader(new FileReader(mgfFile));
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    writer.write(line);
-                    writer.newLine();
+                try (BufferedReader reader = new BufferedReader(new FileReader(mgfFile))) {
+                    String line = null;
+                    while ((line = reader.readLine()) != null) {
+                        writer.write(line);
+                        writer.newLine();
+                    }
                 }
-
-                reader.close();
             }
-
-            writer.close();
         } catch (IOException ex) {
             System.out.println("Exception merging MGF files.");
             return false;
@@ -83,11 +80,8 @@ public class FileFormatUtils {
         return true;
     }
 
-    public static boolean mzMLToMGF(MzMLUnmarshaller input, String output) {
-        try {
-            FileWriter outputStream = new FileWriter(output);
-            BufferedWriter writer = new BufferedWriter(outputStream);
-
+    public static boolean mzMLToMGF(MzMLUnmarshaller input, String output) {        
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(output))) {
             String originalRawFileName = null;
             MzMLObjectIterator<SourceFile> sourceFiles = input.unmarshalCollectionFromXpath("/fileDescription/sourceFileList/sourceFile", SourceFile.class);
             while (sourceFiles.hasNext()) {
@@ -243,12 +237,11 @@ public class FileFormatUtils {
                             writer.write("\n");
                         }
                     }  //... If precursor ion
-                } //... If MS2    
+                } //... If MS2
             }   //... While
 
             System.out.println(invalidCount);
 
-            writer.close();
         } catch (IOException | NumberFormatException e) {
             System.err.println("Error: " + e.getMessage());
             return false;
@@ -450,6 +443,7 @@ public class FileFormatUtils {
     }
 
     private static class MgfOverMergeLimitException extends RuntimeException {
+
         public MgfOverMergeLimitException(long overBy) {
             super("MGF data supplied is over the requested limit. Over by: " + overBy);
         }

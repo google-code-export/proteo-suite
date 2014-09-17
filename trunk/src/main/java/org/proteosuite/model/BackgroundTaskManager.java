@@ -14,6 +14,7 @@ public class BackgroundTaskManager {
     private ExecutorService genericService = null;
     private ExecutorService searchGUIService = null;
     private ExecutorService openMSService = null;
+    private ExecutorService trivialService = null;
     private final Set<BackgroundTask> tasks = new LinkedHashSet<>();
     private final int OPTIMUM_THREADS = computeOptimumThreads();
     private static BackgroundTaskManager INSTANCE;
@@ -56,6 +57,9 @@ public class BackgroundTaskManager {
             case "LINKING FEATURES":
                 task.queueForExecution(openMSService);
                 break;
+            case "PRINT OUTPUT":
+                task.queueForExecution(trivialService);
+                break;
             default:
                 task.queueForExecution(genericService);
                 break;
@@ -73,6 +77,10 @@ public class BackgroundTaskManager {
 
         if (openMSService != null) {
             openMSService.shutdownNow();
+        }
+        
+        if (trivialService != null) {
+            trivialService.shutdownNow();
         }
 
         int threadsForGenericExecutor = (int) Math.floor((double) OPTIMUM_THREADS / 2.0) - 1;
@@ -94,6 +102,8 @@ public class BackgroundTaskManager {
         }
 
         openMSService = Executors.newFixedThreadPool(threadsForOpenMSExecutor);
+        
+        trivialService = Executors.newCachedThreadPool();
     }
 
     private static int computeOptimumThreads() {
