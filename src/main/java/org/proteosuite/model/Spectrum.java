@@ -1,13 +1,13 @@
 
 package org.proteosuite.model;
 
-import java.util.TreeSet;
+import java.util.LinkedList;
 
 /**
  *
  * @author SPerkins
  */
-public class Spectrum extends TreeSet<MzIntensityPair> {    
+public class Spectrum extends LinkedList<MzIntensityPair> {    
     private MzIntensityPair basePeak = new MzIntensityPair(0.0, 0.0);
     private double retentionTimeInSeconds = 0.0;
     private int spectrumIndex = -1;

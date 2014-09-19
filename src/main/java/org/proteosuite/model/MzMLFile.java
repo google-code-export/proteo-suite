@@ -318,6 +318,8 @@ public class MzMLFile extends RawDataFile {
 
                 Number[] mzValues = getBinaryDataArrayForAccession(BINARY_MZ_PARAM, spectrum.getBinaryDataArrayList().getBinaryDataArray());
                 Number[] intensityValues = getBinaryDataArrayForAccession(BINARY_INTENSITY_PARAM, spectrum.getBinaryDataArrayList().getBinaryDataArray());
+                
+                spectrum = null;
 
                 if (mzValues != null && intensityValues != null && mzValues.length == intensityValues.length) {
                     for (int i = 0; i < mzValues.length; i++) {

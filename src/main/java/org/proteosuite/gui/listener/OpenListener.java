@@ -4,10 +4,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileFilter;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.proteosuite.WorkSpace;
@@ -27,36 +28,34 @@ public class OpenListener implements ActionListener {
 
     private static final AnalyseData data = AnalyseData.getInstance();
     private static final InspectModel model = data.getInspectModel();
-    private boolean folderMode = false;
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JMenuItem menuItem = (JMenuItem) e.getSource();
-        folderMode = menuItem.getText().equals("Import MGFs From Folder");
         JFileChooser openFile = new JFileChooser(WorkSpace.sPreviousLocation);
         boolean choicesValid = false;
         File[] files = null;
+        boolean folderMode = false;
 
         while (!choicesValid) {
-            if (folderMode) {
-                openFile.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                openFile.setDialogTitle("Select Folder To Import MGFs From");
-            } else {
-                openFile.setAcceptAllFileFilterUsed(false);
-                openFile.setMultiSelectionEnabled(true);
-                openFile.setFileFilter(new FileNameExtensionFilter("MGF, mzML, mzIdentML, mzQuantML",
-                        "mgf", "mzml", "mzq", "mzid", "mzidentml", "mzq", "mzquantml"));
-            }
+            openFile.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            openFile.setMultiSelectionEnabled(true);
+            openFile.setDialogTitle("Choose Files/Folders");
+            openFile.setAcceptAllFileFilterUsed(true);
+            openFile.setMultiSelectionEnabled(true);
+            openFile.setFileFilter(new FileNameExtensionFilter("MGF, mzML, mzIdentML, mzQuantML",
+                    "mgf", "mzml", "mzq", "mzid", "mzidentml", "mzq", "mzquantml"));
 
             int result = openFile.showOpenDialog(null);
-
             if (result == JFileChooser.CANCEL_OPTION) {
                 return;
             }
 
             files = openFile.getSelectedFiles();
+            if (files == null || files.length == 0) {
+                files = new File[]{openFile.getSelectedFile()};
+            }
 
-            // Need to check for a mixture of folders and files, and also disallow mutiple folders.
+            // Need to check for a mixture of folders and files, and also disallow mutiple folders.            
             boolean foundFiles = false;
             boolean foundDirectories = false;
             boolean foundMultipleDirectories = false;
@@ -78,14 +77,19 @@ public class OpenListener implements ActionListener {
                                 TabbedMainPanel.getInstance(),
                                 "You have chosen a invalid selection of files and folders:\n"
                                 + "- A directory/folder may not be selected together with files.\n"
-                                + "- Multiple directories may not be selected together.le.\n"
+                                + "- Multiple directories may not be selected together.\n"
                                 + "You may wish to restructure your data locations before trying again.",
                                 "Invalid Selection", JOptionPane.PLAIN_MESSAGE,
                                 JOptionPane.ERROR_MESSAGE);
             } else {
                 choicesValid = true;
+
+                // At this stage if foundDirectories if true, then only a single folder was selected.
+                folderMode = foundDirectories;
             }
         }
+
+        Set<String> fileNamesAlreadyLoaded = new HashSet<>();
 
         for (File file : files) {
             if (!folderMode && !file.getParent().equals(WorkSpace.sPreviousLocation)) {
@@ -95,73 +99,125 @@ public class OpenListener implements ActionListener {
             }
 
             if (folderMode) {
-                File[] mgfFiles = file.listFiles(new FileExtensionFilter("MGF"));
-                AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
-                        .setRawDataProcessing();
-                for (File mgfFile : mgfFiles) {
-                    RawDataFile rawDataFile = new MascotGenericFormatFile(mgfFile);
-                    rawDataFile.setSelectedUsingFolderMode(true);
-                    data.addRawDataFile(rawDataFile);
-                    ((RawDataAndMultiplexingStep) AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP)
-                            .refreshFromData();
-                }
-
-                return;
-            }
-
-            String name = file.getName();
-            String[] tmp = name.split(Pattern.quote("."));
-            String extension = tmp[tmp.length - 1];
-
-            if (extension.equalsIgnoreCase("mzq")) {
-                MzQuantMLFile quantDataFile = new MzQuantMLFile(file);
-                model.addQuantDataFile(quantDataFile);
-            } else if (extension.equalsIgnoreCase("mzid")) {
-                RawDataFile parent = null;
-                if (model.getRawData().size() > 0) {
-                    // TODO: We possibly should poll the user here for an mzML file.
-                    Object[] selectionValues = new Object[model.getRawData().size() + 1];
-                    int i = 0;
-                    selectionValues[i++] = "None";
-                    for (RawDataFile rawDataFile : model.getRawData()) {
-                        selectionValues[i++] = rawDataFile.getFileName();
+                File[] folderFiles = file.listFiles(new FileExtensionFilter("MGF", "mzML", "mzQ", "mzQuantML", "mzIdentML", "mzid"));
+                boolean detectedValidFile = false;
+                for (File folderFile : folderFiles) {
+                    if (rawFileAlreadyLoaded(folderFile)) {
+                        fileNamesAlreadyLoaded.add(folderFile.getName());
+                        continue;
                     }
 
-                    String s = (String) JOptionPane.showInputDialog(
-                            null,
-                            "Please select the spectrum file",
-                            "Parent Spectrum File",
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            selectionValues,
-                            "None");
-
-                    if (s != null && !s.equals("None")) {
-                        parent = model.getRawDataFile(s);
+                    if (processFile(folderFile, true)) {
+                        detectedValidFile = true;
                     }
                 }
 
-                MzIdentMLFile identDataFile = new MzIdentMLFile(file, parent);
-                identDataFile.setCleanable(true);
-                model.addIdentDataFile(identDataFile);
-            } else if (extension.equalsIgnoreCase("mzml")) {
-                MzMLFile rawDataFile = new MzMLFile(file, true);
-                data.addRawDataFile(rawDataFile);
+                if (detectedValidFile) {
+                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
+                            .setRawDataProcessing();
+                }
 
-                AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
-                        .setRawDataProcessing();
-                ((RawDataAndMultiplexingStep) AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP)
-                        .refreshFromData();
-            } else if (extension.equalsIgnoreCase("mgf")) {
-                data.addRawDataFile(new MascotGenericFormatFile(file, true));
-                AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
-                        .setRawDataProcessing();
-                ((RawDataAndMultiplexingStep) AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP)
-                        .refreshFromData();
             } else {
-                System.out.println("Unknown File type");
+                if (rawFileAlreadyLoaded(file)) {
+                    fileNamesAlreadyLoaded.add(file.getName());
+                    continue;
+                }
+
+                boolean rawFileProcessed = processFile(file, false);
+                if (rawFileProcessed) {
+                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
+                            .setRawDataProcessing();
+                }
             }
         }
+
+        if (fileNamesAlreadyLoaded.size() > 0) {
+            JOptionPane
+                    .showConfirmDialog(
+                            TabbedMainPanel.getInstance(),
+                            "You have chosen to load data files that have already been loaded:\n"
+                            + StringUtils.join("\n", fileNamesAlreadyLoaded) + "\n"
+                            + "Each data file may only be loaded once.\n",
+                            "Data File Already Loaded", JOptionPane.PLAIN_MESSAGE,
+                            JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private static boolean processFile(File file, boolean folderMode) {
+        String name = file.getName();
+        String[] tmp = name.split(Pattern.quote("."));
+        String extension = tmp[tmp.length - 1];
+        boolean rawFileDetected = false;
+
+        if (extension.equalsIgnoreCase("mzq")) {
+            MzQuantMLFile quantDataFile = new MzQuantMLFile(file);
+            model.addQuantDataFile(quantDataFile);
+        } else if (extension.equalsIgnoreCase("mzid")) {
+            RawDataFile parent = null;
+            if (model.getRawData().size() > 0) {
+                // TODO: We possibly should poll the user here for an mzML file.
+                Object[] selectionValues = new Object[model.getRawData().size() + 1];
+                int i = 0;
+                selectionValues[i++] = "None";
+                for (RawDataFile rawDataFile : model.getRawData()) {
+                    selectionValues[i++] = rawDataFile.getFileName();
+                }
+
+                String s = (String) JOptionPane.showInputDialog(
+                        null,
+                        "Please select the spectrum file",
+                        "Parent Spectrum File",
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        selectionValues,
+                        "None");
+
+                if (s != null && !s.equals("None")) {
+                    parent = model.getRawDataFile(s);
+                }
+            }
+
+            MzIdentMLFile identDataFile = new MzIdentMLFile(file, parent);
+            identDataFile.setCleanable(true);
+            model.addIdentDataFile(identDataFile);
+        } else if (extension.equalsIgnoreCase("mzml")) {
+            MzMLFile rawDataFile = new MzMLFile(file, true);
+            rawDataFile.setSelectedUsingFolderMode(folderMode);
+            data.addRawDataFile(rawDataFile);
+
+            rawFileDetected = true;
+
+            AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
+                    .setRawDataProcessing();
+            ((RawDataAndMultiplexingStep) AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP)
+                    .refreshFromData();
+        } else if (extension.equalsIgnoreCase("mgf")) {
+            MascotGenericFormatFile rawDataFile = new MascotGenericFormatFile(file, true);
+            rawDataFile.setSelectedUsingFolderMode(folderMode);
+            data.addRawDataFile(rawDataFile);
+
+            rawFileDetected = true;
+
+            AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
+                    .setRawDataProcessing();
+            ((RawDataAndMultiplexingStep) AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP)
+                    .refreshFromData();
+        } else {
+            System.out.println("Unknown File type");
+        }
+
+        return rawFileDetected;
+    }
+
+    private static boolean rawFileAlreadyLoaded(File file) {
+        for (int i = 0; i < data.getRawDataCount(); i++) {
+            RawDataFile rawData = data.getRawDataFile(i);
+            if (rawData.getFileName().equals(file.getName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private class FileExtensionFilter implements FileFilter {

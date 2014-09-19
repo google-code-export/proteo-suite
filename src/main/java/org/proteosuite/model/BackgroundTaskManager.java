@@ -45,7 +45,12 @@ public class BackgroundTaskManager {
             task.setRefreshAction(tasksRefreshAction);            
         }
         
-        this.tasks.add(task);        
+        this.tasks.add(task);
+        
+        if (task.isSlave()) {
+            task.queueForExecution(trivialService);
+            return;
+        }
         
         switch (task.getName().toUpperCase()) {
             case "CREATE IDENTIFICATIONS":
@@ -56,10 +61,7 @@ public class BackgroundTaskManager {
             case "ALIGNING FEATURES":
             case "LINKING FEATURES":
                 task.queueForExecution(openMSService);
-                break;
-            case "PRINT OUTPUT":
-                task.queueForExecution(trivialService);
-                break;
+                break;            
             default:
                 task.queueForExecution(genericService);
                 break;

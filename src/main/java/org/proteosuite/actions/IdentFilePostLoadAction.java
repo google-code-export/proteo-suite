@@ -17,8 +17,8 @@ public class IdentFilePostLoadAction implements ProteoSuiteAction<Void, IdentDat
     @Override
     public Void act(IdentDataFile identData) {
         AnalyseData.getInstance().getInspectModel().addIdentDataFile(identData);
-        InspectTab.getInstance().refreshComboBox();
-
+        InspectTab.getInstance().refreshComboBox();       
+        
         AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().checkAndUpdateIdentificationsStatus();
 
         if (identData.getParent() != null) {

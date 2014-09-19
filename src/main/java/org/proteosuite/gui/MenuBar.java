@@ -63,11 +63,8 @@ public class MenuBar extends JMenuBar {
 	}
 
 	private JMenu getFileMenu() {
-		JMenuItem openFiles = new JMenuItem("Import File");
-		openFiles.addActionListener(new OpenListener());
-                
-                JMenuItem openFilesFromFolder = new JMenuItem("Import MGFs From Folder");
-                openFilesFromFolder.addActionListener(new OpenListener());
+		JMenuItem openFiles = new JMenuItem("Import Files or Folders...");
+		openFiles.addActionListener(new OpenListener());               
 
 		JMenuItem jmExit = new JMenuItem("Exit");
 		jmExit.addActionListener(new ExitListener());
@@ -75,8 +72,7 @@ public class MenuBar extends JMenuBar {
 				InputEvent.ALT_MASK));
 
 		JMenu jmFile = new JMenu("File");
-		jmFile.add(openFiles);
-                jmFile.add(openFilesFromFolder);
+		jmFile.add(openFiles);                
 		jmFile.add(new JPopupMenu.Separator());
 		jmFile.add(jmExit);
 
