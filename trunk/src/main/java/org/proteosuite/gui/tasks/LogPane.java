@@ -70,6 +70,8 @@ public class LogPane extends JScrollPane {
 
             this.reader = reader;
             this.errorOutput = errorOutput;
+            
+            this.setSlaveStatus(true);
 
             this.addAsynchronousProcessingAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
                 @Override

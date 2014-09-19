@@ -42,11 +42,11 @@ public class AnalyseData {
         synchronized (this) {
             rawDataFiles.add(rawDataFile);
 
-        }
+        }        
     }
 
     public RawDataFile getRawDataFile(int fileIndex) {
-        synchronized (this) {
+        synchronized (this) {            
             return rawDataFiles.get(fileIndex);
         }
     }

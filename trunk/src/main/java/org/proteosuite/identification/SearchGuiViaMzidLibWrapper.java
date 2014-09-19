@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -148,7 +149,9 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
 
     private void computeGenomeAnnotation() {
 
-        BackgroundTask task = new BackgroundTask(rawData.iterator().next(), "Run Genome Annotation");
+        Iterator<MascotGenericFormatFile> iterator = rawData.iterator();
+        BackgroundTask task = new BackgroundTask(iterator.next(), "Run Genome Annotation");
+        final CountDownLatch masterTaskLatch = new CountDownLatch(1);
 
         task.addAsynchronousProcessingAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
             @Override
@@ -201,6 +204,8 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                 if (mzidFile.exists()) {
                     data.getInspectModel().addIdentDataFile(new MzIdentMLFile(mzidFile, null));
                 }
+                
+                masterTaskLatch.countDown();
 
                 JOptionPane
                         .showConfirmDialog(
@@ -224,6 +229,26 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                 return null;
             }
         });
+        
+        while (iterator.hasNext()) {
+            MascotGenericFormatFile dataFile = iterator.next();
+            BackgroundTask slaveTask = new BackgroundTask(dataFile, "Run Genome Annotation");
+            slaveTask.setSlaveStatus(true);
+            slaveTask.addAsynchronousProcessingAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
+                @Override
+                public Object act(BackgroundTaskSubject argument) {
+                    try {
+                        masterTaskLatch.await();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(SearchGuiViaMzidLibWrapper.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    return null;
+                }
+            });
+            
+            BackgroundTaskManager.getInstance().submit(slaveTask);
+        }
 
         BackgroundTaskManager.getInstance().submit(task);
     }

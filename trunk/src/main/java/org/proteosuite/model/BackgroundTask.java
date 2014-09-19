@@ -23,11 +23,20 @@ public class BackgroundTask {
     private final Set<Object> processingResults = new LinkedHashSet<>();
     private final BackgroundTaskSubject taskSubject;
     private boolean invisibility = false;
+    private boolean slave = false;
     private String taskStatus = "Pending...";
 
     public BackgroundTask(BackgroundTaskSubject taskSubject, String taskName) {
         this.taskSubject = taskSubject;
         this.taskName = taskName;
+    }
+    
+    public void setSlaveStatus(boolean slaveStatus) {
+        this.slave = slaveStatus;
+    }
+    
+    public boolean isSlave() {
+        return this.slave;
     }
 
     public void setInvisibility(boolean invisibility) {
