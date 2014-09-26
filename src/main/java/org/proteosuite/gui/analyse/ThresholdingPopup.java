@@ -30,7 +30,7 @@ import org.proteosuite.utils.NumericalUtils;
  */
 public class ThresholdingPopup extends JDialog {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;    
     private JComboBox<String> thresholdingChoice;
     private JComboBox<String> thresholdingOperator;
     private JTextField thresholdingValue;

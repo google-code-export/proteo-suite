@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
 import javax.swing.JFrame;
+import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CleanIdentificationsStep;
 import org.proteosuite.gui.analyse.ThresholdingPopup;
 import org.proteosuite.gui.tables.CleanIdentificationsTable;
@@ -48,7 +49,7 @@ public class PerformThresholdingForSelectedListener implements ActionListener {
             }
         }        
         
-        if (identFileToProcess == null) {
+        if (identFileToProcess == null || !identFileToProcess.isCleanable() || identFileToProcess.getThresholdStatus().equals("Thresholding...")|| identFileToProcess.getPSMCountPassingThreshold() == -1) {
             return;
         }
 
@@ -64,9 +65,11 @@ public class PerformThresholdingForSelectedListener implements ActionListener {
         if (popup.hasBeenClosed()) {
             return;
         }
+        
+        AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setCleanIdentificationsProcessing();
 
         String[] thresholdToPerform = popup.getThresholdingChosen();
-        ThresholdWrapper wrapper = new ThresholdWrapper(identFileToProcess, thresholdToPerform[0], Double.valueOf(thresholdToPerform[2]), thresholdToPerform[3].equals(">"));
+        ThresholdWrapper wrapper = new ThresholdWrapper(identFileToProcess, thresholdToPerform[0], Double.valueOf(thresholdToPerform[2]), thresholdToPerform[1].equals(">"));
         wrapper.doThresholding();
     }   
 }
