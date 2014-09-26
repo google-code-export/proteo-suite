@@ -14,6 +14,7 @@ import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CleanIdentificationsStep;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
+import org.proteosuite.utils.NumericalUtils;
 import org.proteosuite.utils.StringUtils;
 import uk.ac.ebi.jmzidml.MzIdentMLElement;
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
@@ -84,7 +85,10 @@ public class MzIdentMLFile extends IdentDataFile {
                 List<CvParam> thresholdingParams = protocol.getThreshold().getCvParam();
                 List<String> thresholdTerms = new ArrayList<>();
                 for (CvParam param : thresholdingParams) {
-                    thresholdTerms.add(param.getName());
+                    if (param.getValue() == null || param.getValue().isEmpty()) {
+                        thresholdTerms.add(param.getName());
+                    } else {
+                    thresholdTerms.add(param.getName() + "(" + param.getValue() + ")");}
                 }
 
                 String thresholding = StringUtils.join(", ", thresholdTerms);
@@ -107,9 +111,9 @@ public class MzIdentMLFile extends IdentDataFile {
                             }
 
                             for (CvParam param : item.getCvParam()) {
-                                if (param.getName().toUpperCase().contains("SCORE") || param.getName().toUpperCase().contains("VALUE")) {
+                                if (NumericalUtils.isDouble(param.getValue())) {
                                     thresholdTypes.put(param.getName(), param.getAccession());
-                                }
+                                }                                
                             }
                         }
                     }

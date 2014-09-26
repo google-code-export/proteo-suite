@@ -104,8 +104,7 @@ public class IdentParamsView extends JDialog {
     private JComboBox<Integer> jcMaxCharge;    
  
     private JComboBox<Character> jcFragmentIonTypesABC;
-    private JComboBox<Character> jcFragmentIonTypesXYZ;
-    private JCheckBox jcDoProteoGrouper;    
+    private JComboBox<Character> jcFragmentIonTypesXYZ;      
     private JComboBox<String> jcEnzyme;
     private JComboBox<String> peptideThresholdValueComboBox;
     private JComboBox<String> proteinThresholdValueComboBox;
@@ -323,8 +322,7 @@ public class IdentParamsView extends JDialog {
         this.jcMinCharge = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
         this.jcMinCharge.setSelectedIndex(1);
         this.jcMaxCharge = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
-        this.jcMaxCharge.setSelectedIndex(3);
-        this.jcDoProteoGrouper = new JCheckBox("Group Proteins?");        
+        this.jcMaxCharge.setSelectedIndex(3);              
         jtMSTolerance
                 .setToolTipText("Precursor Mass Tolerance (E.g. +/- 2.5Da, +/- 20ppm)");        
         this.peptideThresholdValueComboBox = new JComboBox<>(thresholdValues);
@@ -350,11 +348,7 @@ public class IdentParamsView extends JDialog {
 
         if (this.genomeAnnotationMode) {
             jPanel.add(getRow(new JLabel("Peptide-level thresholding:"), this.peptideThresholdValueComboBox, new JLabel("Protein-level thresholding:"), this.proteinThresholdValueComboBox));
-        }
-        
-        if (!this.genomeAnnotationMode) {
-            jPanel.add(getRow(jcDoProteoGrouper));
-        }
+        }       
 
         return jPanel;
     }
@@ -433,11 +427,7 @@ public class IdentParamsView extends JDialog {
 
     public String[] getGeneModel() {
         return databasePanel.getGeneModel();
-    }
-
-    public boolean isRequestingProteoGrouper() {
-        return jcDoProteoGrouper.isSelected();
-    }    
+    }      
     
     public String getPeptideLevelThresholding() {
         return ((String) this.peptideThresholdValueComboBox.getSelectedItem()).split(" ")[0];

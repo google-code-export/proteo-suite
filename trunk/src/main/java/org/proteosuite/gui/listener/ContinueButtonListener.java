@@ -17,6 +17,7 @@ import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
 import org.proteosuite.gui.analyse.TMTStep;
 import org.proteosuite.gui.tables.DefineConditionsTable;
 import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.MascotGenericFormatFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.utils.StringUtils;
@@ -28,12 +29,11 @@ import org.proteosuite.utils.StringUtils;
 public class ContinueButtonListener implements ActionListener {
 
     private JPanel panel;
-    private AnalyseData data;
+    private static final AnalyseData data = AnalyseData.getInstance();
     private AnalyseDynamicTab parent;
 
     public ContinueButtonListener(JPanel panel) {
-        this.panel = panel;
-        data = AnalyseData.getInstance();
+        this.panel = panel;        
     }
 
     @Override
@@ -44,9 +44,37 @@ public class ContinueButtonListener implements ActionListener {
         } else if (panel instanceof DefineConditionsStep) {
             defineConditionsStep();
         } else if (panel instanceof CreateOrLoadIdentificationsStep) {
-            identificationsStep();                   
+            identificationsStep();
         } else if (panel instanceof CleanIdentificationsStep) {
-            switch (data.getMultiplexing()) {
+            cleanIdentificationsStep();
+        }
+    }   
+    
+    private void cleanIdentificationsStep() {
+        boolean needsCleaning = false;
+        for (int i = 0; i < data.getRawDataCount(); i++) {
+            IdentDataFile identData = data.getRawDataFile(i).getIdentificationDataFile();
+            if (identData != null && identData.isCleanable()) {
+                needsCleaning = true;
+                break;
+            }
+        }
+        
+        if (needsCleaning) {
+            JOptionPane
+                        .showConfirmDialog(
+                                panel,
+                                "You have not thresholded all of your data.\n"
+                                + "Thresholding is a mandatory step to ensure the quality of your identifications.\n"
+                                + "If you do not wish to do any quantitation, you do not need to proceed any further"
+                                        + " and may visualise your data in the Inspect tab or exit ProteoSuite now.\n"
+                                + "Otherwise please threshold your data to continue.",
+                                "Identification Data Not Thresholded", JOptionPane.PLAIN_MESSAGE,
+                                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        switch (data.getMultiplexing()) {
                 case "None (label-free)":
                     ((LabelFreeStep) AnalyseDynamicTab.LABEL_FREE_STEP)
                             .refreshFromData();
@@ -65,9 +93,8 @@ public class ContinueButtonListener implements ActionListener {
                     parent.moveToStep(AnalyseDynamicTab.TMT_STEP);
                     break;
             }
-            
+
             AnalyseStatusPanel.getInstance().setQuantitationAsCurrentStep();
-        }
     }
 
     private void rawDataAndMultiplexingStep() {
@@ -133,10 +160,10 @@ public class ContinueButtonListener implements ActionListener {
                     mgfPresent = true;
                     if (dataFile.getFile().length() > Math.pow(1024, 3)) {
                         mgfErrorFiles.add(dataFile.getFileName());
-                    } else if (((MascotGenericFormatFile)dataFile).getSpectraCount() > 25000) {
+                    } else if (((MascotGenericFormatFile) dataFile).getSpectraCount() > 25000) {
                         mgfErrorFiles.add(dataFile.getFileName());
                     }
-                    
+
                     break;
             }
         }
@@ -155,7 +182,7 @@ public class ContinueButtonListener implements ActionListener {
                                 JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
             if (data.getRawDataCount() > 1 && !data.getRawDataFile(0).isSelectedUsingFolderMode()) {
                 JOptionPane
                         .showConfirmDialog(
@@ -165,10 +192,10 @@ public class ContinueButtonListener implements ActionListener {
                                 + "To select multiple MGFs for genome annotation please clear the existing file selection and use \"Import MGFs From Folder\".\n",
                                 "Multiple MGF Files : Different Data Source", JOptionPane.PLAIN_MESSAGE,
                                 JOptionPane.INFORMATION_MESSAGE);
-                
+
                 return;
             }
-            
+
             if (mgfErrorFiles.size() > 0) {
                 JOptionPane
                         .showConfirmDialog(
@@ -177,13 +204,13 @@ public class ContinueButtonListener implements ActionListener {
                                 + "Files that are too large to process:\n" + StringUtils.join("\n", mgfErrorFiles) + "\n"
                                 + "Your either have more than 1GB of data per file, or more than 25,000 spectra per file.\n"
                                 + "Please remove the problem MGF file(s) from your chosen directory, then remove all MGFs from ProteoSuite and re-import your chosen folder.\n"
-                                        + "You may wish to split large MGF files into smaller MGF files.",
+                                + "You may wish to split large MGF files into smaller MGF files.",
                                 "MGF Files : Data Too Large", JOptionPane.PLAIN_MESSAGE,
                                 JOptionPane.ERROR_MESSAGE);
 
                 return;
             }
-        } else {           
+        } else {
             if (mgfPresent) {
                 JOptionPane
                         .showConfirmDialog(
@@ -191,7 +218,7 @@ public class ContinueButtonListener implements ActionListener {
                                 "You have not chosen to do a genome annotation run, but your raw data contains MGF files.\n"
                                 + "ProteoSuite does not currently support MGF files for processing when not doing genome annotation.\n"
                                 + "We currently only support mzML for processing.\n"
-                                        + "MGF files can still be visualised in the 'Inspect' tab."
+                                + "MGF files can still be visualised in the 'Inspect' tab."
                                 + "This may change at a later date.\n"
                                 + "Please remove the MGF data to continue to the next stage.",
                                 "MGF Data Present", JOptionPane.PLAIN_MESSAGE,
@@ -225,20 +252,20 @@ public class ContinueButtonListener implements ActionListener {
                                 JOptionPane.ERROR_MESSAGE);
                 return;
             }
-        }       
+        }
 
         if (data.getGenomeAnnotationMode()) {
             ((CreateOrLoadIdentificationsStep) AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)
-                .refreshFromData();
+                    .refreshFromData();
             parent.moveToStep(AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP);
             AnalyseStatusPanel.getInstance().setGenomeAnnotationMode();
             AnalyseStatusPanel.getInstance().setIdentificationsAsCurrentStep();
         } else {
             ((DefineConditionsStep) AnalyseDynamicTab.DEFINE_CONDITIONS_STEP)
-                .refreshFromData();
+                    .refreshFromData();
             parent.moveToStep(AnalyseDynamicTab.DEFINE_CONDITIONS_STEP);
             AnalyseStatusPanel.getInstance().setConditionsAsCurrentStep();
-        }       
+        }
     }
 
     private void identificationsStep() {
@@ -249,29 +276,42 @@ public class ContinueButtonListener implements ActionListener {
                 break;
             }
         }
-        
+
         if (!canMoveOn) {
             JOptionPane
                     .showConfirmDialog(
                             panel,
                             "Not all raw files have identifications being loaded or created.\n"
-                                    + "Please correct this before moving to the next stage.",
+                            + "Please correct this before moving to the next stage.",
                             "Missing Identifications", JOptionPane.PLAIN_MESSAGE,
                             JOptionPane.ERROR_MESSAGE);
-            
+
             return;
         }
-        
+
         if (data.getGenomeAnnotationMode()) {
-                parent.moveToStep(AnalyseDynamicTab.DONE_STEP);
-                AnalyseStatusPanel.getInstance().setResultsAsCurrentStep();
-            } else {
+            parent.moveToStep(AnalyseDynamicTab.DONE_STEP);
+            AnalyseStatusPanel.getInstance().setResultsAsCurrentStep();
+        } else {
+            boolean identsNeedCleaning = false;
+            for (int i = 0; i < data.getRawDataCount(); i++) {
+                IdentDataFile file = data.getRawDataFile(i).getIdentificationDataFile();
+                if (file != null && file.isCleanable()) {
+                    identsNeedCleaning = true;
+                    break;
+                }
+            }
+
+            if (identsNeedCleaning) {
                 ((CleanIdentificationsStep) AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP).refreshFromData();
                 parent.moveToStep(AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP);
                 AnalyseStatusPanel.getInstance().setCleanConditionsAsCurrentStep();
-            }   
+            } else {
+               cleanIdentificationsStep();                
+            }
+        }
     }
-    
+
     private void defineConditionsStep() {
         DefineConditionsTable conditionsTable = ((DefineConditionsStep) panel)
                 .getConditionsTable();
@@ -284,8 +324,7 @@ public class ContinueButtonListener implements ActionListener {
                             JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        AnalyseData data = AnalyseData.getInstance();
+        
         AnalyseDynamicTab parent = (AnalyseDynamicTab) panel.getParent();
 
         AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()

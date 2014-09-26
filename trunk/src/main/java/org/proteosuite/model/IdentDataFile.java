@@ -17,6 +17,7 @@ public abstract class IdentDataFile implements BackgroundTaskSubject {
     protected int peptideCountPassingThreshold = -1;
     protected String thresholdingUsed = "";
     protected Map<String, String> thresholdables = new HashMap<>(); 
+    private String thresholdStatus = "Needed";
      
     private boolean mayNeedCleaning = false;
     public IdentDataFile(File file, RawDataFile parent) {
@@ -27,6 +28,14 @@ public abstract class IdentDataFile implements BackgroundTaskSubject {
     
     public String getAbsoluteFileName() {
         return file.getAbsolutePath();
+    }
+    
+    public void setThresholdStatus(String status) {
+        this.thresholdStatus = status;
+    }
+    
+    public String getThresholdStatus() {
+        return mayNeedCleaning ? thresholdStatus : "Complete";
     }
     
     public String getFileName() {

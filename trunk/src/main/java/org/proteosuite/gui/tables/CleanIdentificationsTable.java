@@ -41,7 +41,7 @@ public class CleanIdentificationsTable extends JTable {
                 identFile.getPSMCountNotPassingThreshold() == -1 ? "Calculating..." : identFile.getPSMCountNotPassingThreshold(),
                 identFile.getPeptideCountPassingThreshold() == -1 ? "Calculating..." : identFile.getPeptideCountPassingThreshold(),
                 identFile.getThresholdingUsed().equals("") ? "Finding..." : identFile.getThresholdingUsed(),
-                null
+                identFile.getThresholdStatus()
             }); 
         }             
     }

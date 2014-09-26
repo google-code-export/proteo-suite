@@ -2,8 +2,10 @@ package org.proteosuite.identification;
 
 import java.io.File;
 import org.proteosuite.actions.ProteoSuiteAction;
+import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CleanIdentificationsStep;
 import org.proteosuite.gui.inspect.InspectTab;
+import org.proteosuite.gui.listener.ContinueButtonListener;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
@@ -44,6 +46,9 @@ public class ThresholdWrapper {
     }
 
     public void doThresholding() {
+        dataFile.setThresholdStatus("Thresholding...");
+        CleanIdentificationsStep.getInstance().refreshFromData();
+        
         final BackgroundTask task = new BackgroundTask(new BackgroundTaskSubject() {
             @Override
             public String getSubjectName() {
@@ -51,18 +56,18 @@ public class ThresholdWrapper {
             }
         }, "Thresholding Identifications");
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<String, Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
             @Override
-            public String act(Void argument) {
+            public String act(BackgroundTaskSubject argument) {
                 outputPath = dataFile.getAbsoluteFileName().replace(".mzid", "_thresholded.mzid");
                 new ThresholdMzid(dataFile.getAbsoluteFileName(), outputPath, true, thresholdOn, thresholdValue, !ThresholdWrapper.this.higherValuesBetter, false);
                 return outputPath;
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
             @Override
-            public Void act(Void argument) {
+            public Void act(BackgroundTaskSubject argument) {
                 RawDataFile rawDataFile = dataFile.getParent();
                 File newFile = new File(outputPath);
                 if (!newFile.exists()) {
@@ -79,6 +84,19 @@ public class ThresholdWrapper {
 
                 CleanIdentificationsStep.getInstance().refreshFromData();
                 
+                boolean allCleaned = true;
+                for (int i = 0; i < data.getRawDataCount(); i++) {
+                    IdentDataFile identData = data.getRawDataFile(i).getIdentificationDataFile();
+                    if (identData != null && identData.isCleanable()) {
+                        allCleaned = false;
+                        break;
+                    }
+                }
+                
+                if (allCleaned) {
+                    AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setCleanIdentificationsDone();
+                }               
+
                 return null;
             }
         });
