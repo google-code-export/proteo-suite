@@ -237,7 +237,9 @@ public class MzMLFile extends RawDataFile {
             String output = this.getAbsoluteFileName().replace("\\.mzML$", ".mgf").replace("\\.mzml$", ".mgf");
             boolean successfulConversion = FileFormatUtils.mzMLToMGF(unmarshaller, output);
             if (successfulConversion) {
-                return new MascotGenericFormatFile(new File(output));
+                MascotGenericFormatFile mgf = new MascotGenericFormatFile(new File(output));
+                mgf.setParent(this);
+                return mgf;
             }
         }
 

@@ -104,7 +104,7 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
             }
 
             identParamsView = new IdentParamsView(
-                    (Window) parent, data.getGenomeAnnotationMode());
+                    (Window) parent, data.doingGenomeAnnotation());
         }
         return identParamsView;
     }
@@ -121,7 +121,7 @@ public class CreateOrLoadIdentificationsStep extends JPanel {
             identificationsTable.addRawFileRow(dataFile);
         }
 
-        if (data.getGenomeAnnotationMode()) {
+        if (data.doingGenomeAnnotation()) {
             identificationsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
                 @Override
                 public void valueChanged(ListSelectionEvent e) {

@@ -3,7 +3,6 @@ package org.proteosuite.model;
 import java.io.File;
 import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.actions.QuantFilePostLoadAction;
-import org.proteosuite.gui.tasks.TasksTab;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
 
 /**
@@ -29,17 +28,18 @@ public class MzQuantMLFile extends QuantDataFile {
     public void initiateLoading() {       
         
         final BackgroundTask task = new BackgroundTask(this, "Load Quantitation Data");
+        task.setInvisibility(true);
         
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<MzQuantMLUnmarshaller, Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<MzQuantMLUnmarshaller, BackgroundTaskSubject>() {
             @Override
-            public MzQuantMLUnmarshaller act(Void argument) {
+            public MzQuantMLUnmarshaller act(BackgroundTaskSubject argument) {
                 return new MzQuantMLUnmarshaller(file);
             }
         });
         
-        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
             @Override
-            public Void act(Void argument) {
+            public Void act(BackgroundTaskSubject argument) {
                 unmarshaller = task.getResultOfClass(MzQuantMLUnmarshaller.class);
                 if (unmarshaller == null) {
                     throw new RuntimeException("mzQuantML file not read in correctly.");

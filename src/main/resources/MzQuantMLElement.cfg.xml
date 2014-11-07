@@ -247,8 +247,8 @@
     <configurations>
         <autoRefResolving>false</autoRefResolving>
         <clazz>uk.ac.liv.jmzqml.model.mzqml.IdentificationFile</clazz>
-        <idMapped>true</idMapped>
-        <indexed>true</indexed>
+        <idMapped>false</idMapped>
+        <indexed>false</indexed>
         <cvParamClass>uk.ac.liv.jmzqml.model.mzqml.params.IdentificationFileCvParam</cvParamClass>
         <userParamClass>uk.ac.liv.jmzqml.model.mzqml.params.IdentificationFileUserParam</userParamClass>
         <refResolverClass>uk.ac.liv.jmzqml.xml.jaxb.resolver.IdentificationFileRefResolver</refResolverClass>

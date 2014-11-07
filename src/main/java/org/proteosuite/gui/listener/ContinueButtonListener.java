@@ -28,7 +28,7 @@ import org.proteosuite.utils.StringUtils;
  */
 public class ContinueButtonListener implements ActionListener {
 
-    private JPanel panel;
+    private final JPanel panel;
     private static final AnalyseData data = AnalyseData.getInstance();
     private AnalyseDynamicTab parent;
 
@@ -71,6 +71,13 @@ public class ContinueButtonListener implements ActionListener {
                                 + "Otherwise please threshold your data to continue.",
                                 "Identification Data Not Thresholded", JOptionPane.PLAIN_MESSAGE,
                                 JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (data.doingIdentificationOnly()) {
+            parent.moveToStep(AnalyseDynamicTab.DONE_STEP);
+            AnalyseStatusPanel.getInstance().setResultsAsCurrentStep();
+            AnalyseStatusPanel.getInstance().setResultsProcessing();
             return;
         }
         
@@ -144,31 +151,38 @@ public class ContinueButtonListener implements ActionListener {
                 case "None (label-free)":
                     file.setAssays(new String[]{""});
                     break;
+                case "None (identification only)":
+                    data.setIdentificationOnlyMode(true);
+                    break;
             }
         }
 
         boolean mzmlPresent = false;
         boolean mgfPresent = false;
-        Set<String> mgfErrorFiles = new LinkedHashSet<>();
+        Set<String> rawErrorFiles = new LinkedHashSet<>();
         for (int i = 0; i < data.getRawDataCount(); i++) {
             RawDataFile dataFile = data.getRawDataFile(i);
             switch (dataFile.getFormat().toUpperCase()) {
                 case "MZML":
                     mzmlPresent = true;
+                    if (dataFile.getFile().length() < (Math.pow(1024, 2) * 50)) {
+                        rawErrorFiles.add(dataFile.getFileName());
+                    } 
+                    
                     break;
                 case "MGF":
                     mgfPresent = true;
-                    if (dataFile.getFile().length() > Math.pow(1024, 3)) {
-                        mgfErrorFiles.add(dataFile.getFileName());
-                    } else if (((MascotGenericFormatFile) dataFile).getSpectraCount() > 25000) {
-                        mgfErrorFiles.add(dataFile.getFileName());
+                    if (dataFile.getFile().length() > Math.pow(1024, 3) || dataFile.getFile().length() < (Math.pow(1024, 2) * 10)) {
+                        rawErrorFiles.add(dataFile.getFileName());
+                    } else if (dataFile.getSpectraCount() > 25000) {                        
+                        rawErrorFiles.add(dataFile.getFileName());
                     }
 
                     break;
             }
         }
 
-        if (data.getGenomeAnnotationMode()) {
+        if (data.doingGenomeAnnotation()) {
             if (mzmlPresent) {
                 // Needs fixing!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
                 JOptionPane
@@ -196,16 +210,18 @@ public class ContinueButtonListener implements ActionListener {
                 return;
             }
 
-            if (mgfErrorFiles.size() > 0) {
+            if (rawErrorFiles.size() > 0) {
                 JOptionPane
                         .showConfirmDialog(
                                 panel,
-                                "Some of your MGF files are too large to process in the genome annotation pipeline.\n"
-                                + "Files that are too large to process:\n" + StringUtils.join("\n", mgfErrorFiles) + "\n"
+                                "Some of your MGF files are too large or too small to process in the genome annotation pipeline.\n"
+                                + "Files that are too large or too small to process:\n" + StringUtils.join("\n", rawErrorFiles) + "\n"
                                 + "Your either have more than 1GB of data per file, or more than 25,000 spectra per file.\n"
-                                + "Please remove the problem MGF file(s) from your chosen directory, then remove all MGFs from ProteoSuite and re-import your chosen folder.\n"
+                                + "Your data file may also be less than 10MB in size.\n"
+                                + "If you have imported a folder please remove the problem MGF file(s) from your chosen directory, then remove all MGFs from ProteoSuite and re-import your chosen folder.\n"
+                                + "Otherwise delete the MGF file from ProteoSuite and import a file which meets these limits."
                                 + "You may wish to split large MGF files into smaller MGF files.",
-                                "MGF Files : Data Too Large", JOptionPane.PLAIN_MESSAGE,
+                                "MGF Files : Data Too Large Or Small", JOptionPane.PLAIN_MESSAGE,
                                 JOptionPane.ERROR_MESSAGE);
 
                 return;
@@ -216,13 +232,28 @@ public class ContinueButtonListener implements ActionListener {
                         .showConfirmDialog(
                                 panel,
                                 "You have not chosen to do a genome annotation run, but your raw data contains MGF files.\n"
-                                + "ProteoSuite does not currently support MGF files for processing when not doing genome annotation.\n"
-                                + "We currently only support mzML for processing.\n"
-                                + "MGF files can still be visualised in the 'Inspect' tab."
+                                + "ProteoSuite currently supports MGF files for pure identification, when not doing genome annotation.\n"
+                                + "We do not support MGF data for quantitation.\n"                                
                                 + "This may change at a later date.\n"
-                                + "Please remove the MGF data to continue to the next stage.",
+                                + "Please switch to mzML to do quantitation.",
                                 "MGF Data Present", JOptionPane.PLAIN_MESSAGE,
+                                JOptionPane.ERROR_MESSAGE);                
+            }
+            
+            if (rawErrorFiles.size() > 0) {
+                JOptionPane
+                        .showConfirmDialog(
+                                panel,
+                                "Some of your raw data files are too large or too small to process in the identification pipeline.\n"
+                                + "Files that are too large or too small to process:\n" + StringUtils.join("\n", rawErrorFiles) + "\n"
+                                + "Your either have more than 1GB of data per MGF file, or more than 25,000 spectra per MGF file.\n"
+                                + "Your data file may also be less than 10MB in size per MGF file, or less than 50MB per mzML file.\n"
+                                + "If you have imported a folder please remove the problem raw file(s) from your chosen directory, then remove all files from ProteoSuite and re-import your chosen folder.\n"
+                                + "Otherwise delete the raw file from ProteoSuite and import a file which meets these limits."
+                                + "You may wish to split large MGF files into smaller MGF files.",
+                                "Raw Files : Data Too Large Or Small", JOptionPane.PLAIN_MESSAGE,
                                 JOptionPane.ERROR_MESSAGE);
+
                 return;
             }
         }
@@ -252,14 +283,16 @@ public class ContinueButtonListener implements ActionListener {
                                 JOptionPane.ERROR_MESSAGE);
                 return;
             }
-        }
-
-        if (data.getGenomeAnnotationMode()) {
+        }        
+        
+        if (data.doingGenomeAnnotation() || data.doingIdentificationOnly()) {
             ((CreateOrLoadIdentificationsStep) AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)
                     .refreshFromData();
-            parent.moveToStep(AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP);
-            AnalyseStatusPanel.getInstance().setGenomeAnnotationMode();
+            parent.moveToStep(AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP);            
             AnalyseStatusPanel.getInstance().setIdentificationsAsCurrentStep();
+            if (data.doingGenomeAnnotation()) {
+                AnalyseStatusPanel.getInstance().setGenomeAnnotationMode();
+            }            
         } else {
             ((DefineConditionsStep) AnalyseDynamicTab.DEFINE_CONDITIONS_STEP)
                     .refreshFromData();
@@ -289,7 +322,7 @@ public class ContinueButtonListener implements ActionListener {
             return;
         }
 
-        if (data.getGenomeAnnotationMode()) {
+        if (data.doingGenomeAnnotation()) {
             parent.moveToStep(AnalyseDynamicTab.DONE_STEP);
             AnalyseStatusPanel.getInstance().setResultsAsCurrentStep();
         } else {

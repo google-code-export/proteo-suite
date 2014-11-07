@@ -1,6 +1,7 @@
 package org.proteosuite.quantitation;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
 import org.proteosuite.model.IdentDataFile;
+import org.proteosuite.model.MzQuantMLFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.utils.PluginManager;
 import org.proteosuite.utils.ProteinInferenceHelper;
@@ -33,7 +35,7 @@ public class XTrackerTMTWrapper {
     private List<RawDataFile> rawData;
     
     private static String plex;
-    private static SystemUtils sysUtils = new SystemUtils();
+    private static final SystemUtils sysUtils = new SystemUtils();
     private String outputPath = null;
 
     public XTrackerTMTWrapper(List<RawDataFile> rawData) {
@@ -59,7 +61,12 @@ public class XTrackerTMTWrapper {
             public Void act(Void argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationDone();
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setMappingDone();
-                    ProteinInferenceHelper.infer(outputPath, plex, ProteinInferenceHelper.REPORTER_ION_INTENSITY, "sum");
+                    //ProteinInferenceHelper.infer(outputPath, plex, ProteinInferenceHelper.REPORTER_ION_INTENSITY, "sum");
+                    AnalyseData
+                        .getInstance()
+                        .getInspectModel()
+                        .addQuantDataFile(
+                                new MzQuantMLFile(new File(outputPath)));
                     return null;
             }
         });

@@ -78,14 +78,14 @@ public class LogPane extends JScrollPane {
                 public Void act(BackgroundTaskSubject argument) {
                     try {
                         String line;
-                        while ((line = reader.readLine()) != null) {
-                            if (errorOutput) {
-                                line = "<font color=\"red\">" + line + "</font>";
-                            }
-                            
+                        while ((line = reader.readLine()) != null) {                            
                             if (printAlso) {
                                 System.out.println(line);
                             }
+                            
+                            if (errorOutput) {
+                                line = "<font color=\"red\">" + line + "</font>";
+                            }                           
                             
                             LogPane.this.append(line + "\n\n");
                             

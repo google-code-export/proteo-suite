@@ -34,10 +34,16 @@ public class AnalyseStatusPanel extends JPanel {
 	private static final JPanel mappingSection = new JPanel();
 	private static final JLabel mapping = new JLabel("Mapping");
 	private static final JLabel mappingStatus = new JLabel();
+        private static final JPanel normalisationSection = new JPanel();
+        private static final JLabel normalisation = new JLabel("Normalisation");
+        private static final JLabel normalisationStatus = new JLabel();
 	private static final JPanel proteinInferenceSection = new JPanel();
 	private static final JLabel proteinInference = new JLabel(
 			"Protein Inference");
 	private static final JLabel proteinInferenceStatus = new JLabel();
+        private static final JPanel anovaSection = new JPanel();
+        private static final JLabel anova = new JLabel("ANOVA");
+        private static final JLabel anovaStatus = new JLabel();
         private static final JPanel resultsSection = new JPanel();
         private static final JLabel results = new JLabel("Results");
         private static final JLabel resultsStatus = new JLabel();
@@ -76,8 +82,12 @@ public class AnalyseStatusPanel extends JPanel {
 				quantitation.getFont().getStyle(), 20));
 		mapping.setFont(new Font(mapping.getFont().getFamily(), mapping
 				.getFont().getStyle(), 20));
+                normalisation.setFont(new Font(normalisation.getFont()
+				.getFamily(), normalisation.getFont().getStyle(), 20));
 		proteinInference.setFont(new Font(proteinInference.getFont()
 				.getFamily(), proteinInference.getFont().getStyle(), 20));
+                anova.setFont(new Font(anova.getFont()
+				.getFamily(), anova.getFont().getStyle(), 20));
                 results.setFont(new Font(results.getFont()
 				.getFamily(), results.getFont().getStyle(), 20));
 
@@ -87,7 +97,9 @@ public class AnalyseStatusPanel extends JPanel {
 		cleanIdentificationsStatus.setIcon(notDone);
 		quantitationStatus.setIcon(notDone);
 		mappingStatus.setIcon(notDone);
+                normalisationStatus.setIcon(notDone);
 		proteinInferenceStatus.setIcon(notDone);
+                anovaStatus.setIcon(notDone);
                 resultsStatus.setIcon(notDone);
 
 		rawDataSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
@@ -98,7 +110,10 @@ public class AnalyseStatusPanel extends JPanel {
 				5, 4));
 		quantitationSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
 		mappingSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
+                normalisationSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
 		proteinInferenceSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5,
+				4));
+                anovaSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5,
 				4));
                 resultsSection.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 4));
 
@@ -114,8 +129,12 @@ public class AnalyseStatusPanel extends JPanel {
 		quantitationSection.add(quantitation);
 		mappingSection.add(mappingStatus);
 		mappingSection.add(mapping);
+                normalisationSection.add(normalisationStatus);
+                normalisationSection.add(normalisation);
 		proteinInferenceSection.add(proteinInferenceStatus);
 		proteinInferenceSection.add(proteinInference);
+                anovaSection.add(anovaStatus);
+                anovaSection.add(anova);
                 resultsSection.add(resultsStatus);
                 resultsSection.add(results);
 
@@ -125,7 +144,9 @@ public class AnalyseStatusPanel extends JPanel {
 		add(cleanIdentificationsSection);
 		add(quantitationSection);
 		add(mappingSection);
+                add(normalisationSection);
 		add(proteinInferenceSection);
+                add(anovaSection);
                 add(resultsSection);
                 
                 rawData.addMouseListener(new RawDataAndMultiplexingSectionListener());
@@ -137,12 +158,15 @@ public class AnalyseStatusPanel extends JPanel {
             quantitationSection.remove(quantitationStatus);
             mappingSection.remove(mappingStatus);
             proteinInferenceSection.remove(proteinInferenceStatus);
+            anovaSection.remove(anovaStatus);
             
             conditions.setForeground(Color.LIGHT_GRAY);
             cleanIdentifications.setForeground(Color.LIGHT_GRAY);
             quantitation.setForeground(Color.LIGHT_GRAY);
             mapping.setForeground(Color.LIGHT_GRAY);
+            normalisation.setForeground(Color.LIGHT_GRAY);
             proteinInference.setForeground(Color.LIGHT_GRAY);
+            anovaSection.setForeground(Color.LIGHT_GRAY);
             
             this.revalidate();
         }
@@ -154,7 +178,9 @@ public class AnalyseStatusPanel extends JPanel {
 		setCleanIdentificationsNotDone();
 		setQuantitationNotDone();
 		setMappingNotDone();
+                setNormalisationNotDone();
 		setProteinInferenceNotDone();
+                setAnovaNotDone();
                 setResultsNotDone();
 	}       
         
@@ -172,6 +198,18 @@ public class AnalyseStatusPanel extends JPanel {
 				.getFamily(), Font.PLAIN, 20));
             
             quantitation.setFont(new Font(quantitation.getFont()
+				.getFamily(), Font.PLAIN, 20));
+            
+            mapping.setFont(new Font(mapping.getFont()
+				.getFamily(), Font.PLAIN, 20));
+            
+            normalisation.setFont(new Font(normalisation.getFont()
+				.getFamily(), Font.PLAIN, 20));
+            
+            proteinInference.setFont(new Font(proteinInference.getFont()
+				.getFamily(), Font.PLAIN, 20));
+            
+            anova.setFont(new Font(anova.getFont()
 				.getFamily(), Font.PLAIN, 20));
             
             results.setFont(new Font(results.getFont()
@@ -205,6 +243,18 @@ public class AnalyseStatusPanel extends JPanel {
         public void setQuantitationAsCurrentStep() {  
             setAllAsPlainText();
             quantitation.setFont(new Font(quantitation.getFont()
+				.getFamily(), Font.BOLD, 20));
+        }
+        
+        public void setNormalisationAsCurrentStep() {
+            setAllAsPlainText();
+            normalisation.setFont(new Font(normalisation.getFont()
+				.getFamily(), Font.BOLD, 20));
+        }
+        
+        public void setAnovaAsCurrentStep() {
+            setAllAsPlainText();
+            anova.setFont(new Font(anova.getFont()
 				.getFamily(), Font.BOLD, 20));
         }
         
@@ -285,6 +335,18 @@ public class AnalyseStatusPanel extends JPanel {
 	public void setMappingProcessing() {
 		mappingStatus.setIcon(processing);
 	}
+        
+        public void setNormalisationDone() {
+		normalisationStatus.setIcon(done);
+	}
+
+	public void setNormalisationNotDone() {
+		normalisationStatus.setIcon(notDone);
+	}
+
+	public void setNormalisationProcessing() {
+		normalisationStatus.setIcon(processing);
+	}
 
 	public void setProteinInferenceDone() {
 		proteinInferenceStatus.setIcon(done);
@@ -298,6 +360,18 @@ public class AnalyseStatusPanel extends JPanel {
 		proteinInferenceStatus.setIcon(processing);
 	}
         
+        public void setAnovaInferenceDone() {
+		anovaStatus.setIcon(done);
+	}
+
+	public void setAnovaNotDone() {
+		anovaStatus.setIcon(notDone);
+	}
+
+	public void setAnovaProcessing() {
+		anovaStatus.setIcon(processing);
+	}
+        
         public void setResultsDone() {
 		resultsStatus.setIcon(done);
 	}
@@ -307,7 +381,7 @@ public class AnalyseStatusPanel extends JPanel {
 	}
 
 	public void setResultsProcessing() {
-		results.setIcon(processing);
+		resultsStatus.setIcon(processing);
 	}
 
 	public synchronized void checkAndUpdateRawDataStatus() {
@@ -330,7 +404,7 @@ public class AnalyseStatusPanel extends JPanel {
 		}
 	}
 
-	public synchronized void checkAndUpdateIdentificationsStatus() {
+	public synchronized boolean checkAndUpdateIdentificationsStatus() {
 		AnalyseData data = AnalyseData.getInstance();
 		boolean allDataLoaded = true;
 		for (int i = 0; i < data.getRawDataCount(); i++) {
@@ -345,5 +419,7 @@ public class AnalyseStatusPanel extends JPanel {
 		if (allDataLoaded) {
 			setIdentificationsDone();
 		}
+                
+                return allDataLoaded;
 	}
 }

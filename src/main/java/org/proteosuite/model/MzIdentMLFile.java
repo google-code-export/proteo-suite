@@ -137,6 +137,10 @@ public class MzIdentMLFile extends IdentDataFile {
             @Override
             public Void act(BackgroundTaskSubject argument) {
                 String[] computationResult = task.getResultOfClass(String[].class);
+                if (computationResult == null || computationResult[0] == null) {
+                    System.out.println("PSM Stats Calculator Did Not Run Properly");
+                }
+                
                 psmCountPassingThreshold = Integer.parseInt(computationResult[0]);
                 psmCountNotPassingThrehsold = Integer.parseInt(computationResult[1]);
                 peptideCountPassingThreshold = Integer.parseInt(computationResult[2]);

@@ -20,9 +20,11 @@ public class ProteinInferenceHelper {
     public static final String REPORTER_ION_INTENSITY = "MS:1001847";
     public static final String LCMS_FEATURE_INTENSITY = "MS:1001840";
     public static final String LABEL_FREE_PEPTIDE = "MS:1001891";
-    private static final String LABEL_FREE_PROTEIN = "MS:1001890";
-    private static final String LABEL_FREE_PEPTIDE_DESC = "Progenesis: peptide normalised abundance";
-    private static final String LABEL_FREE_PROTEIN_DESC = "Progenesis: protein normalised abundance";
+    
+    private static final String LABEL_FREE_PROTEIN_GROUP_NORMALISED_ACC = "MS:1002518";
+    private static final String LABEL_FREE_PROTEIN_GROUP_NORMALISED_NAME = "Progenesis: protein group normalised abundance";
+    private static final String LABEL_FREE_PROTEIN_GROUP_RAW_ACC = "MS:1002519";
+    private static final String LABEL_FREE_PROTEIN_GROUP_RAW_NAME = "Progenesis: protein group raw abundance";
     private static final String REPORTER_ION_INTENSITY_DESC = "reporter ion intensity";
     private static final String LCMS_FEATURE_INTENSITY_DESC = "LC-MS feature intensity";
     private static final String quantLayerType = "AssayQuantLayer";
@@ -43,26 +45,29 @@ public class ProteinInferenceHelper {
             }
         }, "Inferring Proteins");
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Void, Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
             @Override
-            public Void act(Void argument) {
+            public Void act(BackgroundTaskSubject argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
                         .setProteinInferenceProcessing();
 
                 outputFile = inputFile.replaceAll(".mzq",
                         "_protein_inference.mzq");
-
+                ProteinAbundanceInference inference;
                 try {
-                    if (quantDataType.equals(REPORTER_ION_INTENSITY)) {
-                        new ProteinAbundanceInference(inputFile, outputFile,
-                                quantMethod, mergeOperator, quantDataType,
-                                LABEL_FREE_PROTEIN, LABEL_FREE_PROTEIN_DESC,
-                                quantLayerType);
-                    } else if (quantDataType.equals(LCMS_FEATURE_INTENSITY)) {
-                        new ProteinAbundanceInference(inputFile, outputFile,
-                                quantMethod, mergeOperator, quantDataType,
-                                LABEL_FREE_PROTEIN, LABEL_FREE_PROTEIN_DESC,
-                                quantLayerType);
+                    switch (quantDataType) {
+                        case REPORTER_ION_INTENSITY:
+//                            inference = new ProteinAbundanceInference(inputFile, outputFile,
+//                                    quantMethod, mergeOperator, quantDataType,
+//                                    "inputPeptideQuantLayerID",
+//                                    LABEL_FREE_PROTEIN, LABEL_FREE_PROTEIN_DESC,
+//                                    quantLayerType);
+                            break;
+                        case LCMS_FEATURE_INTENSITY:
+                            inference = new ProteinAbundanceInference(inputFile, outputFile, "AssayQuantLayer",
+                                    "MS:1001840", "MS:1001850", LABEL_FREE_PROTEIN_GROUP_NORMALISED_ACC, LABEL_FREE_PROTEIN_GROUP_NORMALISED_NAME,
+                                    LABEL_FREE_PROTEIN_GROUP_RAW_ACC, LABEL_FREE_PROTEIN_GROUP_RAW_NAME, "sum");                            
+                            break;
                     }
                 } catch (FileNotFoundException ex) {
                     System.out.println("Protein inference error: "
@@ -73,9 +78,9 @@ public class ProteinInferenceHelper {
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
             @Override
-            public Void act(Void argument) {
+            public Void act(BackgroundTaskSubject argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
                         .setProteinInferenceDone();
 

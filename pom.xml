@@ -74,12 +74,7 @@
              
         =============================================================================
     -->  
-    <dependencies>  
-        <dependency>
-            <groupId>uk.ac.liv</groupId>
-            <artifactId>jmzquantml</artifactId>
-            <version>1.0.0-1.0.4-SNAPSHOT</version>
-        </dependency>
+    <dependencies>
         <dependency>
             <groupId>net.sourceforge.jexcelapi</groupId>
             <artifactId>jxl</artifactId>
@@ -133,19 +128,24 @@
             <version>6.5.1</version>
         </dependency>
         <dependency>
-            <groupId>MzidLib</groupId>
-            <artifactId>mzidentml-lib</artifactId>
-            <version>1.6.5</version>
-        </dependency>
-        <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>utilities</artifactId>
             <version>3.27.0</version>
         </dependency>
         <dependency>
-            <groupId>cranfield</groupId>
+            <groupId>uk.ac.liv</groupId>
+            <artifactId>jmzquantml</artifactId>
+            <version>1.0.0-1.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.liv</groupId>
             <artifactId>mzqlib</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>0.4-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>MzidLib</groupId>
+            <artifactId>mzidentml-lib</artifactId>
+            <version>1.6.11-SNAPSHOT</version>
         </dependency>
     </dependencies>
     
@@ -273,5 +273,17 @@
                 </excludes>
             </resource>  
         </resources>  
-    </build>    
+    </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.0.1</version>
+                <configuration>
+                    <configLocation>config/sun_checks.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>

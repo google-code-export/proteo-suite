@@ -1,6 +1,7 @@
 package org.proteosuite.quantitation;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,7 +16,9 @@ import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
+import org.proteosuite.model.BackgroundTaskSubject;
 import org.proteosuite.model.IdentDataFile;
+import org.proteosuite.model.MzQuantMLFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.utils.PluginManager;
 import org.proteosuite.utils.ProteinInferenceHelper;
@@ -42,9 +45,9 @@ public class XTrackerITRAQWrapper {
 
     public void compute() {
         final BackgroundTask task = new BackgroundTask(rawData.iterator().next(), "Quantitating iTRAQ Data");
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Void, Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
             @Override
-            public Void act(Void argument) {
+            public Void act(BackgroundTaskSubject argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationProcessing();
                 generateFiles();
                 new xTracker(outputPath, rawData.get(0).getFile().getParent());                
@@ -52,16 +55,23 @@ public class XTrackerITRAQWrapper {
             }
         });
         
-        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
             @Override
-            public Void act(Void argument) {
+            public Void act(BackgroundTaskSubject argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationDone();
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setMappingDone();
-                    ProteinInferenceHelper.infer(outputPath, fourPlex ? "iTRAQ 4-plex" : "iTRAQ 8-plex", ProteinInferenceHelper.REPORTER_ION_INTENSITY, "sum");
+                    
+                    // For now, skip all the mzq post-processing steps, and jst load the file.
+                    //ProteinInferenceHelper.infer(outputPath, fourPlex ? "iTRAQ 4-plex" : "iTRAQ 8-plex", ProteinInferenceHelper.REPORTER_ION_INTENSITY, "sum");
+                    
+                    AnalyseData
+                        .getInstance()
+                        .getInspectModel()
+                        .addQuantDataFile(
+                                new MzQuantMLFile(new File(outputPath)));
                     return null;
             }
-        });
-        
+        });        
 
         BackgroundTaskManager.getInstance().submit(task);
     }
