@@ -69,12 +69,14 @@ public class RawDataAndMultiplexingStep extends JPanel {
         } else {
             multiplexingBox.setSelectedIndex(0);
         }
+        
+        multiplexingBox.addItem("None (identification only)");
 
         JPanel buttonsPanel = new JPanel(new GridLayout(2, 3));
 
         genomeAnnotationBox.setSelected(false);
 
-        buttonsPanel.add(getRow(new JLabel("Genome Annotation (i.e. ProteoAnnotator) Run?"), genomeAnnotationBox));
+        buttonsPanel.add(getRow(new JLabel("Genome Annotation Run?"), genomeAnnotationBox));
 
         buttonsPanel.add(Box.createGlue());
         buttonsPanel.add(Box.createGlue());

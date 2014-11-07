@@ -48,7 +48,7 @@ public class PreviousButtonListener implements ActionListener {
             parent.moveToStep(AnalyseDynamicTab.RAW_DATA_AND_MULTIPLEXING_STEP);  
             AnalyseStatusPanel.getInstance().setRawDataAsCurrentStep();
         } else if (panel instanceof CreateOrLoadIdentificationsStep) {
-            if (!data.getGenomeAnnotationMode()) {
+            if (!data.doingGenomeAnnotation()) {
                 parent.moveToStep(AnalyseDynamicTab.DEFINE_CONDITIONS_STEP);
                 AnalyseStatusPanel.getInstance().setConditionsAsCurrentStep();
             } else {

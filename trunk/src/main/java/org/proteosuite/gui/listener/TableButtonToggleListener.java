@@ -19,7 +19,7 @@ public class TableButtonToggleListener implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (AnalyseData.getInstance().getGenomeAnnotationMode()) {
+        if (AnalyseData.getInstance().doingGenomeAnnotation()) {
             return;
         }
         

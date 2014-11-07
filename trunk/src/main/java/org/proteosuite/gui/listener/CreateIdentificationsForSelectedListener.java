@@ -2,7 +2,6 @@ package org.proteosuite.gui.listener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -50,7 +49,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
         
         Map<String, String> runParams = identDialog.getSearchGUIParameterSet();       
 
-        if (data.getGenomeAnnotationMode()) {
+        if (data.doingGenomeAnnotation()) {
             Set<MascotGenericFormatFile> rawDataFiles = new HashSet<>();
             for (int i = 0; i < data.getRawDataCount(); i++) {
                 RawDataFile rawDataFile = data.getRawDataFile(i);
@@ -91,12 +90,12 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
                     rawDataFile = ((MzMLFile) rawDataFile).getAsMGF();
                 }
 
-                Set<MascotGenericFormatFile> rawDataFiles = Collections.singleton((MascotGenericFormatFile) rawDataFile);
-
                 SearchGuiViaMzidLibWrapper wrapper = new SearchGuiViaMzidLibWrapper(
-                        rawDataFiles,
+                        (MascotGenericFormatFile) rawDataFile,
                         identDialog.getSingleDatabasePath(),
-                        runParams);
+                        runParams,
+                identDialog.getPeptideLevelThresholding(),
+                identDialog.getProteinLevelThresholding());
 
                 wrapper.compute();
             }

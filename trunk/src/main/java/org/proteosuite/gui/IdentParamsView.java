@@ -44,7 +44,6 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -83,7 +82,7 @@ public class IdentParamsView extends JDialog {
     private final JComboBox<String> jcFragmentToleranceUnits = new JComboBox<>(new String[]{"ppm",
         "Da"});
 
-    private final JComboBox<Integer> jcMaxMissedCleavages = new JComboBox<>(new Integer[]{0, 1, 2, 3, 4, 5,});  
+    private final JComboBox<Integer> jcMaxMissedCleavages = new JComboBox<>(new Integer[]{0, 1, 2, 3, 4, 5,});
 
     private final JList<String> jlstFixedMods = new JList<>(
             new DefaultListModel<String>());
@@ -92,19 +91,17 @@ public class IdentParamsView extends JDialog {
             new DefaultListModel<String>());
 
     private final JList<String> jlstVarMods = new JList<>(
-            new DefaultListModel<String>());
+            new DefaultListModel<String>());    
 
-    private final JTextField jtDatabaseFile = new JTextField(50);
-    
     private final JTextField jtPrefix = new JTextField(16);
-    
+
     private JTextField jtMSTolerance;
     private JTextField jtMSMSTolerance;
     private JComboBox<Integer> jcMinCharge;
-    private JComboBox<Integer> jcMaxCharge;    
- 
+    private JComboBox<Integer> jcMaxCharge;
+
     private JComboBox<Character> jcFragmentIonTypesABC;
-    private JComboBox<Character> jcFragmentIonTypesXYZ;      
+    private JComboBox<Character> jcFragmentIonTypesXYZ;
     private JComboBox<String> jcEnzyme;
     private JComboBox<String> peptideThresholdValueComboBox;
     private JComboBox<String> proteinThresholdValueComboBox;
@@ -136,9 +133,7 @@ public class IdentParamsView extends JDialog {
                 .addElement("carbamidomethyl c");
 
         // Getting total available processors for multithreading
-        jcMaxMissedCleavages.setSelectedIndex(1);
-
-        jtDatabaseFile.setToolTipText("Enter the path to the database file");        
+        jcMaxMissedCleavages.setSelectedIndex(1);        
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -178,16 +173,13 @@ public class IdentParamsView extends JDialog {
 
         run.setVisible(true);
 
-        
-
         setMaximumSize(new Dimension(792, 648));
         setMinimumSize(new Dimension(792, 648));
 
         run.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                handleRunButtonPress(jtDatabaseFile.getText(),
-                        jlstFixedMods.getModel(), jlstVarMods.getModel(),
+                handleRunButtonPress(jlstFixedMods.getModel(), jlstVarMods.getModel(),
                         jcMaxMissedCleavages.getSelectedIndex());
             }
         });
@@ -317,14 +309,14 @@ public class IdentParamsView extends JDialog {
         this.jcFragmentIonTypesABC.setSelectedIndex(1);
         this.jtMSMSTolerance = new JTextField("0.5");
         this.jtMSMSTolerance.setColumns(3);
-        this.jtMSTolerance = new JTextField("5");        
-        this.jtMSTolerance.setColumns(3);  
+        this.jtMSTolerance = new JTextField("5");
+        this.jtMSTolerance.setColumns(3);
         this.jcMinCharge = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
         this.jcMinCharge.setSelectedIndex(1);
         this.jcMaxCharge = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
-        this.jcMaxCharge.setSelectedIndex(3);              
+        this.jcMaxCharge.setSelectedIndex(3);
         jtMSTolerance
-                .setToolTipText("Precursor Mass Tolerance (E.g. +/- 2.5Da, +/- 20ppm)");        
+                .setToolTipText("Precursor Mass Tolerance (E.g. +/- 2.5Da, +/- 20ppm)");
         this.peptideThresholdValueComboBox = new JComboBox<>(thresholdValues);
         this.peptideThresholdValueComboBox.setSelectedIndex(3);
         this.proteinThresholdValueComboBox = new JComboBox<>(thresholdValues);
@@ -343,12 +335,12 @@ public class IdentParamsView extends JDialog {
                 jcMaxMissedCleavages));
 
         jPanel.add(getRow(new JLabel("Precursor Charge Range:"), jcMinCharge, new JLabel("-"), jcMaxCharge));
-        
-        jPanel.add(getRow(new JLabel("Output File Prefix:"), jtPrefix));
 
         if (this.genomeAnnotationMode) {
-            jPanel.add(getRow(new JLabel("Peptide-level thresholding:"), this.peptideThresholdValueComboBox, new JLabel("Protein-level thresholding:"), this.proteinThresholdValueComboBox));
-        }       
+            jPanel.add(getRow(new JLabel("Output File Prefix:"), jtPrefix));
+        }
+
+        jPanel.add(getRow(new JLabel("Peptide-level thresholding:"), this.peptideThresholdValueComboBox, new JLabel("Protein-level thresholding:"), this.proteinThresholdValueComboBox));
 
         return jPanel;
     }
@@ -378,8 +370,7 @@ public class IdentParamsView extends JDialog {
         return uniMod;
     }
 
-    private void handleRunButtonPress(String databaseFile,
-            ListModel<String> fixedModsModel, ListModel<String> varModsModel,
+    private void handleRunButtonPress(ListModel<String> fixedModsModel, ListModel<String> varModsModel,
             int maxMissedCleavages) {
 
         // Validate entries
@@ -394,7 +385,7 @@ public class IdentParamsView extends JDialog {
         hasRunSuccessfully = true;
         dispose();
     }
-    
+
     public String getOutputFilePrefix() {
         return jtPrefix.getText();
     }
@@ -406,9 +397,9 @@ public class IdentParamsView extends JDialog {
         //parameterSet.put("frag_ppm", ((String) jcFragmentToleranceUnits.getSelectedItem()).equals("ppm") ? "1" : "2");
         parameterSet.put("frag_tol", jtMSMSTolerance.getText());
         parameterSet.put("enzyme", (String) jcEnzyme.getSelectedItem());
-        parameterSet.put("min_charge", String.valueOf((Integer)jcMinCharge.getSelectedItem()));
-        parameterSet.put("max_charge", String.valueOf((Integer)jcMaxCharge.getSelectedItem()));
-        parameterSet.put("mc", (String) String.valueOf((Integer)jcMaxMissedCleavages.getSelectedItem()));
+        parameterSet.put("min_charge", String.valueOf((Integer) jcMinCharge.getSelectedItem()));
+        parameterSet.put("max_charge", String.valueOf((Integer) jcMaxCharge.getSelectedItem()));
+        parameterSet.put("mc", (String) String.valueOf((Integer) jcMaxMissedCleavages.getSelectedItem()));
         parameterSet.put("fi", String.valueOf(jcFragmentIonTypesABC.getSelectedItem()));
         parameterSet.put("ri", String.valueOf(jcFragmentIonTypesXYZ.getSelectedItem()));
         parameterSet.put("fixed_mods", StringUtils.join(", ", jlstFixedMods.getModel()));
@@ -427,12 +418,12 @@ public class IdentParamsView extends JDialog {
 
     public String[] getGeneModel() {
         return databasePanel.getGeneModel();
-    }      
-    
+    }
+
     public String getPeptideLevelThresholding() {
         return ((String) this.peptideThresholdValueComboBox.getSelectedItem()).split(" ")[0];
     }
-    
+
     public String getProteinLevelThresholding() {
         return ((String) this.proteinThresholdValueComboBox.getSelectedItem()).split(" ")[0];
     }
@@ -448,12 +439,12 @@ public class IdentParamsView extends JDialog {
                 if (!geneModels[0].toUpperCase().endsWith(".GFF")) {
                     validationErrors.add("GFF file has not been correctly set. Please amend.");
                 }
-                
+
                 if (geneModels[1] != null && !geneModels[1].isEmpty() && !(geneModels[1].toUpperCase().endsWith(".FASTA") || geneModels[1].toUpperCase().endsWith(".FA"))) {
                     validationErrors.add("FastA file has not been correctly set. Please amend.");
                 }
             }
-            
+
             Map<String, String> otherModels = this.getOtherGeneModels();
             for (Entry<String, String> otherModel : otherModels.entrySet()) {
                 if (otherModel.getKey() == null || otherModel.getKey().isEmpty()) {
@@ -461,7 +452,8 @@ public class IdentParamsView extends JDialog {
                 }
             }
         } else {
-            if (jtDatabaseFile.getText().isEmpty() || (!jtDatabaseFile.getText().toUpperCase().endsWith(".FASTA"))) {
+            String databaseText = this.getSingleDatabasePath();
+            if (databaseText.isEmpty() || (!databaseText.toUpperCase().endsWith(".FASTA"))) {
                 validationErrors.add("FastA file has not been correctly set. Please amend.");
             }
         }

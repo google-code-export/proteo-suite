@@ -23,6 +23,7 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
     private static final String RETENTION_TIME_PARAM = "MS:1000894";
     private boolean cacheSpectra = false;
     private MgfFile mgf = null;
+    private RawDataFile parent = null;
 
     public MascotGenericFormatFile(File file) {
         this(file, false);
@@ -31,6 +32,14 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
     public MascotGenericFormatFile(File file, boolean cacheSpectra) {
         super(file);
         this.cacheSpectra = cacheSpectra;
+    }
+    
+    public void setParent(RawDataFile parent) {
+        this.parent = parent;
+    }
+    
+    public RawDataFile selfOrParent() {
+        return parent == null ? this : parent;
     }
 
     @Override
@@ -76,9 +85,9 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
             @Override
             public Void act(BackgroundTaskSubject argument) {
                 mgf = task.getResultOfClass(MgfFile.class);
-                if (mgf == null) {
-                        throw new RuntimeException("MGF file not read in correctly.");
-                    }
+//                if (mgf == null) {
+//                        throw new RuntimeException("MGF file not read in correctly.");
+//                    }
                 
                 return null;
             }

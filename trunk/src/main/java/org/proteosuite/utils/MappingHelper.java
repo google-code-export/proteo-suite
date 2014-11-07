@@ -1,5 +1,6 @@
 package org.proteosuite.utils;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.bind.JAXBException;
@@ -9,6 +10,7 @@ import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
 import org.proteosuite.model.IdentDataFile;
+import org.proteosuite.model.MzQuantMLFile;
 import org.proteosuite.model.QuantDataFile;
 import org.proteosuite.model.RawDataFile;
 import uk.ac.liv.jmzqml.xml.io.MzQuantMLUnmarshaller;
@@ -58,8 +60,8 @@ public class MappingHelper {
             public Void act(Void argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setMappingDone();
                 String outputFile = task.getResultOfClass(String.class);
-                ProteinInferenceHelper.infer(outputFile, "Label-free", ProteinInferenceHelper.LCMS_FEATURE_INTENSITY, "sum");
                 
+                NormalisationHelper.normalise(new MzQuantMLFile(new File(outputFile)));               
                 return null;
             }
         });

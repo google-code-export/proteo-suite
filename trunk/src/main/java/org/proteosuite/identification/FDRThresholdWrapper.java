@@ -12,8 +12,8 @@ import org.proteosuite.model.BackgroundTaskSubject;
 import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.MzIdentMLFile;
 import org.proteosuite.model.RawDataFile;
-import uk.ac.liv.mzidlib.FalseDiscoveryRateGlobal;
 import uk.ac.liv.mzidlib.ThresholdMzid;
+import uk.ac.liv.mzidlib.fdr.FalseDiscoveryRateGlobal;
 
 /**
  *

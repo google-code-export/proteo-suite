@@ -16,6 +16,7 @@ public class AnalyseData {
     private final List<RawDataFile> rawDataFiles = new ArrayList<>();
     private String multiplexing = "";
     private boolean supportGenomeAnnotation = false;
+    private boolean supportIdentificationOnly = false;
     private LogManager logs = new LogManager();
     private static AnalyseData instance = null;
 
@@ -71,8 +72,16 @@ public class AnalyseData {
         this.supportGenomeAnnotation = genomeAnnotationMode;
     }
 
-    public boolean getGenomeAnnotationMode() {
+    public boolean doingGenomeAnnotation() {
         return this.supportGenomeAnnotation;
+    }
+    
+    public void setIdentificationOnlyMode(boolean identOnlyMode) {
+        this.supportIdentificationOnly = identOnlyMode;
+    }
+    
+    public boolean doingIdentificationOnly() {
+        return this.supportIdentificationOnly;
     }
 
     public String getMultiplexing() {

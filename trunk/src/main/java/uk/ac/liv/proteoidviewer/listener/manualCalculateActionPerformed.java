@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -15,7 +14,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.xml.bind.JAXBException;
-
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -25,14 +23,13 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-
 import uk.ac.ebi.jmzidml.model.mzidml.DBSequence;
 import uk.ac.ebi.jmzidml.model.mzidml.PeptideEvidence;
 import uk.ac.ebi.jmzidml.model.mzidml.PeptideEvidenceRef;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationItem;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationList;
 import uk.ac.ebi.jmzidml.model.mzidml.SpectrumIdentificationResult;
-import uk.ac.liv.mzidlib.FalseDiscoveryRate;
+import uk.ac.liv.mzidlib.fdr.FalseDiscoveryRate;
 import uk.ac.liv.proteoidviewer.ProteoIDViewer;
 import uk.ac.liv.proteoidviewer.tabs.GlobalStatisticsPanel;
 import uk.ac.liv.proteoidviewer.util.IdViewerUtils;
