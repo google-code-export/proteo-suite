@@ -214,7 +214,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                             mzidFile.getParentFile().getName() + ".mzid");
                     try {
                         Files.move(mzidFile.toPath(), finalFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                        SystemUtils.deleteRecursive(mzidFile.getParentFile());
+                        //SystemUtils.deleteRecursive(mzidFile.getParentFile());
                     } catch (IOException ex) {
                         Logger.getLogger(SearchGuiViaMzidLibWrapper.class.getName()).log(Level.SEVERE, null, ex);
                         finalFile = mzidFile;
@@ -358,7 +358,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
         try {
             File thisClassFile = new File(URLDecoder.decode(SearchGuiViaMzidLibWrapper.class.getProtectionDomain().getCodeSource().getLocation().getPath(), "UTF-8"));
             if (thisClassFile.getAbsolutePath().endsWith("classes")) {
-                return new File("c:\\mzidlib\\mzidentml-lib-1.6.11-SNAPSHOT.jar");
+                return new File("c:\\mzidlib\\mzidentml-lib-1.6.11.jar");
             }
 
             File mzidlibFolder = new File(thisClassFile.getParent() + File.separator + "mzidlib");
