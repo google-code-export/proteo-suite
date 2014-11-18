@@ -1,7 +1,9 @@
 package org.proteosuite.gui.tables;
 
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
+import org.proteosuite.gui.listener.TasksTableRowListener;
 
 /**
  *
@@ -20,15 +22,20 @@ public class TasksTable extends JTable {
             }
         };
         
+        model.addColumn("Task ID");
         model.addColumn("Name");
         model.addColumn("Phase");
         model.addColumn("Status");
         
+        getColumnModel().removeColumn(getColumnModel().getColumn(0));        
+        
         setModel(model);    
+        getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        getSelectionModel().addListSelectionListener(new TasksTableRowListener(this));
     }
     
-    public void addTaskRow(String file, String phase, String status) {
-        model.addRow(new Object[]{file, phase, status});
+    public void addTaskRow(String taskID, String file, String phase, String status) {
+        model.addRow(new Object[]{taskID, file, phase, status});
     }
     
     public void clear() {

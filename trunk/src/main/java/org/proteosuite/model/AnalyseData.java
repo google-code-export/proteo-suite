@@ -16,8 +16,7 @@ public class AnalyseData {
     private final List<RawDataFile> rawDataFiles = new ArrayList<>();
     private String multiplexing = "";
     private boolean supportGenomeAnnotation = false;
-    private boolean supportIdentificationOnly = false;
-    private LogManager logs = new LogManager();
+    private boolean supportIdentificationOnly = false;    
     private static AnalyseData instance = null;
 
     private AnalyseData() {
@@ -29,11 +28,7 @@ public class AnalyseData {
         }
 
         return instance;
-    }
-
-    public List<Log> getLogs() {
-        return logs;
-    }
+    }   
 
     public InspectModel getInspectModel() {
         return inspectModel;
@@ -97,15 +92,5 @@ public class AnalyseData {
         BackgroundTaskManager.getInstance().reset();
 
         AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().reset();
-    }
-
-    private class LogManager extends ArrayList<Log> {
-
-        @Override
-        public boolean add(Log log) {
-            boolean success = super.add(log);
-            TasksTab.getInstance().refreshData();
-            return success;
-        }
-    }
+    }    
 }

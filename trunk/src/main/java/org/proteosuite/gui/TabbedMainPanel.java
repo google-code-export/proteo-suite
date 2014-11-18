@@ -13,7 +13,7 @@ public class TabbedMainPanel extends JTabbedPane {
 	private static final long serialVersionUID = 1L;
         private static TabbedMainPanel INSTANCE = null;
 
-	private TabbedMainPanel() {
+	private TabbedMainPanel() {                
 		addTab("Analyse", null, AnalyseDynamicTab.getInstance(),
 				"Analyse your data using our pipeline.");
 		addTab("Inspect", null, InspectTab.getInstance(), "Inspect your data.");

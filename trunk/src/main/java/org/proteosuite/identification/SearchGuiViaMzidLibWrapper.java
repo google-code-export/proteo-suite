@@ -1,18 +1,14 @@
 package org.proteosuite.identification;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,11 +25,11 @@ import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
 import org.proteosuite.model.BackgroundTaskSubject;
-import org.proteosuite.model.Log;
+import org.proteosuite.model.IntWrapper;
+import org.proteosuite.model.TaskStreams;
 import org.proteosuite.model.MascotGenericFormatFile;
 import org.proteosuite.model.MzIdentMLFile;
 import org.proteosuite.utils.StringUtils;
-import org.proteosuite.utils.SystemUtils;
 
 /**
  *
@@ -57,9 +53,9 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
         commandList.add(jarLocation);
     }
 
-    public SearchGuiViaMzidLibWrapper(MascotGenericFormatFile inputSpectra, String databasePath, Map<String, String> searchParameters, String peptideLevelThresholding, String proteinLevelThresholding) {
+    public SearchGuiViaMzidLibWrapper(Set<MascotGenericFormatFile> inputSpectra, String databasePath, Map<String, String> searchParameters, String peptideLevelThresholding, String proteinLevelThresholding) {
         this.genomeAnnotation = false;
-        this.rawData = new HashSet<>(Collections.singleton(inputSpectra));
+        this.rawData = inputSpectra;
         commandList.add("GenericSearch");
         if (databasePath != null && !databasePath.isEmpty()) {
             commandList.add("-inputFasta");
@@ -175,21 +171,33 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
     }
 
     private void computeGenericSearch() {
-        final MascotGenericFormatFile rawDataFile = rawData.iterator().next();
-        BackgroundTask task = new BackgroundTask(rawDataFile, "Create Identifications");
+        Iterator<MascotGenericFormatFile> iterator = rawData.iterator();
+        final MascotGenericFormatFile primaryFile = iterator.next();
+        BackgroundTask task = new BackgroundTask(primaryFile, "Create Identifications");
+        final CountDownLatch masterTaskLatch = new CountDownLatch(1);
         task.addAsynchronousProcessingAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
             @Override
             public Integer act(BackgroundTaskSubject argument) {
 
-                commandList.add("-spectrum_files");
-                commandList.add(rawDataFile.getAbsoluteFileName());
+                if (rawData.size() > 1) {
+                    commandList.add("-spectrum_files");
+                    commandList.add(primaryFile.getFile().getParent());
+                } else {
+
+                    commandList.add("-spectrum_files");
+                    commandList.add(primaryFile.getAbsoluteFileName());
+                }                
+                
 
                 commandList.add("-outputFolder");
-                commandList.add(rawDataFile.getFile().getParentFile().getAbsolutePath() + File.separator + rawDataFile.getFileName().replace(".mgf", "_ident"));
+                commandList.add(primaryFile.getFile().getParentFile().getAbsolutePath() + File.separator + primaryFile.getFileName().replace(".mgf", "_ident"));
                 System.out.println("Execution String: " + StringUtils.join(" ", commandList));
 
                 try {
-                    return execAndProcess();
+                    IntWrapper processVal = new IntWrapper(-1);
+                    TaskStreams streams = execAndProcess(processVal);
+                    task.setStreams(streams);
+                    return processVal.get();
                 } catch (IOException | InterruptedException ex) {
                     Logger.getLogger(SearchGuiViaMzidLibWrapper.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -203,8 +211,8 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
             @Override
             public Void act(BackgroundTaskSubject argument) {                
 
-                String outputMzid = rawDataFile.getFile().getParentFile().getAbsolutePath()
-                        + File.separator + rawDataFile.getFileName().replace(".mgf", "_ident") + File.separator
+                String outputMzid = primaryFile.getFile().getParentFile().getAbsolutePath()
+                        + File.separator + primaryFile.getFileName().replace(".mgf", "_ident") + File.separator
                         + "combined_fdr_peptide_threshold_proteoGrouper_fdr_Threshold.mzid";
 
                 File mzidFile = new File(outputMzid);
@@ -220,7 +228,9 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                         finalFile = mzidFile;
                     }
                     
-                    data.getInspectModel().addIdentDataFile(new MzIdentMLFile(finalFile, rawDataFile.selfOrParent()));                    
+                    data.getInspectModel().addIdentDataFile(new MzIdentMLFile(finalFile, primaryFile.selfOrParent()));  
+                    
+                    masterTaskLatch.countDown();
                 }
 
                 return null;
@@ -234,6 +244,26 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                 return null;
             }
         });
+        
+        while (iterator.hasNext()) {
+            MascotGenericFormatFile dataFile = iterator.next();
+            BackgroundTask slaveTask = new BackgroundTask(dataFile, "Create Identifications");
+            slaveTask.setSlaveStatus(true);
+            slaveTask.addAsynchronousProcessingAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
+                @Override
+                public Object act(BackgroundTaskSubject argument) {
+                    try {
+                        masterTaskLatch.await();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(SearchGuiViaMzidLibWrapper.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    return null;
+                }
+            });
+
+            BackgroundTaskManager.getInstance().submit(slaveTask);
+        }
 
         taskManager.submit(task);
     }
@@ -241,30 +271,32 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
     private void computeGenomeAnnotation() {
 
         Iterator<MascotGenericFormatFile> iterator = rawData.iterator();
-        BackgroundTask task = new BackgroundTask(iterator.next(), "Run Genome Annotation");
+        final MascotGenericFormatFile primaryFile = iterator.next();
+        BackgroundTask task = new BackgroundTask(primaryFile, "Run Genome Annotation");
         final CountDownLatch masterTaskLatch = new CountDownLatch(1);
 
         task.addAsynchronousProcessingAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
             @Override
-            public Integer act(BackgroundTaskSubject ignored) {
-
-                MascotGenericFormatFile mgf = rawData.iterator().next();
+            public Integer act(BackgroundTaskSubject ignored) {                
                 if (rawData.size() > 1) {
                     commandList.add("-spectrum_files");
-                    commandList.add(mgf.getFile().getParent());
+                    commandList.add(primaryFile.getFile().getParent());
                 } else {
 
                     commandList.add("-spectrum_files");
-                    commandList.add(mgf.getAbsoluteFileName());
+                    commandList.add(primaryFile.getAbsoluteFileName());
                 }
 
                 commandList.add("-outputFolder");
-                commandList.add(mgf.getFile().getParentFile().getAbsolutePath() + File.separator + "annotation_output");
+                commandList.add(primaryFile.getFile().getParentFile().getAbsolutePath() + File.separator + "annotation_output");
                 System.out.println("Execution String: " + StringUtils.join(" ", commandList));
 
                 try {
-                    return execAndProcess();
-                } catch (IOException | InterruptedException ex) {
+                    IntWrapper processVal = new IntWrapper(-1);                   
+                    TaskStreams streams = execAndProcess(processVal);
+                    task.setStreams(streams);
+                    return processVal.get();
+                } catch (InterruptedException | IOException ex) {
                     Logger.getLogger(SearchGuiViaMzidLibWrapper.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
@@ -281,7 +313,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
                         .setResultsDone();
 
-                String outputMzid = rawData.iterator().next().getFile().getParentFile().getAbsolutePath()
+                String outputMzid = primaryFile.getFile().getParentFile().getAbsolutePath()
                         + File.separator + "annotation_output" + File.separator
                         + prefix
                         + "combined_fdr_peptide_threshold_mappedGff2_proteoGrouper_fdr_Threshold.mzid";
@@ -308,12 +340,9 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
-            @Override
-            public Void act(BackgroundTaskSubject argument) {
-                System.out.println("Genome annotation done.");
-                return null;
-            }
+        task.addCompletionAction((ProteoSuiteAction<Object, BackgroundTaskSubject>) (BackgroundTaskSubject argument) -> {
+            System.out.println("Genome annotation done.");
+            return null;
         });
 
         while (iterator.hasNext()) {
@@ -343,15 +372,14 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
         System.out.println("This JAR found is: \"" + getMzIdLibJar() + "\"");
     }
 
-    private int execAndProcess() throws IOException, InterruptedException {
+    private TaskStreams execAndProcess(IntWrapper processVal) throws IOException, InterruptedException {
         ProcessBuilder builder = new ProcessBuilder(commandList);
         Process proc = builder.start();
-
-        Log log = new Log();
-        log.setErrorOutput(new BufferedReader(new InputStreamReader(proc.getErrorStream())));
-        log.setStandardOutput(new BufferedReader(new InputStreamReader(proc.getInputStream())));
-        data.getLogs().add(log);
-        return proc.waitFor();
+        TaskStreams streams = new TaskStreams();
+        streams.setErrorStream(proc.getErrorStream());
+        streams.setOutputStream(proc.getInputStream());        
+        processVal.set(proc.waitFor());
+        return streams;
     }
 
     private static File getMzIdLibJar() {

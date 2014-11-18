@@ -1,11 +1,20 @@
 package org.proteosuite.model;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.SynchronousQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingWorker;
+import org.proteosuite.actions.EmptyAction;
 import org.proteosuite.actions.ProteoSuiteAction;
 
 /**
@@ -22,6 +31,11 @@ public class BackgroundTask {
     private ProteoSuiteAction<Object, BackgroundTaskSubject> refreshAction;
     private final Set<Object> processingResults = new LinkedHashSet<>();
     private final BackgroundTaskSubject taskSubject;
+    private final CountDownLatch taskLatch = new CountDownLatch(1);
+    private final BlockingQueue<String> errorQueue = new SynchronousQueue<>();
+    private final BlockingQueue<String> outputQueue = new SynchronousQueue<>();
+    private TaskStreams streams = null;
+    private String id = null;
     private boolean invisibility = false;
     private boolean slave = false;
     private String taskStatus = "Pending...";
@@ -30,11 +44,19 @@ public class BackgroundTask {
         this.taskSubject = taskSubject;
         this.taskName = taskName;
     }
-    
+
+    public void setID(String id) {
+        this.id = id;
+    }
+
+    public String getID() {
+        return this.id;
+    }
+
     public void setSlaveStatus(boolean slaveStatus) {
         this.slave = slaveStatus;
     }
-    
+
     public boolean isSlave() {
         return this.slave;
     }
@@ -81,18 +103,26 @@ public class BackgroundTask {
         this.refreshAction = action;
     }
 
+    public CountDownLatch getTaskLatch() {
+        return this.taskLatch;
+    }
+
     public final void queueForExecution(ExecutorService service) {
+        if (refreshAction == null) {
+            refreshAction = EmptyAction.emptyAction();
+        }
+
         if (!invisibility) {
             refreshAction.act(taskSubject);
         }
-        
-        for (ProteoSuiteAction<BackgroundTaskSubject, Object> action : BackgroundTask.this.synchronousProcessingActions) {
-            processingResults.add(action.act(taskSubject));
-        }
 
-        SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+        BackgroundTask.this.synchronousProcessingActions.stream().forEach(action -> {
+            processingResults.add(action.act(taskSubject));
+        });
+
+        SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
             @Override
-            protected Void doInBackground() throws Exception {
+            protected String doInBackground() throws Exception {
                 for (CountDownLatch condition : BackgroundTask.this.processingConditions) {
                     condition.await();
                 }
@@ -101,12 +131,12 @@ public class BackgroundTask {
                 if (!invisibility) {
                     refreshAction.act(taskSubject);
                 }
-                
-                for (ProteoSuiteAction<BackgroundTaskSubject, Object> action : BackgroundTask.this.asynchronousProcessingActions) {
-                    processingResults.add(action.act(taskSubject));
-                }
 
-                return null;
+                BackgroundTask.this.asynchronousProcessingActions.stream().forEach(action -> {
+                    processingResults.add(action.act(taskSubject));
+                });
+
+                return "OK";
             }
 
             @Override
@@ -115,14 +145,22 @@ public class BackgroundTask {
                 if (!invisibility) {
                     refreshAction.act(taskSubject);
                 }
-                
-                for (ProteoSuiteAction<BackgroundTaskSubject, Object> action : BackgroundTask.this.completionActions) {
+
+                BackgroundTask.this.completionActions.stream().forEach(action -> {
                     action.act(taskSubject);
-                }
+                });
+
+                taskLatch.countDown();
             }
         };
 
         service.submit(worker);
+    }
+
+    public void setStreams(TaskStreams streams) {
+        this.streams = streams;
+        readStreams();
+
     }
 
     public final <T> T getResultOfClass(Class clazz) {
@@ -133,5 +171,73 @@ public class BackgroundTask {
         }
 
         return null;
+    }
+
+    private void readStreams() {
+        if (streams != null && streams.getOutputStream() != null) {
+            BackgroundTaskManager.getInstance().submit(new StreamReader(streams.getOutputStream(), false, true));
+        }
+
+        if (streams != null && streams.getErrorStream() != null) {
+            BackgroundTaskManager.getInstance().submit(new StreamReader(streams.getErrorStream(), true, true));
+        }
+    }
+    
+    public BlockingQueue getOutputQueue() {
+        return this.outputQueue;
+    }
+    
+    public BlockingQueue getErrorQueue() {
+        return this.errorQueue;
+    }
+
+    private class StreamReader extends BackgroundTask {
+
+        private boolean printAlso;
+        private boolean errorOutput;
+        private InputStream stream;
+
+        public StreamReader(InputStream streamIn, boolean errorOutputIn, boolean printAlsoIn) {
+            super(() -> "External Program Feed", "Print Output");
+
+            this.stream = streamIn;
+            this.errorOutput = errorOutputIn;
+            this.printAlso = printAlsoIn;
+            super.setSlaveStatus(true);
+
+            super.addAsynchronousProcessingAction((ProteoSuiteAction<Object, BackgroundTaskSubject>) (BackgroundTaskSubject argument) -> {
+                try {
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            if (printAlso) {
+                                System.out.println(line);
+                            }
+                            
+                            if (errorOutput) {
+                                line = "<font color=\"red\">" + line + "</font>";
+                                errorQueue.add(line);
+                                taskStatus = "Error: Click For Information";
+                                refreshAction.act(argument);
+                                
+                            } else {
+                                outputQueue.add(line);
+                            }
+                        }
+                        
+                        if (errorOutput) {
+                            errorQueue.add("<END>");
+                        } else {
+                            outputQueue.add("<END>");
+                        }
+                    }
+                }
+                catch (IOException ex) {
+                    Logger.getLogger(BackgroundTask.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                return null;
+            });
+        }
     }
 }
