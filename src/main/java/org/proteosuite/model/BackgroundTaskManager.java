@@ -1,9 +1,11 @@
 package org.proteosuite.model;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 import org.proteosuite.actions.ProteoSuiteAction;
 
 /**
@@ -11,17 +13,32 @@ import org.proteosuite.actions.ProteoSuiteAction;
  * @author SPerkins
  */
 public class BackgroundTaskManager {
+
     private ExecutorService genericService = null;
     private ExecutorService searchGUIService = null;
     private ExecutorService openMSService = null;
+    private boolean openMSThreadsExclusive = true;
     private ExecutorService trivialService = null;
-    private final Set<BackgroundTask> tasks = new LinkedHashSet<>();
+    private final List<BackgroundTask> tasks = new ArrayList<>();
     private final int OPTIMUM_THREADS = computeOptimumThreads();
     private static BackgroundTaskManager INSTANCE;
     private ProteoSuiteAction<Object, BackgroundTaskSubject> tasksRefreshAction = null;
+    private int idCounter = 0;
 
     private BackgroundTaskManager() {
         this.reset();
+    }
+
+    public void freeMoreThreadsForGenericExecution() {
+        openMSThreadsExclusive = false;
+    }
+    
+    public Set<BackgroundTask> getTasksOfType(String type) {
+        return tasks.stream().filter(p -> p.getName().toUpperCase().equals(type.toUpperCase())).collect(Collectors.toSet());
+    }
+    
+    public BackgroundTask getTaskOfID(String id) {
+        return tasks.stream().filter(p -> p.getID().equals(id)).findFirst().get();
     }
 
     public static BackgroundTaskManager getInstance() {
@@ -31,39 +48,45 @@ public class BackgroundTaskManager {
 
         return INSTANCE;
     }
-    
+
     public void setTasksRefreshAction(ProteoSuiteAction<Object, BackgroundTaskSubject> action) {
         this.tasksRefreshAction = action;
     }
-    
-    public Set<BackgroundTask> getTasks() {
+
+    public List<BackgroundTask> getTasks() {
         return this.tasks;
     }
 
     public void submit(BackgroundTask task) {
-        if (tasksRefreshAction != null) {            
-            task.setRefreshAction(tasksRefreshAction);            
+        task.setID("t" + (idCounter++));
+        if (tasksRefreshAction != null) {
+            task.setRefreshAction(tasksRefreshAction);
         }
-        
+
         this.tasks.add(task);
-        
+
         if (task.isSlave()) {
             task.queueForExecution(trivialService);
             return;
         }
-        
+
         switch (task.getName().toUpperCase()) {
             case "CREATE IDENTIFICATIONS":
-            case "RUN GENOME ANNOTATION":
-                task.queueForExecution(searchGUIService);
+            case "RUN GENOME ANNOTATION":                
+                task.queueForExecution(searchGUIService);                
                 break;
             case "FINDING FEATURES":
             case "ALIGNING FEATURES":
             case "LINKING FEATURES":
                 task.queueForExecution(openMSService);
-                break;            
+                break;
             default:
-                task.queueForExecution(genericService);
+                if (!openMSThreadsExclusive) {
+                    task.queueForExecution(openMSService);
+                } else {
+                    task.queueForExecution(genericService);
+                }
+
                 break;
         }
     }
@@ -76,11 +99,11 @@ public class BackgroundTaskManager {
         if (searchGUIService != null) {
             searchGUIService.shutdownNow();
         }
-
+        
         if (openMSService != null) {
             openMSService.shutdownNow();
         }
-        
+
         if (trivialService != null) {
             trivialService.shutdownNow();
         }
@@ -95,7 +118,6 @@ public class BackgroundTaskManager {
         genericService = Executors.newFixedThreadPool(threadsForGenericExecutor);
 
         searchGUIService = Executors.newSingleThreadExecutor();
-
         int threadsForOpenMSExecutor = (int) Math.floor((double) OPTIMUM_THREADS / 2.0);
         System.out.println("Constraining openMS executor to use: " + threadsForOpenMSExecutor + " threads.");
         if (threadsForOpenMSExecutor < 1) {
@@ -104,12 +126,11 @@ public class BackgroundTaskManager {
         }
 
         openMSService = Executors.newFixedThreadPool(threadsForOpenMSExecutor);
-        
+
         trivialService = Executors.newCachedThreadPool();
     }
 
     private static int computeOptimumThreads() {
-        System.out.println("Optimum threads: " + (Runtime.getRuntime().availableProcessors() - 1));
-        return Runtime.getRuntime().availableProcessors() - 1;
+        return Runtime.getRuntime().availableProcessors();
     }
 }

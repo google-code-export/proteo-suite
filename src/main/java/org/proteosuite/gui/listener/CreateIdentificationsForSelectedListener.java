@@ -2,6 +2,7 @@ package org.proteosuite.gui.listener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -30,24 +31,24 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
 
     @Override
     public void actionPerformed(ActionEvent event) {
-        AnalyseData data = AnalyseData.getInstance();     
-        
+        AnalyseData data = AnalyseData.getInstance();
+
         // Get the identParamsView.
         final IdentParamsView identDialog = step.getIdentParamsView();
 
         // Add the view to the content pane.
         identDialog.setVisible(true);
-        
+
         if (identDialog.hasRunSuccessfully()) {
             step.setCreateButtonEnabled(false);
         } else {
             return;
         }
-        
+
         AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
                 .setIdentificationsProcessing();
-        
-        Map<String, String> runParams = identDialog.getSearchGUIParameterSet();       
+
+        Map<String, String> runParams = identDialog.getSearchGUIParameterSet();
 
         if (data.doingGenomeAnnotation()) {
             Set<MascotGenericFormatFile> rawDataFiles = new HashSet<>();
@@ -60,7 +61,7 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
             }
 
             step.refreshFromData();
-            
+
             SearchGuiViaMzidLibWrapper wrapper = new SearchGuiViaMzidLibWrapper(
                     rawDataFiles,
                     identDialog.getGeneModel(),
@@ -72,11 +73,34 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
 
             wrapper.printDebugInfo();
             wrapper.compute();
-            
+
             TabbedMainPanel.getInstance().setSelectedIndex(2);
         } else {
+            // THIS IS REALLY INELEGANT - CHANGE ME!!!
+            if (data.getRawDataCount() > 0 && data.getRawDataFile(0).isSelectedUsingFolderMode()) {
+                Set<MascotGenericFormatFile> rawDataFiles = new HashSet<>();
+                for (int i = 0; i < data.getRawDataCount(); i++) {
+                    RawDataFile rawDataFile = data.getRawDataFile(i);
+                    if (rawDataFile instanceof MascotGenericFormatFile) {
+                        rawDataFile.setIdentStatus("Creating...");
+                        rawDataFiles.add((MascotGenericFormatFile) rawDataFile);
+                    }
+                }
+                
+                step.refreshFromData();
+                
+                SearchGuiViaMzidLibWrapper wrapper = new SearchGuiViaMzidLibWrapper(rawDataFiles,
+                        identDialog.getSingleDatabasePath(),
+                        runParams,
+                        identDialog.getPeptideLevelThresholding(),
+                        identDialog.getProteinLevelThresholding());
+                
+                wrapper.compute();
+                return;
+            }
+
             // Get the selected raw files from the table to know which ones to run
-            // ident for.
+            // ident for.           
             int[] selectedRawFiles = step.getIdentificationsTable()
                     .getSelectedRows();
             for (int fileIndex = 0; fileIndex < selectedRawFiles.length; fileIndex++) {
@@ -91,14 +115,14 @@ public class CreateIdentificationsForSelectedListener implements ActionListener 
                 }
 
                 SearchGuiViaMzidLibWrapper wrapper = new SearchGuiViaMzidLibWrapper(
-                        (MascotGenericFormatFile) rawDataFile,
+                        Collections.singleton((MascotGenericFormatFile) rawDataFile),
                         identDialog.getSingleDatabasePath(),
                         runParams,
-                identDialog.getPeptideLevelThresholding(),
-                identDialog.getProteinLevelThresholding());
+                        identDialog.getPeptideLevelThresholding(),
+                        identDialog.getProteinLevelThresholding());
 
                 wrapper.compute();
             }
-        }       
+        }
     }
 }

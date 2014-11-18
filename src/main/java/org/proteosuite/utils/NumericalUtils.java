@@ -53,5 +53,5 @@ public final class NumericalUtils {
         }
         
         return true;
-    }
+    }   
 }

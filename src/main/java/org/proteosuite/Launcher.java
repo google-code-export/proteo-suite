@@ -70,6 +70,8 @@ public class Launcher {
                             + "OpenMS is available at:\n" + openMSUrl + "\nTo install now, click \"Yes\" to be directed to the openMS web site.\n"
                             + "Once installed you will need to restart Proteosuite to use openMS features.",
                             "openMS Not Installed!", JOptionPane.YES_NO_OPTION);
+            
+            BackgroundTaskManager.getInstance().freeMoreThreadsForGenericExecution();
             if (result == JOptionPane.YES_OPTION) {
                 OpenURL.open(openMSUrl);
                 return;

@@ -17,8 +17,8 @@ import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
 import org.proteosuite.gui.analyse.TMTStep;
 import org.proteosuite.gui.tables.DefineConditionsTable;
 import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.BackgroundTaskManager;
 import org.proteosuite.model.IdentDataFile;
-import org.proteosuite.model.MascotGenericFormatFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.utils.StringUtils;
 
@@ -132,27 +132,34 @@ public class ContinueButtonListener implements ActionListener {
             switch (data.getMultiplexing()) {
                 case "iTRAQ 4-plex":
                     file.setAssays(new String[]{"114", "115", "116", "117"});
+                    BackgroundTaskManager.getInstance().freeMoreThreadsForGenericExecution();
                     break;
                 case "iTRAQ 8-plex":
                     file.setAssays(new String[]{"113", "114", "115", "116", "117", "118", "119", "121"});
+                    BackgroundTaskManager.getInstance().freeMoreThreadsForGenericExecution();
                     break;
                 case "TMT 2-plex":
                     file.setAssays(new String[]{"126", "127"});
+                    BackgroundTaskManager.getInstance().freeMoreThreadsForGenericExecution();
                     break;
                 case "TMT 6-plex":
                     file.setAssays(new String[]{"126", "127", "128", "129", "130", "131"});
+                    BackgroundTaskManager.getInstance().freeMoreThreadsForGenericExecution();
                     break;
                 case "TMT 8-plex":
                     file.setAssays(new String[]{"126", "127N", "127C", "128", "129N", "129C", "130", "131"});
+                    BackgroundTaskManager.getInstance().freeMoreThreadsForGenericExecution();
                     break;
                 case "TMT 10-plex":
                     file.setAssays(new String[]{"126", "127N", "127C", "128N", "128C", "129N", "129C", "130N", "130C", "131"});
+                    BackgroundTaskManager.getInstance().freeMoreThreadsForGenericExecution();
                     break;
                 case "None (label-free)":
                     file.setAssays(new String[]{""});
                     break;
                 case "None (identification only)":
                     data.setIdentificationOnlyMode(true);
+                    BackgroundTaskManager.getInstance().freeMoreThreadsForGenericExecution();
                     break;
             }
         }
@@ -172,9 +179,13 @@ public class ContinueButtonListener implements ActionListener {
                     break;
                 case "MGF":
                     mgfPresent = true;
-                    if (dataFile.getFile().length() > Math.pow(1024, 3) || dataFile.getFile().length() < (Math.pow(1024, 2) * 10)) {
+                    // First check file is under upper limit.
+                    if (dataFile.getFile().length() > Math.pow(1024, 3) || dataFile.getSpectraCount() > 25000) {
                         rawErrorFiles.add(dataFile.getFileName());
-                    } else if (dataFile.getSpectraCount() > 25000) {                        
+                    }
+                    
+                    // Now check file is over lower limit.
+                    if (dataFile.getFile().length() < (Math.pow(1024, 2) * 10) || dataFile.getSpectraCount() < 1000) {                    
                         rawErrorFiles.add(dataFile.getFileName());
                     }
 
@@ -217,7 +228,7 @@ public class ContinueButtonListener implements ActionListener {
                                 "Some of your MGF files are too large or too small to process in the genome annotation pipeline.\n"
                                 + "Files that are too large or too small to process:\n" + StringUtils.join("\n", rawErrorFiles) + "\n"
                                 + "Your either have more than 1GB of data per file, or more than 25,000 spectra per file.\n"
-                                + "Your data file may also be less than 10MB in size.\n"
+                                + "Your data file may also be less than 10MB in size, or contain less than 1000 spectra.\n"
                                 + "If you have imported a folder please remove the problem MGF file(s) from your chosen directory, then remove all MGFs from ProteoSuite and re-import your chosen folder.\n"
                                 + "Otherwise delete the MGF file from ProteoSuite and import a file which meets these limits."
                                 + "You may wish to split large MGF files into smaller MGF files.",
@@ -247,7 +258,7 @@ public class ContinueButtonListener implements ActionListener {
                                 "Some of your raw data files are too large or too small to process in the identification pipeline.\n"
                                 + "Files that are too large or too small to process:\n" + StringUtils.join("\n", rawErrorFiles) + "\n"
                                 + "Your either have more than 1GB of data per MGF file, or more than 25,000 spectra per MGF file.\n"
-                                + "Your data file may also be less than 10MB in size per MGF file, or less than 50MB per mzML file.\n"
+                                + "Your data file may also be less than 10MB in size per MGF file (or less than 1000 spectra), or less than 50MB per mzML file.\n"
                                 + "If you have imported a folder please remove the problem raw file(s) from your chosen directory, then remove all files from ProteoSuite and re-import your chosen folder.\n"
                                 + "Otherwise delete the raw file from ProteoSuite and import a file which meets these limits."
                                 + "You may wish to split large MGF files into smaller MGF files.",
