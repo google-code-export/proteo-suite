@@ -1,81 +1,60 @@
 package org.proteosuite.quantitation;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.bind.JAXBException;
+import org.proteosuite.ProteoSuiteException;
 import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.executor.Executor;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.jopenms.command.JOpenMS;
 import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
-import org.proteosuite.model.BackgroundTaskSubject;
+import org.proteosuite.model.ProteoSuiteActionSubject;
 import org.proteosuite.model.MzQuantMLFile;
+import org.proteosuite.model.ProteoSuiteActionResult;
 import org.proteosuite.model.QuantDataFile;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.utils.MappingHelper;
-import uk.ac.liv.mzqlib.consensusxml.convertor.ConsensusXMLProcessor;
-import uk.ac.liv.mzqlib.consensusxml.convertor.ConsensusXMLProcessorFactory;
+import org.proteosuite.utils.SystemUtils;
+import org.proteosuite.utils.SystemUtils.SystemType;
 
 /**
  *
  * @author SPerkins
  */
 public class OpenMSLabelFreeWrapper {
-
+    private static boolean IS_WINDOWS = false;
+    private static final List<File> installedLocationHints = new ArrayList<>();
+    static {
+        installedLocationHints.add(new File("c:\\Program Files\\OpenMS-1.11\\bin"));
+        installedLocationHints.add(new File("c:\\Program Files (x86)\\OpenMS-1.11\\bin"));
+        installedLocationHints.add(new File("c:\\Program Files"));
+        installedLocationHints.add(new File("c:\\Program Files (x86)"));
+        installedLocationHints.add(new File("c:"));
+    }
+    
     private final List<RawDataFile> rawDataFiles;
     private final CountDownLatch featureFinderCentroidedLatch;
     private final CountDownLatch mapAlignerPoseClusteringLatch;
-    private final CountDownLatch featureLinkerUnlabeledQTLatch;
-    private static String systemExecutableExtension;
+    private final CountDownLatch featureLinkerUnlabeledQTLatch;    
 
     public static boolean checkIsInstalled() {
-        Executor exec = new Executor("FeatureFinderCentroided");
-        exec.callExe();
-        String output = exec.getOutput();
-
-        if (output != null && output.contains("No options given. Aborting!")) {
-            return true;
+        IS_WINDOWS = SystemUtils.getSystemType().equals(SystemType.WIN32) || SystemUtils.getSystemType().equals(SystemType.WIN64);
+        File executable = null;
+        if (IS_WINDOWS) {
+            executable = SystemUtils.findExecutionCommand("FeatureFinderCentroided.exe", installedLocationHints);
+        } else {
+            executable = SystemUtils.findExecutionCommand("FeatureFinderCentroided", installedLocationHints);
         }
-
-        exec = new Executor("FeatureFinderCentroided.exe");
-        exec.callExe();
-        output = exec.getOutput();
-        if (output != null && output.contains("No options given. Aborting!")) {
-            return true;
-        }
-
-        return false;
+        
+        return executable != null;
     }
 
     public OpenMSLabelFreeWrapper(List<RawDataFile> rawDataFiles) {
-        String operatingSystemType = System.getProperty("os.name");
-
-        if (operatingSystemType.startsWith("Windows")) {
-            systemExecutableExtension = ".exe";
-            if (System.getenv("ProgramFiles(x86)") != null) {
-
-            } else {
-
-            }
-        } else {
-            systemExecutableExtension = "";
-            String linuxVersion = org.proteosuite.jopenms.util.Utils
-                    .getLinuxVersion();
-            if (linuxVersion.contains("x86_64")
-                    || linuxVersion.contains("ia64")) {
-
-            } else {
-
-            }
-        }
-
         this.rawDataFiles = rawDataFiles;
         featureFinderCentroidedLatch = new CountDownLatch(rawDataFiles.size());
         mapAlignerPoseClusteringLatch = new CountDownLatch(1);
@@ -124,30 +103,33 @@ public class OpenMSLabelFreeWrapper {
             final CountDownLatch featureFinderCentroidedLatch,
             final int executionDelay) {
 
-        BackgroundTask task = new BackgroundTask(inputDataFile, "Finding Features");
+        BackgroundTask<ProteoSuiteActionSubject> task = new BackgroundTask<>(inputDataFile, "Finding Features");
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Void, Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
             @Override
-            public Void act(Void argument) {
+            public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
                 try {
                     Thread.sleep(executionDelay * 1000);
-                    JOpenMS.performOpenMSTask(systemExecutableExtension,
-                            "FeatureFinderCentroided",
-                            Arrays.asList(inputDataFile.getAbsoluteFileName()),
-                            Arrays.asList(outputFile));
+                    String command = "FeatureFinderCentroided" + (IS_WINDOWS ? ".exe" : "");
+                    File executable = SystemUtils.findExecutionCommand(command, installedLocationHints);
+//                    JOpenMS.performOpenMSTask(executable,
+//                            Arrays.asList(inputDataFile.getAbsoluteFileName()),
+//                            Arrays.asList(outputFile));
                 } catch (InterruptedException ex) {
+                    ProteoSuiteException pex = new ProteoSuiteException("Thread sleep error in openMS thread.", ex);
                     Logger.getLogger(OpenMSLabelFreeWrapper.class.getName()).log(Level.SEVERE, null, ex);
+                    return new ProteoSuiteActionResult(pex);
                 }
 
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
             @Override
-            public Void act(Void argument) {
+            public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
                 featureFinderCentroidedLatch.countDown();
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
 
@@ -159,7 +141,7 @@ public class OpenMSLabelFreeWrapper {
             final CountDownLatch featureFinderCentroidedLatch,
             final CountDownLatch mapAlignerPoseClusteringLatch) {
 
-        BackgroundTaskSubject subject = new BackgroundTaskSubject() {
+        ProteoSuiteActionSubject subject = new ProteoSuiteActionSubject() {
             private final File file = new File(inputFiles.get(0));
 
             @Override
@@ -168,25 +150,25 @@ public class OpenMSLabelFreeWrapper {
             }
         };
 
-        BackgroundTask task = new BackgroundTask(subject, "Aligning Features");
+        BackgroundTask<ProteoSuiteActionSubject> task = new BackgroundTask<>(subject, "Aligning Features");
 
         task.addProcessingCondition(featureFinderCentroidedLatch);
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Void, Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
             @Override
-            public Void act(Void argument) {
-                JOpenMS.performOpenMSTask(systemExecutableExtension,
-                        "MapAlignerPoseClustering", inputFiles, outputFiles);
-
-                return null;
+            public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
+                String command = "MapAlignerPoseClustering" + (IS_WINDOWS ? ".exe" : "");
+                File executable = SystemUtils.findExecutionCommand(command, installedLocationHints);
+//                JOpenMS.performOpenMSTask(executable, inputFiles, outputFiles);
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
             @Override
-            public Void act(Void argument) {
+            public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
                 mapAlignerPoseClusteringLatch.countDown();
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
 
@@ -198,7 +180,7 @@ public class OpenMSLabelFreeWrapper {
             final CountDownLatch mapAlignerPoseClusteringLatch,
             final CountDownLatch featureLinkerUnlabeledQTLatch) {
 
-        BackgroundTaskSubject subject = new BackgroundTaskSubject() {
+        ProteoSuiteActionSubject subject = new ProteoSuiteActionSubject() {
             private final File file = new File(inputFiles.get(0));
 
             @Override
@@ -207,30 +189,31 @@ public class OpenMSLabelFreeWrapper {
             }
         };
 
-        BackgroundTask task = new BackgroundTask(subject, "Linking Features");
+        BackgroundTask<ProteoSuiteActionSubject> task = new BackgroundTask<>(subject, "Linking Features");
 
         task.addProcessingCondition(mapAlignerPoseClusteringLatch);
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Void, Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
             @Override
-            public Void act(Void argument) {
-                JOpenMS.performOpenMSTask(systemExecutableExtension,
-                        "FeatureLinkerUnlabeledQT", inputFiles,
-                        Arrays.asList(outputFile));
+            public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
+                String command = "FeatureLinkerUnlabeledQT" + (IS_WINDOWS ? ".exe" : "");
+                File executable = SystemUtils.findExecutionCommand(command, installedLocationHints);
+//                JOpenMS.performOpenMSTask(executable, inputFiles,
+//                        Arrays.asList(outputFile));
 
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
 
             @Override
-            public Void act(Void argument) {
+            public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
                         .setQuantitationDone();
 
                 featureLinkerUnlabeledQTLatch.countDown();
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
 
@@ -241,7 +224,7 @@ public class OpenMSLabelFreeWrapper {
             final String consensusXMLFile, final String mzqFile,
             final CountDownLatch featureLinkerUnlabeledQTLatch) {
 
-        BackgroundTaskSubject subject = new BackgroundTaskSubject() {
+        ProteoSuiteActionSubject subject = new ProteoSuiteActionSubject() {
             private final File file = new File(consensusXMLFile);
 
             @Override
@@ -250,33 +233,33 @@ public class OpenMSLabelFreeWrapper {
             }
         };
 
-        BackgroundTask task = new BackgroundTask(subject, "Converting to mzQuantML");
+        BackgroundTask<ProteoSuiteActionSubject> task = new BackgroundTask<>(subject, "Converting to mzQuantML");
         task.addProcessingCondition(featureLinkerUnlabeledQTLatch);
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Void, Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
             @Override
-            public Void act(Void argument) {
-                try {                    
-                    ConsensusXMLProcessor conProc = ConsensusXMLProcessorFactory
-                            .getInstance().buildConsensusXMLProcessor(
-                                    new File(consensusXMLFile));
-                    conProc.convert(mzqFile);
-                } catch (IOException | JAXBException ex) {
-                    Logger.getLogger(OpenMSLabelFreeWrapper.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
+//                try {                    
+//                    ConsensusXMLProcessor conProc = ConsensusXMLProcessorFactory
+//                            .getInstance().buildConsensusXMLProcessor(
+//                                    new File(consensusXMLFile));
+//                    conProc.convert(mzqFile);
+//                } catch (IOException | JAXBException ex) {
+//                    Logger.getLogger(OpenMSLabelFreeWrapper.class.getName()).log(Level.SEVERE, null, ex);
+//                }
 
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
             @Override
-            public Void act(Void argument) {
+            public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
                 QuantDataFile quantFile = new MzQuantMLFile(new File(
                         mzqFile));
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
                         .setQuantitationDone();
                 MappingHelper.map(quantFile);
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
 

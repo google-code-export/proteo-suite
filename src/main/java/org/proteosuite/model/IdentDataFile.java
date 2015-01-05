@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @author SPerkins
  */
-public abstract class IdentDataFile implements BackgroundTaskSubject {
+public abstract class IdentDataFile implements ProteoSuiteActionSubject {
     protected RawDataFile parent;
     protected File file;    
     protected boolean computedPSMStats = false;

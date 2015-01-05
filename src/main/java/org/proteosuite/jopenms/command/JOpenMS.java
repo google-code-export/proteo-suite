@@ -31,31 +31,29 @@ public class JOpenMS {
 	private JOpenMS() {
 	}
 
-	public static void performOpenMSTask(String systemExecutableExtension,
-			String openMSCommand, List<String> inputFiles,
-			List<String> outputFiles) {
+	public static void performOpenMSTask(File executable, List<String> inputFiles,
+			List<String> outputFiles) throws IOException {
 		
 		//OpenMSExecutor openMSExecutor = OpenMSFactory.getExecutor(openMSCommand);
 		//Map<String, Object> cfgMap = openMSExecutor.getDefaultConfig();
 		
-		
-		OpenMSModule module = new OpenMSModule(openMSCommand,
-				systemExecutableExtension);
+		String executableTrimmed = executable.getName().replaceFirst("\\.[Ee][Xx][Ee]", "");
+		OpenMSModule module = new OpenMSModule(executable);
 		Map<String, Object> cfgMap = module.getCfgMap();
 
-		setConfig(cfgMap, openMSCommand + "$1$in",
+		setConfig(cfgMap, executableTrimmed + "$1$in",
 				StringUtils.join(" ", inputFiles));
-		setConfig(cfgMap, openMSCommand + "$1$out",
+		setConfig(cfgMap, executableTrimmed + "$1$out",
 				StringUtils.join(" ", outputFiles));
 
-		File cfgFile = generateConfigFile(openMSCommand, module,
+		File cfgFile = generateConfigFile(executableTrimmed, module,
 				cfgMap);
 
 		String[] args = new String[2];
 		args[0] = "-ini";
 		args[1] = cfgFile.getAbsolutePath();
 
-		Executor e = new Executor(openMSCommand);
+		Executor e = new Executor(executable);
 		e.callExe(args);
 		System.out.println(e.getOutput());
 		System.out.println(e.getError());

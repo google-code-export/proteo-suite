@@ -14,7 +14,8 @@ import org.proteosuite.gui.IdentParamsView;
 import org.proteosuite.gui.ProteoSuite;
 import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
-import org.proteosuite.model.BackgroundTaskSubject;
+import org.proteosuite.model.ProteoSuiteActionResult;
+import org.proteosuite.model.ProteoSuiteActionSubject;
 import org.proteosuite.quantitation.OpenMSLabelFreeWrapper;
 import org.proteosuite.utils.ExceptionCatcher;
 import org.proteosuite.utils.OpenURL;
@@ -47,14 +48,22 @@ public class Launcher {
                 try {
                     new ProteoSuite().setVisible(true);
                 } catch (Exception e) {
-                    ExceptionCatcher.reportException(e);
-                    JOptionPane.showMessageDialog(null,
-                            "ProteoSuite has crashed with: " + e.getMessage(),
-                            "OH NO!", JOptionPane.ERROR_MESSAGE);
-                    System.exit(1);
+                    handleException(new ProteoSuiteException("ProteoSuite error.", e));
                 }
             }
         });
+    }
+    
+    public static void handleException(ProteoSuiteException pex) {
+        ExceptionCatcher.reportException(pex);
+        int result = JOptionPane.showConfirmDialog(null, "ProteoSuite has encountered a fatal problem: " + pex.getLocalizedMessage() + "\n"
+        + "You can close the software now, in which case any work currently being done may be lost, or you"
+                + " can allow tasks to complete (if possible) and close it later.\n"
+                + "Do you wish to close the software immediately?", "He's dead, Jim!", JOptionPane.YES_NO_OPTION);
+        
+        if (result == JOptionPane.YES_OPTION) {
+            System.exit(1);
+        }       
     }
 
     private static void installCheckOpenMS() {
@@ -95,21 +104,23 @@ public class Launcher {
         }
     }
 
-    private static class UpdateWorker extends BackgroundTask {
+    private static class UpdateWorker extends BackgroundTask<ProteoSuiteActionSubject> {
 
         public UpdateWorker() {
-            super(new BackgroundTaskSubject() {
+            super(new ProteoSuiteActionSubject() {
                 @Override
                 public String getSubjectName() {
                     return "ProteoSuite";
                 }
-            }, "Checking For Update");
+            }, "Checking For Update");           
 
-            super.addAsynchronousProcessingAction(new ProteoSuiteAction<String, BackgroundTaskSubject>() {
+            super.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
                 @Override
-                public String act(BackgroundTaskSubject argument) {
+                public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
                     try {
-                        return UpdateCheck.hasUpdate(ProteoSuite.PROTEOSUITE_VERSION);
+                        String updateCheckString = UpdateCheck.hasUpdate(ProteoSuite.PROTEOSUITE_VERSION);
+                        ProteoSuiteActionResult<String> result = new ProteoSuiteActionResult(updateCheckString, null); 
+                        return result;
                     } catch (IOException ex) {
                         Logger.getLogger(Launcher.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -118,9 +129,9 @@ public class Launcher {
                 }
             });
 
-            super.addCompletionAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
+            super.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
                 @Override
-                public Void act(BackgroundTaskSubject subject) {
+                public ProteoSuiteActionResult act(ProteoSuiteActionSubject subject) {
                     String newVersion = UpdateWorker.super.getResultOfClass(String.class);
                     if (newVersion == null) {
                         return null;

@@ -6,7 +6,7 @@ import java.io.File;
  *
  * @author SPerkins
  */
-public abstract class QuantDataFile implements BackgroundTaskSubject {
+public abstract class QuantDataFile implements ProteoSuiteActionSubject {
     protected File file;
     
     

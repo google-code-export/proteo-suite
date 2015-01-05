@@ -10,6 +10,6 @@ package org.proteosuite.model;
  *
  * @author SPerkins
  */
-public interface BackgroundTaskSubject {
+public interface ProteoSuiteActionSubject {
     public String getSubjectName();
 }

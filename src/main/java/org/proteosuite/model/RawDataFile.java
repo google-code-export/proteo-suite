@@ -9,15 +9,17 @@ import java.util.Map;
  *
  * @author SPerkins
  */
-public abstract class RawDataFile implements Iterable<Spectrum>, BackgroundTaskSubject {
+public abstract class RawDataFile implements Iterable<Spectrum>, ProteoSuiteActionSubject {
     protected Map<String, Spectrum> cachedSpectra = null;    
     protected boolean cachingComplete = false;
     protected File file;
+    
     protected boolean[] peakPicking = {false, false};
     protected boolean peakPickingChecked;
     protected int spectraCount;
     protected boolean[] msLevelPresence = {false, false};
     protected boolean spectraCountChecked;    
+    private File peakListFile;
     private final Map<String, String> assayConditions = new HashMap<>();
     private IdentDataFile identFile = null;
     private String identStatus = "<None>";   
@@ -53,6 +55,14 @@ public abstract class RawDataFile implements Iterable<Spectrum>, BackgroundTaskS
         return identStatus;
     }
     
+    public File getPeakListFile() {
+        return peakListFile;
+    }
+    
+    public void setPeakListFile(File peakFile) {
+        peakListFile = peakFile;
+    }
+    
     public void setSelectedUsingFolderMode(boolean selectionMode) {
         this.selectedUsingFolderMode = selectionMode;
     }
@@ -60,6 +70,8 @@ public abstract class RawDataFile implements Iterable<Spectrum>, BackgroundTaskS
     public boolean isSelectedUsingFolderMode() {
         return this.selectedUsingFolderMode;
     }
+    
+    
     
     public void setIdentStatus(String identStatus) {
         this.identStatus = identStatus;

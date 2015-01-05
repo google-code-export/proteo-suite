@@ -18,6 +18,8 @@ import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
 import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.MzQuantMLFile;
+import org.proteosuite.model.ProteoSuiteActionResult;
+import org.proteosuite.model.ProteoSuiteActionSubject;
 import org.proteosuite.model.RawDataFile;
 import org.proteosuite.utils.PluginManager;
 import org.proteosuite.utils.ProteinInferenceHelper;
@@ -46,19 +48,19 @@ public class XTrackerTMTWrapper {
     public void compute() {
         BackgroundTask task = new BackgroundTask(rawData.iterator().next(), "Quantitating TMT Data");
         
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Void, Void>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
             @Override
-            public Void act(Void argument) {
+            public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationProcessing();
                 generateFiles();
                 new xTracker(outputPath, rawData.get(0).getFile().getParent());
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
         
-        task.addCompletionAction(new ProteoSuiteAction<Void, Void>() {
+        task.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
             @Override
-            public Void act(Void argument) {
+            public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setQuantitationDone();
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setMappingDone();
                     //ProteinInferenceHelper.infer(outputPath, plex, ProteinInferenceHelper.REPORTER_ION_INTENSITY, "sum");
@@ -67,7 +69,7 @@ public class XTrackerTMTWrapper {
                         .getInspectModel()
                         .addQuantDataFile(
                                 new MzQuantMLFile(new File(outputPath)));
-                    return null;
+                    return ProteoSuiteActionResult.emptyResult();
             }
         });
         

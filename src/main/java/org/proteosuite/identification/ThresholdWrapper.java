@@ -5,13 +5,13 @@ import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CleanIdentificationsStep;
 import org.proteosuite.gui.inspect.InspectTab;
-import org.proteosuite.gui.listener.ContinueButtonListener;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
-import org.proteosuite.model.BackgroundTaskSubject;
+import org.proteosuite.model.ProteoSuiteActionSubject;
 import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.MzIdentMLFile;
+import org.proteosuite.model.ProteoSuiteActionResult;
 import org.proteosuite.model.RawDataFile;
 import uk.ac.liv.mzidlib.ThresholdMzid;
 
@@ -49,29 +49,29 @@ public class ThresholdWrapper {
         dataFile.setThresholdStatus("Thresholding...");
         CleanIdentificationsStep.getInstance().refreshFromData();
         
-        final BackgroundTask task = new BackgroundTask(new BackgroundTaskSubject() {
+        final BackgroundTask task = new BackgroundTask(new ProteoSuiteActionSubject() {
             @Override
             public String getSubjectName() {
                 return dataFile.getFileName();
             }
         }, "Thresholding Identifications");
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
             @Override
-            public String act(BackgroundTaskSubject argument) {
+            public ProteoSuiteActionResult<String> act(ProteoSuiteActionSubject argument) {
                 outputPath = dataFile.getAbsoluteFileName().replace(".mzid", "_thresholded.mzid");
                 new ThresholdMzid(dataFile.getAbsoluteFileName(), outputPath, true, thresholdOn, thresholdValue, !ThresholdWrapper.this.higherValuesBetter, false);
-                return outputPath;
+                return new ProteoSuiteActionResult(outputPath);
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
+        task.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
             @Override
-            public Void act(BackgroundTaskSubject argument) {
+            public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
                 RawDataFile rawDataFile = dataFile.getParent();
                 File newFile = new File(outputPath);
                 if (!newFile.exists()) {
-                    return null;
+                    ProteoSuiteActionResult.emptyResult();
                 }
 
                 IdentDataFile newIdentFile = new MzIdentMLFile(newFile, rawDataFile);
@@ -97,7 +97,7 @@ public class ThresholdWrapper {
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setCleanIdentificationsDone();
                 }               
 
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
 

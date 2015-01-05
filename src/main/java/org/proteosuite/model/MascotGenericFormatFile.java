@@ -1,4 +1,3 @@
-
 package org.proteosuite.model;
 
 import java.io.File;
@@ -12,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.proteosuite.ProteoSuiteException;
 import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.actions.RawFilePostLoadAction;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
@@ -27,17 +27,17 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
 
     public MascotGenericFormatFile(File file) {
         this(file, false);
-    }    
-    
+    }
+
     public MascotGenericFormatFile(File file, boolean cacheSpectra) {
         super(file);
         this.cacheSpectra = cacheSpectra;
     }
-    
+
     public void setParent(RawDataFile parent) {
         this.parent = parent;
     }
-    
+
     public RawDataFile selfOrParent() {
         return parent == null ? this : parent;
     }
@@ -65,45 +65,45 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
 
     @Override
     protected void initiateLoading() {
-        
-        final BackgroundTask task = new BackgroundTask(this, "Load Raw Data");
-        
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<MgfFile, BackgroundTaskSubject>() {
+
+        final BackgroundTask<RawDataFile> task = new BackgroundTask<>(this, "Load Raw Data");
+
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, RawDataFile>() {
             @Override
-            public MgfFile act(BackgroundTaskSubject ignored) {
+            public ProteoSuiteActionResult<MgfFile> act(RawDataFile ignored) {
                 try {
-                    return new MgfFile(file);
-                } catch (JMzReaderException ex) {
-                    Logger.getLogger(MascotGenericFormatFile.class.getName()).log(Level.SEVERE, null, ex);
+                    MgfFile mgfFile = new MgfFile(file);
+                    return new ProteoSuiteActionResult<>(mgfFile);
                 }
-                
-                return null;
+                catch (JMzReaderException ex) {
+                    Logger.getLogger(MascotGenericFormatFile.class.getName()).log(Level.SEVERE, null, ex);
+                    return new ProteoSuiteActionResult(new ProteoSuiteException("Error reading MGF file.", ex));
+                }                
             }
         });
-        
-        task.addCompletionAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
+
+        task.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult, RawDataFile>() {
             @Override
-            public Void act(BackgroundTaskSubject argument) {
+            public ProteoSuiteActionResult act(RawDataFile argument) {
                 mgf = task.getResultOfClass(MgfFile.class);
-//                if (mgf == null) {
-//                        throw new RuntimeException("MGF file not read in correctly.");
-//                    }
-                
-                return null;
+                if (mgf == null) {
+                    return new ProteoSuiteActionResult(new ProteoSuiteException("MGF file not read correctly from completed task."));
+                }
+
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
-        
-        
+
         task.addCompletionAction(new RawFilePostLoadAction());
-        task.addCompletionAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
+        task.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult, RawDataFile>() {
             @Override
-            public Void act(BackgroundTaskSubject ignored) {
+            public ProteoSuiteActionResult act(RawDataFile ignored) {
                 System.out.println("Done loading MGF file.");
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
-        
-        BackgroundTaskManager.getInstance().submit(task);      
+
+        BackgroundTaskManager.getInstance().submit(task);
     }
 
     @Override
@@ -178,15 +178,15 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
                     if (precursorMz == null) {
                         throw new RuntimeException("Precursor m/z value in MGF can not be empty/null!");
                     }
-                    
+
                     if (precursorIntensity == null) {
                         precursorIntensity = 10.0;
                     }
-                    
+
                     if (precursorCharge == null) {
                         throw new RuntimeException("Precursor charge value in MGF can not be empty/null!");
                     }
-                    
+
                     Feature precursor = new Feature(precursorMz, precursorIntensity, precursorCharge);
                     localSpectrum = new FragmentSpectrum(precursor);
 
@@ -198,16 +198,15 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
                         }
                     }
 
-                    localSpectrum.setSpectrumID(spectrum.getId());                   
+                    localSpectrum.setSpectrumID(spectrum.getId());
                     localSpectrum.setSpectrumIndex(index++);
-                   
 
                     double retentionTime = Double.parseDouble(getValueForAccession(RETENTION_TIME_PARAM, spectrum.getAdditional().getCvParams()));
                     localSpectrum.setRetentionTimeInSeconds(retentionTime);
-                    if (retentionTimePrecursorMap.containsKey((int)retentionTime)) {
-                        retentionTimePrecursorMap.get((int)retentionTime).add(precursor);
+                    if (retentionTimePrecursorMap.containsKey((int) retentionTime)) {
+                        retentionTimePrecursorMap.get((int) retentionTime).add(precursor);
                     } else {
-                        retentionTimePrecursorMap.put((int)retentionTime, new LinkedList<>(Arrays.asList(precursor)));
+                        retentionTimePrecursorMap.put((int) retentionTime, new LinkedList<>(Arrays.asList(precursor)));
                     }
                 } else {
                     Entry<Integer, List<Feature>> precursorSpectrum = reconstitutedPrecursorsIterator.next();
@@ -217,7 +216,7 @@ public class MascotGenericFormatFile extends RawDataFile implements Comparable {
                     }
 
                     localSpectrum.setRetentionTimeInSeconds(precursorSpectrum.getKey());
-                    
+
                     localSpectrum.setSpectrumIndex(index++);
                     localSpectrum.setSpectrumID("prec_" + precursorIndex++);
                 }

@@ -5,26 +5,18 @@
  */
 package org.proteosuite.actions;
 
-import org.proteosuite.model.BackgroundTaskSubject;
+import org.proteosuite.model.ProteoSuiteActionResult;
+import org.proteosuite.model.ProteoSuiteActionSubject;
 
 /**
  *
  * @author SPerkins
  */
-public class EmptyAction implements ProteoSuiteAction<Object, BackgroundTaskSubject> {
-    private static EmptyAction INSTANCE = null;
-    private EmptyAction() {}
+public class EmptyAction<T extends ProteoSuiteActionSubject> implements ProteoSuiteAction<ProteoSuiteActionResult, T> {    
+    protected EmptyAction() {}
     
     @Override
-    public Void act(BackgroundTaskSubject argument) {
-        return null;
-    }
-    
-    public static EmptyAction emptyAction() {
-        if (INSTANCE == null) {
-            INSTANCE = new EmptyAction();
-        }
-        
-        return INSTANCE;
+    public ProteoSuiteActionResult act(T argument) {
+        return ProteoSuiteActionResult.emptyResult();
     }    
 }

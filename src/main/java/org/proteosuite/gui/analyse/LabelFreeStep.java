@@ -33,7 +33,7 @@ public class LabelFreeStep extends JPanel {
 				"Your identifications will be automatically created and/or loaded in the background.\n"
 						+ "Additionally your raw data files are (or have) been loaded for inspection in the Inspect tab. This tab will"
 						+ " also become populated with quantitation data after you click confirm below.\n\n"
-						+ "Identifications created in Proteosuite are provided by SearchGUI (through mzidentml-lib)+.\n"
+						+ "Identifications created in Proteosuite are provided by SearchGUI (through mzidentml-lib).\n"
 						+ "Label free quantitation is provided by openMS.");
 		mainText.setEditable(false);
 		mainText.setLineWrap(true);

@@ -12,9 +12,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.proteosuite.ProteoSuiteException;
 import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.actions.RawFilePostLoadAction;
-import org.proteosuite.utils.FileFormatUtils;
 import org.proteosuite.utils.NumericalUtils;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
@@ -199,52 +199,38 @@ public class MzMLFile extends RawDataFile {
     @Override
     protected void initiateLoading() {        
 
-        final BackgroundTask task = new BackgroundTask(this, "Load Raw Data");        
+        final BackgroundTask<RawDataFile> task = new BackgroundTask<>(this, "Load Raw Data");        
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<MzMLUnmarshaller, BackgroundTaskSubject>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, RawDataFile>() {
             @Override
-            public MzMLUnmarshaller act(BackgroundTaskSubject ignored) {
-                return new MzMLUnmarshaller(file);
+            public ProteoSuiteActionResult<MzMLUnmarshaller> act(RawDataFile ignored) {
+                return new ProteoSuiteActionResult(new MzMLUnmarshaller(file));
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Void,BackgroundTaskSubject>() {
+        task.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult,RawDataFile>() {
             @Override
-            public Void act(BackgroundTaskSubject ignored) {
+            public ProteoSuiteActionResult act(RawDataFile ignored) {
                 unmarshaller = task.getResultOfClass(MzMLUnmarshaller.class);
                 if (unmarshaller == null) {
-                    throw new RuntimeException("mzML file not read in correctly.");
+                    return new ProteoSuiteActionResult(new ProteoSuiteException("mzML file not read in correctly."));                    
                 }
                 
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
         
         task.addCompletionAction(new RawFilePostLoadAction());
-        task.addCompletionAction(new ProteoSuiteAction<Void, BackgroundTaskSubject>() {
+        task.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult, RawDataFile>() {
             @Override
-            public Void act(BackgroundTaskSubject ignored) {
+            public ProteoSuiteActionResult act(RawDataFile ignored) {
                 System.out.println("Done loading mzML file.");
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
 
         BackgroundTaskManager.getInstance().submit(task);       
-    }
-
-    public MascotGenericFormatFile getAsMGF() {
-        if (this.isLoaded()) {
-            String output = this.getAbsoluteFileName().replace("\\.mzML$", ".mgf").replace("\\.mzml$", ".mgf");
-            boolean successfulConversion = FileFormatUtils.mzMLToMGF(unmarshaller, output);
-            if (successfulConversion) {
-                MascotGenericFormatFile mgf = new MascotGenericFormatFile(new File(output));
-                mgf.setParent(this);
-                return mgf;
-            }
-        }
-
-        return null;
-    }
+    }   
 
     @Override
     public Iterator<Spectrum> iterator() {
@@ -363,10 +349,8 @@ public class MzMLFile extends RawDataFile {
     }
 
     private static boolean containsParamAccession(String accession, List<CVParam> params) {
-        for (CVParam param : params) {
-            if (param.getAccession().equals(accession)) {
-                return true;
-            }
+        if (params.stream().anyMatch((param) -> (param.getAccession().equals(accession)))) {
+            return true;
         }
 
         return false;

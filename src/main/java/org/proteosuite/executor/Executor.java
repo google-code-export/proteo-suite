@@ -1,7 +1,12 @@
 package org.proteosuite.executor;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Calls an executable file and returns the output from StdOut/StdError
@@ -10,12 +15,12 @@ import java.io.InputStream;
  * 
  */
 public class Executor {
-	private final String exePath;
+	private final File executable;
 	private String errorMessage;
-	private String outputMessage;
+	private List<String> outputMessage = new ArrayList<>();        
 
-	public Executor(String exePath) {
-		this.exePath = exePath;
+	public Executor(File exe) {
+		this.executable = exe;
 	}
 
 	/**
@@ -26,26 +31,24 @@ public class Executor {
 	 *            A string containing command to pass to exe
 	 * @return true if success, false if failure
 	 */
-	public boolean callExe(String[] args) {
+	public boolean callExe(String[] args) throws IOException {
 		String[] exeArgs = new String[args.length+1];
-		exeArgs[0] = exePath;
+		exeArgs[0] = executable.getCanonicalPath();
 		System.arraycopy(args, 0, exeArgs, 1, args.length);
 		
 		ProcessBuilder processBuilder = new ProcessBuilder(exeArgs);
 		Process process  = null;
 		try {
 			process = processBuilder.start();
-
-
-			InputStream is = process.getInputStream();
+                        InputStream is = process.getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 			InputStream errIs = process.getErrorStream();
 			int value;
-			StringBuilder output = new StringBuilder();
-			while ((value = is.read()) != -1) {
-				output.append((char) value);
-			}
-                        
-			outputMessage = output.toString();
+			
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            outputMessage.add(line);
+                        }			
 
 			StringBuilder error = new StringBuilder();
 			while ((value = errIs.read()) != -1) {
@@ -62,14 +65,10 @@ public class Executor {
 		
 		int exitValue = process.exitValue();
 		
-		if (exitValue == 0) {		
-                    return true;
-                }
-		
-		return false;
+		return exitValue == 0;
 	}
 
-	public boolean callExe() {
+	public boolean callExe() throws IOException {
 		return callExe(new String[0]);
 		
 	}
@@ -88,7 +87,11 @@ public class Executor {
 	 * 
 	 * @return error Message
 	 */
-	public String getOutput() {
-		return outputMessage;
-	}
+//	public String getOutput() {
+//		return outputMessage;
+//	}
+        
+        public List<String> getOutput() {
+            return outputMessage;
+        }
 }

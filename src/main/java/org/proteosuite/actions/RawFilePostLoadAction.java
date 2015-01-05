@@ -4,16 +4,17 @@ import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.model.AnalyseData;
+import org.proteosuite.model.ProteoSuiteActionResult;
 import org.proteosuite.model.RawDataFile;
 
 /**
  *
  * @author SPerkins
  */
-public class RawFilePostLoadAction implements ProteoSuiteAction<Object, RawDataFile> {
+public class RawFilePostLoadAction implements ProteoSuiteAction<ProteoSuiteActionResult, RawDataFile> {
 
     @Override
-    public Void act(RawDataFile rawData) {
+    public ProteoSuiteActionResult act(RawDataFile rawData) {
         if (rawData == null) {
             return null;
         }
@@ -27,6 +28,6 @@ public class RawFilePostLoadAction implements ProteoSuiteAction<Object, RawDataF
         AnalyseDynamicTab.getInstance().getAnalyseStatusPanel()
                 .checkAndUpdateRawDataStatus();
         
-        return null;        
+        return ProteoSuiteActionResult.emptyResult();        
     }
 }

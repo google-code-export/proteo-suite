@@ -1,8 +1,8 @@
 package org.proteosuite.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -19,10 +19,10 @@ public class BackgroundTaskManager {
     private ExecutorService openMSService = null;
     private boolean openMSThreadsExclusive = true;
     private ExecutorService trivialService = null;
-    private final List<BackgroundTask> tasks = new ArrayList<>();
+    private final Queue<BackgroundTask> tasks = new ConcurrentLinkedQueue<>();
     private final int OPTIMUM_THREADS = computeOptimumThreads();
     private static BackgroundTaskManager INSTANCE;
-    private ProteoSuiteAction<Object, BackgroundTaskSubject> tasksRefreshAction = null;
+    private ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject> tasksRefreshAction = null;
     private int idCounter = 0;
 
     private BackgroundTaskManager() {
@@ -49,11 +49,11 @@ public class BackgroundTaskManager {
         return INSTANCE;
     }
 
-    public void setTasksRefreshAction(ProteoSuiteAction<Object, BackgroundTaskSubject> action) {
+    public void setTasksRefreshAction(ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject> action) {
         this.tasksRefreshAction = action;
     }
 
-    public List<BackgroundTask> getTasks() {
+    public Queue<BackgroundTask> getTasks() {
         return this.tasks;
     }
 
