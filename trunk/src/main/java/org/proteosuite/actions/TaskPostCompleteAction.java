@@ -1,17 +1,18 @@
 package org.proteosuite.actions;
 
 import org.proteosuite.gui.tasks.TasksTab;
-import org.proteosuite.model.BackgroundTaskSubject;
+import org.proteosuite.model.ProteoSuiteActionResult;
+import org.proteosuite.model.ProteoSuiteActionSubject;
 
 /**
  *
  * @author SPerkins
  */
-public class TaskPostCompleteAction implements ProteoSuiteAction<Object, BackgroundTaskSubject> {
+public class TaskPostCompleteAction implements ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject> {
 
     @Override
-    public Void act(BackgroundTaskSubject subject) {
+    public ProteoSuiteActionResult act(ProteoSuiteActionSubject subject) {
         TasksTab.getInstance().refreshData();
-        return null;
+        return ProteoSuiteActionResult.emptyResult();
     }
 }

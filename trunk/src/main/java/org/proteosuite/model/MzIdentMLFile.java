@@ -76,11 +76,11 @@ public class MzIdentMLFile extends IdentDataFile {
 
     @Override
     public synchronized void computePSMStats() {
-        final BackgroundTask task = new BackgroundTask(this, "Compute PSM Stats");
+        final BackgroundTask<IdentDataFile> task = new BackgroundTask<>(this, "Compute PSM Stats");
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<String[], BackgroundTaskSubject>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, IdentDataFile>() {
             @Override
-            public String[] act(BackgroundTaskSubject ignored) {
+            public ProteoSuiteActionResult<String[]> act(IdentDataFile ignored) {
                 SpectrumIdentificationProtocol protocol = unmarshaller.unmarshal(MzIdentMLElement.SpectrumIdentificationProtocol);
                 List<CvParam> thresholdingParams = protocol.getThreshold().getCvParam();
                 List<String> thresholdTerms = new ArrayList<>();
@@ -128,14 +128,14 @@ public class MzIdentMLFile extends IdentDataFile {
                     thresholdsBuilder.append(";");
                 }
 
-                return new String[]{String.valueOf(psmPassingThreshold), String.valueOf(psmNotPassingThreshold),
-                    String.valueOf(peptidesPassingThreshold.size()), thresholding, thresholdsBuilder.toString()};
+                return new ProteoSuiteActionResult<String[]>(new String[]{String.valueOf(psmPassingThreshold), String.valueOf(psmNotPassingThreshold),
+                    String.valueOf(peptidesPassingThreshold.size()), thresholding, thresholdsBuilder.toString()});                
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Void, BackgroundTaskSubject>() {
+        task.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult, IdentDataFile>() {
             @Override
-            public Void act(BackgroundTaskSubject argument) {
+            public ProteoSuiteActionResult act(IdentDataFile argument) {
                 String[] computationResult = task.getResultOfClass(String[].class);
                 if (computationResult == null || computationResult[0] == null) {
                     System.out.println("PSM Stats Calculator Did Not Run Properly");
@@ -156,7 +156,7 @@ public class MzIdentMLFile extends IdentDataFile {
                 
                 ((CleanIdentificationsStep) AnalyseDynamicTab.CLEAN_IDENTIFICATIONS_STEP).refreshFromData();
                 
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
 
@@ -165,25 +165,25 @@ public class MzIdentMLFile extends IdentDataFile {
 
     @Override
     protected void initiateLoading() {
-        final BackgroundTask task = new BackgroundTask(this, "Loading Identifications");
+        final BackgroundTask<IdentDataFile> task = new BackgroundTask<>(this, "Loading Identifications");
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<MzIdentMLUnmarshaller, BackgroundTaskSubject>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, IdentDataFile>() {
             @Override
-            public MzIdentMLUnmarshaller act(BackgroundTaskSubject argument) {
+            public ProteoSuiteActionResult<MzIdentMLUnmarshaller> act(IdentDataFile argument) {
                 if (MzIdentMLFile.this.getParent() != null) {
                     MzIdentMLFile.this.getParent().setIdentStatus("Loading...");
                     ((CreateOrLoadIdentificationsStep) (AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)).refreshFromData();
                 }
 
-                return new MzIdentMLUnmarshaller(file);
+                return new ProteoSuiteActionResult(new MzIdentMLUnmarshaller(file));
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Void, BackgroundTaskSubject>() {
+        task.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult, IdentDataFile>() {
             @Override
-            public Void act(BackgroundTaskSubject argument) {
+            public ProteoSuiteActionResult act(IdentDataFile argument) {
                 unmarshaller = task.getResultOfClass(MzIdentMLUnmarshaller.class);
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
 

@@ -8,9 +8,10 @@ import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
-import org.proteosuite.model.BackgroundTaskSubject;
+import org.proteosuite.model.ProteoSuiteActionSubject;
 import org.proteosuite.model.IdentDataFile;
 import org.proteosuite.model.MzIdentMLFile;
+import org.proteosuite.model.ProteoSuiteActionResult;
 import org.proteosuite.model.RawDataFile;
 import uk.ac.liv.mzidlib.ThresholdMzid;
 import uk.ac.liv.mzidlib.fdr.FalseDiscoveryRateGlobal;
@@ -47,16 +48,16 @@ public class FDRThresholdWrapper {
         identDataFile.setThresholdStatus("Thresholding...");
         CleanIdentificationsStep.getInstance().refreshFromData();
         
-        final BackgroundTask task = new BackgroundTask(new BackgroundTaskSubject() {
+        final BackgroundTask task = new BackgroundTask(new ProteoSuiteActionSubject() {
             @Override
             public String getSubjectName() {
                 return identDataFile.getFileName();
             }
         }, "FDR Thresholding Identifications");
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
             @Override
-            public String act(BackgroundTaskSubject argument) {
+            public ProteoSuiteActionResult<String> act(ProteoSuiteActionSubject argument) {
                 FalseDiscoveryRateGlobal fdrGlobal = new FalseDiscoveryRateGlobal(identDataFile.getAbsoluteFileName(), "1", decoyHitTag, fdrThresholdTerm, lowerValuesBetter, fdrLevel, null);
                 fdrGlobal.computeFDRusingJonesMethod();
                 String fdrPath = identDataFile.getAbsoluteFileName().replace(".mzid", "_fdr.mzid");
@@ -68,17 +69,17 @@ public class FDRThresholdWrapper {
                     new ThresholdMzid(fdrPath, outputPath, true, fdrLevel.equals("Peptide") ? peptideLevelTerm : psmLevelTerm, fdrThreshold, true, false);
                 }
 
-                return outputPath;
+                return new ProteoSuiteActionResult<String>(outputPath);
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
+        task.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
             @Override
-            public Void act(BackgroundTaskSubject argument) {
+            public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
                 RawDataFile rawDataFile = identDataFile.getParent();
                 File newFile = new File(outputPath);
                 if (!newFile.exists()) {
-                    return null;
+                    return ProteoSuiteActionResult.emptyResult();
                 }
 
                 IdentDataFile newIdentFile = new MzIdentMLFile(newFile, rawDataFile);
@@ -104,7 +105,7 @@ public class FDRThresholdWrapper {
                     AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setCleanIdentificationsDone();
                 }
 
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
 

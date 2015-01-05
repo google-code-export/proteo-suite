@@ -1,11 +1,14 @@
 package org.proteosuite.utils;
 
-import java.io.FileNotFoundException;
+import java.io.File;
+import java.io.IOException;
+import org.proteosuite.ProteoSuiteException;
 import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
-import org.proteosuite.model.BackgroundTaskSubject;
+import org.proteosuite.model.ProteoSuiteActionResult;
+import org.proteosuite.model.ProteoSuiteActionSubject;
 import org.proteosuite.model.QuantDataFile;
 import uk.ac.man.mzqlib.normalisation.PepProtAbundanceNormalisation;
 
@@ -24,36 +27,42 @@ public class NormalisationHelper {
 
     public static void normalise(final QuantDataFile quantData) {
 
-        final BackgroundTask task = new BackgroundTask(quantData, "Normalising Peptide Quantitation");
+        final BackgroundTask<QuantDataFile> task = new BackgroundTask<>(quantData, "Normalising Peptide Quantitation");
         task.setInvisibility(true);
 
-        task.addAsynchronousProcessingAction(new ProteoSuiteAction<String, BackgroundTaskSubject>() {
+        task.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, QuantDataFile>() {
             @Override
-            public String act(BackgroundTaskSubject argument) {
+            public ProteoSuiteActionResult<File> act(QuantDataFile argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setNormalisationProcessing();
-                String outputFile = quantData.getAbsoluteFileName().replace(".mzq", "_normalised.mzq");
+                File outputFile = null;                               
                 try {
-                    PepProtAbundanceNormalisation normalisation = new PepProtAbundanceNormalisation(quantData.getAbsoluteFileName(), outputFile, "AssayQuantLayer", RAW_FEATURE_INTENSITY_ACC, PEPTIDE_NORMALISED_ACC, PEPTIDE_NORMALISED_NAME, "peptide", "_REVERSED", null);
+                    outputFile = new File(quantData.getFile().getCanonicalPath().replaceFirst("\\.[Mm][Zz][Qq]$", "_normalised.mzq"));   
+                    PepProtAbundanceNormalisation normalisation = new PepProtAbundanceNormalisation(quantData.getAbsoluteFileName(), outputFile.getCanonicalPath(), "peptide", "AssayQuantLayer", RAW_FEATURE_INTENSITY_ACC, PEPTIDE_NORMALISED_ACC, PEPTIDE_NORMALISED_NAME, "_REVERSED", null);
                     normalisation.multithreadingCalc();
                 }
-                catch (FileNotFoundException e) {
-                    System.out.println("Problem computing normalisation!");
-                    e.printStackTrace();
+                catch (IOException e) {
+                    ProteoSuiteException pex = new ProteoSuiteException("Normalisation routine failure.", e);                    
+                    pex.printStackTrace();
+                    return new ProteoSuiteActionResult(pex);                    
                 }
 
-                return outputFile;
+                return new ProteoSuiteActionResult<File>(outputFile);
             }
         });
 
-        task.addCompletionAction(new ProteoSuiteAction<Object, BackgroundTaskSubject>() {
+        task.addCompletionAction(new ProteoSuiteAction<ProteoSuiteActionResult, QuantDataFile>() {
             @Override
-            public Void act(BackgroundTaskSubject argument) {
+            public ProteoSuiteActionResult act(QuantDataFile argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setNormalisationDone();
-                String outputFile = task.getResultOfClass(String.class);
+                File outputFile = task.getResultOfClass(File.class);
+                if (outputFile == null) {
+                    ProteoSuiteException pex = new ProteoSuiteException("Unable to retrieve File result of normalisation.");
+                    return new ProteoSuiteActionResult(pex);
+                }
 
                 ProteinInferenceHelper.infer(outputFile, "Label-free", ProteinInferenceHelper.LCMS_FEATURE_INTENSITY, "sum");
 
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             }
         });
 

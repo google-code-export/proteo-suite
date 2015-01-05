@@ -24,7 +24,11 @@ public class TasksTableRowListener implements ListSelectionListener {
     @Override
     public void valueChanged(ListSelectionEvent e) {        
         int rowSelected = table.getSelectedRow();
-        String taskID = (String) table.getValueAt(rowSelected, 0);
+        if (rowSelected == -1) {
+            return;
+        }
+        
+        String taskID = (String) table.getModel().getValueAt(rowSelected, 0);
         BackgroundTask task = BackgroundTaskManager.getInstance().getTaskOfID(taskID);
         OutputPane.getInstance().showLog(task);       
     }    

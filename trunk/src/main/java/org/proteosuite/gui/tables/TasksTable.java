@@ -25,11 +25,10 @@ public class TasksTable extends JTable {
         model.addColumn("Task ID");
         model.addColumn("Name");
         model.addColumn("Phase");
-        model.addColumn("Status");
-        
-        getColumnModel().removeColumn(getColumnModel().getColumn(0));        
+        model.addColumn("Status");               
         
         setModel(model);    
+        getColumnModel().removeColumn(getColumnModel().getColumn(0));
         getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         getSelectionModel().addListSelectionListener(new TasksTableRowListener(this));
     }

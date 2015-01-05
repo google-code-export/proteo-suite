@@ -5,17 +5,18 @@ import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
 import org.proteosuite.gui.inspect.InspectTab;
 import org.proteosuite.model.AnalyseData;
 import org.proteosuite.model.IdentDataFile;
+import org.proteosuite.model.ProteoSuiteActionResult;
 
 /**
  *
  * @author SPerkins
  */
-public class IdentFilePostLoadAction implements ProteoSuiteAction<Void, IdentDataFile> {
+public class IdentFilePostLoadAction implements ProteoSuiteAction<ProteoSuiteActionResult, IdentDataFile> {
 
     private static final AnalyseData data = AnalyseData.getInstance();
 
     @Override
-    public Void act(IdentDataFile identData) {
+    public ProteoSuiteActionResult act(IdentDataFile identData) {
         AnalyseData.getInstance().getInspectModel().addIdentDataFile(identData);
         InspectTab.getInstance().refreshComboBox();        
 
@@ -39,6 +40,6 @@ public class IdentFilePostLoadAction implements ProteoSuiteAction<Void, IdentDat
 
         ((CreateOrLoadIdentificationsStep) (AnalyseDynamicTab.CREATE_OR_LOAD_IDENTIFICATIONS_STEP)).refreshFromData();
 
-        return null;
+        return ProteoSuiteActionResult.emptyResult();
     }
 }
