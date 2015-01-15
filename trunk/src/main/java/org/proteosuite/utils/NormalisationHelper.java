@@ -8,7 +8,6 @@ import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.model.BackgroundTask;
 import org.proteosuite.model.BackgroundTaskManager;
 import org.proteosuite.model.ProteoSuiteActionResult;
-import org.proteosuite.model.ProteoSuiteActionSubject;
 import org.proteosuite.model.QuantDataFile;
 import uk.ac.man.mzqlib.normalisation.PepProtAbundanceNormalisation;
 
@@ -34,16 +33,33 @@ public class NormalisationHelper {
             @Override
             public ProteoSuiteActionResult<File> act(QuantDataFile argument) {
                 AnalyseDynamicTab.getInstance().getAnalyseStatusPanel().setNormalisationProcessing();
-                File outputFile = null;                               
+                File outputFile = null;
                 try {
-                    outputFile = new File(quantData.getFile().getCanonicalPath().replaceFirst("\\.[Mm][Zz][Qq]$", "_normalised.mzq"));   
+                    outputFile = new File(quantData.getFile().getCanonicalPath().replaceFirst("\\.[Mm][Zz][Qq]$", "_normalised.mzq"));
                     PepProtAbundanceNormalisation normalisation = new PepProtAbundanceNormalisation(quantData.getAbsoluteFileName(), outputFile.getCanonicalPath(), "peptide", "AssayQuantLayer", RAW_FEATURE_INTENSITY_ACC, PEPTIDE_NORMALISED_ACC, PEPTIDE_NORMALISED_NAME, "_REVERSED", null);
                     normalisation.multithreadingCalc();
+                    int existsCheckCount = 0;
+                    while (!outputFile.exists()) {
+                        System.out.println("Normalisation output file does not exist after poll attempt " + ++existsCheckCount);
+                        if (existsCheckCount == 10) {
+                            System.out.println("Not checking any more times.");
+                            ProteoSuiteException pex = new ProteoSuiteException("File result of normalisation does not exist.");
+                            return new ProteoSuiteActionResult(pex);
+                        }
+
+                        System.out.println("Will check " + (10 - existsCheckCount) + " more times starting in 30 seconds.");
+                        Thread.sleep(30 * 1000);
+                    }
                 }
-                catch (IOException e) {
-                    ProteoSuiteException pex = new ProteoSuiteException("Normalisation routine failure.", e);                    
+                catch (IOException | InterruptedException e) {
+                    if (e instanceof InterruptedException) {
+                        ProteoSuiteException pex = new ProteoSuiteException("Failure to sleep thread in normalisation routine.", e);
+                        return new ProteoSuiteActionResult(pex);
+                    }
+                    
+                    ProteoSuiteException pex = new ProteoSuiteException("Normalisation routine failure.", e);
                     pex.printStackTrace();
-                    return new ProteoSuiteActionResult(pex);                    
+                    return new ProteoSuiteActionResult(pex);
                 }
 
                 return new ProteoSuiteActionResult<File>(outputFile);

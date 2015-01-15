@@ -16,6 +16,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingWorker;
+import org.proteosuite.Launcher;
 import org.proteosuite.actions.Actions;
 import org.proteosuite.actions.ProteoSuiteAction;
 
@@ -167,6 +168,10 @@ public class BackgroundTask<T extends ProteoSuiteActionSubject> {
                 BackgroundTask.this.completionActions.stream().forEach(action -> {
                     action.act(taskSubject);
                 });
+                
+                processingResults.stream().filter((result) -> (result.hasException())).forEach((result) -> {
+                    Launcher.handleException(result.getException());
+                });
 
                 taskLatch.countDown();
             }
@@ -272,7 +277,7 @@ public class BackgroundTask<T extends ProteoSuiteActionSubject> {
                     Logger.getLogger(BackgroundTask.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
-                return null;
+                return ProteoSuiteActionResult.emptyResult();
             });
         }
     }

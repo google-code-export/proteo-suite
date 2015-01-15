@@ -123,9 +123,8 @@ public class Launcher {
                         return result;
                     } catch (IOException ex) {
                         Logger.getLogger(Launcher.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-
-                    return null;
+                        return new ProteoSuiteActionResult(new ProteoSuiteException("Error checking for new version.", ex));
+                    }                   
                 }
             });
 
@@ -134,7 +133,7 @@ public class Launcher {
                 public ProteoSuiteActionResult act(ProteoSuiteActionSubject subject) {
                     String newVersion = UpdateWorker.super.getResultOfClass(String.class);
                     if (newVersion == null) {
-                        return null;
+                        return new ProteoSuiteActionResult(new ProteoSuiteException("Error getting version result from task."));                        
                     }
 
                     int result = JOptionPane
@@ -148,7 +147,7 @@ public class Launcher {
                         OpenURL.open(newVersion);
                     }
 
-                    return null;
+                    return ProteoSuiteActionResult.emptyResult();
                 }
             });
         }
