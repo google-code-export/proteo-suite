@@ -1,11 +1,14 @@
 package org.proteosuite.quantitation;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.JAXBException;
 import org.proteosuite.ProteoSuiteException;
 import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.executor.Executor;
@@ -21,14 +24,18 @@ import org.proteosuite.model.RawDataFile;
 import org.proteosuite.utils.MappingHelper;
 import org.proteosuite.utils.SystemUtils;
 import org.proteosuite.utils.SystemUtils.SystemType;
+import uk.ac.liv.mzqlib.consensusxml.converter.ConsensusXMLProcessor;
+import uk.ac.liv.mzqlib.consensusxml.converter.ConsensusXMLProcessorFactory;
 
 /**
  *
  * @author SPerkins
  */
 public class OpenMSLabelFreeWrapper {
+
     private static boolean IS_WINDOWS = false;
     private static final List<File> installedLocationHints = new ArrayList<>();
+
     static {
         installedLocationHints.add(new File("c:\\Program Files\\OpenMS-1.11\\bin"));
         installedLocationHints.add(new File("c:\\Program Files (x86)\\OpenMS-1.11\\bin"));
@@ -36,11 +43,11 @@ public class OpenMSLabelFreeWrapper {
         installedLocationHints.add(new File("c:\\Program Files (x86)"));
         installedLocationHints.add(new File("c:"));
     }
-    
+
     private final List<RawDataFile> rawDataFiles;
     private final CountDownLatch featureFinderCentroidedLatch;
     private final CountDownLatch mapAlignerPoseClusteringLatch;
-    private final CountDownLatch featureLinkerUnlabeledQTLatch;    
+    private final CountDownLatch featureLinkerUnlabeledQTLatch;
 
     public static boolean checkIsInstalled() {
         IS_WINDOWS = SystemUtils.getSystemType().equals(SystemType.WIN32) || SystemUtils.getSystemType().equals(SystemType.WIN64);
@@ -50,7 +57,7 @@ public class OpenMSLabelFreeWrapper {
         } else {
             executable = SystemUtils.findExecutionCommand("FeatureFinderCentroided", installedLocationHints);
         }
-        
+
         return executable != null;
     }
 
@@ -112,11 +119,17 @@ public class OpenMSLabelFreeWrapper {
                     Thread.sleep(executionDelay * 1000);
                     String command = "FeatureFinderCentroided" + (IS_WINDOWS ? ".exe" : "");
                     File executable = SystemUtils.findExecutionCommand(command, installedLocationHints);
-//                    JOpenMS.performOpenMSTask(executable,
-//                            Arrays.asList(inputDataFile.getAbsoluteFileName()),
-//                            Arrays.asList(outputFile));
-                } catch (InterruptedException ex) {
+                    JOpenMS.performOpenMSTask(executable,
+                            Arrays.asList(inputDataFile.getAbsoluteFileName()),
+                            Arrays.asList(outputFile));
+                }
+                catch (InterruptedException ex) {
                     ProteoSuiteException pex = new ProteoSuiteException("Thread sleep error in openMS thread.", ex);
+                    Logger.getLogger(OpenMSLabelFreeWrapper.class.getName()).log(Level.SEVERE, null, ex);
+                    return new ProteoSuiteActionResult(pex);
+                }
+                catch (IOException ex) {
+                    ProteoSuiteException pex = new ProteoSuiteException("Error executing FeatureFinderCentroided.", ex);
                     Logger.getLogger(OpenMSLabelFreeWrapper.class.getName()).log(Level.SEVERE, null, ex);
                     return new ProteoSuiteActionResult(pex);
                 }
@@ -159,7 +172,14 @@ public class OpenMSLabelFreeWrapper {
             public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
                 String command = "MapAlignerPoseClustering" + (IS_WINDOWS ? ".exe" : "");
                 File executable = SystemUtils.findExecutionCommand(command, installedLocationHints);
-//                JOpenMS.performOpenMSTask(executable, inputFiles, outputFiles);
+                try {
+                    JOpenMS.performOpenMSTask(executable, inputFiles, outputFiles);
+                }
+                catch (IOException ex) {
+                    ProteoSuiteException pex = new ProteoSuiteException("Error executing MapAlignerPoseClustering.", ex);
+                    Logger.getLogger(OpenMSLabelFreeWrapper.class.getName()).log(Level.SEVERE, null, ex);
+                    return new ProteoSuiteActionResult(pex);
+                }
                 return ProteoSuiteActionResult.emptyResult();
             }
         });
@@ -198,8 +218,15 @@ public class OpenMSLabelFreeWrapper {
             public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
                 String command = "FeatureLinkerUnlabeledQT" + (IS_WINDOWS ? ".exe" : "");
                 File executable = SystemUtils.findExecutionCommand(command, installedLocationHints);
-//                JOpenMS.performOpenMSTask(executable, inputFiles,
-//                        Arrays.asList(outputFile));
+                try {
+                    JOpenMS.performOpenMSTask(executable, inputFiles,
+                            Arrays.asList(outputFile));
+                }
+                catch (IOException ex) {
+                    ProteoSuiteException pex = new ProteoSuiteException("Error executing FeatureLinkerUnlabeledQT.", ex);
+                    Logger.getLogger(OpenMSLabelFreeWrapper.class.getName()).log(Level.SEVERE, null, ex);
+                    return new ProteoSuiteActionResult(pex);
+                }
 
                 return ProteoSuiteActionResult.emptyResult();
             }
@@ -238,14 +265,16 @@ public class OpenMSLabelFreeWrapper {
         task.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
             @Override
             public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
-//                try {                    
-//                    ConsensusXMLProcessor conProc = ConsensusXMLProcessorFactory
-//                            .getInstance().buildConsensusXMLProcessor(
-//                                    new File(consensusXMLFile));
-//                    conProc.convert(mzqFile);
-//                } catch (IOException | JAXBException ex) {
-//                    Logger.getLogger(OpenMSLabelFreeWrapper.class.getName()).log(Level.SEVERE, null, ex);
-//                }
+                try {                    
+                    ConsensusXMLProcessor conProc = ConsensusXMLProcessorFactory
+                            .getInstance().buildConsensusXMLProcessor(
+                                    new File(consensusXMLFile));
+                    conProc.convert(mzqFile);
+                } catch (IOException | JAXBException ex) {                    
+                    ProteoSuiteException pex = new ProteoSuiteException("Error doing conversion from consensus XML to mzq.", ex);
+                    Logger.getLogger(OpenMSLabelFreeWrapper.class.getName()).log(Level.SEVERE, null, ex);
+                    return new ProteoSuiteActionResult(pex);
+                }
 
                 return ProteoSuiteActionResult.emptyResult();
             }

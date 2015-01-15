@@ -207,7 +207,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                 } else {
                     if (primaryFile instanceof MzMLFile) {
                         File file = new File(primaryFile.getAbsoluteFileName().replaceAll("\\.mzML$", ".mgf").replace("\\.mzml$", ".mgf"));
-                        boolean successfulConversion = FileFormatUtils.mzMLToMGF(((MzMLFile) primaryFile).getUnmarshaller(), file.getAbsolutePath());                        
+                        boolean successfulConversion = FileFormatUtils.mzMLToMGF(((MzMLFile) primaryFile).getUnmarshaller(), file.getAbsolutePath());                       
                         if (successfulConversion && file.exists()) {
                             primaryFile.setPeakListFile(file);
                             commandList.add("-spectrum_files");
@@ -252,7 +252,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                     task.setStreams(streams);
                     int returnVal = awaitProcessTermination(proc);
                     if (returnVal != 0) {
-                        return null;
+                        return new ProteoSuiteActionResult(new ProteoSuiteException("Generic identification search produced exceptional return value."));
                     }
 
                     // If we are in 'folder' mode, then don't add retention times - it is impossible at this stage.
@@ -276,7 +276,7 @@ public class SearchGuiViaMzidLibWrapper implements SearchEngine {
                         }
                     }
                 }
-                catch (IOException | InterruptedException ex) {
+                catch (IOException | InterruptedException ex) {                
                     Logger.getLogger(SearchGuiViaMzidLibWrapper.class.getName()).log(Level.SEVERE, null, ex);
                     return new ProteoSuiteActionResult(new ProteoSuiteException("Error running mzidLib/searchGUI for identifications.", ex));
                 }

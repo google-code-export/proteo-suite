@@ -360,7 +360,7 @@ public class AnalyseStatusPanel extends JPanel {
 		proteinInferenceStatus.setIcon(processing);
 	}
         
-        public void setAnovaInferenceDone() {
+        public void setAnovaDone() {
 		anovaStatus.setIcon(done);
 	}
 

@@ -16,7 +16,7 @@ public class RawFilePostLoadAction implements ProteoSuiteAction<ProteoSuiteActio
     @Override
     public ProteoSuiteActionResult act(RawDataFile rawData) {
         if (rawData == null) {
-            return null;
+            return ProteoSuiteActionResult.emptyResult();
         }
         
         RawDataAndMultiplexingStep.getInstance().refreshFromData();
