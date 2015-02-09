@@ -53,8 +53,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
-import org.proteosuite.WorkSpace;
-import org.proteosuite.utils.NumericalUtils;
+import org.proteosuite.utils.PrimitiveUtils;
 import org.proteosuite.utils.StringUtils;
 
 /**
@@ -65,8 +64,7 @@ import org.proteosuite.utils.StringUtils;
 public class IdentParamsView extends JDialog {
 
     private static final long serialVersionUID = 1L;
-    private static final Pattern possibleModsFilePattern = Pattern.compile("(.+)\\(.+\\)");
-    private static final WorkSpace workSpace = WorkSpace.getInstance();
+    private static final Pattern possibleModsFilePattern = Pattern.compile("(.+)\\(.+\\)");    
     private static final String NO_MODS_SELECTED = "--- none selected ---";
     private static Set<String> possibleMods = null;
     private static final String[] thresholdValues = new String[]{"0.00 (0%)", "0.001 (0.1%)", "0.005 (0.5%)", "0.01 (1%)", "0.02 (2%)", "0.03 (3%)", "0.04 (4%)", "0.05 (5%)"};
@@ -458,11 +456,11 @@ public class IdentParamsView extends JDialog {
             }
         }
 
-        if (!NumericalUtils.isDouble(jtMSTolerance.getText())) {
+        if (!PrimitiveUtils.isDouble(jtMSTolerance.getText())) {
             validationErrors.add("Precursor MS tolerance is not a valid number. Please amend.");
         }
 
-        if (!NumericalUtils.isDouble(jtMSMSTolerance.getText())) {
+        if (!PrimitiveUtils.isDouble(jtMSMSTolerance.getText())) {
             validationErrors.add("Fragment MS/MS tolerance is not a valid number. Please amend.");
         }
 

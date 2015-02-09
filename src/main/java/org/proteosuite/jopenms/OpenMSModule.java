@@ -85,7 +85,7 @@ public class OpenMSModule {
      */
     private Map<String, Object> initConfigMap(File ini, String executableTrimmed) {
 
-        Map<String, Object> configMap = new HashMap<String, Object>();
+        Map<String, Object> configMap = new HashMap<>();
 
         configMap.put("iniFile", ini); // store the input file name with key
         // "inputFileName"
@@ -153,7 +153,7 @@ public class OpenMSModule {
                     Object value = m.get(nodeName);
 
                     if (value == null) {
-                        subMap = new HashMap<String, Object>();
+                        subMap = new HashMap<>();
                         m.put(nodeName, subMap);
                         subMap.put(item.getName(), item.getValue());
                         // subMap.put(item.getName(), item);
@@ -190,7 +190,7 @@ public class OpenMSModule {
                     Object value = m.get(nodeName);
 
                     if (value == null) {
-                        subMap = new HashMap<String, Object>();
+                        subMap = new HashMap<>();
                         m.put(nodeName, subMap);
 
                         // Param_1_6_2.xsd
@@ -210,10 +210,11 @@ public class OpenMSModule {
     }
 
     private String getItemListValue(ITEMLIST itlst) {
-        String lstValue = "::";
-        for (LISTITEM lstitem : itlst.getLISTITEM()) {
-            lstValue += lstitem.getValue();
-        }
-        return lstValue;
+        StringBuilder lstValue = new StringBuilder("::");
+        itlst.getLISTITEM().stream().forEach((lstitem) -> {
+            lstValue.append(lstitem.getValue());
+        });
+        
+        return lstValue.toString();
     }
 }

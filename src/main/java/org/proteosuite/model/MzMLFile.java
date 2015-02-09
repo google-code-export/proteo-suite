@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import org.proteosuite.ProteoSuiteException;
 import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.actions.RawFilePostLoadAction;
-import org.proteosuite.utils.NumericalUtils;
+import org.proteosuite.utils.PrimitiveUtils;
 import uk.ac.ebi.jmzml.model.mzml.BinaryDataArray;
 import uk.ac.ebi.jmzml.model.mzml.CVParam;
 import uk.ac.ebi.jmzml.xml.io.MzMLObjectIterator;
@@ -283,7 +283,7 @@ public class MzMLFile extends RawDataFile {
                     double precursorMz = Double.parseDouble(getValueForAccession(PRECURSOR_MZ_PARAM, precursorParams));
                     String precursorChargeString = getValueForAccession(PRECURSOR_CHARGE_PARAM, precursorParams);
                     int precursorCharge = 0;
-                    if (precursorChargeString != null && NumericalUtils.isInteger(precursorChargeString)) {
+                    if (precursorChargeString != null && PrimitiveUtils.isInteger(precursorChargeString)) {
                         precursorCharge = Integer.parseInt(getValueForAccession(PRECURSOR_CHARGE_PARAM, precursorParams));
                     }
 

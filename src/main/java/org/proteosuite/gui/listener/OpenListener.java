@@ -11,7 +11,8 @@ import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.proteosuite.WorkSpace;
+import org.proteosuite.config.Config;
+import org.proteosuite.config.GlobalConfig;
 import org.proteosuite.gui.TabbedMainPanel;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.RawDataAndMultiplexingStep;
@@ -28,10 +29,11 @@ public class OpenListener implements ActionListener {
 
     private static final AnalyseData data = AnalyseData.getInstance();
     private static final InspectModel model = data.getInspectModel();
+    private static final GlobalConfig config = Config.getInstance().getGlobalConfig();
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JFileChooser openFile = new JFileChooser(WorkSpace.sPreviousLocation);
+        JFileChooser openFile = new JFileChooser(config.getRememberedDirectory());
         boolean choicesValid = false;
         File[] files = null;
         boolean folderMode = false;
@@ -92,10 +94,10 @@ public class OpenListener implements ActionListener {
         Set<String> fileNamesAlreadyLoaded = new HashSet<>();
 
         for (File file : files) {
-            if (!folderMode && !file.getParent().equals(WorkSpace.sPreviousLocation)) {
-                WorkSpace.sPreviousLocation = file.getParent();
-            } else if (folderMode && !file.toString().equals(WorkSpace.sPreviousLocation)) {
-                WorkSpace.sPreviousLocation = file.getPath();
+            if (!folderMode && !file.getParent().equals(config.getRememberedDirectory())) {
+                config.setRememberedDirectory(file.getParent());                
+            } else if (folderMode && !file.toString().equals(config.getRememberedDirectory())) {
+                config.setRememberedDirectory(file.getPath());                
             }
 
             if (folderMode) {
