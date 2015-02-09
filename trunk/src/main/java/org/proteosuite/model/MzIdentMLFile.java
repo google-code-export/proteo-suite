@@ -14,7 +14,7 @@ import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
 import org.proteosuite.gui.analyse.CleanIdentificationsStep;
 import org.proteosuite.gui.analyse.CreateOrLoadIdentificationsStep;
-import org.proteosuite.utils.NumericalUtils;
+import org.proteosuite.utils.PrimitiveUtils;
 import org.proteosuite.utils.StringUtils;
 import uk.ac.ebi.jmzidml.MzIdentMLElement;
 import uk.ac.ebi.jmzidml.model.mzidml.CvParam;
@@ -111,7 +111,7 @@ public class MzIdentMLFile extends IdentDataFile {
                             }
 
                             for (CvParam param : item.getCvParam()) {
-                                if (NumericalUtils.isDouble(param.getValue())) {
+                                if (PrimitiveUtils.isDouble(param.getValue())) {
                                     thresholdTypes.put(param.getName(), param.getAccession());
                                 }                                
                             }

@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import org.proteosuite.utils.NumericalUtils;
+import org.proteosuite.utils.PrimitiveUtils;
 
 /**
  *
@@ -77,7 +77,7 @@ public class ThresholdingPopup extends JDialog {
         thresholdButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                if (NumericalUtils.isDouble(thresholdingValue.getText())) {
+                if (PrimitiveUtils.isDouble(thresholdingValue.getText())) {
                     setVisible(false);
                     dispose();
                 } else {

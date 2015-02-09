@@ -1,11 +1,11 @@
 package org.proteosuite.utils;
 
-public final class NumericalUtils {
+public final class PrimitiveUtils {
 
     /**
      * Private constructor to prevent instantiation.
      */
-    private NumericalUtils() {
+    private PrimitiveUtils() {
     }
 
     /**
@@ -53,5 +53,5 @@ public final class NumericalUtils {
         }
         
         return true;
-    }   
+    } 
 }

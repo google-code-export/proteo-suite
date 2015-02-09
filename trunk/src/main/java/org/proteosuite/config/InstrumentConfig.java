@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.proteosuite.utils.NumericalUtils;
+import org.proteosuite.utils.PrimitiveUtils;
 
 /**
  *
@@ -77,13 +77,13 @@ public class InstrumentConfig {
                 instrument_name = value;
                 break;
             case "MS1_TOL":
-                if (NumericalUtils.isDouble(value)) {
+                if (PrimitiveUtils.isDouble(value)) {
                     ms1tol = Double.parseDouble(value);
                 }
             
                 break;
             case "MS2_TOL":
-                if (NumericalUtils.isDouble(value)) {
+                if (PrimitiveUtils.isDouble(value)) {
                     ms2tol = Double.parseDouble(value);
                 }
             

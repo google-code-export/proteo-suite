@@ -10,6 +10,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.proteosuite.actions.ProteoSuiteAction;
 import org.proteosuite.actions.TaskPostCompleteAction;
+import org.proteosuite.config.Config;
 import org.proteosuite.gui.IdentParamsView;
 import org.proteosuite.gui.ProteoSuite;
 import org.proteosuite.model.BackgroundTask;
@@ -32,6 +33,9 @@ public class Launcher {
         // Setting standard look and feel
         setLookAndFeel();
         installCheckOpenMS();
+        
+        // Prime configuration.
+        Config.getInstance();
 
         // Pre-load the searchGUI modifications.
         IdentParamsView.readInPossibleMods();
@@ -47,23 +51,24 @@ public class Launcher {
             public void run() {
                 try {
                     new ProteoSuite().setVisible(true);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     handleException(new ProteoSuiteException("ProteoSuite error.", e));
                 }
             }
         });
     }
-    
+
     public static void handleException(ProteoSuiteException pex) {
         ExceptionCatcher.reportException(pex);
         int result = JOptionPane.showConfirmDialog(null, "ProteoSuite has encountered a fatal problem: " + pex.getLocalizedMessage() + "\n"
-        + "You can close the software now, in which case any work currently being done may be lost, or you"
+                + "You can close the software now, in which case any work currently being done may be lost, or you"
                 + " can allow tasks to complete (if possible) and close it later.\n"
                 + "Do you wish to close the software immediately?", "He's dead, Jim!", JOptionPane.YES_NO_OPTION);
-        
+
         if (result == JOptionPane.YES_OPTION) {
             System.exit(1);
-        }       
+        }
     }
 
     private static void installCheckOpenMS() {
@@ -79,7 +84,7 @@ public class Launcher {
                             + "OpenMS is available at:\n" + openMSUrl + "\nTo install now, click \"Yes\" to be directed to the openMS web site.\n"
                             + "Once installed you will need to restart Proteosuite to use openMS features.",
                             "openMS Not Installed!", JOptionPane.YES_NO_OPTION);
-            
+
             BackgroundTaskManager.getInstance().freeMoreThreadsForGenericExecution();
             if (result == JOptionPane.YES_OPTION) {
                 OpenURL.open(openMSUrl);
@@ -99,7 +104,8 @@ public class Launcher {
                     break;
                 }
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException exception) {
+        }
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException exception) {
             exception.printStackTrace();
         }
     }
@@ -112,19 +118,20 @@ public class Launcher {
                 public String getSubjectName() {
                     return "ProteoSuite";
                 }
-            }, "Checking For Update");           
+            }, "Checking For Update");
 
             super.addAsynchronousProcessingAction(new ProteoSuiteAction<ProteoSuiteActionResult, ProteoSuiteActionSubject>() {
                 @Override
                 public ProteoSuiteActionResult act(ProteoSuiteActionSubject argument) {
                     try {
                         String updateCheckString = UpdateCheck.hasUpdate(ProteoSuite.PROTEOSUITE_VERSION);
-                        ProteoSuiteActionResult<String> result = new ProteoSuiteActionResult(updateCheckString, null); 
+                        ProteoSuiteActionResult<String> result = new ProteoSuiteActionResult(updateCheckString, null);
                         return result;
-                    } catch (IOException ex) {
+                    }
+                    catch (IOException ex) {
                         Logger.getLogger(Launcher.class.getName()).log(Level.SEVERE, null, ex);
                         return new ProteoSuiteActionResult(new ProteoSuiteException("Error checking for new version.", ex));
-                    }                   
+                    }
                 }
             });
 
@@ -132,19 +139,17 @@ public class Launcher {
                 @Override
                 public ProteoSuiteActionResult act(ProteoSuiteActionSubject subject) {
                     String newVersion = UpdateWorker.super.getResultOfClass(String.class);
-                    if (newVersion == null) {
-                        return new ProteoSuiteActionResult(new ProteoSuiteException("Error getting version result from task."));                        
-                    }
+                    if (newVersion != null) {
+                        int result = JOptionPane
+                                .showConfirmDialog(
+                                        null,
+                                        "There is a new version of ProteoSuite available\n Click OK to visit the download page.",
+                                        "Information", JOptionPane.OK_CANCEL_OPTION,
+                                        JOptionPane.INFORMATION_MESSAGE);
 
-                    int result = JOptionPane
-                            .showConfirmDialog(
-                                    null,
-                                    "There is a new version of ProteoSuite available\n Click OK to visit the download page.",
-                                    "Information", JOptionPane.OK_CANCEL_OPTION,
-                                    JOptionPane.INFORMATION_MESSAGE);
-
-                    if (result == JOptionPane.OK_OPTION) {
-                        OpenURL.open(newVersion);
+                        if (result == JOptionPane.OK_OPTION) {
+                            OpenURL.open(newVersion);
+                        }
                     }
 
                     return ProteoSuiteActionResult.emptyResult();

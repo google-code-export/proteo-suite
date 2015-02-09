@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import javax.xml.validation.Validator;
-import org.proteosuite.WorkSpace;
+
 import org.proteosuite.actions.ProteoSuiteAction;
 import static org.proteosuite.gui.ProteoSuite.MZQ_XSD;
 import org.proteosuite.gui.analyse.AnalyseDynamicTab;
@@ -38,6 +38,7 @@ public class XTrackerITRAQWrapper {
     private static boolean fourPlex = true;
     private static SystemUtils sysUtils = new SystemUtils();
     private String outputPath = null;
+    private String defaultProjectName = "DEFAULT_PROJECT";
 
     public XTrackerITRAQWrapper(List<RawDataFile> rawData) {
         this.rawData = rawData;        
@@ -87,14 +88,14 @@ public class XTrackerITRAQWrapper {
      */
     private boolean generateFiles() {
         // Check project name
-        String sFile = WorkSpace.sProjectName;
+        String sFile = defaultProjectName;
         System.out.println(sysUtils.getTime()
                 + " - Generating files for the pipeline ...");
 
         if (sFile.equals("New") || sFile.equals("")) {
             sFile = "output.mzq";
 
-            WorkSpace.sProjectName = sFile;
+            defaultProjectName = sFile;
         }
 
         // Generate mzq file
@@ -104,7 +105,7 @@ public class XTrackerITRAQWrapper {
 
         // Unmarshall mzquantml file        
         Validator validator = XMLparser.getValidator(MZQ_XSD);
-        boolean validFlag = XMLparser.validate(validator, rawData.get(0).getFile().getParent().replace("\\", "/") + "/" + WorkSpace.sProjectName);
+        boolean validFlag = XMLparser.validate(validator, rawData.get(0).getFile().getParent().replace("\\", "/") + "/" + defaultProjectName);
         System.out.println(sysUtils.getTime() + " - Validating mzQuantML ...");
         if (!validFlag) {
             System.out.println("Invalid mzQuantML file!");
@@ -132,7 +133,7 @@ public class XTrackerITRAQWrapper {
         writeXTrackerIdent(technique, sPipeline[0]);
         writeXTrackerRaw(sPipeline[1]);
         writeXTrackerQuant(sPipeline[2]);
-        writeXTrackerOutput(sPipeline[3], WorkSpace.sProjectName);
+        writeXTrackerOutput(sPipeline[3], defaultProjectName);
     }
 
     /**

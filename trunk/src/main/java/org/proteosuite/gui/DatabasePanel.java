@@ -19,7 +19,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.proteosuite.WorkSpace;
+import org.proteosuite.config.Config;
+import org.proteosuite.config.GlobalConfig;
 
 public class DatabasePanel extends JPanel {
 
@@ -33,6 +34,7 @@ public class DatabasePanel extends JPanel {
     private static final String fastaTooltip = "FastA is not mandatory if GFF contains protein sequences.";
     private static final String gffTooltip = "GFF is always mandatory.";
     private static final int TEXTFIELD_SIZE = 32;
+    private static final GlobalConfig config = Config.getInstance().getGlobalConfig();
 
     private JTextField databaseText;
 
@@ -367,7 +369,7 @@ public class DatabasePanel extends JPanel {
 
     private static void setDatabaseButtonClicked(JTextField databaseFile, JDialog searchSettingsDialog, boolean fastaDialog) {
         // Adding files
-        JFileChooser chooser = new JFileChooser(WorkSpace.sPreviousLocation);
+        JFileChooser chooser = new JFileChooser(config.getRememberedDirectory());
         if (fastaDialog) {
             chooser.setDialogTitle("Select the FastA database file:");
         } else {
@@ -399,8 +401,8 @@ public class DatabasePanel extends JPanel {
             return;
         }
 
-        if (!file.getParent().equals(WorkSpace.sPreviousLocation)) {
-            WorkSpace.sPreviousLocation = file.getParent();
+        if (!file.getParent().equals(config.getRememberedDirectory())) {
+            config.setRememberedDirectory(file.getParent());
         }
 
         databaseFile.setText(file.getPath());
